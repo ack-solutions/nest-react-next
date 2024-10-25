@@ -1,0 +1,9 @@
+{
+  "generators": {
+    "crud": {
+      "factory": "./src/generators/crud/generator",
+      "schema": "./src/generators/crud/schema.json",
+      "description": "crud generator"
+    }
+  }
+}

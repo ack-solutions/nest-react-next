@@ -1,0 +1,41 @@
+{
+  "name": "crud",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "tools/crud/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/tools/crud",
+        "main": "tools/crud/src/index.ts",
+        "tsConfig": "tools/crud/tsconfig.lib.json",
+        "assets": [
+          "tools/crud/*.md",
+          {
+            "input": "./tools/crud/src",
+            "glob": "**/!(*.ts)",
+            "output": "./src"
+          },
+          {
+            "input": "./tools/crud/src",
+            "glob": "**/*.d.ts",
+            "output": "./src"
+          },
+          {
+            "input": "./tools/crud",
+            "glob": "generators.json",
+            "output": "."
+          },
+          {
+            "input": "./tools/crud",
+            "glob": "executors.json",
+            "output": "."
+          }
+        ]
+      }
+    }
+  }
+}
