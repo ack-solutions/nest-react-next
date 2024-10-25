@@ -44,3 +44,5 @@ Thumbs.db
 # Next.js
 .next
 out
+
+**/vite.config.{js,ts,mjs,mts,cjs,cts}.timestamp*
