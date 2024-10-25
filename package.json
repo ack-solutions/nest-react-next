@@ -4,7 +4,13 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
+    "start:all": "nx run-many -t=serve,dev --projects=api,admin,web",
     "build": "nx build",
+    "build:all": "nx run-many -t=build",
+    "test": "nx test",
+    "test:all": "nx run-many -t=test",
+    "e2e": "nx e2e",
+    "e2e:all": "nx run-many -t=e2e",
     "g:crud": "nx g @mlm/generators:crud"
   },
   "private": true,
