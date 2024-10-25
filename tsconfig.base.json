@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@mlm/crud": ["tools/crud/src/index.ts"]
+      "@mlm/generators": ["tools/generators/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

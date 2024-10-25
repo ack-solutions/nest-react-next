@@ -2,7 +2,11 @@
   "name": "@mlm/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start": "nx serve",
+    "build": "nx build",
+    "g:crud": "nx g @mlm/generators:crud"
+  },
   "private": true,
   "dependencies": {
     "@nestjs/common": "^10.0.2",

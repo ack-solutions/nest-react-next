@@ -1,7 +1,7 @@
 {
-  "name": "crud",
+  "name": "generators",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "tools/crud/src",
+  "sourceRoot": "tools/generators/src",
   "projectType": "library",
   "tags": [],
   "targets": {
@@ -9,28 +9,28 @@
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/tools/crud",
-        "main": "tools/crud/src/index.ts",
-        "tsConfig": "tools/crud/tsconfig.lib.json",
+        "outputPath": "dist/tools/generators",
+        "main": "tools/generators/src/index.ts",
+        "tsConfig": "tools/generators/tsconfig.lib.json",
         "assets": [
-          "tools/crud/*.md",
+          "tools/generators/*.md",
           {
-            "input": "./tools/crud/src",
+            "input": "./tools/generators/src",
             "glob": "**/!(*.ts)",
             "output": "./src"
           },
           {
-            "input": "./tools/crud/src",
+            "input": "./tools/generators/src",
             "glob": "**/*.d.ts",
             "output": "./src"
           },
           {
-            "input": "./tools/crud",
+            "input": "./tools/generators",
             "glob": "generators.json",
             "output": "."
           },
           {
-            "input": "./tools/crud",
+            "input": "./tools/generators",
             "glob": "executors.json",
             "output": "."
           }
