@@ -1,15 +1,20 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.scss';
+import { ReactCore } from '@mlm/react-core';
+import { Icon } from '@mlm/react-core';
 
 import NxWelcome from './nx-welcome';
 
 import { Route, Routes, Link } from 'react-router-dom';
+import { toDisplayDate } from '@mlm/utils';
 
 export function App() {
+  
   return (
     <div>
       <NxWelcome title="admin" />
-
+      {/* <Icon icon={''} /> */}
+      <ReactCore />
+      {toDisplayDate(new Date)}
       {/* START: routes */}
       {/* These routes and navigation have been generated for you */}
       {/* Feel free to move and update them to fit your needs */}
