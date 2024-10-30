@@ -13,7 +13,7 @@ interface IconProps extends Omit<TypographyProps, 'className' | 'variant'> {
 export  function Icon({
   icon,
   sx,
-  size,
+  size='medium',
   ...other
 }: IconProps) {
 

@@ -47,7 +47,7 @@
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
-    "fantasticon": "^3.0.0",
+    "fantasticon": "1.2.3",
     "formik": "^2.4.6",
     "formik-mui": "^5.0.0-alpha.1",
     "framer-motion": "^11.11.10",
