@@ -11,7 +11,7 @@ export const OtpInputField = ({
 }: OtpInputFieldProps) => {
     const theme = useTheme()
     const handleOTPChange = useCallback(
-        (otp) => {
+        (otp: string) => {
             setFieldValue(name, otp)
         },
         [name, setFieldValue],

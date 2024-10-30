@@ -6,6 +6,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { LoginInputDTO } from './dto/login-input.dto';
 import { LoginSuccessDTO } from './dto/login-success.dto';
 import { LoginSendOtpDTO } from './dto/login-send-otp.dto';
+import { RegisterInputDTO } from './dto/register-input.dto';
 
 
 @ApiTags('Auth')
@@ -29,6 +30,20 @@ export class AuthController {
     async sendLoginOtp(@Body() req: LoginSendOtpDTO) {
         return this.authService.sendLoginOtp(req);
     }
+
+    @ApiOperation({ summary: 'Register verify email end OTP' })
+    @ApiResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Send OTP Failed',
+    })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Send OTP Success',
+    })
+    @Post('send-register-otp')
+    async sendRegistrationOtp(@Body() req: any) {
+        return this.authService.sendRegistrationOtp(req);
+    }
     
     @ApiOperation({ summary: 'Login' })
     @ApiResponse({
@@ -43,6 +58,21 @@ export class AuthController {
     @Post('login')
     async login(@Body() req: LoginInputDTO) {
         return this.authService.login(req);
+    }
+
+    @ApiOperation({ summary: 'Register' })
+    @ApiResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Register Failed',
+    })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        // type: LoginSuccessDTO,
+        description: 'Register Success',
+    })
+    @Post('register')
+    async register(@Body() req: RegisterInputDTO) {
+        return this.authService.register(req);
     }
 
 

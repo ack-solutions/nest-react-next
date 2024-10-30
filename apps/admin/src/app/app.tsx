@@ -1,57 +1,46 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { ReactCore } from '@mlm/react-core';
+import { AccessProvider, AuthProvider, ConfirmProvider, ReactCore, SettingsProvider } from '@mlm/react-core';
 import { Icon } from '@mlm/react-core';
-import  {IRole} from '@mlm/types'
+import { IRole } from '@mlm/types'
 import NxWelcome from './nx-welcome';
 
-import { Route, Routes, Link } from 'react-router-dom';
+import { Route, Routes, Link, HashRouter } from 'react-router-dom';
 import { toDisplayDate } from '@mlm/utils';
+import Router from './routes';
+import AppRoutes from './AppRoutes';
+import { ThemeProvider } from './theme/theme-provider';
+import { Box, Typography } from '@mui/material';
 
 export function App() {
-
+  const handlePermissionsDeny = () => {
+    return (
+        <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            p={4}
+        >
+            <Typography variant="h2" align="center">
+                You are authorized to access the page.
+            </Typography>
+        </Box>
+    );
+};
   return (
-    <div>
-      <NxWelcome title="admin" />
-      {/* <Icon icon={''} /> */}
-      <ReactCore />
-      {toDisplayDate(new Date, )}
-      {/* START: routes */}
-      {/* These routes and navigation have been generated for you */}
-      {/* Feel free to move and update them to fit your needs */}
-      <br />
-      <hr />
-      <br />
-      <div role="navigation">
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/page-2">Page 2</Link>
-          </li>
-        </ul>
-      </div>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <div>
-              This is the generated root route.{' '}
-              <Link to="/page-2">Click here for page 2.</Link>
-            </div>
-          }
-        />
-        <Route
-          path="/page-2"
-          element={
-            <div>
-              <Link to="/">Click here to go back to root page.</Link>
-            </div>
-          }
-        />
-      </Routes>
-      {/* END: routes */}
-    </div>
+
+        //  <HashRouter>
+            <SettingsProvider>
+                <ThemeProvider>
+                    <AccessProvider onDeny={handlePermissionsDeny}>
+                        <AuthProvider>
+                            <ConfirmProvider>
+                                <AppRoutes />
+                            </ConfirmProvider>
+                        </AuthProvider>
+                    </AccessProvider>
+                </ThemeProvider>
+            </SettingsProvider>
+        // </HashRouter>
   );
 }
 

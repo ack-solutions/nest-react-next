@@ -56,7 +56,7 @@ const isStyleObject = (obj: unknown) => typeof obj === 'object' && obj !== null;
 
 const OTPInput = ({
   value = '',
-  numInputs = 6,
+  numInputs = 4,
   onChange,
   onPaste,
   renderInput,

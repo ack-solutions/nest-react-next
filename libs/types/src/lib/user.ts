@@ -31,6 +31,7 @@ export enum UserStatusEnum {
   PENDING = 'pending',
 }
 
+
 export interface ILoginInput {
   email: string;
   password: string;

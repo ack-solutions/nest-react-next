@@ -1,5 +1,11 @@
 export * from './icon';
 export * from './loading-screen';
-export { Loadable } from './Loadable';
+export * from './scrollbar';
+export * from './data-table';
+export { default as DataTable } from './data-table/index';
+export { TableActionMenu} from './data-table/table-action-menu';
+export { default as Label } from './label/Label';
+export { Loadable } from './loadable';
+export { MenuDropdown } from './menu-dropdown/MenuDropdown';
 export { default as Logo } from './Logo';
 export * from './form';

@@ -11,11 +11,11 @@ import { User, UsersModule } from '../user';
 import { Verification } from '../user/verification.entity';
 import { JwtConfigService } from './jwt-config.service';
 
-
 @Module({
   imports: [
-    ConfigModule,
+    ConfigModule.forRoot({ isGlobal: true }), 
     JwtModule.registerAsync({
+      imports: [ConfigModule],
       inject: [ConfigService],
       useClass: JwtConfigService
     }),

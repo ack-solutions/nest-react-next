@@ -5,22 +5,21 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { DataSource } from "typeorm";
 import { SeederModuleExtraOptions } from './seeder/seeder.module';
 import { seeder } from './seeder/seeder';
-import { Configs } from '@mlm/nest-core';
-import { TypeOrmConfigService } from '@mlm/nest-core';
 import { seeders } from '../app/core/core-seeders';
 import { entities } from '../app/core/core-entities';
+import { TypeOrmConfigService } from '../app/core/typeorm-config.service';
+import database from '../app/core/database';
+
 
 
 export async function seedRunner(extraOptions: Partial<SeederModuleExtraOptions> = {}) {
 
     return seeder({
         imports: [
-            ConfigModule.forRoot({
-                load: Configs,
-            }),
+            ConfigModule.forFeature(database),
             TypeOrmModule.forRootAsync({
-                imports: [ConfigModule,],
-                inject: [ConfigService,],
+                imports: [ConfigModule],
+                inject: [ConfigService],
                 useClass: TypeOrmConfigService,
                 dataSourceFactory: async (options) => {
                     const dataSource = await new DataSource(options).initialize();

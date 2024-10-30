@@ -64,7 +64,7 @@ type Props = {
   sx?: SxProps;
 };
 
-export  function LoadingScreen({ isDashboard, ...other }: Props) {
+export function LoadingScreen({ isDashboard = true, ...other }: Props) {
   return (
     <>
       <ProgressBar />
@@ -113,9 +113,9 @@ export  function LoadingScreen({ isDashboard, ...other }: Props) {
                   repeat: Infinity,
                   duration: 3, // Total duration for color and progress animation
                   ease: 'easeInOut',
-                //  times: [0, 0.5, 1], // Ensure smooth transition through colors
+                  //  times: [0, 0.5, 1], // Ensure smooth transition through colors
                 }}
-                // transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+              // transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
               />
             </Box>
 
