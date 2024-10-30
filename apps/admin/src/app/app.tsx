@@ -1,12 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { AccessProvider, AuthProvider, ConfirmProvider, ReactCore, SettingsProvider } from '@mlm/react-core';
-import { Icon } from '@mlm/react-core';
-import { IRole } from '@mlm/types'
-import NxWelcome from './nx-welcome';
+import { AccessProvider, AuthProvider, ConfirmProvider, SettingsProvider } from '@mlm/react-core';
 
-import { Route, Routes, Link, HashRouter } from 'react-router-dom';
-import { toDisplayDate } from '@mlm/utils';
-import Router from './routes';
 import AppRoutes from './AppRoutes';
 import { ThemeProvider } from './theme/theme-provider';
 import { Box, Typography } from '@mui/material';
@@ -40,7 +34,7 @@ export function App() {
                     </AccessProvider>
                 </ThemeProvider>
             </SettingsProvider>
-        // </HashRouter>
+        //  </HashRouter>
   );
 }
 
