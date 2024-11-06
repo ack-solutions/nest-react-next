@@ -1,0 +1,79 @@
+name: Sync Template Repository
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Adjust this as needed
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.PAT_GITHUB_TOKEN }} 
+
+    steps:
+      # Set up SSH agent and add SSH key
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_TEMPLATE_PRIVATE_KEY }}
+
+      # Set dynamic branch name with the current date
+      - name: Set Dynamic Branch Name
+        id: vars
+        run: echo "BRANCH_NAME=update-from-template-$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+
+       # Checkout the project repository using SSH
+      - name: Checkout Project Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PAT_GITHUB_TOKEN }}
+
+      # Add Template Repository as Remote and Fetch
+      - name: Fetch Template Repository
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git remote add template git@github.com:ack-solutions/nest-react-next.git
+          git fetch template main
+
+         
+      # Check for Changes
+      - name: Check for Changes Between Template and Project
+        run: |
+          if git diff --quiet main template/main; then
+            echo "No changes detected between main and template/main."
+            echo "CHANGES_DETECTED=false" >> $GITHUB_ENV
+          else
+            echo "Changes detected between main and template/main."
+            echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
+          fi
+
+      #  Create Branch and Apply Changes if Needed
+      - name: Create New Branch and Apply Changes
+        if: env.CHANGES_DETECTED == 'true'
+        run: |
+          git checkout -b "${{ env.BRANCH_NAME }}"
+          git merge --allow-unrelated-histories template/main -m "Merge template changes into project branch"
+          echo "Update timestamp $(date)" > .last_update  # Optional: Ensure a change to trigger PR
+          git add .last_update
+          git commit -m "Add dummy update to trigger PR"
+
+       # Push the New Branch to Project Repository
+      - name: Push New Branch
+        if: env.CHANGES_DETECTED == 'true'
+        run: |
+          git push -u origin "${{ env.BRANCH_NAME }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Create a Pull Request
+      - name: Create Pull Request
+        run: |
+          gh pr create \
+            --title "Update from Template Repository $(date +'%Y-%m-%d')" \
+            --body "This PR includes the latest changes from the template repository." \
+            --head "${{ env.BRANCH_NAME }}" \
+            --base main
