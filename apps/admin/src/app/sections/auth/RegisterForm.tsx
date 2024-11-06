@@ -55,7 +55,6 @@ const RegisterFrom = ({ onSubmit }: RegisterFromProps) => {
                         {(errors as any).afterSubmit && (
                             <Alert severity="error">{(errors as any).afterSubmit as any}</Alert>
                         )}
-
                         <Field
                             fullWidth
                             name="firstName"

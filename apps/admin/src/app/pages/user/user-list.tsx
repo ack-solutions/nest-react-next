@@ -276,12 +276,8 @@ export default function UsersList() {
       render: (row:any) => (
         <TableActionMenu
           row={row}
-          actions={row?.deletedAt ? [{
-            onClick: () => handleRestoreDelete(row),
-            icon: <Icon icon="rotate-left" />,
-            title: 'Restore'
-          }] : []}
-          // {...!row?.deletedAt ? { onView: () => handleViewUser(row), onEdit: () => handleOpenAddEditUser(row) } : {}}
+
+          {...!row?.deletedAt ? { onView: () => handleViewUser(row), onEdit: () => handleOpenAddEditUser(row) } : {}}
           // {...!row?.isSuperAdmin ? { onDelete: () => handleDeleteUser(row) } : {}}
         />
       ),

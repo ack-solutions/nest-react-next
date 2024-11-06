@@ -40,8 +40,8 @@ export const PATH_DASHBOARD = {
     add: path(ROOTS_DASHBOARD, '/users/add'),
     roles: path(ROOTS_DASHBOARD, '/users/roles'),
     permissions: path(ROOTS_DASHBOARD, '/users/permissions'),
-
   },
+ 
   settings: {
     payroll: path(ROOTS_DASHBOARD, '/settings/payroll'),
     business: path(ROOTS_DASHBOARD, '/settings/business'),

@@ -34,6 +34,7 @@ const DefaultDialog = ({
   return (
     <Dialog
       open={open ?? true} // Keep open externally controlled
+      fullWidth
       maxWidth={dialogProps.maxWidth || 'md'} // Default maxWidth to 'md'
       fullScreen={fullScreen} // Responsive fullScreen for smaller screens
       onClose={onClose}
@@ -48,7 +49,7 @@ const DefaultDialog = ({
             onClick={onClose}
             sx={{ position: 'absolute', right: 8, top: 8 }}
           >
-            <Icon icon='close' />
+            <Icon icon='close' size='small' />
           </IconButton>
         </DialogTitle>
       )}

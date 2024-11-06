@@ -78,7 +78,7 @@ export abstract class CRUDService<T> extends Service {
     return instanceApi.delete<T>(`${this.apiPath}/${id}`);
   }
 
-  trashDelete(id: string | number) {
+  trashDelete(id: string) {
     return instanceApi.delete<T>(`${this.apiPath}/${id}/trash`)
   }
 

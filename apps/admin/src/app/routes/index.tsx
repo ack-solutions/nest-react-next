@@ -3,7 +3,6 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import { PATH_DASHBOARD } from './paths';
 import AuthLayout from '../layout/auth';
 import DashboardLayout from '../layout/dashboard';
-import UserList from '../pages/user/user-list';
 import GuestGuard from '../guards/guest-guard';
 import AuthGuard from '../guards/auth-guard';
 import { Loadable } from '@mlm/react-core';
@@ -22,6 +21,9 @@ const Register = Loadable(lazy(() => import('../pages/auth/Register')));
 
 // Dashboard
 const Dashboard = Loadable(lazy(() => import('../pages/dashboard/dashboard')));
+const UserList = Loadable(lazy(() => import('../pages/user/user-list')));
+const RoleList = Loadable(lazy(() => import('../pages/roles/role-list')));
+const PermissionList = Loadable(lazy(() => import('../pages/user/permission-list')));
 // const Product = Loadable(lazy(() => import('../pages/dashboard/Dashboard')));
 // const Reports = Loadable(lazy(() => import('../pages/reports/Reports')));
 // const UserList = Loadable(lazy(() => import('../pages/users/UserList')));
@@ -61,15 +63,16 @@ export default function Router() {
                 { path: 'app', element: <Dashboard /> },
                 { path: 'dashboard', element: <Dashboard /> },
                 {
-                  path: 'users',
-                  children: [
-                    { path: 'list', element: <UserList /> },
-                    // { path: 'edit/:id', element: <AddEditUser /> },
-                    // { path: 'add', element: <AddEditUser /> },
-                    // { path: 'roles', element: <UserRoles /> },
-                    // { path: 'permissions', element: <Permissions /> },
-                  ],
+                    path: 'users',
+                    children: [
+                        { path: 'list', element: <UserList /> },
+                        // { path: 'edit/:id', element: <AddEditUser /> },
+                        // { path: 'add', element: <AddEditUser /> },
+                        { path: 'roles', element: <RoleList /> },
+                        { path: 'permissions', element: <PermissionList /> },
+                    ],
                 },
+         
                 // ...routes.app,
                 // { path: 'product', element: <Product /> },
                 // { path: 'reports', element: <Reports /> },

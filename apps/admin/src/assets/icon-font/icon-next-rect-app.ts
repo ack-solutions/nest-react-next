@@ -69,6 +69,8 @@ export type IconNextRectAppId =
   | "menu"
   | "message-text"
   | "message"
+  | "more-vertical-outline"
+  | "more"
   | "note-21"
   | "note-fill"
   | "notification-1"
@@ -172,6 +174,8 @@ export type IconNextRectAppKey =
   | "Menu"
   | "MessageText"
   | "Message"
+  | "MoreVerticalOutline"
+  | "More"
   | "Note_21"
   | "NoteFill"
   | "Notification_1"
@@ -275,6 +279,8 @@ export enum IconNextRectApp {
   Menu = "menu",
   MessageText = "message-text",
   Message = "message",
+  MoreVerticalOutline = "more-vertical-outline",
+  More = "more",
   Note_21 = "note-21",
   NoteFill = "note-fill",
   Notification_1 = "notification-1",
@@ -379,35 +385,37 @@ export const ICON_NEXT_RECT_APP_CODEPOINTS: { [key in IconNextRectApp]: string }
   [IconNextRectApp.Menu]: "61764",
   [IconNextRectApp.MessageText]: "61765",
   [IconNextRectApp.Message]: "61766",
-  [IconNextRectApp.Note_21]: "61767",
-  [IconNextRectApp.NoteFill]: "61768",
-  [IconNextRectApp.Notification_1]: "61769",
-  [IconNextRectApp.NotificationStatus]: "61770",
-  [IconNextRectApp.Notification]: "61771",
-  [IconNextRectApp.OutlineFavorite]: "61772",
-  [IconNextRectApp.People]: "61773",
-  [IconNextRectApp.Printer]: "61774",
-  [IconNextRectApp.ProfileCircle]: "61775",
-  [IconNextRectApp.QrCode]: "61776",
-  [IconNextRectApp.RadioFill]: "61777",
-  [IconNextRectApp.RadioOutline]: "61778",
-  [IconNextRectApp.Receipt]: "61779",
-  [IconNextRectApp.Refresh]: "61780",
-  [IconNextRectApp.SaleFill]: "61781",
-  [IconNextRectApp.SearchEmoji]: "61782",
-  [IconNextRectApp.SearchNormal]: "61783",
-  [IconNextRectApp.SendSms]: "61784",
-  [IconNextRectApp.Size]: "61785",
-  [IconNextRectApp.Sms]: "61786",
-  [IconNextRectApp.Star]: "61787",
-  [IconNextRectApp.ThreeDotCircle]: "61788",
-  [IconNextRectApp.TickCircle]: "61789",
-  [IconNextRectApp.TickSquare]: "61790",
-  [IconNextRectApp.TicketStar]: "61791",
-  [IconNextRectApp.Timer_1]: "61792",
-  [IconNextRectApp.TimerStart]: "61793",
-  [IconNextRectApp.Trash]: "61794",
-  [IconNextRectApp.Upload]: "61795",
-  [IconNextRectApp.UserEdit]: "61796",
-  [IconNextRectApp.User]: "61797",
+  [IconNextRectApp.MoreVerticalOutline]: "61767",
+  [IconNextRectApp.More]: "61768",
+  [IconNextRectApp.Note_21]: "61769",
+  [IconNextRectApp.NoteFill]: "61770",
+  [IconNextRectApp.Notification_1]: "61771",
+  [IconNextRectApp.NotificationStatus]: "61772",
+  [IconNextRectApp.Notification]: "61773",
+  [IconNextRectApp.OutlineFavorite]: "61774",
+  [IconNextRectApp.People]: "61775",
+  [IconNextRectApp.Printer]: "61776",
+  [IconNextRectApp.ProfileCircle]: "61777",
+  [IconNextRectApp.QrCode]: "61778",
+  [IconNextRectApp.RadioFill]: "61779",
+  [IconNextRectApp.RadioOutline]: "61780",
+  [IconNextRectApp.Receipt]: "61781",
+  [IconNextRectApp.Refresh]: "61782",
+  [IconNextRectApp.SaleFill]: "61783",
+  [IconNextRectApp.SearchEmoji]: "61784",
+  [IconNextRectApp.SearchNormal]: "61785",
+  [IconNextRectApp.SendSms]: "61786",
+  [IconNextRectApp.Size]: "61787",
+  [IconNextRectApp.Sms]: "61788",
+  [IconNextRectApp.Star]: "61789",
+  [IconNextRectApp.ThreeDotCircle]: "61790",
+  [IconNextRectApp.TickCircle]: "61791",
+  [IconNextRectApp.TickSquare]: "61792",
+  [IconNextRectApp.TicketStar]: "61793",
+  [IconNextRectApp.Timer_1]: "61794",
+  [IconNextRectApp.TimerStart]: "61795",
+  [IconNextRectApp.Trash]: "61796",
+  [IconNextRectApp.Upload]: "61797",
+  [IconNextRectApp.UserEdit]: "61798",
+  [IconNextRectApp.User]: "61799",
 };

@@ -134,11 +134,11 @@ const NavbarItem = forwardRef(({ item, open, depth, active, config, externalLink
 			<>
 				{icon && <StyledIcon size={config?.iconSize}>{icon}</StyledIcon>}
 
-				{/* {subItem && (
+				{subItem && (
 					<StyledIcon size={config?.iconSize}>
 						<StyledDotIcon active={active} />
 					</StyledIcon>
-				)} */}
+				)}
 			</>
 
 			{!(config?.hiddenLabel && !subItem) && (
