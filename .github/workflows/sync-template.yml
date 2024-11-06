@@ -1,6 +1,8 @@
 name: Sync Template Repository
 
 on:
+  schedule:
+    - cron: "0 0 * * *"  # Adjust this as needed
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
