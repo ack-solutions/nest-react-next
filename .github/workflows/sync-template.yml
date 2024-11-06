@@ -71,6 +71,7 @@ jobs:
 
       # Create a Pull Request
       - name: Create Pull Request
+        if: env.CHANGES_DETECTED == 'true'
         run: |
           gh pr create \
             --title "Update from Template Repository" \
