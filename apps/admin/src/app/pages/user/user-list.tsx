@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { has, split, startCase } from 'lodash';
-import { DataTable, DataTableColumn, DataTableHandle, Icon, TableActionMenu, useConfirm, UserService, useToasty } from '@mlm/react-core';
+import { DataTable, DataTableColumn, DataTableHandle, Icon, Label, TableActionMenu, useConfirm, UserService, useToasty } from '@mlm/react-core';
 import { IUser, RoleNameEnum, UserStatusEnum } from '@mlm/types';
 import { toDisplayDate } from '@mlm/utils';
 
@@ -106,11 +106,11 @@ export default function UsersList() {
   //       })
   //       .then(async () => {
   //         try {
-  //           if (row.deletedAt) {
-  //             await userService.trashDelete(row.id)
+  //           if (row?.deletedAt) {
+  //             await userService.trashDelete(row?.id)
   //           }
   //           else {
-  //             await userService.delete(row.id).
+  //             await userService.delete(row?.id).
   //               then(() => {
   //                 // 
   //               })
@@ -130,6 +130,7 @@ export default function UsersList() {
   //   },
   //   [deleteConfirm, showToasty]
   // );
+
   const handleRestoreDelete = useCallback(
     (row: IUser) => {
       deleteConfirm(
@@ -247,21 +248,18 @@ export default function UsersList() {
       isSortable: true,
       render: (row) => (row?.roles)?.map((role) => role.name).join(', '),
     },
-    // {
-    //   name: 'status',
-    //   label: 'Status',
-    //   isSearchable: true,
-    //   isSortable: true,
-    //   render: (row) => (
-    //     <Label
-    //       onClick={handleUpdateStatus(row)}
-    //       variant='soft'
-    //       color={row?.status === 'active' ? 'success' : 'error'}
-    //     >
-    //       {startCase(row?.status)}
-    //     </Label>
-    //   ),
-    // },
+    {
+      name: 'status',
+      label: 'Status',
+      render: (row) => (
+        <Label
+          variant='soft'
+          color={row?.status === UserStatusEnum.ACTIVE ? 'success' : 'warning'}
+        >
+          {startCase(row?.status)}
+        </Label>
+      ),
+    },
     {
       name: 'createdAt',
       label: 'Created Date',
@@ -276,7 +274,6 @@ export default function UsersList() {
       render: (row:any) => (
         <TableActionMenu
           row={row}
-
           {...!row?.deletedAt ? { onView: () => handleViewUser(row), onEdit: () => handleOpenAddEditUser(row) } : {}}
           // {...!row?.isSuperAdmin ? { onDelete: () => handleDeleteUser(row) } : {}}
         />
@@ -286,14 +283,12 @@ export default function UsersList() {
 
 
   return (
-    // <Page title="Users">
     <Container maxWidth={false}>
       <DataTable
         data={users}
         columns={columns}
         ref={datatableRef}
         totalRow={total}
-        selectable
         defaultOrder='desc'
         defaultOrderBy='createdAt'
         onChange={handleDataTableChange}
@@ -325,10 +320,7 @@ export default function UsersList() {
           </>
         )}
       />
-
-      {/* {selectedUser && <AddEditUserDialog onClose={handleCloseAddEditUser} values={selectedUser} />} */}
     </Container>
-    // </Page>
   );
 }
 

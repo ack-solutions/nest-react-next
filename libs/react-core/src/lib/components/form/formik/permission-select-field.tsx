@@ -2,7 +2,7 @@ import { ErrorMessage, FieldProps } from 'formik';
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Button, Card, CardContent, CardHeader, Checkbox, FormControlLabel, FormHelperText, Grid, Stack, TextField } from '@mui/material';
 import { cloneDeep, isEqual } from 'lodash';
-import Label from '../../label/Label';
+import Label from '../../label/label';
 
 export interface PermissionSelectFieldProps extends FieldProps {
   options: Array<{ value: any; label: string }>;

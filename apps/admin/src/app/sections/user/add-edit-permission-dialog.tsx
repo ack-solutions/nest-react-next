@@ -49,7 +49,7 @@ const AddEditPermissionDialog = ({ onClose, values, onSubmit }: AddEditPermissio
                 validationSchema={validationSchema}
                 onSubmit={onSubmit}
                 innerRef={formRef}
-
+                enableReinitialize
             >
                 {({ handleSubmit }) => (
                     <Form autoComplete="off" noValidate onSubmit={handleSubmit}>

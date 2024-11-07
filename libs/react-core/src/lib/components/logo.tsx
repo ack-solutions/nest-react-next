@@ -2,8 +2,6 @@ import { forwardRef } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Link, BoxProps } from '@mui/material';
 
-// ----------------------------------------------------------------------
-
 export interface LogoProps extends BoxProps {
   disabledLink?: boolean;
   small?: boolean;

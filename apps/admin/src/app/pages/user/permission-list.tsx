@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { DataTable, DataTableColumn, DataTableHandle, PermissionService, TableActionMenu, useConfirm, useToasty } from '@mlm/react-core';
 import { IRole } from '@mlm/types';
 import { toDisplayDate } from '@mlm/utils';
-import AddEditPermissionDialog from '../../sections/user/AddEditPermissionDialog';
+import AddEditPermissionDialog from '../../sections/user/add-edit-permission-dialog';
 import { startCase } from 'lodash';
 
 const permissionService = PermissionService.getInstance<PermissionService>();

@@ -21,7 +21,9 @@ const Register = Loadable(lazy(() => import('../pages/auth/register')));
 
 // Dashboard
 const Dashboard = Loadable(lazy(() => import('../pages/dashboard/dashboard')));
+// User
 const UserList = Loadable(lazy(() => import('../pages/user/user-list')));
+const AddEditUser = Loadable(lazy(() => import('../pages/user/add-edit-user')));
 const RoleList = Loadable(lazy(() => import('../pages/roles/role-list')));
 const PermissionList = Loadable(lazy(() => import('../pages/user/permission-list')));
 // const Product = Loadable(lazy(() => import('../pages/dashboard/Dashboard')));
@@ -66,7 +68,7 @@ export default function Router() {
                     path: 'users',
                     children: [
                         { path: 'list', element: <UserList /> },
-                        // { path: 'edit/:id', element: <AddEditUser /> },
+                        { path: 'edit/:id', element: <AddEditUser /> },
                         // { path: 'add', element: <AddEditUser /> },
                         { path: 'roles', element: <RoleList /> },
                         { path: 'permissions', element: <PermissionList /> },

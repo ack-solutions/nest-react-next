@@ -24,9 +24,19 @@ export class UserService extends CrudService<User> {
     super(userRepository);
   }
 
-  async beforeSave(entity: DeepPartial<User>, req): Promise<User> {
+  async beforeSave(entity: DeepPartial<any>, req): Promise<User> {
+    console.log({ entity, req });
+
     // if ((entity as any).password) {
     //   entity.passwordHash = await hashPassword((entity as any).password.trim());
+    // }
+    // if (entity.password) {
+    //   entity.passwordHash = await hashPassword(entity.password);
+    // }
+    // if (entity?.roles) {
+    //   entity.roles = entity.roleIds.map((id) => {
+    //     return new Role({ id })
+    //   });
     // }
     return entity as User;
   }
@@ -34,8 +44,8 @@ export class UserService extends CrudService<User> {
   async createUser(request: any) {
     const userEntity: User = request;
 
-    console.log(userEntity,89989898);
-    
+    console.log(userEntity, 89989898);
+
     if (request.password) {
       userEntity.passwordHash = await hashPassword(request.password.trim());
     }
@@ -47,8 +57,8 @@ export class UserService extends CrudService<User> {
     }
 
     const user = new User(userEntity);
-    console.log(user,656565);
-    
+    console.log(user, 656565);
+
     try {
       await this.userRepository.save(user);
     } catch (error) {
