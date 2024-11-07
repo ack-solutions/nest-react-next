@@ -12,7 +12,7 @@ const NotFound = Loadable(lazy(() => import('../pages/error/not-found')));
 
 // // Authentication
 const Login = Loadable(lazy(() => import('../pages/auth/login')));
-const Register = Loadable(lazy(() => import('../pages/auth/Register')));
+const Register = Loadable(lazy(() => import('../pages/auth/register')));
 // const Register = Loadable(lazy(() => import('../pages/auth/Register')));
 // const ForgotPassword = Loadable(
 //   lazy(() => import('../pages/auth/ForgotPassword'))

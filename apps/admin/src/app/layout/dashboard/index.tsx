@@ -1,12 +1,11 @@
 import { useMemo, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Box } from '@mui/material';
-import Navbar from './navbar/Navbar';
 import { HEADER, NAV } from '../config';
 import Header from './header';
 import NavbarMini from './navbar/navbar-mini';
 import { useResponsive, useSettingsContext } from '@mlm/react-core';
-
+import Navbar from './navbar/navbar';
 
 const SPACING = 8
 

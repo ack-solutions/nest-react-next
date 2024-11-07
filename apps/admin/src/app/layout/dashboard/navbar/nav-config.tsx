@@ -122,7 +122,7 @@ export function useNavData() {
     const groupedItems = [
         ...navigationItems,
     ].reduce((acc, item) => {
-        const group = item.groupName || 'Other'; // Default to 'Other' if no groupName
+        const group = item.groupName || 'Other';
         if (!acc[group]) {
             acc[group] = [];
         }
@@ -146,8 +146,6 @@ export function useNavData() {
 export function buildTree(items: NavigationItem[]): NavigationItem[] {
     const itemMap = new Map<string, NavigationItem>();
     const roots: NavigationItem[] = [];
-
-    // First, create a map of all items
     items.forEach((item) => {
         itemMap.set(item.id || '', {
             icon: item.icon,
@@ -158,7 +156,6 @@ export function buildTree(items: NavigationItem[]): NavigationItem[] {
         });
     });
 
-    // Then, build the tree
     items.forEach((item) => {
         const id = item.id || '';
         const parentId = item.parentId || '';

@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from '@mui/material';
 import { Icon } from '../icon';
-import { MenuDropdown } from '../menu-dropdown/MenuDropdown';
+import { MenuDropdown } from '../menu-dropdown/menu-dropdown';
 import { useAccess } from '../../contexts';
 
 export interface TableAction {

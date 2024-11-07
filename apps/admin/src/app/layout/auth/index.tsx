@@ -6,13 +6,9 @@ const RootStyle = styled('div')({
   overflow: 'auto',
 });
 
-
 export default function AuthLayout() {
-
   return (
     <RootStyle>
-      {/* <RightTopBackground />
-      <LeftBottomBackground /> */}
       <Outlet />
     </RootStyle>
   );

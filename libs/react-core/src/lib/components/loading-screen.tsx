@@ -1,7 +1,7 @@
 import { styled, SxProps } from '@mui/material/styles';
-import ProgressBar from './progress-bar/ProgressBar';
+import ProgressBar from './progress-bar/progress-bar';
 import { motion } from 'framer-motion';
-import Logo from './Logo';
+import Logo from './logo';
 import { Box } from '@mui/material';
 
 const RootStyle = styled('div')(({ theme }) => ({

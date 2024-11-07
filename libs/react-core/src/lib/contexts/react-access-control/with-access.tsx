@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 
-import useAccess from './useAccess'
+import useAccess from './use-access'
 import context from './context'
 
 export interface WithAccessOptions {

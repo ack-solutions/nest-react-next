@@ -1,5 +1,5 @@
-export { default as withAccess } from './withAccess'
-export { default as useAccess } from './/useAccess'
-export { default as Show } from './Show'
+export { default as withAccess } from './with-access'
+export { default as useAccess } from './use-access'
+export { default as Show } from './show'
 
 export { AccessProvider, AccessConsumer } from './context'

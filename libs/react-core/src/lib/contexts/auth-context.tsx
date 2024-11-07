@@ -4,7 +4,7 @@ import {
 } from 'react';
 import axios from 'axios';
 import { chain, map } from 'lodash';
-import useAccess from './react-access-control/useAccess';
+import useAccess from './react-access-control/use-access';
 import { instanceApi } from '@mlm/utils';
 import { UserService } from '../services/user.service';
 

@@ -1,5 +1,5 @@
 import { alpha, Box, Palette, PaletteColor, styled } from '@mui/material';
-import { LabelColor, LabelVariant } from './Label';
+import { LabelColor, LabelVariant } from './label';
 // import { LabelColor, LabelVariant } from './label';
 
 // Define the styled Label component

@@ -1,12 +1,13 @@
 import React, { useCallback, useState } from 'react'
 import AuthLayout from '../../sections/auth/auth-layout'
 import { Box, Stack, Typography } from '@mui/material'
-import RegisterForm from '../../sections/auth/RegisterForm'
+import RegisterForm from '../../sections/auth/register-form'
 import LoginOtpVerification from '../../sections/auth/login-otp-verification'
 import { AuthService } from '@mlm/react-core'
 import { errorMessage } from '@mlm/utils'
 
 const authService = AuthService.getInstance<AuthService>()
+
 const Register = () => {
     const [verifyData, setVerifyData] = useState<any>(null)
 

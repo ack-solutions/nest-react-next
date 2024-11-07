@@ -38,17 +38,12 @@ export function useOffSetTop(top = 0, options?: UseScrollOptions) {
 
 export default function Header({ onOpenNav }: Props) {
   const theme = useTheme();
-  const { pathname } = useLocation();
-  //const settings = useSettingsContext();
   const lgUp = useResponsive('up', 'lg');
   const offset = useOffSetTop(HEADER.H_DESKTOP);
   const offsetTop = offset;
   const isNavHorizontal = !lgUp
   const isNavMini = !lgUp
-  // const titleFromPath = usePageTitle(pathname ?? '');
-  // const { heading, breadcrumbs } = useDashboardLayout();
 
-  // const pageTitle = useMemo(() => heading || titleFromPath, [heading, titleFromPath])
   const renderContent = (
     <>
       {!lgUp && (
@@ -57,40 +52,6 @@ export default function Header({ onOpenNav }: Props) {
         </IconButton>
       )}
 
-      {/* <Searchbar /> */}
-
-      <Stack direction='column' spacing={0}>
-        {/* {pageTitle && (
-          <Typography variant="h5">
-            {pageTitle}
-          </Typography>
-        )} */}
-
-        {/* {breadcrumbs?.length > 0 && (
-          <Breadcrumbs separator={(
-            <Box
-              component="span"
-              sx={{
-                width: 4,
-                height: 4,
-                borderRadius: '50%',
-                bgcolor: 'text.disabled'
-              }}
-            />
-          )}
-          >
-            {breadcrumbs.map((link) => (
-              <BreadcrumbsLink
-                key={link.name || ''}
-                link={link}
-                disabled={link.name === breadcrumbs[breadcrumbs.length - 1]?.name}
-              />
-            ))}
-          </Breadcrumbs>
-        )} */}
-      </Stack>
-
-
       <Stack
         flexGrow={1}
         direction="row"
@@ -98,7 +59,6 @@ export default function Header({ onOpenNav }: Props) {
         justifyContent="flex-end"
         spacing={{ xs: 0.5, sm: 1 }}
       >
-        {/* <SettingsButton /> */}
         <AccountPopover />
       </Stack>
     </>

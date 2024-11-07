@@ -1,5 +1,5 @@
 import { Collapse, List, ListSubheader, styled } from '@mui/material';
-import React, { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { NavbarConfigProps, NavigationItem } from '../../../types/navigation';
 import NavbarList from './navbar-list';
 

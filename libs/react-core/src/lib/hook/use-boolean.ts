@@ -1,9 +1,5 @@
-'use client';
 
 import { useMemo, useState, useCallback, Dispatch, SetStateAction } from 'react';
-
-// ----------------------------------------------------------------------
-
 export interface UseBooleanReturn {
   value: boolean;
   data: any;

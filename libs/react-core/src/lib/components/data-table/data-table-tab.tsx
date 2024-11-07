@@ -1,5 +1,5 @@
 import { Stack, Tab, Tabs, TabsProps } from '@mui/material';
-import Label from '../label/Label';
+import Label from '../label/label';
 import { SyntheticEvent } from 'react';
 
 interface ITab {

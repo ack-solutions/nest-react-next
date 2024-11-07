@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -27,15 +25,6 @@ export const navVerticalConfig = (config?: NavbarConfigProps) => ({
 interface NavbarProps {
   openNav: boolean;
   onCloseNav: () => void;
-};
-
-
-
-interface NavGroupProps {
-  subheader?: string;
-  items: NavigationItem[];
-  config?: NavbarConfigProps;
-  initialStatus?: boolean;
 };
 
 export default function Navbar({ openNav, onCloseNav }: NavbarProps) {
