@@ -8,5 +8,5 @@ export { default as Label } from './label/label';
 export { Loadable } from './loadable';
 export { MenuDropdown } from './menu-dropdown/menu-dropdown';
 export { default as DefaultDialog } from './default-dialog';
-export { default as Logo } from './Logo';
+export { default as Logo } from './logo';
 export * from './form';
