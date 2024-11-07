@@ -10,7 +10,7 @@ import {
     Button,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { has, split, startCase } from 'lodash';
+import { has, map, omit, split, startCase } from 'lodash';
 import { DataTable, DataTableColumn, DataTableHandle, Icon, RoleService, TableActionMenu, useConfirm, UserService, useToasty } from '@mlm/react-core';
 import { IRole, RoleNameEnum, UserStatusEnum } from '@mlm/types';
 import { toDisplayDate } from '@mlm/utils';
@@ -39,27 +39,39 @@ export default function RoleList() {
         },
         [],
     )
+
     const handleCloseAddEditRoleDialog = useCallback(
         () => {
             setSelectRole(null)
         },
         [],
     )
+
     const handleSubmitForm = useCallback(
         (value: IRole, action: any) => {
             console.log(value);
-            
+            const request = {
+                ...omit(value, ['id', 'createdAt', 'updatedAt', 'deletedAt',]),
+                permissions: map(value.permissions, (value) => {
+                    return { id: value }
+                })
+            }
+
             if (value?.id) {
-                roleService.update(value?.id, value).then(() => {
+                roleService.update(value?.id, request).then(() => {
                     showToasty('Role updated Successfully')
                     action.setSubmitting(false)
+                    handleCloseAddEditRoleDialog()
+                    datatableRef?.current?.refresh();
                 }).catch((error) => {
                     showToasty(error, 'error')
                 })
             } else {
-                roleService.create(value).then(() => {
+                roleService.create(request).then(() => {
                     action.setSubmitting(false)
                     showToasty('Role updated Successfully')
+                    datatableRef?.current?.refresh();
+                    handleCloseAddEditRoleDialog()
                 }).catch((error) => {
                     showToasty(error, 'error')
                 })
@@ -111,6 +123,7 @@ export default function RoleList() {
             s: {
                 ...filter?.s,
             },
+            relations: ['permissions']
         };
         roleService.getMany(filter).then((data) => {
             setRoles(data?.items || []);
@@ -118,6 +131,7 @@ export default function RoleList() {
         });
     }, []);
 
+    
     const columns: DataTableColumn<IRole>[] = [
         {
             name: 'name',
@@ -159,7 +173,6 @@ export default function RoleList() {
                 detailRowTitle='Roles'
                 topAction={<Button variant='contained' onClick={handleOpenAddEditRoleDialog({})}>Add Role</Button>}
             />
-
             {selectRole && <AddEditRoleDialog onSubmit={handleSubmitForm} onClose={handleCloseAddEditRoleDialog} roleValue={selectRole} />}
         </Container>
         // </Page>

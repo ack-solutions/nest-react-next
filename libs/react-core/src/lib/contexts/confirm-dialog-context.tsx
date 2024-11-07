@@ -40,9 +40,9 @@ export const defaultProps = {
 // ConfirmDialog component
 const ConfirmDialog = ({
   noButtonProps,
-  noText,
+  noText = 'Cancel',
   yesButtonProps,
-  yesText,
+  yesText = 'Delete',
   description,
   resolveReject,
   onClose,

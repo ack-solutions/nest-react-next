@@ -25,8 +25,6 @@ export default function AccountPopover() {
   ];
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  console.log(user, 'user')
-  // const { showToasty } = useToasty();
 
   const handleLogout = async () => {
     try {
