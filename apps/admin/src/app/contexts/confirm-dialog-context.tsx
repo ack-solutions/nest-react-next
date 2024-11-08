@@ -24,6 +24,7 @@ export interface ConfirmDialogProps extends DefaultDialogProps {
   yesButtonProps?: ButtonProps;
   noButtonProps?: ButtonProps;
   resolveReject?: [() => void, () => void];
+  onClose: () => void;
 }
 
 // Set default props for ConfirmDialog
@@ -40,9 +41,9 @@ export const defaultProps = {
 // ConfirmDialog component
 const ConfirmDialog = ({
   noButtonProps,
-  noText,
+  noText = 'Cancel',
   yesButtonProps,
-  yesText,
+  yesText = 'Delete',
   description,
   resolveReject,
   onClose,

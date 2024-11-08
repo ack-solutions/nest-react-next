@@ -30,7 +30,7 @@ const DataTableTab= ({
       onChange={(event, tab) => onChange(event, tab)}
       sx={{ px: 2, bgcolor: 'background.neutral' }}
     >
-      {tabs.map((tab) => (
+      {tabs?.map((tab:any) => (
         <Tab
           disableRipple
           key={tab.value}

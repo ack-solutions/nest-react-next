@@ -14,7 +14,8 @@ import { CheckboxWithLabel } from 'formik-mui';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { PATH_AUTH } from '../../routes/paths';
 import { ILoginSendOtpInput } from '@mlm/types';
-import { Icon, TextField, useBoolean } from '@mlm/react-core';
+import { useBoolean } from '@mlm/react-core';
+import { Icon, TextField } from '@admin/app/components';
 
 
 export type LoginFormProps = {

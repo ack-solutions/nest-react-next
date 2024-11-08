@@ -5,7 +5,7 @@ import { alpha, ListItemButton, ListItemIcon, styled } from '@mui/material';
 import { NavbarConfigProps, NavigationItem } from '../../../types/navigation';
 import { NavLink as RouterLink } from 'react-router-dom';
 import { forwardRef } from 'react';
-import { Icon } from '@mlm/react-core';
+import { Icon } from '@admin/app/components';
 
 
 export interface NavbarItemProps extends ListItemButtonProps {

@@ -1,9 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { AccessProvider, AuthProvider, ConfirmProvider, SettingsProvider } from '@mlm/react-core';
+import { AccessProvider, AuthProvider,  SettingsProvider } from '@mlm/react-core';
 
 import AppRoutes from './app-routes';
 import { ThemeProvider } from './theme/theme-provider';
 import { Box, Typography } from '@mui/material';
+import { ConfirmProvider } from './contexts/confirm-dialog-context';
 
 export function App() {
   const handlePermissionsDeny = () => {

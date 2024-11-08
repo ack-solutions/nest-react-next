@@ -93,8 +93,6 @@ const setSession = async (accessToken?: string | null): Promise<void> => {
 
 
 
-
-
 const AuthProvider = ({ children }: any) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { define } = useAccess();

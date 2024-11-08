@@ -7,7 +7,7 @@ import LoginForm from '../../sections/auth/login-form'
 import LoginOtpVerification from '../../sections/auth/login-otp-verification'
 import { AuthService, useAuth } from '@mlm/react-core'
 import AuthLayout from '../../sections/auth/auth-layout'
-import RegisterFrom from '../../sections/auth/register-form'
+
 
 
 

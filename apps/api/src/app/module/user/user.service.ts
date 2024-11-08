@@ -8,6 +8,7 @@ import { User } from './user.entity';
 import { CrudService, hashPassword } from '@mlm/nest-core';
 import { RoleNameEnum } from '@mlm/types';
 import { Role } from '../role';
+import { cloneDeep, has, isArray } from 'lodash';
 
 
 @Injectable()
@@ -24,18 +25,24 @@ export class UserService extends CrudService<User> {
     super(userRepository);
   }
 
-  async beforeSave(entity: DeepPartial<User>, req): Promise<User> {
-    // if ((entity as any).password) {
-    //   entity.passwordHash = await hashPassword((entity as any).password.trim());
-    // }
+  async beforeSave(entity: DeepPartial<any>, req): Promise<User> {   
+    if (has(req, 'password') && req?.password ) {
+      console.log(65655656565);
+      
+      entity.passwordHash = await hashPassword(req.password);
+    }
+    if (entity?.roles) {
+      entity.roles = req.roles.map((id) => {
+        return new Role({ id })
+      });
+    }
     return entity as User;
   }
 
   async createUser(request: any) {
     const userEntity: User = request;
 
-    console.log(userEntity,89989898);
-    
+
     if (request.password) {
       userEntity.passwordHash = await hashPassword(request.password.trim());
     }
@@ -45,10 +52,8 @@ export class UserService extends CrudService<User> {
       });
       userEntity.roles = [new Role({ id: userRole.id })];
     }
-
     const user = new User(userEntity);
-    console.log(user,656565);
-    
+
     try {
       await this.userRepository.save(user);
     } catch (error) {

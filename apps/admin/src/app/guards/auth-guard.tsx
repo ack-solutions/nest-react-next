@@ -1,7 +1,8 @@
 import { useState, ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { PATH_AUTH } from "../routes/paths";
-import { LoadingScreen, useAuth } from '@mlm/react-core';
+import {  useAuth } from '@mlm/react-core';
+import { LoadingScreen } from '../components';
 
 
 type AuthGuardProps = {

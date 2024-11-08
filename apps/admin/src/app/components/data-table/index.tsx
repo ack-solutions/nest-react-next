@@ -39,7 +39,7 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import useDebounce from '../../hook/use-debounce';
+import { useDebounce } from '@mlm/react-core';
 
 interface TablePaginationActionsProps {
   count: number;
