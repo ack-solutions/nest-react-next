@@ -77,7 +77,7 @@ const IndexVerify = ({
 			{!isValidOtp ? (
 				<Container maxWidth="sm">
 					<ContentStyle>
-						<Typography variant="h1">
+						<Typography variant="h2">
 							Enter OTP Code
 						</Typography>
 						<Typography sx={{ color: 'text.secondary' }}>
