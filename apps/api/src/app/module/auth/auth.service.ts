@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcryptjs';
 import { ILike, Not, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-import * as moment from 'moment';
+import moment from 'moment';
 import { ConfigService } from '@nestjs/config';
 import { User, UserService } from '../user';
 import { Verification } from '../user/verification.entity';
@@ -248,6 +248,35 @@ export class AuthService {
         }
     }
 
+    async sendOtp(request?: any) {
+        const user = await this.userRepo.findOne({
+            where: {
+                email: request.email,
+            }
+        });
+
+        if (user) {
+            const otp = await generateRandomNumber();
+
+            await this.verificationRepo.delete({
+                email: request.email,
+            });
+            await this.verificationRepo.insert({
+                otp: otp,
+                email: request.email,
+            });
+            //   try {
+            //     await this.notificationService.sendOtpMail(user, { otp });
+            //   } catch (error) {
+            //     throw new BadGatewayException('OTP send failed');
+            //   }
+            return { message: 'OTP send successfully' };
+        } else {
+            throw new BadRequestException(
+                'There is no account linked with the provided email!'
+            );
+        }
+    }
 
     async veryFyOtp(request?: any) {
         const otpData = await this.verificationRepo.findOne({
@@ -263,19 +292,19 @@ export class AuthService {
         }
         //   }
 
-        // if (otpData && (otpData.otp == request.otp)) {
-        //     const otpDateTime = moment(otpData.createdAt).add(15, 'minutes').format('YYYY-MM-DD HH:mm:ss');
-        //     const currentDateTime = moment().format('YYYY-MM-DD HH:mm:ss')
-        //     if (currentDateTime < otpDateTime) {
-        //         return { message: 'Your OTP verified successfully' };
-        //     }
-        //     else {
-        //         throw new BadRequestException('OTP is expired');
-        //     }
-        // }
-        // else {
-        //     throw new BadRequestException('OTP is not valid');
-        // }
+        if (otpData && (otpData.otp == request.otp)) {
+            const otpDateTime = moment((otpData.createdAt)).add(15, 'minutes').format('YYYY-MM-DD HH:mm:ss');
+            const currentDateTime = moment().format('YYYY-MM-DD HH:mm:ss')
+            if (currentDateTime < otpDateTime) {
+                return { message: 'Your OTP verified successfully' };
+            }
+            else {
+                throw new BadRequestException('OTP is expired');
+            }
+        }
+        else {
+            throw new BadRequestException('OTP is not valid');
+        }
     }
 
 

@@ -36,6 +36,43 @@ export default function UsersList() {
     [navigate]
   );
 
+  const handleDeleteUser = useCallback(
+    (row: any) => {
+      if (row.id) {
+        deleteConfirm(
+          {
+            title: row.deletedAt ? "Permanent Delete" : "Delete",
+            description: `Are you sure you want to ${row.deletedAt ? "permanent delete" : "delete"} this user?`
+          })
+          .then(async () => {
+            try {
+              if (row.deletedAt) {
+                await userService.trashDelete(row.id)
+              }
+              else {
+                await userService.delete(row.id).
+                  then(() => {
+                    // 
+                  })
+                  .catch((error) => {
+                    showToasty(error.message, 'error');
+                  });
+              }
+              datatableRef?.current?.refresh();
+              showToasty('User successfully deleted');
+            } catch (error: any) {
+              showToasty(error, 'error');
+            }
+          })
+          .catch(() => {
+            //
+          });
+      }
+
+    },
+    [deleteConfirm, showToasty]
+  );
+
   const handleRowClick = useCallback(
     (row: IUser) => {
       handleViewUser(row)
@@ -154,7 +191,7 @@ export default function UsersList() {
             icon: <Icon icon="lock-circle" />,
             title: 'Change Password'
           }]}
-        // {...!row?.isSuperAdmin ? { onDelete: () => handleDeleteUser(row) } : {}}
+          {...!row?.isSuperAdmin ? { onDelete: () => handleDeleteUser(row) } : {}}
         />
       ),
     },

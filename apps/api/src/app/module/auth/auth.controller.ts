@@ -119,4 +119,34 @@ export class AuthController {
     async forgotPassword(@Body() req: any) {
         return this.authService.forgotPassword(req);
     }
+
+    @ApiOperation({ summary: 'Forgot Password Verify OTP' })
+    @ApiResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Verify OTP Failed',
+    })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        // type: SuccessDTO,
+        description: 'Verify OTP Success',
+    })
+    @Post('otp/verify')
+    async veryFyOtp(@Body() req: any) {
+        return this.authService.veryFyOtp(req);
+    }
+
+    @ApiOperation({ summary: 'Forgot Password Send OTP' })
+    @ApiResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Send OTP Failed',
+    })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        // type: SuccessDTO,
+        description: 'Send OTP Success',
+    })
+    @Post('otp')
+    async sendOtp(@Body() req: any) {
+        return this.authService.sendOtp(req);
+    }
 }

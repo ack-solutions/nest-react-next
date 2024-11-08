@@ -10,11 +10,11 @@ export class AuthService extends Service {
     sendLoginOtp(request?: any) {
         return this.instanceApi.post(`auth/send-login-otp`, request);
     }
-    
+
     sendRegisterOtp(request?: any) {
         return this.instanceApi.post(`auth/send-register-otp`, request);
     }
-    
+
     login(request: ILoginInput) {
         return this.instanceApi.post<ILoginSuccess>('auth/login', request)
     }
@@ -33,6 +33,11 @@ export class AuthService extends Service {
         localStorage.clear();
     }
 
+    sendOtp(request?: any) {
+        return this.instanceApi.post('auth/otp', request).then((resp) => {
+            return resp
+        })
+    }
 
     verifyOtp(request: any) {
         return this.instanceApi.post(`auth/otp/verify`, request)

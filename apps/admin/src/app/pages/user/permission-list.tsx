@@ -68,7 +68,7 @@ export default function PermissionList() {
                 deleteConfirm(
                     {
                         title: row.deletedAt ? "Permanent Delete" : "Delete",
-                        description: `Are you sure you want to ${row.deletedAt ? "permanent delete" : "delete"} this user?`
+                        description: `Are you sure you want to ${row.deletedAt ? "permanent delete" : "delete"} this permission?`
                     })
                     .then(async () => {
                         try {
@@ -85,7 +85,7 @@ export default function PermissionList() {
                                     });
                             }
                             datatableRef?.current?.refresh();
-                            showToasty('User successfully deleted');
+                            showToasty('Permission successfully deleted');
                         } catch (error: any) {
                             showToasty(error, 'error');
                         }

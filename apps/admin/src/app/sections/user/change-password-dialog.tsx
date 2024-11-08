@@ -1,10 +1,10 @@
 import { DefaultDialog, Icon, TextField } from '@admin/app/components'
-import { AuthService, useBoolean, UserService, useToasty } from '@mlm/react-core'
+import { useBoolean, UserService, useToasty } from '@mlm/react-core'
 import { IUser } from '@mlm/types'
 import { Button, IconButton, InputAdornment, Stack, useTheme } from '@mui/material'
 import { Field, Form, Formik, FormikHelpers } from 'formik'
 import { pick } from 'lodash'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import { object, ref, string } from 'yup'
 
 export interface ChangePasswordDialogProps {

@@ -13,6 +13,7 @@ const NotFound = Loadable(lazy(() => import('../pages/error/not-found')));
 // // Authentication
 const Login = Loadable(lazy(() => import('../pages/auth/login')));
 const Register = Loadable(lazy(() => import('../pages/auth/register')));
+const ForgotPassword = Loadable(lazy(() => import('../pages/auth/forget-password')));
 
 // Dashboard
 const Dashboard = Loadable(lazy(() => import('../pages/dashboard/dashboard')));
@@ -38,7 +39,7 @@ export default function Router() {
                 { path: 'login', element: <Login /> },
                 { path: 'register', element: <Register /> },
                 // { path: 'register', element: <Register /> },
-                // { path: 'forgot-password', element: <ForgotPassword /> },
+                { path: 'forgot-password', element: <ForgotPassword /> },
                 // { path: 'verify', element: <VerifyCode /> },
                 // ...routes.auth,
             ],
