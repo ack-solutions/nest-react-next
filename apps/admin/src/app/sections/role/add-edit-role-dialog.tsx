@@ -1,5 +1,6 @@
 
-import { DefaultDialog, PermissionSelectField, PermissionService, RoleService, TextField } from '@mlm/react-core'
+import { DefaultDialog, PermissionSelectField, TextField } from '@admin/app/components'
+import { PermissionService, RoleService } from '@mlm/react-core'
 import { IPermission, IRole } from '@mlm/types'
 import { Button, Stack } from '@mui/material'
 import { Field, Form, Formik, FormikProps } from 'formik'

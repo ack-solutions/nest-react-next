@@ -1,10 +1,14 @@
-import { AutocompleteField, RoleService, TextField } from '@mlm/react-core';
-import { IUser } from '@mlm/types';
-import { Checkbox, MenuItem, Stack } from '@mui/material';
+import { Icon, TextField } from '@admin/app/components';
+import { RoleService, useBoolean } from '@mlm/react-core';
+import { IRole, IUser } from '@mlm/types';
+import { Button, Checkbox, IconButton, InputAdornment, MenuItem, Stack, useTheme } from '@mui/material';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { startCase } from 'lodash';
 import React, { useEffect, useRef, useState } from 'react'
-import { object, string } from 'yup';
+import { object, ref, string } from 'yup';
+import Grid from '@mui/material/Grid2';
+import { useNavigate, useParams } from 'react-router-dom';
+import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 
 const roleService = RoleService.getInstance<RoleService>();
 
@@ -13,17 +17,43 @@ export interface AddEditUserFormProps {
     onSubmit: (value?: IUser, action?: FormikHelpers<any>) => void;
 }
 const defaultValues = {
-    name: '',
-    // isActive: true,
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    roles: []
 };
 
 const validationSchema = object().shape({
-    name: string().trim().required().label('Name'),
+    firstName: string().trim().required().label('First Name'),
+    lastName: string().trim().required().label('Last Name'),
+    email: string().trim().required().label('Email'),
+    phoneNumber: string().required().label('Phone Number'),
+    password: string().label('Password').when('id', {
+        is: (id: any) => !id,
+        then: (schema) =>
+            schema.nullable().required().matches(/^(?=.*[a-z])(?=.*[0-9])(?=.{8,})/,
+                "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+            ),
+        otherwise: (schema) =>
+            schema.nullable().matches(/^(?=.*[a-z])(?=.*[0-9])(?=.{8,})/,
+                "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+            ),
+    }),
+    confirmPassword: string().label('Confirm Password').when(['id', 'password'], {
+        is: (id: any, password: any) => !id || !!password,
+        then: (schema) => schema.oneOf([ref('password'), ''], 'Passwords must match').required(),
+    }),
 });
 
 const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
     const formRef = useRef<any>();
     const [roles, setRoles] = useState([]);
+    const showPassword = useBoolean()
+    const confirmShowPassword = useBoolean()
+    const theme = useTheme();
+    const navigate = useNavigate()
+    const { id: userId } = useParams();
 
     useEffect(() => {
         roleService.getMany().then((data) => {
@@ -43,8 +73,8 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
         >
             {({ handleSubmit }) => (
                 <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-                    <Stack spacing={2}>
-                        <Stack spacing={2} direction='row'>
+                    <Grid container spacing={2}>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <Field
                                 fullWidth
                                 required
@@ -52,6 +82,8 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 label='First Name'
                                 component={TextField}
                             />
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <Field
                                 fullWidth
                                 required
@@ -59,8 +91,54 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 label='Last Name'
                                 component={TextField}
                             />
-                        </Stack>
-                        <Stack spacing={2} direction='row'>
+                        </Grid>
+                        {!userId && (
+                            <>
+                                <Grid size={{ xs: 12, md: 6 }}>
+                                    <Field
+                                        fullWidth
+                                        type={showPassword.value ? 'text' : 'password'}
+                                        name="password"
+                                        label="Password"
+                                        component={TextField}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton onClick={() => showPassword.onToggle()} edge="end">
+                                                        <Icon
+                                                            icon={showPassword.value ? 'eye' : 'eye-slash'}
+                                                            color={theme.palette.grey[500]}
+                                                        />
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12, md: 6 }}>
+                                    <Field
+                                        fullWidth
+                                        type={confirmShowPassword.value ? 'text' : 'password'}
+                                        name="confirmPassword"
+                                        label="Confirm Password"
+                                        component={TextField}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton onClick={() => confirmShowPassword.onToggle()} edge="end">
+                                                        <Icon
+                                                            icon={confirmShowPassword.value ? 'eye' : 'eye-slash'}
+                                                            color={theme.palette.grey[500]}
+                                                        />
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                    />
+                                </Grid>
+                            </>
+                        )}
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <Field
                                 fullWidth
                                 required
@@ -68,6 +146,8 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 label='Email'
                                 component={TextField}
                             />
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <Field
                                 fullWidth
                                 required
@@ -75,35 +155,42 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 label='Phone Number'
                                 component={TextField}
                             />
-                        </Stack>
-                        <Stack spacing={2} direction='row'>
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 6 }}>
                             <Field
-                                name="roles"
-                                label="Roles"
-                                multiple
-                                component={AutocompleteField}
-                                options={roles}
-                                renderKey="name"
-                                renderValue="id"
-                                renderOption={(props: any, option: any, state: any) => (
-                                    <MenuItem {...props}>
-                                        <Checkbox checked={state?.selected} />
-                                        {startCase(option?.name)}
+                                fullWidth
+                                required
+                                name='roles'
+                                label='Roles'
+                                component={TextField}
+                                SelectProps={{
+                                    multiple: true
+                                }}
+                                select
+                            >
+                                {roles?.map((role: IRole) => (
+                                    <MenuItem
+                                        key={role?.id}
+                                        value={role?.id}
+                                    >
+                                        {role?.name}
                                     </MenuItem>
-                                )}
-                                isOptionEqualToValue={(option: any, value: any) =>
-                                    value.id === option.id
-                                }
-                            />
-                            <Field
-                                fullWidth
-                                required
-                                name='phoneNumber'
-                                label='Phone Number'
-                                component={TextField}
-                            />
-                        </Stack>
-
+                                ))}
+                            </Field>
+                        </Grid>
+                    </Grid>
+                    <Stack
+                        direction='row'
+                        spacing={2}
+                        justifyContent='flex-end'
+                        mt={2}
+                    >
+                        <Button variant='outlined' onClick={() => navigate(PATH_DASHBOARD.users.root)}>
+                            Cancel
+                        </Button>
+                        <Button variant='contained' type='submit'>
+                            Submit
+                        </Button>
                     </Stack>
                 </Form>
             )}

@@ -1,4 +1,4 @@
-import { LoadingScreen, useAuth } from '@mlm/react-core';
+import {  useAuth } from '@mlm/react-core';
 import Routes from './routes';
 
 const AppRoutes = () => {

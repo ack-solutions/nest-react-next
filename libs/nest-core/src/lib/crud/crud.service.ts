@@ -87,7 +87,7 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
     partialEntity: DeepPartial<T>
   ): Promise<T> {
     try {
-      let findCondition;
+      let findCondition :any;
       if (typeof criteria === 'string' || typeof criteria === 'number') {
         findCondition = { id: criteria };
       } else {
@@ -109,7 +109,6 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
         ...partialEntity,
         updatedAt: new Date()
       });
-
 
       obj = await this.beforeSave(obj, partialEntity);
 

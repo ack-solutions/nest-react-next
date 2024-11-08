@@ -5,11 +5,13 @@ import {
     Button,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { DataTable, DataTableColumn, DataTableHandle, PermissionService, TableActionMenu, useConfirm, useToasty } from '@mlm/react-core';
+import { PermissionService,  useToasty } from '@mlm/react-core';
 import { IRole } from '@mlm/types';
 import { toDisplayDate } from '@mlm/utils';
 import AddEditPermissionDialog from '../../sections/user/add-edit-permission-dialog';
 import { startCase } from 'lodash';
+import { DataTableHandle, DataTableColumn, TableActionMenu, DataTable } from '@admin/app/components';
+import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
 
 const permissionService = PermissionService.getInstance<PermissionService>();
 

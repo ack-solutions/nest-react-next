@@ -19,7 +19,8 @@
       "@mlm/nest-core": ["libs/nest-core/src/index.ts"],
       "@mlm/react-core": ["libs/react-core/src/index.ts"],
       "@mlm/types": ["libs/types/src/index.ts"],
-      "@mlm/utils": ["libs/utils/src/index.ts"]
+      "@mlm/utils": ["libs/utils/src/index.ts"],
+      "@admin/*": ["apps/admin/src/*"],
     }
   },
   "exclude": ["node_modules", "tmp"]

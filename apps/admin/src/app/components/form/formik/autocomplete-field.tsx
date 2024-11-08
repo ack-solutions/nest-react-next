@@ -15,13 +15,6 @@ export const AutocompleteField = ({
   ...props
 }: AutocompleteFieldProps) => {
 
-  // const autocompleteValue = useMemo(() => {
-  //   if (value?.length > 0 && valueKey) {
-  //     const valueIds = (typeof value[0] === 'object') ? map(value, valueKey) : value
-  //     setFieldValue(name, valueIds);
-  //     return valueIds || []
-  //   }
-  // }, [value, valueKey]);
 
   const handleChange = useCallback(
     (event?: any, newValue?: any) => {
@@ -30,17 +23,11 @@ export const AutocompleteField = ({
     [name, setFieldValue]
   );
 
-  console.log(value);
-  
   return (
     <Box width="100%">
       <Autocomplete
         value={value}
         onChange={handleChange}
-        // renderInputProps={{
-        //   error: touched[name] && !!errors[name],
-        //   helperText: touched[name] && !!errors[name] ? errors[name] : ''
-        // }}
         {...props}
       />
     </Box>

@@ -4,6 +4,8 @@ import { useCallback, useMemo } from 'react';
 import { Box, IconButton, InputAdornment, Tooltip } from '@mui/material';
 import { find, includes, map } from 'lodash';
 import { Replay } from '@mui/icons-material';
+import { TextFieldRaw } from './text-field-raw';
+
 
 export interface AutocompleteProps extends MuiAutocompleteProps<any, any, any, any> {
   renderKey?: string;
@@ -88,6 +90,7 @@ const Autocomplete = ({
   //   },
   //   [freeSolo, multiple, props, onChange, options, renderKey]
   // );
+console.log(autocompleteValue);
 
   return (
     <Box width="100%">
@@ -99,7 +102,7 @@ const Autocomplete = ({
         freeSolo={freeSolo}
         {...(renderKey ? { getOptionLabel: (option:any) => option[renderKey] || '' } : {})}
         renderInput={(params: any) => (
-          <TextField
+          <TextFieldRaw
             {...params}
             label={label}
             required={required}

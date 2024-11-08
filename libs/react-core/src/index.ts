@@ -1,5 +1,4 @@
 export * from './lib/react-core';
-export * from './lib/components';
 export * from './lib/hook';
 export * from './lib/services';
 export * from './lib/contexts';

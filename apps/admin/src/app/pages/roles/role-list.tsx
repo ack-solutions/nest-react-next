@@ -1,28 +1,18 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import {
     Container,
-    Stack,
-    Typography,
-    MenuItem,
-    TextField,
-    FormControlLabel,
-    Switch,
     Button,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { has, map, omit, split, startCase } from 'lodash';
-import { DataTable, DataTableColumn, DataTableHandle, Icon, RoleService, TableActionMenu, useConfirm, UserService, useToasty } from '@mlm/react-core';
-import { IRole, RoleNameEnum, UserStatusEnum } from '@mlm/types';
+import { map, omit, } from 'lodash';
+import { RoleService, useToasty } from '@mlm/react-core';
+import { IRole } from '@mlm/types';
 import { toDisplayDate } from '@mlm/utils';
 import AddEditRoleDialog from '../../sections/role/add-edit-role-dialog';
+import { DataTable, DataTableColumn, DataTableHandle, TableActionMenu } from '@admin/app/components';
+import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
 
 const roleService = RoleService.getInstance<RoleService>();
-
-interface ITableFilter {
-    role?: RoleNameEnum | 'all';
-    isTrashed?: boolean;
-    status?: UserStatusEnum | 'all';
-}
 
 export default function RoleList() {
     const { showToasty } = useToasty();
@@ -131,7 +121,7 @@ export default function RoleList() {
         });
     }, []);
 
-    
+
     const columns: DataTableColumn<IRole>[] = [
         {
             name: 'name',

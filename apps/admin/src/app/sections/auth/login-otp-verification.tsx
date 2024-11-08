@@ -5,7 +5,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { object, string } from 'yup';
 import { PATH_AUTH } from '../../routes/paths';
-import { OtpInputField } from '@mlm/react-core';
+import { OtpInputField } from '@admin/app/components';
 
 
 const VeryFySchema = object().shape({

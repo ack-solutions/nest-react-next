@@ -1,5 +1,6 @@
 
-import { DefaultDialog, PermissionService, useToasty } from '@mlm/react-core';
+import { DefaultDialog } from '@admin/app/components';
+import {  PermissionService, useToasty } from '@mlm/react-core';
 import { Button, Stack } from '@mui/material'
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { TextField } from 'formik-mui';
