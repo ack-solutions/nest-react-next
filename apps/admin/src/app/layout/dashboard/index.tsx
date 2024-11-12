@@ -5,7 +5,7 @@ import { HEADER, NAV } from '../config';
 import Header from './header';
 import NavbarMini from './navbar/navbar-mini';
 import { useResponsive, useSettingsContext } from '@mlm/react-core';
-import Navbar from './navbar/navbar1';
+import Navbar from './navbar/navbar';
 
 const SPACING = 8
 
