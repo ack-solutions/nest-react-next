@@ -5,7 +5,7 @@ import { useNavData } from './nav-config';
 import { NAV } from '../../config';
 import { NavbarConfigProps } from '../../../types/navigation'; import NavbarToggleButton from './navbar-toggle-button';
 import NavbarGroup from './navbar-group';
-import { Logo } from '@mlm/react-core';
+import { Logo } from '@admin/app/components';
 
 export const hideScroll = {
 	x: {

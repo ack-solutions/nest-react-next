@@ -1,11 +1,14 @@
 
-import { DefaultDialog, RoleService, TextField, useToasty } from '@mlm/react-core'
-import { IRole } from '@mlm/types'
+import { DefaultDialog, PermissionSelectField, TextField } from '@admin/app/components'
+import { PermissionService, RoleService } from '@mlm/react-core'
+import { IPermission, IRole } from '@mlm/types'
 import { Button, Stack } from '@mui/material'
-import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik'
-import React, { useCallback, useRef } from 'react'
+import { Field, Form, Formik, FormikProps } from 'formik'
+import { map } from 'lodash'
+import { useEffect, useRef, useState } from 'react'
 import { object, string } from 'yup'
 
+const permissionService = PermissionService.getInstance<PermissionService>();
 const roleService = RoleService.getInstance<RoleService>();
 
 export interface AddEditRoleDialogProps {
@@ -15,38 +18,49 @@ export interface AddEditRoleDialogProps {
 }
 
 const defaultValue = {
-  name: ''
+  name: '',
+  permissions: []
 }
 const validationSchema = object().shape({
   name: string().label('Name').required(),
 });
 const AddEditRoleDialog = ({ onClose, roleValue, onSubmit }: AddEditRoleDialogProps) => {
   const formRef = useRef<FormikProps<any>>(null);
-  const { showToasty } = useToasty();
+  const [permissions, setPermissions] = useState<IPermission[]>()
+  const [roleValues, setRoleValues] = useState<any>(null)
 
-  // const handleSubmitForm = useCallback(
-  //   (value: IRole, action: any) => {
-  //     console.log(value);
+  useEffect(() => {
+    permissionService.getMany({ limit: 210, page: 1 }).then(({ items }) => {
+      setPermissions(items)
 
-  //     if (value?.id) {
-  //       roleService.update(value?.id, value).then(() => {
-  //         showToasty('Role updated Successfully')
-  //         action.setSubmitting(false)
-  //       }).catch((error) => {
-  //         showToasty(error, 'error')
-  //       })
-  //     } else {
-  //       roleService.create(value).then(() => {
-  //         action.setSubmitting(false)
-  //         showToasty('Role updated Successfully')
-  //       }).catch((error) => {
-  //         showToasty(error, 'error')
-  //       })
-  //     }
-  //   },
-  //   [],
-  // )
+    }).catch(() => {
+      // setUserRoles(null)
+    })
+  }, [])
 
+  console.log(roleValue);
+  useEffect(() => {
+    if (roleValue?.id) {
+      roleService.getOne(roleValue?.id, {
+        relations: ['permissions'],
+        select: {
+          permissions: { id: true }
+        }
+      }
+      ).then((resp) => {
+        console.log(resp);
+
+        const permissions = map(resp.permissions, 'id')
+        setRoleValues({
+          ...resp,
+          permissions
+        })
+      }).catch((error) => {
+        console.log(error);
+
+      })
+    }
+  }, [roleValue?.id])
 
   return (
     <DefaultDialog
@@ -61,7 +75,7 @@ const AddEditRoleDialog = ({ onClose, roleValue, onSubmit }: AddEditRoleDialogPr
       }
     >
       <Formik
-        initialValues={Object.assign({}, defaultValue, roleValue)}
+        initialValues={Object.assign({}, defaultValue, roleValues)}
         validationSchema={validationSchema}
         enableReinitialize
         onSubmit={onSubmit}
@@ -69,13 +83,25 @@ const AddEditRoleDialog = ({ onClose, roleValue, onSubmit }: AddEditRoleDialogPr
       >
         {({ errors, isSubmitting, handleSubmit, values }) => (
           <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-            <Field
-              fullWidth
-              name="name"
-              label="Name"
-              component={TextField}
-              required
-            />
+            <Stack spacing={2}>
+              <Field
+                fullWidth
+                name="name"
+                label="Name"
+                component={TextField}
+                required
+              />
+              <Field
+                options={permissions}
+                name="permissions"
+                label="Permissions"
+                component={PermissionSelectField}
+                column={2}
+                renderValue='id'
+                renderLabel='name'
+              />
+
+            </Stack>
           </Form>
         )}
       </Formik>

@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, IconButton, Avatar, Button } from '@mui/material';
 import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
-import { MenuDropdown, useAccess, useAuth } from '@mlm/react-core';
+import {  useAccess, useAuth } from '@mlm/react-core';
 import { startCase } from 'lodash';
+import { MenuDropdown } from '@admin/app/components';
 
 
 
@@ -25,8 +26,6 @@ export default function AccountPopover() {
   ];
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  console.log(user, 'user')
-  // const { showToasty } = useToasty();
 
   const handleLogout = async () => {
     try {
