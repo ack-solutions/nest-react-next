@@ -22,7 +22,6 @@ export const OtpInputField = ({
     return (
         <>
             <OTPInput
-                // inputStyle="inputStyle"
                 containerStyle={{
                     margin: ' 0 auto'
                 }}

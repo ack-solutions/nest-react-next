@@ -1,8 +1,6 @@
 import { alpha, Box, Palette, PaletteColor, styled } from '@mui/material';
 import { LabelColor, LabelVariant } from './label';
-// import { LabelColor, LabelVariant } from './label';
 
-// Define the styled Label component
 export const StyledLabel = styled(Box)<{ ownerState: { color: LabelColor; variant: LabelVariant } }>(
 	({ theme, ownerState }) => {
 		const isLight = theme.palette.mode === 'light';
@@ -11,7 +9,6 @@ export const StyledLabel = styled(Box)<{ ownerState: { color: LabelColor; varian
 		const outlinedVariant = ownerState.variant === 'outlined';
 		const softVariant = ownerState.variant === 'soft';
 
-		// Default style for the Label
 		const defaultStyle = {
 			...(ownerState.color === 'default' && {
 				// FILLED variant

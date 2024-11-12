@@ -102,7 +102,6 @@ export class AuthController {
     })
     @Post('reset-password')
     async resetPassword(@Body() req: any) {
-        console.log('654654156')
         return this.authService.resetPassword(req);
     }
 

@@ -7,6 +7,7 @@ const RootStyle = styled('div')({
 });
 
 export default function AuthLayout() {
+  
   return (
     <RootStyle>
       <Outlet />

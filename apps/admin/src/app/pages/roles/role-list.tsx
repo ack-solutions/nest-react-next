@@ -39,7 +39,6 @@ export default function RoleList() {
 
     const handleSubmitForm = useCallback(
         (value: IRole, action: any) => {
-            console.log(value);
             const request = {
                 ...omit(value, ['id', 'createdAt', 'updatedAt', 'deletedAt',]),
                 permissions: map(value.permissions, (value) => {

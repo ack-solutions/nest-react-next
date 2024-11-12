@@ -2,8 +2,6 @@
 import { SxProps, Typography, TypographyProps } from '@mui/material';
 import { useMemo } from 'react';
 
-// ----------------------------------------------------------------------
-
 interface IconProps extends Omit<TypographyProps, 'className' | 'variant'> {
   sx?: SxProps;
   icon: string;

@@ -1,14 +1,11 @@
 import React, { useCallback, useState } from 'react'
 import { Box, Stack, Typography } from '@mui/material'
-import { FormikHelpers } from 'formik'
 import { ILoginSendOtpInput } from '@mlm/types'
 import { errorMessage } from '@mlm/utils'
 import LoginForm from '../../sections/auth/login-form'
 import LoginOtpVerification from '../../sections/auth/login-otp-verification'
 import { AuthService, useAuth } from '@mlm/react-core'
 import AuthLayout from '../../sections/auth/auth-layout'
-
-
 
 
 const authService = AuthService.getInstance<AuthService>()
@@ -20,7 +17,6 @@ const Login = () => {
     (value?: ILoginSendOtpInput, action?: any) => {
       value = value ? value : verifyData
       authService.sendLoginOtp(value).then(({ data }) => {
-        console.log(654564)
         setVerifyData(value)
       }).catch((error) => {
         action?.setErrors({ afterSubmit: errorMessage(error) });

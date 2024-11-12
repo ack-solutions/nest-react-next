@@ -57,8 +57,6 @@ const RootStyle = styled('div')(({ theme }) => ({
   }
 }));
 
-// ----------------------------------------------------------------------
-
 type Props = {
   isDashboard?: boolean;
   sx?: SxProps;
@@ -78,7 +76,6 @@ export function LoadingScreen({ isDashboard = true, ...other }: Props) {
               height: 225,
             }}
           >
-            {/* Animated rotating and growing arc */}
             <Box
               component={motion.svg}
               width="225"
@@ -100,50 +97,28 @@ export function LoadingScreen({ isDashboard = true, ...other }: Props) {
                 cx="25"
                 cy="25"
                 r="20"
-                stroke="url(#gradientArc)" // Apply gradient
+                stroke="url(#gradientArc)" 
                 strokeWidth="1.5"
                 fill="none"
                 strokeDasharray="125"
                 strokeDashoffset="100"
                 animate={{
-                  strokeDashoffset: [100, 0], // Progress animation
-                  //stroke: ['#0b1436', '#363392', '#d21e3f'], // Color change animation
+                  strokeDashoffset: [100, 0], 
                 }}
                 transition={{
                   repeat: Infinity,
-                  duration: 3, // Total duration for color and progress animation
+                  duration: 3, 
                   ease: 'easeInOut',
-                  //  times: [0, 0.5, 1], // Ensure smooth transition through colors
                 }}
-              // transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+        
               />
             </Box>
-
-
             <Logo sx={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
             }} />
           </Box>
-          {/* <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              {[0, 1, 2, 3, 4].map((index) => (
-                <motion.div
-                  key={index}
-                  variants={blockVariants}
-                  
-                  animate="animate"
-                  style={{
-                    width: '50px',
-                    height: '50px',
-                    borderRadius: '10%',
-                    backgroundColor: colors[index % colors.length],
-                  }}
-                />
-              ))}
-            </Box>
-          </Box> */}
         </RootStyle>
       )}
     </>

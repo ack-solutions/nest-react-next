@@ -34,9 +34,7 @@ const SectionStyle = styled(Box)(({ theme }) => ({
 const ContentStyle = styled(Box)(() => ({
     margin: 'auto',
     display: 'flex',
-    //minHeight: '100vh',
     justifyContent: 'center',
-    // padding: theme.spacing(12, 0),
 }));
 
 
@@ -47,7 +45,6 @@ const AuthLayout = ({
     rootTitle,
 }: AuthLayoutProps) => {
     const isDesktop = useResponsive('up', 'md')
-    console.log({ isDesktop })
     return (
         <RootStyle title={rootTitle}>
             {!isDesktop && (

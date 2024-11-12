@@ -68,10 +68,7 @@ export class UserSeeder implements Seeder {
       dummyUser.roles = [adminRole];
       dummyUsers.push(new User(dummyUser));
     }
-
-    console.log(dummyUsers, 'dummyUsers')
     users = uniqBy([...users, ...dummyUsers], (user) => user.email);
-    console.log(users)
     return this.userRepository.save(users);
   }
 

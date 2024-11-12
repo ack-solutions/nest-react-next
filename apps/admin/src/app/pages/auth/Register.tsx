@@ -15,7 +15,6 @@ const Register = () => {
         (value?: any, action?: any) => {
             value = value ? value : verifyData
             authService.sendRegisterOtp(value).then(({ data }) => {
-                console.log(654564)
                 setVerifyData(value)
             }).catch((error) => {
                 action?.setErrors({ afterSubmit: errorMessage(error) });
@@ -33,8 +32,7 @@ const Register = () => {
                 otp: Number(values?.otp),
                 ...verifyData,
             }
-            console.log(request);
-            
+
             authService.register(request).then(({ data }) => {
                 action.resetForm();
                 setVerifyData(null)

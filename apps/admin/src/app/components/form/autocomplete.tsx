@@ -75,23 +75,6 @@ const Autocomplete = ({
     },
     [freeSolo, multiple, props, onChange, options, renderKey]
   );
-  // const handleBlur = useCallback(
-  //   (e?:any) => {
-  //     const val = e.target.value || '';
-  //     if (freeSolo && val && !multiple) {
-  //       let item :any;
-  //       if (props.getOptionLabel) {
-  //         item = find(options, (option:any) => props.getOptionLabel(option) === val);
-  //       } else {
-  //         item = find(options, { [renderKey]: val });
-  //       }
-  //       onChange && onChange(e, item, 'blur');
-  //     }
-  //   },
-  //   [freeSolo, multiple, props, onChange, options, renderKey]
-  // );
-console.log(autocompleteValue);
-
   return (
     <Box width="100%">
       <MuiAutocomplete

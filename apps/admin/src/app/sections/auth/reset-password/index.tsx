@@ -39,7 +39,6 @@ const ResetPassword = ({
 
 	const handleResetPassword = useCallback(
     async (values:any, actions: FormikHelpers<any>) => {
-      console.log(handleResetPassword,"handleResetPassword")
       try {
         const request = {
           ...values,

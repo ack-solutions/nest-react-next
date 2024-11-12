@@ -38,7 +38,6 @@ const AddEditRoleDialog = ({ onClose, roleValue, onSubmit }: AddEditRoleDialogPr
     })
   }, [])
 
-  console.log(roleValue);
   useEffect(() => {
     if (roleValue?.id) {
       roleService.getOne(roleValue?.id, {
@@ -48,8 +47,6 @@ const AddEditRoleDialog = ({ onClose, roleValue, onSubmit }: AddEditRoleDialogPr
         }
       }
       ).then((resp) => {
-        console.log(resp);
-
         const permissions = map(resp.permissions, 'id')
         setRoleValues({
           ...resp,

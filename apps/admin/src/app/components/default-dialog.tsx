@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import { Icon } from './icon';
 
-// DefaultDialogProps now extends DialogProps but leaves 'open' flexible, managed outside
 export interface DefaultDialogProps extends Omit<DialogProps, 'open'> {
   open?: boolean;
   title?: string;
@@ -19,7 +18,6 @@ export interface DefaultDialogProps extends Omit<DialogProps, 'open'> {
   onClose?: () => void;
 }
 
-// DefaultDialog component updated for flexibility and responsiveness
 const DefaultDialog = ({
   open,
   title,
@@ -33,14 +31,14 @@ const DefaultDialog = ({
 
   return (
     <Dialog
-      open={open ?? true} // Keep open externally controlled
+      open={open ?? true} 
       fullWidth
-      maxWidth={dialogProps.maxWidth || 'md'} // Default maxWidth to 'md'
-      fullScreen={fullScreen} // Responsive fullScreen for smaller screens
+      maxWidth={dialogProps.maxWidth || 'md'}
+      fullScreen={fullScreen} 
       onClose={onClose}
       {...dialogProps}
     >
-      {/* Dialog Title Section */}
+
       {title && (
         <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           {title}
@@ -53,11 +51,7 @@ const DefaultDialog = ({
           </IconButton>
         </DialogTitle>
       )}
-
-      {/* Dialog Content */}
       <DialogContent dividers>{children}</DialogContent>
-
-      {/* Dialog Actions */}
       {actions && (
         <DialogActions sx={{ p: 2, justifyContent: 'flex-end' }}>
           {actions}

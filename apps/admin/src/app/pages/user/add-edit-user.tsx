@@ -21,7 +21,6 @@ const AddEditUser = () => {
         (value?: IUser, action?: FormikHelpers<any>) => {
             if (value?.id) {
                 userService.update(value?.id, value).then((resp) => {
-                    console.log(resp);
                     showToasty('User Successfully Updated')
                     action?.setSubmitting(false)
                     navigate(PATH_DASHBOARD.users.root)
@@ -49,8 +48,6 @@ const AddEditUser = () => {
                 })
                 .then((data) => {
                     const rolesIds = data?.roles?.map((role: IRole) => role?.id)
-                    console.log(rolesIds);
-
                     setUser({ ...data, roles: rolesIds });
                 })
                 .catch((error) => { });

@@ -56,7 +56,6 @@ const IndexVerify = ({
 		async () => {
 			try {
 				await authService.sendOtp({ email }).then((data) => {
-					console.log(data, 111)
 				})
 			} catch (error) {
 				console.log(error)

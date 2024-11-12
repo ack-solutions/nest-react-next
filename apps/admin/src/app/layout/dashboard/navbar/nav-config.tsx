@@ -32,6 +32,7 @@ import BadgeTwoToneIcon from '@mui/icons-material/BadgeTwoTone';
 
 import { useMemo } from 'react';
 import { NavigationItem } from '../../../types/navigation';
+import { RoleNameEnum } from '@mlm/types';
 
 
 const ICONS = {
@@ -84,7 +85,7 @@ export function useNavData() {
             title: 'Reports',
             path: PATH_DASHBOARD.reports.root,
             icon: ICONS.reports,
-            permissions: [],
+            permissions: [RoleNameEnum.CUSTOMER],
             staticPaths: [PATH_DASHBOARD.reports.root]
         },
         {
@@ -93,14 +94,14 @@ export function useNavData() {
             title: 'Users',
             path: '',
             icon: ICONS.user,
-            permissions: [],
+            permissions: [RoleNameEnum.CUSTOMER],
             staticPaths: ['users'],
             children: [
                 {
                     id: 'users.list',
                     title: 'Users',
                     path: PATH_DASHBOARD.users.root,
-                    permissions: [],
+                    permissions: [RoleNameEnum.CUSTOMER],
                     staticPaths: [PATH_DASHBOARD.users.root],
                 },
                 {
