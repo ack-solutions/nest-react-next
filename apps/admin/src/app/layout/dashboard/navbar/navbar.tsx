@@ -8,7 +8,7 @@ import { NAV } from '../../config';
 import { NavbarConfigProps, NavigationItem } from '../../../types/navigation';
 import NavbarToggleButton from './navbar-toggle-button';
 import NavbarGroup from './navbar-group';
-import {  useResponsive } from '@mlm/react-core';
+import { useResponsive } from '@mlm/react-core';
 import Scrollbar from '@admin/app/components/scrollbar/scrollbar';
 import { Logo } from '@admin/app/components';
 
@@ -53,7 +53,7 @@ export default function Navbar({ openNav, onCloseNav }: NavbarProps) {
       }}
     >
       <>
-        <Logo sx={{ mt: 3, mb: 1, display : 'block', mx: 'auto' }} />
+        <Logo sx={{ mt: 3, mb: 1, display: 'block', mx: 'auto' }} />
 
         <Stack>
           {navData.map((group, index) => (
@@ -78,8 +78,8 @@ export default function Navbar({ openNav, onCloseNav }: NavbarProps) {
         width: { lg: NAV.W_VERTICAL }
       }}
     >
-      <NavbarToggleButton />
-      {lgUp ? (
+      {lgUp ? (<>
+        <NavbarToggleButton />
         <Stack
           sx={{
             height: 1,
@@ -90,6 +90,7 @@ export default function Navbar({ openNav, onCloseNav }: NavbarProps) {
         >
           {renderContent}
         </Stack>
+      </>
       ) : (
         <Drawer
           open={openNav}

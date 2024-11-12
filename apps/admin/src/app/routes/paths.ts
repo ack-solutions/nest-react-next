@@ -41,6 +41,9 @@ export const PATH_DASHBOARD = {
     roles: path(ROOTS_DASHBOARD, '/users/roles'),
     permissions: path(ROOTS_DASHBOARD, '/users/permissions'),
   },
+  profile: {
+    root: path(ROOTS_DASHBOARD, '/profile'),
+  },
  
   settings: {
     payroll: path(ROOTS_DASHBOARD, '/settings/payroll'),

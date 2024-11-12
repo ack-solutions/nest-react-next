@@ -200,23 +200,23 @@ export default function UsersList() {
 
   return (
     <Page title='Users'>
-      <CustomBreadcrumbs
-        heading="Users"
-        links={[
-          { name: 'Dashboard', href: PATH_DASHBOARD.root },
-          { name: 'User', href: PATH_DASHBOARD.users.root },
-          { name: 'List' },
-        ]}
-        action={
-          <Button
-            variant='contained'
-            onClick={() => navigate(`${PATH_DASHBOARD.users.add}`)}
-          >
-            Add User
-          </Button>
-        }
-      />
       <Container maxWidth={false}>
+        <CustomBreadcrumbs
+          heading="Users"
+          links={[
+            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'User', href: PATH_DASHBOARD.users.root },
+            { name: 'List' },
+          ]}
+          action={
+            <Button
+              variant='contained'
+              onClick={() => navigate(`${PATH_DASHBOARD.users.add}`)}
+            >
+              Add User
+            </Button>
+          }
+        />
         <DataTable
           data={users}
           columns={columns}

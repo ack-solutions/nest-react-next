@@ -50,7 +50,7 @@ export const PermissionSelectField = ({
   );
 
   const handleSearchChange = useCallback(
-    (event:any) => {
+    (event: any) => {
       setSearchValue(event.target.value);
     },
     [],
@@ -92,7 +92,7 @@ export const PermissionSelectField = ({
   return (
     <Box>
       {label && (<Label>{label}</Label>)}
-      
+
       <FormHelperText color="error"><ErrorMessage name={name} /></FormHelperText>
 
       <Card sx={{
@@ -105,15 +105,11 @@ export const PermissionSelectField = ({
         overflow: 'hidden',
       }}>
         <CardHeader
-          sx={{
-            flex: 0
-          }}
           action={
             (
               <Stack
-                direction='row'
+                direction={{ xs: 'column', sm: 'row' }}
                 spacing={2}
-                flex={0}
               >
                 <TextField
                   placeholder='Search in Permissions'
@@ -169,4 +165,4 @@ export const PermissionSelectField = ({
   );
 };
 
- 
+

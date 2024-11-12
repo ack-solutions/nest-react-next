@@ -2,6 +2,7 @@ export * from './icon';
 export * from './loading-screen';
 export * from './scrollbar';
 export * from './data-table';
+export { default as Image } from './image-as';
 export { default as DataTable } from './data-table/index';
 export { TableActionMenu } from './data-table/table-action-menu';
 export { default as Label } from './label/label';

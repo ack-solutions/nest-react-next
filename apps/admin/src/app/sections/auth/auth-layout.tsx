@@ -44,38 +44,8 @@ const AuthLayout = ({
     children,
     rootTitle,
 }: AuthLayoutProps) => {
-    const isDesktop = useResponsive('up', 'md')
     return (
         <RootStyle title={rootTitle}>
-            {!isDesktop && (
-                <SectionStyle>
-                    <Box sx={{ mt: 4, mb: { xs: 6, xl: 10 }, maxWidth: '290px' }}>
-                        <Box
-                            component="img"
-                            src="/assets/images/logo.svg"
-                            sx={{
-                                height: '100%',
-                                width: '100%'
-                            }}
-                        />
-                    </Box>
-                    <Box sx={{
-                        height: 'calc(100vh - 250px)'
-                    }}>
-                        <Box
-                            component="img"
-                            src={src}
-                            sx={{
-                                //maxWidth: 530,
-                                height: '100%',
-                                width: 'auto',
-                                objectFit: 'contain'
-                            }}
-                        />
-                    </Box>
-                </SectionStyle>
-            )}
-
             <Container
                 disableGutters
                 sx={{

@@ -56,15 +56,15 @@ const AddEditUser = () => {
 
     return (
         <Page title={`${userId ? 'Edit User' : 'Add User'}`}>
-            <CustomBreadcrumbs
-                heading="Users"
-                links={[
-                    { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                    { name: 'Users', href: PATH_DASHBOARD.users.root },
-                    { name: `${userId ? 'Edit User' : 'Add User'}` },
-                ]}
-            />
             <Container maxWidth={false}>
+                <CustomBreadcrumbs
+                    heading="Users"
+                    links={[
+                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
+                        { name: 'Users', href: PATH_DASHBOARD.users.root },
+                        { name: `${userId ? 'Edit User' : 'Add User'}` },
+                    ]}
+                />
                 <AddEditUserForm onSubmit={handleSubmit} values={user} />
             </Container>
         </Page>

@@ -17,7 +17,7 @@ export default function AccountPopover() {
 
     {
       label: 'Profile',
-      linkTo: PATH_DASHBOARD.root,
+      linkTo: PATH_DASHBOARD.profile.root,
     },
 
   ];

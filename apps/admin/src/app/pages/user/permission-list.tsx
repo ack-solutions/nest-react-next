@@ -5,13 +5,16 @@ import {
     Button,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { PermissionService,  useToasty } from '@mlm/react-core';
+import { PermissionService, useToasty } from '@mlm/react-core';
 import { IRole } from '@mlm/types';
 import { toDisplayDate } from '@mlm/utils';
 import AddEditPermissionDialog from '../../sections/user/add-edit-permission-dialog';
 import { startCase } from 'lodash';
 import { DataTableHandle, DataTableColumn, TableActionMenu, DataTable } from '@admin/app/components';
 import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
+import Page from '@admin/app/components/page';
+import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
+import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 
 const permissionService = PermissionService.getInstance<PermissionService>();
 
@@ -141,24 +144,33 @@ export default function PermissionList() {
     ];
 
     return (
-        // <Page title="Users">
-        <Container maxWidth={false}>
-            <DataTable
-                data={roles}
-                columns={columns}
-                ref={datatableRef}
-                totalRow={total}
-                defaultOrder='desc'
-                defaultOrderBy='createdAt'
-                onChange={handleDataTableChange}
-                detailRowTitle='Permission'
-                topAction={<Button variant='contained' onClick={handleOpenAddEditRoleDialog({})}>Add Permission</Button>}
-            />
-            {selectPermission && <AddEditPermissionDialog onSubmit={handleSubmitForm} onClose={handleCloseAddEditRoleDialog} values={selectPermission} />}
+        <Page title='Permission'>
+            <Container maxWidth={false}>
+                <CustomBreadcrumbs
+                    heading="Permission"
+                    links={[
+                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
+                        { name: 'Permission', href: PATH_DASHBOARD.users.permissions },
+                        { name: 'List' },
+                    ]}
+                    action={
+                        <Button variant='contained' onClick={handleOpenAddEditRoleDialog({})}>Add Permission</Button>
+                    }
+                />
+                <DataTable
+                    data={roles}
+                    columns={columns}
+                    ref={datatableRef}
+                    totalRow={total}
+                    defaultOrder='desc'
+                    defaultOrderBy='createdAt'
+                    onChange={handleDataTableChange}
+                />
+                {selectPermission && <AddEditPermissionDialog onSubmit={handleSubmitForm} onClose={handleCloseAddEditRoleDialog} values={selectPermission} />}
 
-        </Container>
+            </Container>
 
-        // </Page>
+        </Page>
     );
 }
 

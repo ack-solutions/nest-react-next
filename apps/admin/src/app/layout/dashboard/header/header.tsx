@@ -49,7 +49,7 @@ export default function Header({ onOpenNav }: Props) {
     <>
       {!lgUp && (
         <IconButton onClick={onOpenNav}>
-          <Icon icon='' />
+          <Icon icon='menu' />
         </IconButton>
       )}
 

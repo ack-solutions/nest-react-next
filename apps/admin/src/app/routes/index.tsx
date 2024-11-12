@@ -19,6 +19,7 @@ const ForgotPassword = Loadable(lazy(() => import('../pages/auth/forget-password
 const Dashboard = Loadable(lazy(() => import('../pages/dashboard/dashboard')));
 // User
 const UserList = Loadable(lazy(() => import('../pages/user/user-list')));
+const UserProfile = Loadable(lazy(() => import('../pages/user/user-profile')));
 const AddEditUser = Loadable(lazy(() => import('../pages/user/add-edit-user')));
 const RoleList = Loadable(lazy(() => import('../pages/roles/role-list')));
 const PermissionList = Loadable(lazy(() => import('../pages/user/permission-list')));
@@ -67,7 +68,7 @@ export default function Router() {
                         { path: 'permissions', element: <PermissionList /> },
                     ],
                 },
-        
+                { path: 'profile', element: <UserProfile />  },
             ],
         },
         { path: '*', element: <Navigate to="/404" replace /> },

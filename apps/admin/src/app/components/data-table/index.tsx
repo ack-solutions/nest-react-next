@@ -272,7 +272,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
     }));
 
     const handleRowClick = useCallback(
-      (row:any) => () => {
+      (row: any) => () => {
         const { id } = row;
         onRowClick && onRowClick(row);
         if (selectable && !onRowClick) {
@@ -291,7 +291,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
     );
 
     const handleCheckUncheck = useCallback(
-      (row:any) => (e: any) => {
+      (row: any) => (e: any) => {
         e.stopPropagation();
         const { id } = row;
 
@@ -309,7 +309,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
     );
 
     const toggleOpenRow = useCallback(
-      (id:any, open:any) => (e: any) => {
+      (id: any, open: any) => (e: any) => {
         e.preventDefault();
         e.stopPropagation();
         setOpenedRows((state: any) => {
@@ -323,7 +323,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
     );
 
     const handleSelectAll = useCallback(
-      (e:any) => {
+      (e: any) => {
         const { checked } = e.target;
         if (checked) {
           const selected = data?.map((n) => n[idKey]);
@@ -336,7 +336,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
     );
 
     const handleSortChange = useCallback(
-      (columnName:any) => () => {
+      (columnName: any) => () => {
         const dir = orderBy === columnName && order === 'asc' ? 'desc' : 'asc';
         setOrder(dir);
         setOrderBy(columnName);
@@ -349,13 +349,13 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
       [orderBy, order, onSortChange]
     );
 
-    const handleSearchChange = useCallback((event:any) => {
+    const handleSearchChange = useCallback((event: any) => {
       const value = event.target.value;
       setSearch(value);
     }, []);
 
     const handlePageChange = useCallback(
-      (event:any, value:any) => {
+      (event: any, value: any) => {
         onPageChange && onPageChange(value);
         setPage(value);
       },
@@ -363,7 +363,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
     );
 
     const handleChangeRowsPerPage = useCallback(
-      (event:any) => {
+      (event: any) => {
         onLimitChange && onLimitChange(event.target.value);
         setRowsPerPage(event.target.value);
         onPageChange && onPageChange(0);
@@ -469,7 +469,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                 </Typography>
               ) : (
                 <Stack
-                  direction="row"
+                  direction={{ xs: 'column', sm: "row" }}
                   spacing={2}
                   justifyContent="space-between"
                   width="100%"
@@ -480,7 +480,6 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                     placeholder="Search..."
                     size="small"
                     type="search"
-                    sx={{ minWidth: '25%' }}
                     startAdornment={
                       <InputAdornment position="start">
                         <SearchOutlinedIcon />
@@ -488,7 +487,6 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                     }
                   />
                   <Stack
-                    minWidth="75%"
                     spacing={2}
                     direction="row"
                     justifyContent="end"

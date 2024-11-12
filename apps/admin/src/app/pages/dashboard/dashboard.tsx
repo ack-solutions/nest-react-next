@@ -1,7 +1,10 @@
+import { Container } from "@mui/material"
 
 const Dashboard = () => {
   return (
-    <div>Dashboard</div>
+    <Container maxWidth={false}>
+      <div>Dashboard</div>
+    </Container>
   )
 }
 

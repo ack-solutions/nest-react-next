@@ -74,7 +74,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
             {({ handleSubmit }) => (
                 <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
-                        <Grid size={{ xs: 12, md: 6 }}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <Field
                                 fullWidth
                                 required
@@ -83,7 +83,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 component={TextField}
                             />
                         </Grid>
-                        <Grid size={{ xs: 12, md: 6 }}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <Field
                                 fullWidth
                                 required
@@ -94,7 +94,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                         </Grid>
                         {!userId && (
                             <>
-                                <Grid size={{ xs: 12, md: 6 }}>
+                                <Grid size={{ xs: 12, sm: 6 }}>
                                     <Field
                                         fullWidth
                                         type={showPassword.value ? 'text' : 'password'}
@@ -115,7 +115,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                         }}
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, md: 6 }}>
+                                <Grid size={{ xs: 12, sm: 6 }}>
                                     <Field
                                         fullWidth
                                         type={confirmShowPassword.value ? 'text' : 'password'}
@@ -138,7 +138,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 </Grid>
                             </>
                         )}
-                        <Grid size={{ xs: 12, md: 6 }}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <Field
                                 fullWidth
                                 required
@@ -147,7 +147,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 component={TextField}
                             />
                         </Grid>
-                        <Grid size={{ xs: 12, md: 6 }}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <Field
                                 fullWidth
                                 required
@@ -156,7 +156,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 component={TextField}
                             />
                         </Grid>
-                        <Grid size={{ xs: 12, md: 6 }}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <Field
                                 fullWidth
                                 required

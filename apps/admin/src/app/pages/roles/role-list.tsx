@@ -11,6 +11,9 @@ import { toDisplayDate } from '@mlm/utils';
 import AddEditRoleDialog from '../../sections/role/add-edit-role-dialog';
 import { DataTable, DataTableColumn, DataTableHandle, TableActionMenu } from '@admin/app/components';
 import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
+import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
+import Page from '@admin/app/components/page';
+import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 
 const roleService = RoleService.getInstance<RoleService>();
 
@@ -149,22 +152,36 @@ export default function RoleList() {
     ];
 
     return (
-        // <Page title="Users">
-        <Container maxWidth={false}>
-            <DataTable
-                data={roles}
-                columns={columns}
-                ref={datatableRef}
-                totalRow={total}
-                defaultOrder='desc'
-                defaultOrderBy='createdAt'
-                onChange={handleDataTableChange}
-                detailRowTitle='Roles'
-                topAction={<Button variant='contained' onClick={handleOpenAddEditRoleDialog({})}>Add Role</Button>}
-            />
-            {selectRole && <AddEditRoleDialog onSubmit={handleSubmitForm} onClose={handleCloseAddEditRoleDialog} roleValue={selectRole} />}
-        </Container>
-        // </Page>
+        <Page title='Roles'>
+            <Container maxWidth={false}>
+                <CustomBreadcrumbs
+                    heading="Users"
+                    links={[
+                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
+                        { name: 'Role', href: PATH_DASHBOARD.users.roles },
+                        { name: 'List' },
+                    ]}
+                    action={
+                        <Button
+                            variant='contained'
+                            onClick={handleOpenAddEditRoleDialog({})}
+                        >
+                            Add Role
+                        </Button>
+                    }
+                />
+                <DataTable
+                    data={roles}
+                    columns={columns}
+                    ref={datatableRef}
+                    totalRow={total}
+                    defaultOrder='desc'
+                    defaultOrderBy='createdAt'
+                    onChange={handleDataTableChange}
+                />
+                {selectRole && <AddEditRoleDialog onSubmit={handleSubmitForm} onClose={handleCloseAddEditRoleDialog} roleValue={selectRole} />}
+            </Container>
+        </Page>
     );
 }
 
