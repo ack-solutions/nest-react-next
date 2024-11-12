@@ -1,1 +1,1 @@
-export { default } from './header1';
+export { default } from './header';
