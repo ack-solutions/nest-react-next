@@ -34,7 +34,6 @@ export default function DashboardLayout() {
         }}
       >
         {isNavMini ? <NavbarMini /> : <Navbar openNav={open} onCloseNav={handleClose} />}
-
         <Box
           component="main"
           sx={{
