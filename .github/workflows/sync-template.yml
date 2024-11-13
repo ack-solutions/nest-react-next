@@ -1,0 +1,80 @@
+name: Sync Template Repository
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Adjust this as needed
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.PAT_GITHUB_TOKEN }}  # Set GH_TOKEN from the PAT_GITHUB_TOKEN secret
+
+    steps:
+      # Step 2: Set dynamic branch name with the current date
+      - name: Set Dynamic Branch Name
+        id: vars
+        run: echo "BRANCH_NAME=update-from-template-$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+
+       # Step 2: Checkout the project repository using SSH
+      - name: Checkout Project Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PAT_GITHUB_TOKEN }}
+
+      # Fetch the latest commit from template repository
+      - name: Fetch Template Repository
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git remote add template https://github.com/ack-solutions/nest-react-next.git
+          git fetch template main
+
+      # Determine Last Synced Commit
+      - name: Get Last Synced Commit
+        id: get_last_commit
+        run: |
+          # Check if .last_sync_commit file exists in the project
+          if [ -f .last_sync_commit ]; then
+            LAST_COMMIT=$(cat .last_sync_commit)
+          else
+            # If no file exists, assume first-time sync
+            LAST_COMMIT=""
+          fi
+          echo "LAST_COMMIT=$LAST_COMMIT" >> $GITHUB_ENV
+
+      # Check for New Changes
+      - name: Check for Last Commit from Template
+        id: check_changes
+        run: |
+          # Get the latest commit hash from template/main
+          NEW_COMMIT=$(git rev-parse template/main)
+          echo "NEW_COMMIT=$NEW_COMMIT" >> $GITHUB_ENV
+
+          # Compare new commit with last synced commit
+          if [ "$NEW_COMMIT" != "$LAST_COMMIT" ]; then
+            echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
+          else
+            echo "CHANGES_DETECTED=false" >> $GITHUB_ENV
+          fi
+
+      #  If Changes Detected, Checkout template main branch and Push New Branch 
+      - name: Fetch Template Repository
+        if: env.CHANGES_DETECTED == 'true'
+        run: |
+          git checkout -b "${{ env.BRANCH_NAME }}" template/main
+          git log -3 --oneline
+          git push -u origin HEAD --force
+
+      # Create a Pull Request
+      - name: Create Pull Request
+        if: env.CHANGES_DETECTED == 'true'
+        run: |
+          gh pr create \
+            --title "Update from Template Repository" \
+            --body "This PR includes the latest changes from the template repository." \
+            --head "${{ env.BRANCH_NAME }}" \
+            --base main
