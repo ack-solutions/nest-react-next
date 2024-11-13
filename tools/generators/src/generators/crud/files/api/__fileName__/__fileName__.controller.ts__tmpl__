@@ -1,0 +1,14 @@
+import { Controller } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { <%= className %>Service } from './<%= fileName %>.service';
+import { CrudController } from '@api/app/core/crud';
+import { <%= className %> } from './<%= fileName %>.entity';
+
+@ApiTags('<%= className %>')
+@Controller('<%= fileName %>')
+export class <%= className %>Controller extends CrudController(<%= className %>)<<%= className %>> {
+    constructor(private readonly <%= propertyName %>Service: <%= className %>Service) {
+        super(<%= propertyName %>Service)
+    }
+
+}

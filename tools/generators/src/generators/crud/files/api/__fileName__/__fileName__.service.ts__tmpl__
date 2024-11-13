@@ -1,0 +1,20 @@
+import {  Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { <%= className %> } from './<%= fileName %>.entity';
+import { Repository } from 'typeorm';
+import { CrudService } from '@api/app/core/crud';
+
+
+@Injectable()
+export class <%= className %>Service extends CrudService<<%= className %>> {
+    constructor(
+        @InjectRepository(<%= className %>)
+        private <%= propertyName %>Repo: Repository<<%= className %>>
+    ) {
+        super(<%= propertyName %>Repo)
+     }
+
+    find() {
+        return this.<%= propertyName %>Repo.find();
+    }
+}

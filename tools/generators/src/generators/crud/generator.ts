@@ -1,22 +1,31 @@
 import {
-  addProjectConfiguration,
   formatFiles,
-  generateFiles,
   Tree,
 } from '@nx/devkit';
-import * as path from 'path';
-import { CrudGeneratorSchema } from './schema';
+import { PluginGeneratorSchema } from './schema';
+import { ApiGenerator } from './api.generator';
+import { ReactGenerator } from './react.generator';
+import { TypesGenerator } from './types.generator';
 
-export async function crudGenerator(tree: Tree, options: CrudGeneratorSchema) {
-  const projectRoot = `libs/${options.name}`;
-  addProjectConfiguration(tree, options.name, {
-    root: projectRoot,
-    projectType: 'library',
-    sourceRoot: `${projectRoot}/src`,
-    targets: {},
-  });
-  generateFiles(tree, path.join(__dirname, 'files'), projectRoot, options);
+
+export async function pluginGenerator(tree: Tree, options: PluginGeneratorSchema) {
+
+
+
+  const typesGenerator = new TypesGenerator(tree, options);
+  await typesGenerator.run()
+  options.columns = typesGenerator.getColumns();
+
+  const apiGenerator = new ApiGenerator(tree, options);
+  await apiGenerator.run()
+
+
+  const reactGenerator = new ReactGenerator(tree, options);
+  await reactGenerator.run()
+
+
   await formatFiles(tree);
 }
 
-export default crudGenerator;
+
+export default pluginGenerator;

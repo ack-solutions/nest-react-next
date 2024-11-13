@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/schema",
-  "$id": "Crud",
+  "$id": "CRUD",
   "title": "",
   "type": "object",
   "properties": {
@@ -12,7 +12,29 @@
         "index": 0
       },
       "x-prompt": "What name would you like to use?"
+    },
+    "generateApi": {
+      "type": "boolean",
+      "description": "Would you like to generate an API (Nest.js) library?",
+      "x-prompt": "Do you want to generate a Nest.js library?",
+      "default": true
+    },
+    "generateReact": {
+      "type": "boolean",
+      "description": "Would you like to generate a React library?",
+      "x-prompt": "Do you want to generate a React library?",
+      "default": true
+    },
+    "addColumns": {
+      "type": "boolean",
+      "description": "Would you like to generate columns?",
+      "x-prompt": "Do you want to generate columns?",
+      "default": true
     }
   },
-  "required": ["name"]
+  "required": [
+    "name",
+    "generateApi",
+    "generateReact"
+  ]
 }
