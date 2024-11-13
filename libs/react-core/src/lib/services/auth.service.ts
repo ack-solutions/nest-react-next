@@ -1,4 +1,4 @@
-import { ILoginInput, ILoginSuccess } from "@mlm/types";
+import { ILoginInput, ILoginSuccess } from "@libs/types";
 import { Service } from "./service";
 export class AuthService extends Service {
 

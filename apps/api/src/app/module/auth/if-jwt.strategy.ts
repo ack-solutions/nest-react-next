@@ -5,7 +5,7 @@ import { ExtractJwt } from 'passport-jwt';
 import * as jwt from 'jsonwebtoken';
 import { PassportStrategy } from '@nestjs/passport';
 import { UserService } from '../user';
-import { UserStatusEnum } from '@mlm/types';
+import { UserStatusEnum } from '@libs/types';
 
 @Injectable()
 export class IfJwtStrategy extends PassportStrategy(Strategy, 'if-jwt') {

@@ -5,9 +5,9 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { map, omit, } from 'lodash';
-import { RoleService, useToasty } from '@mlm/react-core';
-import { IRole } from '@mlm/types';
-import { toDisplayDate } from '@mlm/utils';
+import { RoleService, useToasty } from '@libs/react-core';
+import { IRole } from '@libs/types';
+import { toDisplayDate } from '@libs/utils';
 import AddEditRoleDialog from '../../sections/role/add-edit-role-dialog';
 import { DataTable, DataTableColumn, DataTableHandle, TableActionMenu } from '@admin/app/components';
 import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';

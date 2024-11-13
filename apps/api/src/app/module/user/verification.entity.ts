@@ -3,8 +3,8 @@ import {  Column, Entity, ManyToOne } from "typeorm";
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { User } from "./user.entity";
 import { IsNumber, IsString } from "class-validator";
-import { IUser, IVerification } from "@mlm/types";
-import { BaseEntity } from "@mlm/nest-core";
+import { IUser, IVerification } from "@libs/types";
+import { BaseEntity } from "@libs/nest-core";
 
 
 @Entity()

@@ -1,4 +1,4 @@
-import { instanceApi, toFormData } from "@mlm/utils";
+import { instanceApi, toFormData } from "@libs/utils";
 import { CRUDService } from "./crud-service";
 
 

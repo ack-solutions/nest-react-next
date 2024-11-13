@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Permission } from './permission.entity';
 import { capitalize, find } from 'lodash';
 import { Role } from '../role/role.entity';
-import { RoleNameEnum } from '@mlm/types';
-import { Seeder } from 'apps/api/src/nest-seeder';
+import { RoleNameEnum } from '@libs/types';
+import { Seeder } from '@libs/nest-core';
 
 
 

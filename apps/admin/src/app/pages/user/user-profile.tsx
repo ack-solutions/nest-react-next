@@ -5,7 +5,7 @@ import { object, string } from 'yup';
 import Grid from '@mui/material/Grid2';
 import { TextField, UploadAvatarField } from '@admin/app/components';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@mlm/react-core';
+import { useAuth } from '@libs/react-core';
 import { UploadAvatar } from '@admin/app/components/upload';
 
 const defaultValues: any = {

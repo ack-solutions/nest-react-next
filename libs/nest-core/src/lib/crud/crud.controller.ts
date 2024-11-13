@@ -17,7 +17,7 @@ import { DeepPartial, FindManyOptions, FindOneOptions } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';
 import { merge } from 'lodash';
 import { DeleteManyInputDTO, GetManyInputDTO } from './dto/get-many-input.dto';
-import { ICrudControllerOptions, IFindOptions, IPaginationResult } from '@mlm/types';
+import { ICrudControllerOptions, IFindOptions, IPaginationResult } from '@libs/types';
 import { ICrudService } from '../types/crud.service';
 
 

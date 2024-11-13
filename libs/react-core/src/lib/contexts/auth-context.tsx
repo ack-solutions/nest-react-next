@@ -5,7 +5,7 @@ import {
 import axios from 'axios';
 import { chain, map } from 'lodash';
 import useAccess from './react-access-control/use-access';
-import { instanceApi } from '@mlm/utils';
+import { instanceApi } from '@libs/utils';
 import { UserService } from '../services/user.service';
 
 interface IUser {

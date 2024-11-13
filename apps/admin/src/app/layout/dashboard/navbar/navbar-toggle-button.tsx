@@ -1,6 +1,6 @@
 import { IconButton, IconButtonProps, useTheme } from '@mui/material'
 import { NAV } from '../../config'
-import {  useSettingsContext } from '@mlm/react-core';
+import {  useSettingsContext } from '@libs/react-core';
 import { Icon } from '@admin/app/components';
 
 const NavbarToggleButton = (props: IconButtonProps) => {

@@ -1,7 +1,7 @@
 
 import { DefaultDialog, PermissionSelectField, TextField } from '@admin/app/components'
-import { PermissionService, RoleService } from '@mlm/react-core'
-import { IPermission, IRole } from '@mlm/types'
+import { PermissionService, RoleService } from '@libs/react-core'
+import { IPermission, IRole } from '@libs/types'
 import { Button, Stack } from '@mui/material'
 import { Field, Form, Formik, FormikProps } from 'formik'
 import { map } from 'lodash'

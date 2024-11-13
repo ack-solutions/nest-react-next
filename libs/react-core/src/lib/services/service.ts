@@ -1,4 +1,4 @@
-import { instanceApi } from "@mlm/utils";
+import { instanceApi } from "@libs/utils";
 
 
 export interface ServiceStatic<T extends Service> {

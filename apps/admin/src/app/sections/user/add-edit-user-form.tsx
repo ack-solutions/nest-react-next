@@ -1,6 +1,6 @@
 import { Icon, TextField } from '@admin/app/components';
-import { RoleService, useBoolean } from '@mlm/react-core';
-import { IRole, IUser } from '@mlm/types';
+import { RoleService, useBoolean } from '@libs/react-core';
+import { IRole, IUser } from '@libs/types';
 import { Button, Checkbox, IconButton, InputAdornment, MenuItem, Stack, useTheme } from '@mui/material';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { startCase } from 'lodash';

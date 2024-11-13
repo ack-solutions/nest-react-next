@@ -1,7 +1,7 @@
 
 import { OptionsObject, useSnackbar, VariantType } from 'notistack';
 import { useCallback } from 'react';
-import { errorMessage } from '@mlm/utils';
+import { errorMessage } from '@libs/utils';
 
 export  function useToasty() {
   const { enqueueSnackbar } = useSnackbar();

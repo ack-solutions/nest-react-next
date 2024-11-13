@@ -1,4 +1,4 @@
-import { IFindOptions, IPaginationResult } from '@mlm/types';
+import { IFindOptions, IPaginationResult } from '@libs/types';
 import { DeepPartial, DeleteResult, FindManyOptions, FindOneOptions, FindOptions, FindOptionsWhere, SaveOptions } from 'typeorm';
 
 

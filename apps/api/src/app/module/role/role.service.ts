@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './role.entity';
-import { IRole } from '@mlm/types';
-import { CrudService } from '@mlm/nest-core';
+import { IRole } from '@libs/types';
+import { CrudService } from '@libs/nest-core';
 
 
 @Injectable()

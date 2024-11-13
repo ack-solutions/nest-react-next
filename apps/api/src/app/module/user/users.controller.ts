@@ -8,8 +8,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { UserDTO } from './dto/user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from '../auth/decorator/current-user';
-import { IUser } from '@mlm/types';
-import { CrudController } from '@mlm/nest-core';
+import { IUser } from '@libs/types';
+import { CrudController } from '@libs/nest-core';
 
 
 @ApiTags('User')

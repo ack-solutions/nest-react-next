@@ -1,4 +1,4 @@
-import { IDatabaseConfig } from "@mlm/nest-core";
+import { IDatabaseConfig } from "@libs/nest-core";
 import { registerAs } from "@nestjs/config";
 import { DatabaseType } from "typeorm";
 

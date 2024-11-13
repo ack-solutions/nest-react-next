@@ -14,7 +14,7 @@ import { FindQueryBuilder } from './find-query-builder';
 // import { IFindOptions, IPaginationResult } from '@ackplus-inventory/core/types';
 import { RequestContext } from '../request-context/request-context';
 import { cloneDeep, has } from 'lodash';
-import { IFindOptions, IPaginationResult } from '@mlm/types';
+import { IFindOptions, IPaginationResult } from '@libs/types';
 // import { FileStorage } from '../module/file-storage';
 import { BaseEntity } from '../typeorm/base.entity';
 // import { FileStorage } from '../file-storage';

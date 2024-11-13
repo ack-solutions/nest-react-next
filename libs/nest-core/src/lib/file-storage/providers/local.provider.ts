@@ -4,7 +4,7 @@
 // import * as moment from 'moment';
 // import { Provider } from './provider';
 // import { basename, join, resolve } from 'path';
-// import { getEnv } from '@mlm/nest-core';
+// import { getEnv } from '@libs/nest-core';
 
 
 // export class LocalProvider extends Provider<LocalProvider> {

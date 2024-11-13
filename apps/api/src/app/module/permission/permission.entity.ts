@@ -9,8 +9,8 @@ import {
 } from 'typeorm';
 import { Role } from '../role/role.entity';
 
-import { IPermission, IRole } from '@mlm/types';
-import { BaseEntity } from '@mlm/nest-core';
+import { IPermission, IRole } from '@libs/types';
+import { BaseEntity } from '@libs/nest-core';
 
 @Entity()
 export class Permission extends BaseEntity implements IPermission {

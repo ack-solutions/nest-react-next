@@ -4,9 +4,9 @@ import { useCallback, useState } from 'react';
 import { FormikHelpers } from 'formik';
 import ResetPasswordForm from './reset-password-form';
 import SuccessDialog from './success-dialog';
-import { AuthService } from '@mlm/react-core';
+import { AuthService } from '@libs/react-core';
 import Page from '@admin/app/components/page';
-import { errorMessage } from '@mlm/utils';
+import { errorMessage } from '@libs/utils';
 export interface ResetPasswordProps {
 	onCloseModal?: () => void;
 	email?: string;

@@ -5,9 +5,9 @@ import {
     Button,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { PermissionService, useToasty } from '@mlm/react-core';
-import { IRole } from '@mlm/types';
-import { toDisplayDate } from '@mlm/utils';
+import { PermissionService, useToasty } from '@libs/react-core';
+import { IRole } from '@libs/types';
+import { toDisplayDate } from '@libs/utils';
 import AddEditPermissionDialog from '../../sections/user/add-edit-permission-dialog';
 import { startCase } from 'lodash';
 import { DataTableHandle, DataTableColumn, TableActionMenu, DataTable } from '@admin/app/components';

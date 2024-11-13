@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import { HEADER, NAV } from '../config';
 import Header from './header';
 import NavbarMini from './navbar/navbar-mini';
-import { useResponsive, useSettingsContext } from '@mlm/react-core';
+import { useResponsive, useSettingsContext } from '@libs/react-core';
 import Navbar from './navbar/navbar';
 
 const SPACING = 8

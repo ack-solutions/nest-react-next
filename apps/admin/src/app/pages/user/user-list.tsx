@@ -6,9 +6,9 @@ import {
   Button,
 } from '@mui/material';
 import { has, split, startCase } from 'lodash';
-import { UserService, useToasty } from '@mlm/react-core';
-import { IUser, UserStatusEnum } from '@mlm/types';
-import { toDisplayDate } from '@mlm/utils';
+import { UserService, useToasty } from '@libs/react-core';
+import { IUser, UserStatusEnum } from '@libs/types';
+import { toDisplayDate } from '@libs/utils';
 import { DataTableHandle, DataTableColumn, TableActionMenu, DataTable, Label, Icon } from '@admin/app/components';
 import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
 import Page from '@admin/app/components/page';

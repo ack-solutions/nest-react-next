@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { Icon } from '../icon';
 import { MenuDropdown } from '../menu-dropdown/menu-dropdown';
-import { useAccess } from '@mlm/react-core';
+import { useAccess } from '@libs/react-core';
 
 export interface TableAction {
   icon: any;

@@ -6,7 +6,7 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { IBaseEntity } from '@mlm/types';
+import { IBaseEntity } from '@libs/types';
 // import { Factory } from '../nest-seeder';
 
 export abstract class BaseEntity implements IBaseEntity {

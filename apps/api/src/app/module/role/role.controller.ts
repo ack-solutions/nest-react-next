@@ -4,8 +4,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { RoleDTO } from './dto/role.dto';
 import { RoleService } from './role.service';
-import { IRole } from '@mlm/types';
-import { CrudController } from '@mlm/nest-core'
+import { IRole } from '@libs/types';
+import { CrudController } from '@libs/nest-core'
 
 @ApiTags('Role')
 @Controller("role")

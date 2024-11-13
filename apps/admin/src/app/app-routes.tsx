@@ -1,4 +1,4 @@
-import {  useAuth } from '@mlm/react-core';
+import {  useAuth } from '@libs/react-core';
 import Routes from './routes';
 
 const AppRoutes = () => {

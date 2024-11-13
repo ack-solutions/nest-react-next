@@ -5,11 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { find, uniqBy } from 'lodash';
 import { Role } from '../role/role.entity'; 
-import { IUser, RoleNameEnum } from '@mlm/types';
-import {  hashPassword, } from '@mlm/nest-core';
-import { DataFactory, Seeder } from 'apps/api/src/nest-seeder';
-
-
+import { IUser, RoleNameEnum } from '@libs/types';
+import {  DataFactory, hashPassword, Seeder, } from '@libs/nest-core';
 
 
 @Injectable()

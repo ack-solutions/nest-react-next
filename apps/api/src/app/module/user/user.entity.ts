@@ -3,9 +3,8 @@ import { Column, Entity, AfterLoad, ManyToMany, JoinTable } from "typeorm";
 import { Role } from "../role/role.entity";
 import { IsBoolean, IsDateString, IsEmail, IsEnum, IsOptional, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-import { IUser, UserStatusEnum } from "@mlm/types";
-import { BaseEntity,  } from "@mlm/nest-core";
-import { Factory } from "apps/api/src/nest-seeder";
+import { IUser, UserStatusEnum } from "@libs/types";
+import { BaseEntity, Factory } from "@libs/nest-core";
 
 
 

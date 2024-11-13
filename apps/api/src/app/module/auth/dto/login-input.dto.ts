@@ -1,4 +1,4 @@
-import { ILoginInput } from "@mlm/types";
+import { ILoginInput } from "@libs/types";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNumber, IsString } from "class-validator";
 

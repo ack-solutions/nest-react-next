@@ -8,7 +8,7 @@ import { NAV } from '../../config';
 import { NavbarConfigProps, NavigationItem } from '../../../types/navigation';
 import NavbarToggleButton from './navbar-toggle-button';
 import NavbarGroup from './navbar-group';
-import { useResponsive } from '@mlm/react-core';
+import { useResponsive } from '@libs/react-core';
 import Scrollbar from '@admin/app/components/scrollbar/scrollbar';
 import { Logo } from '@admin/app/components';
 

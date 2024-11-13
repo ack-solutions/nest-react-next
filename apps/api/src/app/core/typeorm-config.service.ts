@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { TlsOptions } from 'tls';
-import { entities } from './core-entities';
+import { entities } from './entities';
 
 
 @Injectable()

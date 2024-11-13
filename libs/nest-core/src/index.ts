@@ -11,7 +11,6 @@ export * from './lib/utils';
 
 // TypeOrm 
 export * from './lib/typeorm/base.entity';
-
 export * from './lib/typeorm/custom-naming-strategy';
 
 // CRUD 
@@ -34,6 +33,8 @@ export * from './lib/types/crud.service';
 // file storage 
 export * from './lib/file-storage'
 
-
 export * from './lib/config'
 export * from './lib/config/database'
+
+// Nest-Seeder
+export * from './lib/nest-seeder'

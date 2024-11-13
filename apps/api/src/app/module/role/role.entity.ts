@@ -2,8 +2,8 @@ import { Column, Entity, ManyToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import {  IsString } from 'class-validator';
 import { Permission } from '../permission/permission.entity';
-import { IPermission, IRole } from '@mlm/types';
-import { BaseEntity } from '@mlm/nest-core';
+import { IPermission, IRole } from '@libs/types';
+import { BaseEntity } from '@libs/nest-core';
 
 @Entity()
 export class Role extends BaseEntity implements IRole {

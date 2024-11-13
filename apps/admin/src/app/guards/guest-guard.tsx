@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { PATH_DASHBOARD } from '../routes/paths';
-import { useAuth } from '@mlm/react-core';
+import { useAuth } from '@libs/react-core';
 
 
 type GuestGuardProps = {

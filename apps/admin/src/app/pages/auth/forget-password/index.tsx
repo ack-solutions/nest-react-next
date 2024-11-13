@@ -4,11 +4,11 @@ import { styled } from '@mui/material/styles';
 import { Box, Button, Container, Typography } from '@mui/material';
 import { PATH_AUTH } from '../../../routes/paths';
 import { FormikHelpers } from 'formik';
-import { AuthService } from '@mlm/react-core';
+import { AuthService } from '@libs/react-core';
 import AuthLayout from '@admin/app/sections/auth/auth-layout';
 import ForgetPasswordForm from './forget-password-form';
 import IndexVerify from '@admin/app/sections/auth/verify-otp/Index-verify';
-import { errorMessage } from '@mlm/utils';
+import { errorMessage } from '@libs/utils';
 import Page from '@admin/app/components/page';
 
 const ContentStyle = styled('div')(() => ({

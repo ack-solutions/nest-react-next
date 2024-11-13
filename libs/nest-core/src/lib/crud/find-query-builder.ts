@@ -2,7 +2,7 @@ import { Brackets, SelectQueryBuilder, Repository, DataSource, WhereExpressionBu
 import { get, uniq, omit, map, concat, chain } from "lodash";
 import { RequestContext } from "../request-context/request-context";
 import { getDataSource } from "../utils";
-import { IFindOptions, IOrderBy, IWhereCondition, OrderDirectionEnum } from '@mlm/types'
+import { IFindOptions, IOrderBy, IWhereCondition, OrderDirectionEnum } from '@libs/types'
 
 export class FindQueryBuilder<T> {
 

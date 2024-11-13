@@ -1,8 +1,8 @@
 
 import { pick } from 'lodash';
 import { Service } from './service';
-import { instanceApi, toFormData } from '@mlm/utils';
-import { IPaginationRequest } from '@mlm/types';
+import { instanceApi, toFormData } from '@libs/utils';
+import { IPaginationRequest } from '@libs/types';
 
 export abstract class CRUDService<T> extends Service {
   protected abstract apiPath: string;

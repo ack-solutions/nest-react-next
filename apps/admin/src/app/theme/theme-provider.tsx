@@ -11,7 +11,7 @@ import { customShadows } from './custom-shadows';
 import { shadows } from './shadows';
 import {  } from '@mui/material/styles';
 import { GlobalStyles } from '@mui/material';
-import {  initialSetting, useSettingsContext } from '@mlm/react-core';
+import {  initialSetting, useSettingsContext } from '@libs/react-core';
 
 
 type Props = {

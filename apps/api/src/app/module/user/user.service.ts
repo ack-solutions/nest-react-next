@@ -5,8 +5,8 @@ import {
   DeepPartial,
 } from 'typeorm';
 import { User } from './user.entity';
-import { CrudService, hashPassword } from '@mlm/nest-core';
-import { RoleNameEnum } from '@mlm/types';
+import { CrudService, hashPassword } from '@libs/nest-core';
+import { RoleNameEnum } from '@libs/types';
 import { Role } from '../role';
 import { cloneDeep, has, isArray } from 'lodash';
 

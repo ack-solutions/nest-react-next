@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from 'react'
 import { Box, Stack, Typography } from '@mui/material'
-import { ILoginSendOtpInput } from '@mlm/types'
-import { errorMessage } from '@mlm/utils'
+import { ILoginSendOtpInput } from '@libs/types'
+import { errorMessage } from '@libs/utils'
 import LoginForm from '../../sections/auth/login-form'
 import LoginOtpVerification from '../../sections/auth/login-otp-verification'
-import { AuthService, useAuth } from '@mlm/react-core'
+import { AuthService, useAuth } from '@libs/react-core'
 import AuthLayout from '../../sections/auth/auth-layout'
 
 

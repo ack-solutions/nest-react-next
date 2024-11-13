@@ -1,4 +1,4 @@
-import { useResponsive } from "@mlm/react-core";
+import { useResponsive } from "@libs/react-core";
 import { Container, styled, Box } from "@mui/material";
 import { ReactNode } from "react";
 

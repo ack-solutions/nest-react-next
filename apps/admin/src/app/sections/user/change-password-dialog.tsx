@@ -1,6 +1,6 @@
 import { DefaultDialog, Icon, TextField } from '@admin/app/components'
-import { useBoolean, UserService, useToasty } from '@mlm/react-core'
-import { IUser } from '@mlm/types'
+import { useBoolean, UserService, useToasty } from '@libs/react-core'
+import { IUser } from '@libs/types'
 import { Button, IconButton, InputAdornment, Stack, useTheme } from '@mui/material'
 import { Field, Form, Formik, FormikHelpers } from 'formik'
 import { pick } from 'lodash'

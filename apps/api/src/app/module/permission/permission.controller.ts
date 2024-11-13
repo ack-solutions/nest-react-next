@@ -4,7 +4,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { PermissionDTO } from './dto/permission.dto';
 import { Permission } from './permission.entity';
 import { PermissionService } from './permission.service';
-import { CrudController } from '@mlm/nest-core';
+import { CrudController } from '@libs/nest-core';
 
 @ApiTags('Permission')
 @Controller("permission")

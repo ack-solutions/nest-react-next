@@ -32,7 +32,7 @@ import BadgeTwoToneIcon from '@mui/icons-material/BadgeTwoTone';
 
 import { useMemo } from 'react';
 import { NavigationItem } from '../../../types/navigation';
-import { RoleNameEnum } from '@mlm/types';
+import { RoleNameEnum } from '@libs/types';
 
 
 const ICONS = {

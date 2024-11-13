@@ -3,10 +3,10 @@ import { useCallback, useState } from 'react'
 import { Alert, Box, Button, Container, Stack, Typography, styled } from '@mui/material';
 import { object, string } from 'yup';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { AuthService } from '@mlm/react-core';
+import { AuthService } from '@libs/react-core';
 import ResetPassword from '../reset-password';
 import { OtpInputField } from '@admin/app/components';
-import { errorMessage } from '@mlm/utils';
+import { errorMessage } from '@libs/utils';
 
 
 const ContentStyle = styled('div')(({ theme }) => ({

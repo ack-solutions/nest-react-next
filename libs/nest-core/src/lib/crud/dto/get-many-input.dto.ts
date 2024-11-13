@@ -1,4 +1,4 @@
-import { IFindOptions, IOrderBy, IWhereCondition, OrderDirectionEnum } from "@mlm/types";
+import { IFindOptions, IOrderBy, IWhereCondition, OrderDirectionEnum } from "@libs/types";
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { IsArray } from "class-validator";
 

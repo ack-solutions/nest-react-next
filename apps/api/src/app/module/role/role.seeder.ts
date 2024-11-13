@@ -2,8 +2,8 @@ import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './role.entity';
-import { RoleNameEnum } from '@mlm/types';
-import { Seeder } from 'apps/api/src/nest-seeder';
+import { RoleNameEnum } from '@libs/types';
+import { Seeder } from '@libs/nest-core';
 
 
 

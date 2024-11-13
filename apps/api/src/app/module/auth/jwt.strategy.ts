@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from '../user';
-import { UserStatusEnum } from '@mlm/types';
+import { UserStatusEnum } from '@libs/types';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
