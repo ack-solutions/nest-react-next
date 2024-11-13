@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { config } from './config';
+import { API_URL } from '../config';
 
 const instance = axios.create();
 instance.interceptors.response.use(
@@ -10,7 +10,7 @@ instance.interceptors.response.use(
 export default instance;
 
 const axiosInstance = axios.create({
-  baseURL: `${config.apiUrl}/api/`,
+  baseURL: `${API_URL}/api/`,
   withCredentials: false,
   headers: {
     "Access-Control-Allow-Origin": "*",

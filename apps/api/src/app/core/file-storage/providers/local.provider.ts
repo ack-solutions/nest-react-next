@@ -12,13 +12,13 @@ export class LocalProvider extends Provider<LocalProvider> {
 	tenantId = '';
 	config = {
 		rootPath: resolve(process.cwd(), 'public'),
-		baseUrl: getEnv('APP_URL', '') + '/public',
+		baseUrl: getEnv('API_URL', '') + '/public',
 	};
 
 	getConfig(key?: string) {
 		const config = {
 			rootPath: resolve(process.cwd(), 'public'),
-			baseUrl: getEnv('APP_URL', '') + '/public',
+			baseUrl: getEnv('API_URL', '') + '/public',
 		};
 		return key ? config[key] : config;
 	}

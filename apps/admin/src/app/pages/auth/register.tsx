@@ -3,8 +3,7 @@ import AuthLayout from '../../sections/auth/auth-layout'
 import { Box, Stack, Typography } from '@mui/material'
 import RegisterForm from '../../sections/auth/register-form'
 import LoginOtpVerification from '../../sections/auth/login-otp-verification'
-import { AuthService } from '@libs/react-core'
-import { errorMessage } from '@libs/utils'
+import { AuthService, errorMessage } from '@libs/react-core'
 
 const authService = AuthService.getInstance<AuthService>()
 

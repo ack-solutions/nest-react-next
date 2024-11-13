@@ -3,8 +3,9 @@ import { ConfigService, registerAs } from "@nestjs/config";
 
 export default registerAs('core', () => ({
   env: process.env.APP_ENV || 'dev',
-  appUrl: process.env.APP_URL || '',
+  apiUrl: process.env.API_URL || '',
   frontUrl: process.env.APP_FRONT_URL || '',
+  adminUrl: process.env.APP_ADMIN_URL || '',
   appKey: process.env.APP_KEY || '',
   port: parseInt(process.env.PORT, 10) || 3333,
 }));

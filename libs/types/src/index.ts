@@ -1,3 +1,4 @@
+export * from './lib/auth';
 export * from './lib/types';
 export * from './lib/base-entity';
 export * from './lib/crud';

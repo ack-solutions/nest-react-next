@@ -1,4 +1,4 @@
-import { instanceApi } from "@libs/utils";
+import { instanceApi } from "../utils/axios";
 
 
 export interface ServiceStatic<T extends Service> {

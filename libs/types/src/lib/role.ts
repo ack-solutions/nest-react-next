@@ -14,5 +14,10 @@ export interface IRole extends IBaseEntity  {
 export enum RoleNameEnum {
     ADMIN = 'Admin',
     MANGER = 'Manger',
-    CUSTOMER = 'Customer',
+    USER = 'User',
+}
+
+export enum RoleGuardEnum {
+    ADMIN = 'Admin',
+    WEB = 'web',
 }

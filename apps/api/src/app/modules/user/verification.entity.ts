@@ -1,9 +1,8 @@
 
-import {  Column, Entity, ManyToOne } from "typeorm";
+import {  Column, Entity } from "typeorm";
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { User } from "./user.entity";
 import { IsNumber, IsString } from "class-validator";
-import { IUser, IVerification } from "@libs/types";
+import { IVerification } from "@libs/types";
 import { BaseEntity } from "@api/app/core/typeorm/base.entity";
 
 
@@ -28,8 +27,5 @@ export class Verification extends BaseEntity  implements IVerification {
   @ApiPropertyOptional()
   @Column({ nullable: true })
   userId?: string;
-
-  @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  user?: IUser;
 
 }

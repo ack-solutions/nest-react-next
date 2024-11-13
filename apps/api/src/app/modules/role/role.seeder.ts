@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './role.entity';
 import { RoleNameEnum } from '@libs/types';
 import { Seeder } from '@api/app/core/nest-seeder';
+import { keyBy } from 'lodash';
 
 
 
@@ -15,27 +16,21 @@ export class RoleSeeder implements Seeder {
   ) { }
 
   async seed() {
-    const adminRoles = [
-      {
-        name: RoleNameEnum.ADMIN,
+
+    const oldRoles = await this.repo.find();
+    const roleByName = keyBy(oldRoles, 'name')
+
+    const systemRoles = Object.values(RoleNameEnum).map((name) => {
+      if (roleByName[name]){
+        return null;
+      }
+      return new Role({
+        name: name,
         isSystemRole: true,
-      },
-    ]
-    const organizationRoles = [
-      {
-        name: RoleNameEnum.MANGER,
-        isSystemRole: true,
-        // organizationId
-      },
-      {
-        name: RoleNameEnum.CUSTOMER,
-        isSystemRole: false,
-        // organizationId
-      },
-    ]
-    let roles: any = [...adminRoles, ...organizationRoles]
-    roles = roles?.map((role) => new Role(role))
-    await this.repo.save(roles);
+      },)
+    }).filter(Boolean);
+
+    await this.repo.save(systemRoles);
   }
 
   async drop() {
