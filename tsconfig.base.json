@@ -15,12 +15,13 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@api/*": ["apps/api/src/*"],
+      "@web/*": ["apps/web/src/*"],
+      "@admin/*": ["apps/admin/src/*"],
       "@libs/generators": ["tools/generators/src/index.ts"],
-      "@libs/nest-core": ["libs/nest-core/src/index.ts"],
       "@libs/react-core": ["libs/react-core/src/index.ts"],
       "@libs/types": ["libs/types/src/index.ts"],
       "@libs/utils": ["libs/utils/src/index.ts"],
-      "@admin/*": ["apps/admin/src/*"],
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -17,6 +17,7 @@
   },
   "private": true,
   "dependencies": {
+    "@aws-sdk/s3-request-presigner": "^3.689.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@faker-js/faker": "^9.1.0",

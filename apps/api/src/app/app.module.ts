@@ -1,15 +1,12 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Configs } from '@libs/nest-core';
 import { DataSource } from 'typeorm';
-import { UsersModule } from './module/user';
-import { RoleModule } from './module/role';
-import { PermissionModule } from './module/permission/permission.module';
-import { AuthModule } from './module/auth/auth.module';
-import { TypeOrmConfigService } from './core/typeorm-config.service';
+import { TypeOrmConfigService } from './core/typeorm/typeorm-config.service';
+import { ApiModule } from './api.module';
+import { Configs } from './core/config';
 
 @Module({
   imports: [
@@ -24,19 +21,12 @@ import { TypeOrmConfigService } from './core/typeorm-config.service';
         return dataSource;
       },
     }),
-    UsersModule,
-    AuthModule,
-    RoleModule,
-    PermissionModule,
+    ApiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 
-export class AppModule implements OnModuleInit {
-  constructor() { }
-  onModuleInit() {
-    // throw new Error('Method not implemented.');
-  }
+export class AppModule {
 
 }

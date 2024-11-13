@@ -3,10 +3,11 @@ dotenv.config();
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { DataSource } from "typeorm";
-import database from './app/core/database';
-import { seeder, TypeOrmConfigService } from '@libs/nest-core';
+import database from './app/core/config/database';
 import { AllEntities } from './app/core/entities';
 import { AllSeeders } from './app/core/seeders';
+import { TypeOrmConfigService } from './app/core/typeorm/typeorm-config.service';
+import { seeder } from './app/core/nest-seeder';
 
 
 
