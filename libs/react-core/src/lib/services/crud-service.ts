@@ -1,16 +1,18 @@
 
 import { pick } from 'lodash';
 import { Service } from './service';
-import { instanceApi, toFormData } from '@libs/utils';
 import { IPaginationRequest } from '@libs/types';
+import { toFormData } from '../utils/form';
 
 export abstract class CRUDService<T> extends Service {
+ 
   protected abstract apiPath: string;
   protected fillable: string[] = [];
-  protected hasFileUpload: boolean = false;
+
+  protected hasFileUpload = false;
 
   getMany(request: IPaginationRequest = {}) {
-    return instanceApi
+    return this.instanceApi
       .get(`${this.apiPath}`, {
         params: request,
       })
@@ -23,7 +25,7 @@ export abstract class CRUDService<T> extends Service {
   }
 
   getOne(id: string | number, request = {}) {
-    return instanceApi
+    return this.instanceApi
       .get<T>(`${this.apiPath}/${id}`, {
         params: request,
       })
@@ -39,7 +41,7 @@ export abstract class CRUDService<T> extends Service {
       request = pick(request, this.fillable);
     }
 
-    return instanceApi
+    return this.instanceApi
       .post<T>(
         `${this.apiPath}`,
         this.hasFileUpload ? toFormData(request) : request
@@ -56,7 +58,7 @@ export abstract class CRUDService<T> extends Service {
       request = pick(request, this.fillable);
     }
 
-    return instanceApi
+    return this.instanceApi
       .put<T>(
         `${this.apiPath}/${id}`,
         this.hasFileUpload ? toFormData(request) : request
@@ -67,7 +69,7 @@ export abstract class CRUDService<T> extends Service {
   }
 
   count(request?: any) {
-    return instanceApi
+    return this.instanceApi
       .get<T>(`${this.apiPath}/count`, { params: request })
       .then(({ data }) => {
         return data;
@@ -75,19 +77,19 @@ export abstract class CRUDService<T> extends Service {
   }
 
   delete(id: string | number) {
-    return instanceApi.delete<T>(`${this.apiPath}/${id}`);
+    return this.instanceApi.delete<T>(`${this.apiPath}/${id}`);
   }
 
   trashDelete(id: string) {
-    return instanceApi.delete<T>(`${this.apiPath}/${id}/trash`)
+    return this.instanceApi.delete<T>(`${this.apiPath}/${id}/trash`)
   }
 
-  restoreTrashed(id: string | number) {
-    return instanceApi.put<T>(`${this.apiPath}/${id}/restore`)
+  restore(id: string | number) {
+    return this.instanceApi.put<T>(`${this.apiPath}/${id}/restore`)
   }
 
   bulkDelete(ids: string[] | number[]) {
-    return instanceApi.delete<T>(`${this.apiPath}`, {
+    return this.instanceApi.delete<T>(`${this.apiPath}`, {
       params: { ids: ids?.join(',') },
     });
   }
@@ -101,7 +103,7 @@ export abstract class CRUDService<T> extends Service {
   }
 
 
-  getQueryKey(method?: 'get-all' | 'get' | 'create' | 'update' | 'delete' | string) {
+  getQueryKey(method?: 'get-all' | 'get-one' | 'create' | 'update' | 'delete' | 'trash-delete' | 'restore' | string) {
     return [this.apiPath, method].filter(Boolean).join('/')
   }
 }
