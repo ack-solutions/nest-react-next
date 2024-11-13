@@ -15,11 +15,13 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@mlm/generators": ["tools/generators/src/index.ts"],
-      "@mlm/nest-core": ["libs/nest-core/src/index.ts"],
-      "@mlm/react-core": ["libs/react-core/src/index.ts"],
-      "@mlm/types": ["libs/types/src/index.ts"],
-      "@mlm/utils": ["libs/utils/src/index.ts"]
+      "@api/*": ["apps/api/src/*"],
+      "@web/*": ["apps/web/src/*"],
+      "@admin/*": ["apps/admin/src/*"],
+      "@libs/generators": ["tools/generators/src/index.ts"],
+      "@libs/react-core": ["libs/react-core/src/index.ts"],
+      "@libs/types": ["libs/types/src/index.ts"],
+      "@libs/utils": ["libs/utils/src/index.ts"],
     }
   },
   "exclude": ["node_modules", "tmp"]

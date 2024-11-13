@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/api/src",
   "projectType": "application",
-  "tags": [],
+  "tags": ["scope:api"],
   "targets": {
     "serve": {
       "executor": "@nx/js:node",
@@ -20,6 +20,17 @@
         "production": {
           "buildTarget": "api:build:production"
         }
+      }
+    },
+    "seed": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "commands": [
+          "ts-node -r tsconfig-paths/register --project apps/api/tsconfig.app.json apps/api/src/seed.ts"
+        ]
       }
     }
   }

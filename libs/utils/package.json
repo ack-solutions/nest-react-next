@@ -1,5 +1,5 @@
 {
-  "name": "@mlm/utils",
+  "name": "@libs/utils",
   "version": "0.0.1",
   "dependencies": {},
   "private": true
