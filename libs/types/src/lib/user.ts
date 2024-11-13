@@ -17,6 +17,7 @@ export interface IUser extends IBaseEntity {
   name?: string;
   avatarUrl?: string;
 }
+
 export interface IVerification extends IBaseEntity {
   email?: string;
   otp: number;

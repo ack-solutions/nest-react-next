@@ -3,8 +3,8 @@ import { Repository } from 'typeorm';
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { find, uniqBy } from 'lodash';
-import { Role } from '../role/role.entity'; 
+import { find, keyBy, uniqBy } from 'lodash';
+import { Role } from '../role/role.entity';
 import { IUser, RoleNameEnum } from '@libs/types';
 import { DataFactory, Seeder } from '@api/app/core/nest-seeder';
 import { hashPassword } from '@api/app/utils';
@@ -20,53 +20,64 @@ export class UserSeeder implements Seeder {
 
   ) { }
 
-  async seed() {
+  async seed({ dummyData }) {
     let users = [];
+
+    const oldUsers = await this.userRepository.find();
+    const userByEmail = keyBy(oldUsers, 'email')
+
+
     const roles = await this.roleRepository.find();
     const adminRole = find(roles, { name: RoleNameEnum.ADMIN });
+    const userRole = find(roles, { name: RoleNameEnum.USER });
 
-
-
-    const defaultUsers:IUser[] = [
+    const defaultUsers: IUser[] = [
       {
-        firstName: 'Chetan',
-        lastName: 'Khandla',
-        email: 'chetan@ackplus.com',
+        firstName: 'Admin',
+        lastName: 'Test',
+        email: 'admin@gmail.com',
         roles: [adminRole],
-        passwordHash: hashPassword('Admin@123'),
+        passwordHash: hashPassword('Test@123'),
         isSuperAdmin: true,
       },
       {
-        firstName: 'Ajay',
-        lastName: 'Khandla',
-        email: 'ajay@ackplus.com',
+        firstName: 'Admin2',
+        lastName: 'Test',
+        email: 'admin2@gmail.com',
         roles: [adminRole],
         passwordHash: hashPassword('Test@123'),
-        
+        isSuperAdmin: false,
       },
       {
-        firstName: 'Customer',
-        lastName: 'Ack',
-        email: 'customer@gmail.com',
-        roles: [adminRole],
+        firstName: 'User',
+        lastName: 'Test',
+        email: 'user@gmail.com',
+        roles: [userRole],
         passwordHash: hashPassword('Test@123'),
       },
     ]
 
-    users = defaultUsers?.map((user)=>{
+    users = defaultUsers?.map((user) => {
       const factoryUser = new User(DataFactory.createForClass(User).generate(1)[0]);
-      return { ...factoryUser, ...user}
+      return { ...factoryUser, ...user }
     })
 
     const dummyUsers = []
-    const Users = await DataFactory.createForClass(User).generate(10)
-    for (let index = 0; index < Users.length; index++) {
-      const dummyUser: any = Users[index];
-      dummyUser.passwordHash = hashPassword('Test@123');
-      dummyUser.roles = [adminRole];
-      dummyUsers.push(new User(dummyUser));
+    if (dummyData) {
+      const Users = await DataFactory.createForClass(User).generate(10)
+      for (let index = 0; index < Users.length; index++) {
+        const dummyUser: any = Users[index];
+        dummyUser.passwordHash = hashPassword('Test@123');
+        dummyUser.roles = [userRole];
+        dummyUsers.push(new User(dummyUser));
+      }
+      users = uniqBy([...users, ...dummyUsers], (user) => user.email);
     }
-    users = uniqBy([...users, ...dummyUsers], (user) => user.email);
+
+    // Filter old user
+    users = users.filter(({ email }) => {
+      return !userByEmail[email];
+    })
     return this.userRepository.save(users);
   }
 

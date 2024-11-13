@@ -1,8 +1,8 @@
 import { Column, Entity, ManyToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import {  IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 import { Permission } from '../permission/permission.entity';
-import { IPermission, IRole } from '@libs/types';
+import { IPermission, IRole, RoleGuardEnum } from '@libs/types';
 import { BaseEntity } from '@api/app/core/typeorm/base.entity';
 
 @Entity()
@@ -11,6 +11,11 @@ export class Role extends BaseEntity implements IRole {
     @IsString()
     @Column()
     name?: string;
+
+    @ApiProperty()
+    @IsString()
+    @Column('text', { default: RoleGuardEnum.ADMIN, comment: 'This type defines the different contexts or environments where roles may apply. Guard name like admin, web, portal and etc...' })
+    guard?: RoleGuardEnum;
 
     @ApiProperty({ default: false })
     @IsString()

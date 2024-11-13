@@ -6,7 +6,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { AuthService } from '@libs/react-core';
 import ResetPassword from '../reset-password';
 import { OtpInputField } from '@admin/app/components';
-import { errorMessage } from '@libs/utils';
+import { errorMessage } from '@libs/react-core';
 
 
 const ContentStyle = styled('div')(({ theme }) => ({

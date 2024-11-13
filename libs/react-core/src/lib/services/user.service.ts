@@ -1,4 +1,5 @@
-import { instanceApi, toFormData } from "@libs/utils";
+
+import { toFormData } from "../utils";
 import { CRUDService } from "./crud-service";
 
 
@@ -11,7 +12,7 @@ export class UserService extends CRUDService<any> {
   }
 
   updateProfile(request: any) {
-    return instanceApi.put<any>('user/profile', toFormData(request));
+    return this.instanceApi.put<any>('user/profile', toFormData(request));
   }
 
   tabCount() {

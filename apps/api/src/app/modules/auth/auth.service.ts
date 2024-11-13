@@ -162,6 +162,7 @@ export class AuthService {
         if (count) {
             throw new ConflictException('There is an existing account with this email address.');
         }
+        
         await this.veryFyOtp({ otp: req?.otp, email: req?.email })
         req.emailVerifiedAt = new Date()
 

@@ -85,7 +85,7 @@ export function useNavData() {
             title: 'Reports',
             path: PATH_DASHBOARD.reports.root,
             icon: ICONS.reports,
-            permissions: [RoleNameEnum.CUSTOMER],
+            permissions: [RoleNameEnum.ADMIN],
             staticPaths: [PATH_DASHBOARD.reports.root]
         },
         {
@@ -94,26 +94,28 @@ export function useNavData() {
             title: 'Users',
             path: '',
             icon: ICONS.user,
-            permissions: [RoleNameEnum.CUSTOMER],
+            permissions: [RoleNameEnum.ADMIN],
             staticPaths: ['users'],
             children: [
                 {
                     id: 'users.list',
                     title: 'Users',
                     path: PATH_DASHBOARD.users.root,
-                    permissions: [RoleNameEnum.CUSTOMER],
+                    permissions: [RoleNameEnum.ADMIN],
                     staticPaths: [PATH_DASHBOARD.users.root],
                 },
                 {
                     id: 'users.roles',
                     title: 'Roles',
                     path: PATH_DASHBOARD.users.roles,
+                    permissions: [RoleNameEnum.ADMIN],
                     staticPaths: [PATH_DASHBOARD.users.roles],
                 },
                 {
                     id: 'users.permissions',
                     title: 'Permissions',
                     path: PATH_DASHBOARD.users.permissions,
+                    permissions: [RoleNameEnum.ADMIN],
                     staticPaths: [PATH_DASHBOARD.users.permissions],
                 },
             ],
