@@ -1,18 +1,25 @@
 
+import { IUser } from "@libs/types";
 import { toFormData } from "../utils";
 import { CRUDService } from "./crud-service";
 
 
 export class UserService extends CRUDService<any> {
   protected apiPath = 'user';
-  // override  hasFileUpload = true;
+  override  hasFileUpload = true;
 
   getMe() {
     return this.instanceApi.get<any>(`${this.apiPath}/me`)
   }
 
-  updateProfile(request: any) {
-    return this.instanceApi.put<any>('user/profile', toFormData(request));
+  // updateProfile(request: Partial<IUser>) {
+  //   return this.instanceApi.put<IUser>(`${this.apiPath}/update/profile`, toFormData(request));
+  // }
+
+  updateProfile(request: Partial<IUser>) {
+    return this.instanceApi.put<IUser>(`${this.apiPath}/update/profile`, request).then((resp) => {
+      return this.mapResponse(resp.data);
+    })
   }
 
   tabCount() {
