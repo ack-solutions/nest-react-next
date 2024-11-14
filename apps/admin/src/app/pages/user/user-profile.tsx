@@ -1,12 +1,14 @@
 import { Box, Button, Container, Stack } from '@mui/material'
-import { Field, Form, Formik } from 'formik'
+import { Field, Form, Formik, FormikHelpers } from 'formik'
 import React, { useCallback, useRef } from 'react'
 import { object, string } from 'yup';
 import Grid from '@mui/material/Grid2';
 import { TextField, UploadAvatarField } from '@admin/app/components';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@libs/react-core';
+import { useAuth, UserService, useToasty } from '@libs/react-core';
 import { UploadAvatar } from '@admin/app/components/upload';
+
+const userService = UserService.getInstance<UserService>();
 
 const defaultValues: any = {
     firstName: '',
@@ -26,13 +28,23 @@ const validationSchema = object().shape({
 const UserProfile = () => {
     const formRef = useRef<any>();
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const {setUser, user } = useAuth();
+    const { showToasty } = useToasty();
 
     const handleSubmitForm = useCallback(
-        () => {
-
+        (values: any, action: FormikHelpers<any>) => {
+            userService.updateProfile(values).then((data) => {
+                setUser({
+                    ...user,
+                    ...data,
+                })
+                showToasty('User profile successfully updated')
+                action.setSubmitting(false)
+            }).catch((error) => {
+                showToasty(error, 'error')
+            })
         },
-        [],
+        [showToasty],
     )
 
     return (

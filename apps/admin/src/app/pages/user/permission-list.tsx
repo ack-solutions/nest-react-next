@@ -4,7 +4,6 @@ import {
     Container,
     Button,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import { PermissionService, useToasty } from '@libs/react-core';
 import { IRole } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
