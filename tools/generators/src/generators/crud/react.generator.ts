@@ -1,7 +1,8 @@
 import { generateFiles, getProjects, names, Tree } from "@nx/devkit";
 import { PluginGeneratorSchema } from "./schema";
 import { libraryGenerator } from "@nx/react";
-import path from "path";
+import { join } from "path";
+
 
 export class ReactGenerator {
     constructor(private tree: Tree, private options: PluginGeneratorSchema) {
@@ -40,7 +41,7 @@ export class ReactGenerator {
 
         generateFiles(
             this.tree,
-            path.join(__dirname, 'files', 'react'), // Path to your custom template files
+            join(__dirname, 'files', 'react'), // Path to your custom template files
             `apps/admin/src/app`, // Destination where the custom files should go
             { tmpl: '', name, className, fileName, propertyName, columns: this.options.columns } // Data to pass to the template (e.g., the library name)
         );
