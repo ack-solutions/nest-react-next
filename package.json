@@ -11,7 +11,7 @@
     "test:all": "nx run-many -t=test",
     "e2e": "nx e2e",
     "e2e:all": "nx run-many -t=e2e",
-    "g:crud": "nx g @app/generators:crud",
+    "g:crud": "nx g @libs/generators:crud",
     "icons": "yarn fantasticon icons  -o apps/admin/src/assets/icon-font  --normalize  --name icon-next-rect-app -h 1024",
     "seed": "nx run api:seed"
   },

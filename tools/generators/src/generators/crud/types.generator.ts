@@ -1,11 +1,16 @@
-import { generateFiles, getProjects, names, Tree } from "@nx/devkit";
+import { generateFiles, getProjects, names, ProjectConfiguration, Tree } from "@nx/devkit";
 import { Column, PluginGeneratorSchema } from "./schema";
-import path from "path";
 import { prompt } from 'enquirer';
-import { libraryGenerator } from "@nx/js";
+import { join } from "path";
 
 export class TypesGenerator {
+    
+    projects: Map<string, ProjectConfiguration>;
+    names: { name: string; className: string; propertyName: string; constantName: string; fileName: string; };
+
     constructor(private tree: Tree, private options: PluginGeneratorSchema) {
+        this.projects = getProjects(this.tree);
+        this.names = names(this.options.name);
     }
 
     getColumns() {
@@ -13,13 +18,8 @@ export class TypesGenerator {
     }
 
     async run() {
-
-        const projects = getProjects(this.tree);
-        const { name, generateApi } = this.options;
-
-        const libName = `${name}-types`
-        const isCreated = projects.has(libName)
-        if (!isCreated && generateApi) {
+        const {  generateApi } = this.options;
+        if (generateApi) {
 
             this.options.columns = []
             if (this.options.addColumns) {
@@ -27,20 +27,8 @@ export class TypesGenerator {
                 this.options.columns = columns.map((value) => this.mapColumnData(value));
             }
 
-            // await libraryGenerator(this.tree, {
-            //     name: libName,
-            //     directory: `packages/${name}/types`,
-            //     importPath: `@ackplus-inventory/${name}/types`,
-            //     publishable: true,
-            //     strict: false,
-            //     buildable: true,
-            //     linter: 'none',
-            //     bundler: 'vite',
-            //     unitTestRunner: 'vitest',
-            // });
-            // this.tree.delete(`packages/${name}/types/src/lib`)
-
             await this.generateFiles();
+            this.addExportStatementInIndex()
         }
     }
 
@@ -50,7 +38,7 @@ export class TypesGenerator {
 
         generateFiles(
             this.tree,
-            path.join(__dirname, 'files', 'types'), // Path to your custom template files
+            join(__dirname, 'files', 'types'), // Path to your custom template files
             `libs/types/src/lib`, // Destination where the custom files should go
             { tmpl: '', name, className, fileName, propertyName, columns: this.options.columns } // Data to pass to the template (e.g., the library name)
         );
@@ -221,5 +209,26 @@ export class TypesGenerator {
 
         // Join options into a comma-separated string
         return options?.length > 0 ? `{${options.join(', ')}}` : '';
+    }
+
+
+
+    private addExportStatementInIndex() {
+        const indexPath = `${this.projects.get('types').root}/src/index.ts`;
+
+        // Check if index.ts exists
+        if (!this.tree.exists(indexPath)) {
+            throw new Error(`index.ts not found at ${indexPath}`);
+        }
+
+        // Read the current content of index.ts
+        const currentContent = this.tree.read(indexPath, 'utf-8').trim();
+
+        // Add the new export line (if it doesn't already exist)
+        const newExportLine = `export * from './lib/${this.names.fileName}';`;
+        if (!currentContent.includes(newExportLine)) {
+            const updatedContent = `${currentContent}\n${newExportLine}\n`;
+            this.tree.write(indexPath, updatedContent);
+        }
     }
 }
