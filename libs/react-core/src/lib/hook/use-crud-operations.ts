@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient, DefinedInitialDataOptions, UseMutationOptions } from '@tanstack/react-query';
-import { IBaseEntity, IPaginationResult } from "@ackplus-inventory/core/types";
+import { IBaseEntity, IPaginationResult } from "@libs/types";
 import { CRUDService } from '../services/crud-service';
 
 
