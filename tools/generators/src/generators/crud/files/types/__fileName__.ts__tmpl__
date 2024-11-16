@@ -1,4 +1,4 @@
-import { IBaseEntity } from "@ackplus-inventory/core/types";
+import { IBaseEntity } from "./base-entity";
 
 export interface I<%= className %> extends IBaseEntity {
   <% columns.forEach(column => { %>

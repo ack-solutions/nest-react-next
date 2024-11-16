@@ -1,6 +1,6 @@
 
 import { <%= className %>Service } from '../services/<%= fileName %>.service';
-import { useCrudOperations } from '@ackplus-inventory/core/react';
+import { useCrudOperations } from '@libs/react-core';
 
 const <% propertyName %>Service = <%= className %>Service.getInstance<<%= className %>Service>()
 

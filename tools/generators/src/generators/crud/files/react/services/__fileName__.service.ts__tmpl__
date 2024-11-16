@@ -1,5 +1,5 @@
-import { I<%= className %> } from '@ackplus-inventory/<%= fileName %>/types';
-import { CRUDService } from '@ackplus-inventory/core/react';
+import { I<%= className %> } from '@libs/types';
+import { CRUDService } from '@libs/react-core';
 
 export class <%= className %>Service extends CRUDService<I<%= className %>> {
   protected apiPath = '<%= fileName %>';
