@@ -6,7 +6,7 @@ import { CRUDService } from "./crud-service";
 
 export class UserService extends CRUDService<any> {
   protected apiPath = 'user';
-  override  hasFileUpload = true;
+  protected override  hasFileUpload = true;
 
   getMe() {
     return this.instanceApi.get<any>(`${this.apiPath}/me`)
@@ -31,7 +31,9 @@ export class UserService extends CRUDService<any> {
   }
 
   changePassword(request: any) {
-    return this.instanceApi.post(`${this.apiPath }/change-password`, request);
+    return this.instanceApi.post(`${this.apiPath }/change-password`, request).then((resp) => {
+      return resp.data;
+    })
   }
 
 }

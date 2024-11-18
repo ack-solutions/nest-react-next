@@ -1,4 +1,4 @@
-import { Container } from '@mui/material'
+import { Card, CardContent, Container } from '@mui/material'
 import React, { useCallback, useEffect, useState } from 'react'
 import AddEditUserForm from '../../sections/user/add-edit-user-form'
 import { IRole, IUser } from '@libs/types'
@@ -56,16 +56,20 @@ const AddEditUser = () => {
 
     return (
         <Page title={`${userId ? 'Edit User' : 'Add User'}`}>
-            <Container maxWidth={false}>
+            <Container maxWidth='lg'>
                 <CustomBreadcrumbs
-                    heading="Users"
+                    heading="Edit User"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
                         { name: 'Users', href: PATH_DASHBOARD.users.root },
                         { name: `${userId ? 'Edit User' : 'Add User'}` },
                     ]}
                 />
-                <AddEditUserForm onSubmit={handleSubmit} values={user} />
+                <Card>
+                    <CardContent>
+                        <AddEditUserForm onSubmit={handleSubmit} values={user} />
+                    </CardContent>
+                </Card>
             </Container>
         </Page>
     )

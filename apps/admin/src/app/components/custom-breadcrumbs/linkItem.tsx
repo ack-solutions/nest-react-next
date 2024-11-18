@@ -17,12 +17,16 @@ export default function BreadcrumbsLink({ link, activeLast, disabled }: Props) {
     alignItems: 'center',
     fontSize: '0.875rem',
     color: 'text.primary',
+    textDecoration: 'none',
+    ':hover': {
+      textDecoration: 'underLine'
+    },
     ...(disabled &&
       !activeLast && {
-        cursor: 'default',
-        pointerEvents: 'none',
-        color: 'text.disabled',
-      }),
+      cursor: 'default',
+      pointerEvents: 'none',
+      color: 'text.disabled',
+    }),
   };
 
   const renderContent = (

@@ -135,7 +135,7 @@ export default function UsersList() {
       render: (row) => (
         <Stack direction="row" alignItems="center" spacing={2}>
           <Typography variant="body2" noWrap>
-            {row?.name}
+            {startCase(row?.name)}
           </Typography>
         </Stack>
       ),
@@ -197,10 +197,9 @@ export default function UsersList() {
     },
   ];
 
-
   return (
     <Page title='Users'>
-      <Container maxWidth={false}>
+      <Container maxWidth='lg'>
         <CustomBreadcrumbs
           heading="Users"
           links={[
@@ -227,6 +226,7 @@ export default function UsersList() {
           onChange={handleDataTableChange}
           onRowClick={handleRowClick}
           hasFilter
+          selectable
         />
       </Container>
       {openPasswordDialog && <ChangePasswordDialog onClose={handleCloseDialog} values={openPasswordDialog} />}

@@ -1,9 +1,11 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
+  Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
@@ -12,10 +14,12 @@ import { ApiTags } from '@nestjs/swagger';
 import { UserDTO } from './dto/user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from '../auth/decorator/current-user';
-import { IUser } from '@libs/types';
+import { ChangePasswordInput, IUser } from '@libs/types';
 import { CrudController } from '../../core/crud';
 import { User } from './user.entity';
-
+import { RequestContext } from '@api/app/core/request-context/request-context';
+import * as bcrypt from 'bcryptjs';
+import { hashPassword } from '@api/app/utils';
 
 @ApiTags('User')
 @Controller('user')
@@ -66,4 +70,33 @@ export class UsersController extends CrudController(UserDTO)<IUser> {
     return this.userService.updateProfile(entity);
   }
   
+  
+  @HttpCode(HttpStatus.ACCEPTED)
+  @Post('change-password')
+  @UseGuards(AuthGuard('jwt'))
+  async changePassword(@Body() entity: ChangePasswordInput) {
+    const currentUser = RequestContext.currentUser();
+    const user = await this.userService.getOne(currentUser.id);
+    const userPassword = await this.userService.userRepository
+      .createQueryBuilder()
+      .where({
+        id: currentUser.id,
+      })
+      .select('"passwordHash"')
+      .getRawOne();
+
+    const isMatch = await bcrypt.compare(
+      entity.oldPassword,
+      userPassword.passwordHash
+    );
+    if (isMatch) {
+      await this.userService.userRepository.update(user.id, {
+        passwordHash: hashPassword(entity.password)
+      });
+    } else {
+      throw new BadRequestException('Old password is wrong');
+    }
+    return true;
+  }
+
 }

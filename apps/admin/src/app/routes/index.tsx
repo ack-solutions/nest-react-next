@@ -20,6 +20,7 @@ const Dashboard = Loadable(lazy(() => import('../pages/dashboard/dashboard')));
 // User
 const UserList = Loadable(lazy(() => import('../pages/user/user-list')));
 const UserProfile = Loadable(lazy(() => import('../pages/user/user-profile')));
+const UserChangePassword = Loadable(lazy(() => import('../pages/user/user-change-password')));
 const AddEditUser = Loadable(lazy(() => import('../pages/user/add-edit-user')));
 const RoleList = Loadable(lazy(() => import('../pages/roles/role-list')));
 const PermissionList = Loadable(lazy(() => import('../pages/user/permission-list')));
@@ -72,6 +73,7 @@ export default function Router() {
                 },
                 { path: 'profile', element: <UserProfile />  },
                 { path: 'page', element: <PageList />  },
+                { path: 'change-password', element: <UserChangePassword />  },
             ],
         },
         { path: '*', element: <Navigate to="/404" replace /> },

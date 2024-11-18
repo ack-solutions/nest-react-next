@@ -22,6 +22,7 @@ import {
   Stack,
   Divider,
   BoxProps,
+  Card,
 } from '@mui/material';
 import {
   forwardRef,
@@ -433,7 +434,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
       (collapsible ? 1 : 0);
 
     return (
-      <Box {...cardProps} className="data-table" width="100%">
+      <Box component={Card} {...cardProps} className="data-table" width="100%">
         {detailRowTitle && (
           <>
             <Stack
