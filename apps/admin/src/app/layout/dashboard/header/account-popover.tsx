@@ -19,6 +19,10 @@ export default function AccountPopover() {
       label: 'Profile',
       linkTo: PATH_DASHBOARD.profile.root,
     },
+    {
+      label: 'Change Password',
+      linkTo: PATH_DASHBOARD.changePassword.root,
+    },
 
   ];
   const navigate = useNavigate();

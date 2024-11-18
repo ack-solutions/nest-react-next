@@ -1,17 +1,17 @@
 import type { } from '@mui/x-date-pickers/themeAugmentation';
 import type { } from '@mui/material/themeCssVarsAugmentation';
 import CssBaseline from '@mui/material/CssBaseline';
-import { createTheme, Experimental_CssVarsProvider as CssVarsProvider, getInitColorSchemeScript as _getInitColorSchemeScript } from '@mui/material/styles';
+import { createTheme, Experimental_CssVarsProvider as CssVarsProvider, getInitColorSchemeScript as _getInitColorSchemeScript, ThemeOptions } from '@mui/material/styles';
 import { typography } from './typography';
-import { components } from './components';
 import { colorSchemes } from './palette';
 import { presets } from './options/presets';
 import { useMemo } from 'react';
 import { customShadows } from './custom-shadows';
 import { shadows } from './shadows';
-import {  } from '@mui/material/styles';
 import { GlobalStyles } from '@mui/material';
-import {  initialSetting, useSettingsContext } from '@libs/react-core';
+import { initialSetting, useSettingsContext } from '@libs/react-core';
+import ComponentsOverrides from './components';
+import shape from './shape';
 
 
 type Props = {
@@ -28,13 +28,12 @@ export function ThemeProvider({ children }: Props) {
     colorSchemes,
     shadows: shadows(settings.colorScheme),
     customShadows: customShadows(settings.colorScheme),
-    shape: { borderRadius: 8 },
-    components,
+    shape:shape,
     typography,
     cssVarPrefix: '',
   }
 
-  const updateTheme = useMemo(() => {
+  const updateTheme: ThemeOptions = useMemo(() => {
     return {
       ...initialTheme,
       colorSchemes: {
@@ -65,7 +64,10 @@ export function ThemeProvider({ children }: Props) {
       },
     };
   }, [settings])
+
   const theme = createTheme(updateTheme);
+
+  theme.components = ComponentsOverrides(theme);
 
   const schemeConfig = {
     modeStorageKey: 'theme-mode',

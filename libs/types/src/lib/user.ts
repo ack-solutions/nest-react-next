@@ -33,3 +33,8 @@ export enum UserStatusEnum {
 }
 
 
+export interface ChangePasswordInput {
+  oldPassword?: string,
+  password?: string,
+  confirmPassword?: string,
+}

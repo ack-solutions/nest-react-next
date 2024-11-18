@@ -36,7 +36,7 @@ export class UserService extends CrudService<User> {
       entity.roles = req.roles.map((id) => {
         return new Role({ id })
       });
-    }
+    }    
     return entity as User;
   }
 
@@ -102,7 +102,6 @@ export class UserService extends CrudService<User> {
       const userEntity = omit(entity, [
         'roles',
       ]);
-console.log({userEntity});
 
       await this.userRepository.save({ ...user, ...userEntity });
       return await this.userRepository.findOne({

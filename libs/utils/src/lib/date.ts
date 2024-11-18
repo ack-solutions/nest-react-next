@@ -28,9 +28,6 @@ export function toDisplayMinutesFormatted(seconds:any) {
 
   } else {
     return `${minutes}m`;
-    // const divisor_for_seconds = seconds % 60;
-    // const new_seconds = Math.floor(divisor_for_seconds);
-    // return new_seconds ? `${minutes}m ${new_seconds}s` : `${minutes}m`;
   }
 }
 

@@ -153,7 +153,7 @@ export default function RoleList() {
 
     return (
         <Page title='Roles'>
-            <Container maxWidth={false}>
+            <Container maxWidth='lg'>
                 <CustomBreadcrumbs
                     heading="Users"
                     links={[

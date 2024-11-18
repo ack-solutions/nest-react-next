@@ -1,6 +1,6 @@
 import { Icon, TextField } from '@admin/app/components';
 import { RoleService, useBoolean } from '@libs/react-core';
-import { IRole, IUser } from '@libs/types';
+import { IRole, IUser, UserStatusEnum } from '@libs/types';
 import { Button, Checkbox, IconButton, InputAdornment, MenuItem, Stack, useTheme } from '@mui/material';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { startCase } from 'lodash';
@@ -21,6 +21,7 @@ const defaultValues = {
     lastName: '',
     email: '',
     phoneNumber: '',
+    status: '',
     roles: []
 };
 
@@ -155,6 +156,24 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 label='Phone Number'
                                 component={TextField}
                             />
+                        </Grid>
+                        <Grid size={{ xs: 12, sm: 6 }}>
+                            <Field
+                                fullWidth
+                                name='status'
+                                label='Status'
+                                component={TextField}
+                                select
+                            >
+                                {Object.values(UserStatusEnum)?.map((status, index) => (
+                                    <MenuItem
+                                        key={index}
+                                        value={status}
+                                    >
+                                        {startCase(status)}
+                                    </MenuItem>
+                                ))}
+                            </Field>
                         </Grid>
                         <Grid size={{ xs: 12, sm: 6 }}>
                             <Field
