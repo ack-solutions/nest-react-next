@@ -23,7 +23,9 @@ export class UserService extends CRUDService<any> {
   }
 
   tabCount() {
-    return this.instanceApi.get(`${this.apiPath}/count`)
+    return this.instanceApi.get(`${this.apiPath}/count`).then((resp) => {
+      return resp.data;
+    })
   }
 
   monthPresentDays() {

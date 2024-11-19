@@ -69,8 +69,6 @@ const ICONS = {
 
 export function useNavData() {
 
-    
-
     const navigationItems = useMemo(() => ([
         {
             id: 'dashboard',

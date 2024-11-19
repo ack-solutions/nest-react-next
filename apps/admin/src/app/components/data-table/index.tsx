@@ -153,7 +153,7 @@ export interface DataTableChangeEvent {
   };
 }
 
-export interface DataTableProps {
+export interface DataTableProps extends Omit<BoxProps, 'onChange' | 'onSelect'> {
   columns: DataTableColumn<any>[];
   data: any[] | null;
   defaultOrder?: 'asc' | 'desc';
@@ -243,6 +243,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
       extraFilter,
       showPagination = true,
       noOptionsText,
+      ...props
     },
     ref
   ) => {
@@ -434,7 +435,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
       (collapsible ? 1 : 0);
 
     return (
-      <Box component={Card} {...cardProps} className="data-table" width="100%">
+      <Box component={Card} className="data-table" width="100%" {...props}>
         {detailRowTitle && (
           <>
             <Stack

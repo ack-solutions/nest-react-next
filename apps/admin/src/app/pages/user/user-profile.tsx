@@ -47,7 +47,7 @@ const UserProfile = () => {
     )
 
     return (
-        <Container maxWidth='sm'>
+        <Container>
             <Card>
                 <CardContent>
                     <Formik

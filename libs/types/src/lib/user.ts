@@ -33,7 +33,7 @@ export enum UserStatusEnum {
 }
 
 
-export interface ChangePasswordInput {
+export interface IChangePasswordInput {
   oldPassword?: string,
   password?: string,
   confirmPassword?: string,

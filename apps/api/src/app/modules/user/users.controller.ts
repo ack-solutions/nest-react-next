@@ -14,7 +14,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { UserDTO } from './dto/user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from '../auth/decorator/current-user';
-import { ChangePasswordInput, IUser } from '@libs/types';
+import {  IChangePasswordInput, IUser } from '@libs/types';
 import { CrudController } from '../../core/crud';
 import { User } from './user.entity';
 import { RequestContext } from '@api/app/core/request-context/request-context';
@@ -74,7 +74,7 @@ export class UsersController extends CrudController(UserDTO)<IUser> {
   @HttpCode(HttpStatus.ACCEPTED)
   @Post('change-password')
   @UseGuards(AuthGuard('jwt'))
-  async changePassword(@Body() entity: ChangePasswordInput) {
+  async changePassword(@Body() entity: IChangePasswordInput) {
     const currentUser = RequestContext.currentUser();
     const user = await this.userService.getOne(currentUser.id);
     const userPassword = await this.userService.userRepository
@@ -96,7 +96,7 @@ export class UsersController extends CrudController(UserDTO)<IUser> {
     } else {
       throw new BadRequestException('Old password is wrong');
     }
-    return true;
+    return 'Password successfully updated.';
   }
 
 }

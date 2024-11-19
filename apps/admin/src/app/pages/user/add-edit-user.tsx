@@ -56,9 +56,9 @@ const AddEditUser = () => {
 
     return (
         <Page title={`${userId ? 'Edit User' : 'Add User'}`}>
-            <Container maxWidth='lg'>
+            <Container>
                 <CustomBreadcrumbs
-                    heading="Edit User"
+                    heading={`${userId ? 'Edit User' : 'Add User'}`}
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
                         { name: 'Users', href: PATH_DASHBOARD.users.root },

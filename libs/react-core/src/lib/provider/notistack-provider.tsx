@@ -2,15 +2,12 @@ import { ReactNode, useRef } from 'react';
 import { SnackbarProvider, SnackbarKey } from 'notistack';
 import { useTheme } from '@mui/material/styles';
 import { GlobalStyles, Collapse, Box, IconButton, alpha } from '@mui/material';
-
 import {
   Info as InfoIcon,
-  CheckCircle as CheckCircleIcon,
   Warning as WarningIcon,
   Error as ErrorIcon,
 } from '@mui/icons-material';
 import { Icon } from '@admin/app/components/icon';
-
 
 function SnackbarStyles() {
   const theme = useTheme();
@@ -20,7 +17,6 @@ function SnackbarStyles() {
   return (
     <GlobalStyles
       styles={{
-        // '#root': {
         '& .notistack-Snackbar': {
           width: '100%',
           maxWidth: 500,
@@ -37,24 +33,18 @@ function SnackbarStyles() {
         '& .SnackbarItem-message': {
           padding: '0 !important',
           fontWeight: theme.typography.fontWeightMedium,
-        },
-        // '& .SnackbarItem-action': {
-        //   marginRight: 0,
-        //   color: theme.palette.action.active,
-        //   '& svg': { width: 20, height: 20 },
-        // },
-        // },
+        }
       }}
     />
   );
 }
 
 
-type Props = {
+interface NotistackProviderProps {
   children: ReactNode;
 };
 
-export  function NotistackProvider({ children }: Props) {
+export  function NotistackProvider({ children }: NotistackProviderProps) {
 
   const isRTL = false;
 
