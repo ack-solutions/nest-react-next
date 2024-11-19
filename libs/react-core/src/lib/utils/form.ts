@@ -41,7 +41,6 @@ export function toFormData(obj: any, form?: any, namespace?: any) {
       }
       fd.append(formKey, value);
     }
-
   }
   return fd;
 }

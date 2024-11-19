@@ -139,17 +139,18 @@ export default function PermissionList() {
                     {...!row?.deletedAt ? { onEdit: handleOpenAddEditRoleDialog(row) } : {}}
                 />
             ),
+            props: { sx: { width: 150 } }
         },
     ];
 
     return (
-        <Page title='Permission'>
-            <Container maxWidth='lg'>
+        <Page title='Permissions'>
+            <Container>
                 <CustomBreadcrumbs
-                    heading="Permission"
+                    heading="Permissions"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: 'Permission', href: PATH_DASHBOARD.users.permissions },
+                        { name: 'Permissions', href: PATH_DASHBOARD.users.permissions },
                         { name: 'List' },
                     ]}
                     action={

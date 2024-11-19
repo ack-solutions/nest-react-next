@@ -199,12 +199,12 @@ export default function UsersList() {
 
   return (
     <Page title='Users'>
-      <Container maxWidth='lg'>
+      <Container>
         <CustomBreadcrumbs
           heading="Users"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.users.root },
+            { name: 'Users', href: PATH_DASHBOARD.users.root },
             { name: 'List' },
           ]}
           action={

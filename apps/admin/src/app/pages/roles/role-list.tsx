@@ -148,17 +148,18 @@ export default function RoleList() {
                     {...!row?.deletedAt ? { onEdit: handleOpenAddEditRoleDialog(row) } : {}}
                 />
             ),
+            props: { sx: { width: 150 } }
         },
     ];
 
     return (
         <Page title='Roles'>
-            <Container maxWidth='lg'>
+            <Container>
                 <CustomBreadcrumbs
-                    heading="Users"
+                    heading="Roles"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: 'Role', href: PATH_DASHBOARD.users.roles },
+                        { name: 'Roles', href: PATH_DASHBOARD.users.roles },
                         { name: 'List' },
                     ]}
                     action={

@@ -5,6 +5,7 @@ import { merge } from "lodash";
 import appBar from "./appbar";
 import Breadcrumbs from "./breadcrumbs";
 import Table from "./table";
+import Container from "./container";
 
 // export const components = {
 //   ...appBar,
@@ -17,5 +18,6 @@ export default function ComponentsOverrides(theme: Theme) :any {
     Card(theme),
     Breadcrumbs(theme),
     Table(theme),
+    Container(theme),
   )
 }
