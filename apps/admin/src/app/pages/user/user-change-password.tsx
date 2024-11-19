@@ -47,7 +47,7 @@ const UserChangePassword = () => {
     )
 
     return (
-        <Container maxWidth='sm'>
+        <Container>
             <Card>
                 <CardHeader title='Change Password' />
                 <CardContent>

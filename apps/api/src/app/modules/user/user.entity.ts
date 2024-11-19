@@ -46,6 +46,10 @@ export class User extends BaseEntity implements IUser {
   phoneNumber?: string;
 
   @ApiProperty()
+  @Column({ nullable: true })
+  phoneCountryId?: string;
+
+  @ApiProperty()
   @IsString()
   @IsOptional()
   @Column({ nullable: true })
@@ -84,6 +88,18 @@ export class User extends BaseEntity implements IUser {
   @JoinTable()
   roles?: Role[];
 
+  @ApiProperty({ type: String, })
+  @IsString()
+  @IsOptional()
+  @Column('text', { nullable: true })
+  aboutMe?: string;
+
+  @ApiProperty({ type: String, })
+  @IsString()
+  @IsOptional()
+  @Column({ length: 200, nullable: true })
+  address?: string;
+  
   @ApiProperty({ example: 'string', readOnly: true })
   name?: string;
 

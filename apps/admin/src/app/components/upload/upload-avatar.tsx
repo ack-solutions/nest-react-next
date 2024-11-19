@@ -1,5 +1,5 @@
 import { useDropzone } from 'react-dropzone';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
 import { UploadProps } from './type';
@@ -61,7 +61,7 @@ export default function UploadAvatar({ error, file, label = "Photo", helperText,
   });
 
 
-  
+
   return (
     <>
       <RootStyle
@@ -87,16 +87,21 @@ export default function UploadAvatar({ error, file, label = "Photo", helperText,
               sx={{ zIndex: 8 }}
             />
           )}
-
+          {!file && (
+            <Image
+              alt="avatar"
+              src='/assets/image/avatar-placeholder.webp'
+            />
+          )}
           <PlaceholderStyle
             className="placeholder"
             sx={{
-              ...(file && {
-                opacity: 0,
-                color: 'common.white',
-                bgcolor: 'grey.900',
-                '&:hover': { opacity: 0.72 },
-              }),
+              // ...(file && {
+              opacity: 0,
+              color: 'common.white',
+              bgcolor: 'grey.900',
+              '&:hover': { opacity: 0.72 },
+              // }),
               ...((isDragReject || error) && {
                 bgcolor: 'error.lighter',
               }),

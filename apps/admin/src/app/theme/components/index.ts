@@ -6,6 +6,7 @@ import appBar from "./appbar";
 import Breadcrumbs from "./breadcrumbs";
 import Table from "./table";
 import Container from "./container";
+import Tabs from "./tabs";
 
 // export const components = {
 //   ...appBar,
@@ -19,5 +20,6 @@ export default function ComponentsOverrides(theme: Theme) :any {
     Breadcrumbs(theme),
     Table(theme),
     Container(theme),
+    Tabs(theme),
   )
 }

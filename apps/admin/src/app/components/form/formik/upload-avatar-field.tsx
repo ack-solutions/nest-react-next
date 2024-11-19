@@ -23,7 +23,6 @@ export const UploadAvatarField = ({
     useEffect(() => {
         if (previewUrl) {
             console.log(previewUrl, 'previewUrl');
-
             setFileUrl(previewUrl)
         }
     }, [previewUrl])
