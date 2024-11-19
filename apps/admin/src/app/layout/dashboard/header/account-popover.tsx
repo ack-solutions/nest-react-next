@@ -11,19 +11,9 @@ export default function AccountPopover() {
 
   const OPTIONS = [
     {
-      label: 'Home',
-      linkTo: '/',
-    },
-
-    {
       label: 'Profile',
       linkTo: PATH_DASHBOARD.profile.root,
     },
-    {
-      label: 'Change Password',
-      linkTo: PATH_DASHBOARD.changePassword.root,
-    },
-
   ];
   const navigate = useNavigate();
   const { user, logout } = useAuth();
