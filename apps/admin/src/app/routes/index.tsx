@@ -23,6 +23,7 @@ const UserProfile = Loadable(lazy(() => import('../pages/user/user-profile')));
 const UserChangePassword = Loadable(lazy(() => import('../pages/user/user-change-password')));
 const AddEditUser = Loadable(lazy(() => import('../pages/user/add-edit-user')));
 const RoleList = Loadable(lazy(() => import('../pages/roles/role-list')));
+const AddEditRole = Loadable(lazy(() => import('../pages/roles/add-edit-role')));
 const PermissionList = Loadable(lazy(() => import('../pages/user/permission-list')));
 // Page
 const PageList = Loadable(lazy(() => import('../pages/page/page-list')));
@@ -68,6 +69,8 @@ export default function Router() {
                         { path: 'edit/:id', element: <AddEditUser /> },
                         { path: 'add', element: <AddEditUser /> },
                         { path: 'roles', element: <RoleList /> },
+                        { path: 'roles/edit/:id', element: <AddEditRole /> },
+                        { path: 'roles/add', element: <AddEditRole /> },
                         { path: 'permissions', element: <PermissionList /> },
                     ],
                 },

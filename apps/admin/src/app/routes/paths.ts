@@ -39,6 +39,8 @@ export const PATH_DASHBOARD = {
     edit: path(ROOTS_DASHBOARD, '/users/edit'),
     add: path(ROOTS_DASHBOARD, '/users/add'),
     roles: path(ROOTS_DASHBOARD, '/users/roles'),
+    editRole: path(ROOTS_DASHBOARD, '/users/roles/edit'),
+    addRole: path(ROOTS_DASHBOARD, '/users/roles/add'),
     permissions: path(ROOTS_DASHBOARD, '/users/permissions'),
   },
   profile: {

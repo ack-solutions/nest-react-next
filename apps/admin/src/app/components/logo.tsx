@@ -25,14 +25,14 @@ export interface LogoProps extends BoxProps {
         {small ? (
           <Box
             component="img"
-            src="/assets/images/small-logo.svg"
+            src="/assets/image/small-logo.svg"
             alt="Logo"
             sx={{ height: 1, width: 1 }}
           />
         ) : (
           <Box
             component="img"
-            src="/assets/images/logo.svg"
+            src="/assets/image/logo.svg"
             alt="Logo"
             sx={{ height: 1, width: 1 }}
           />

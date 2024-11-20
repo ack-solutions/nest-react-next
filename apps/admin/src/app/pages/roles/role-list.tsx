@@ -24,50 +24,10 @@ export default function RoleList() {
     const navigate = useNavigate();
     const deleteConfirm = useConfirm();
     const datatableRef = useRef<DataTableHandle>(null);
-    const [selectRole, setSelectRole] = useState<any>()
 
-    const handleOpenAddEditRoleDialog = useCallback(
+    const handleOpenEditRole = useCallback(
         (row: IRole) => () => {
-            setSelectRole(row)
-        },
-        [],
-    )
-
-    const handleCloseAddEditRoleDialog = useCallback(
-        () => {
-            setSelectRole(null)
-        },
-        [],
-    )
-
-    const handleSubmitForm = useCallback(
-        (value: IRole, action: any) => {
-            const request = {
-                ...omit(value, ['id', 'createdAt', 'updatedAt', 'deletedAt',]),
-                permissions: map(value.permissions, (value) => {
-                    return { id: value }
-                })
-            }
-
-            if (value?.id) {
-                roleService.update(value?.id, request).then(() => {
-                    showToasty('Role updated Successfully')
-                    action.setSubmitting(false)
-                    handleCloseAddEditRoleDialog()
-                    datatableRef?.current?.refresh();
-                }).catch((error) => {
-                    showToasty(error, 'error')
-                })
-            } else {
-                roleService.create(request).then(() => {
-                    action.setSubmitting(false)
-                    showToasty('Role updated Successfully')
-                    datatableRef?.current?.refresh();
-                    handleCloseAddEditRoleDialog()
-                }).catch((error) => {
-                    showToasty(error, 'error')
-                })
-            }
+            navigate(`${PATH_DASHBOARD.users.editRole}/${row?.id}`)
         },
         [],
     )
@@ -145,7 +105,7 @@ export default function RoleList() {
                 <TableActionMenu
                     row={row}
                     onDelete={() => handleDeleteUser(row)}
-                    {...!row?.deletedAt ? { onEdit: handleOpenAddEditRoleDialog(row) } : {}}
+                    {...!row?.deletedAt ? { onEdit: handleOpenEditRole(row) } : {}}
                 />
             ),
             props: { sx: { width: 150 } }
@@ -165,7 +125,7 @@ export default function RoleList() {
                     action={
                         <Button
                             variant='contained'
-                            onClick={handleOpenAddEditRoleDialog({})}
+                            onClick={() => navigate(PATH_DASHBOARD.users.addRole)}
                         >
                             Add Role
                         </Button>
@@ -180,7 +140,6 @@ export default function RoleList() {
                     defaultOrderBy='createdAt'
                     onChange={handleDataTableChange}
                 />
-                {selectRole && <AddEditRoleDialog onSubmit={handleSubmitForm} onClose={handleCloseAddEditRoleDialog} roleValue={selectRole} />}
             </Container>
         </Page>
     );

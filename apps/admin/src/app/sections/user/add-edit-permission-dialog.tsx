@@ -1,12 +1,11 @@
 
 import { DefaultDialog } from '@admin/app/components';
-import {  PermissionService, useToasty } from '@libs/react-core';
-import { Button, Stack } from '@mui/material'
+import { RoleService } from '@libs/react-core';
+import { IRole } from '@libs/types';
+import { Button, MenuItem, Stack } from '@mui/material'
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { TextField } from 'formik-mui';
-import { omit } from 'lodash';
-import { useSnackbar } from 'notistack';
-import { useCallback, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { object, string } from 'yup';
 
 
@@ -16,10 +15,11 @@ interface AddEditPermissionDialogProps {
     onSubmit: (value?: any, action?: FormikHelpers<any>) => void;
 }
 
-const permissionService = PermissionService.getInstance<PermissionService>()
+const roleService = RoleService.getInstance<RoleService>();
 
 const defaultValues = {
     name: '',
+    roles: []
     // isActive: true,
 };
 
@@ -29,6 +29,15 @@ const validationSchema = object().shape({
 
 const AddEditPermissionDialog = ({ onClose, values, onSubmit }: AddEditPermissionDialogProps) => {
     const formRef = useRef<any>();
+    const [roles, setRoles] = useState([]);
+
+    useEffect(() => {
+        roleService.getMany().then((data) => {
+            setRoles(data?.items || []);
+        }).catch((error) => {
+            //
+        })
+    }, [])
     return (
         <DefaultDialog
             maxWidth='xs'
@@ -62,6 +71,26 @@ const AddEditPermissionDialog = ({ onClose, values, onSubmit }: AddEditPermissio
                                 label='Name'
                                 component={TextField}
                             />
+                            <Field
+                                fullWidth
+                                required
+                                name='roles'
+                                label='Roles'
+                                component={TextField}
+                                SelectProps={{
+                                    multiple: true
+                                }}
+                                select
+                            >
+                                {roles?.map((role: IRole) => (
+                                    <MenuItem
+                                        key={role?.id}
+                                        value={role?.id}
+                                    >
+                                        {role?.name}
+                                    </MenuItem>
+                                ))}
+                            </Field>
                         </Stack>
 
                     </Form>
