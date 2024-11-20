@@ -5,7 +5,7 @@ import {
     Button,
 } from '@mui/material';
 import { PermissionService, useToasty } from '@libs/react-core';
-import { IRole } from '@libs/types';
+import { IPermission, IRole } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
 import AddEditPermissionDialog from '../../sections/user/add-edit-permission-dialog';
 import { startCase } from 'lodash';
@@ -19,14 +19,14 @@ const permissionService = PermissionService.getInstance<PermissionService>();
 
 export default function PermissionList() {
     const { showToasty } = useToasty();
-    const [roles, setRoles] = useState<IRole[] | null>(null);
+    const [permissions, setPermissions] = useState<IPermission[] | null>(null);
     const [total, setTotal] = useState(0);
     const deleteConfirm = useConfirm();
     const datatableRef = useRef<DataTableHandle>(null);
     const [selectPermission, setSelectPermission] = useState<any>()
 
     const handleOpenAddEditRoleDialog = useCallback(
-        (row: IRole) => () => {
+        (row: IRole) => {
             setSelectPermission(row)
         },
         [],
@@ -40,7 +40,7 @@ export default function PermissionList() {
     )
 
     const handleSubmitForm = useCallback(
-        (value: IRole, action: any) => {
+        (value: IPermission, action: any) => {
             if (value?.id) {
                 permissionService.update(value?.id, value).then(() => {
                     showToasty('Permission updated Successfully')
@@ -107,14 +107,19 @@ export default function PermissionList() {
             s: {
                 ...filter?.s,
             },
+            relations: ['roles'],
         };
         permissionService.getMany(filter).then((data) => {
-            setRoles(data?.items || []);
+            const updatedData = data?.items?.map((item: any) => ({
+                ...item,
+                roles: item.roles.map((role: any) => role.id), 
+            }));
+            setPermissions(updatedData|| []);
             setTotal(data?.total || 0);
         });
     }, []);
 
-    const columns: DataTableColumn<IRole>[] = [
+    const columns: DataTableColumn<IPermission>[] = [
         {
             name: 'name',
             label: 'Name',
@@ -136,13 +141,13 @@ export default function PermissionList() {
                 <TableActionMenu
                     row={row}
                     onDelete={() => handleDeleteUser(row)}
-                    {...!row?.deletedAt ? { onEdit: handleOpenAddEditRoleDialog(row) } : {}}
+                    {...!row?.deletedAt ? { onEdit: () => handleOpenAddEditRoleDialog(row) } : {}}
                 />
             ),
             props: { sx: { width: 150 } }
         },
     ];
-
+    
     return (
         <Page title='Permissions'>
             <Container>
@@ -154,22 +159,21 @@ export default function PermissionList() {
                         { name: 'List' },
                     ]}
                     action={
-                        <Button variant='contained' onClick={handleOpenAddEditRoleDialog({})}>Add Permission</Button>
+                        <Button variant='contained' onClick={() => handleOpenAddEditRoleDialog({})}>Add Permission</Button>
                     }
                 />
                 <DataTable
-                    data={roles}
+                    data={permissions}
                     columns={columns}
                     ref={datatableRef}
                     totalRow={total}
                     defaultOrder='desc'
                     defaultOrderBy='createdAt'
                     onChange={handleDataTableChange}
+                    onRowClick={handleOpenAddEditRoleDialog}
                 />
                 {selectPermission && <AddEditPermissionDialog onSubmit={handleSubmitForm} onClose={handleCloseAddEditRoleDialog} values={selectPermission} />}
-
             </Container>
-
         </Page>
     );
 }
