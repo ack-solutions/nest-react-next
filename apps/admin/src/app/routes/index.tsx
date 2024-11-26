@@ -20,7 +20,7 @@ const Dashboard = Loadable(lazy(() => import('../pages/dashboard/dashboard')));
 // User
 const UserList = Loadable(lazy(() => import('../pages/user/user-list')));
 const UserProfile = Loadable(lazy(() => import('../pages/user/user-profile')));
-const UserChangePassword = Loadable(lazy(() => import('../pages/user/user-change-password')));
+const UserChangePassword = Loadable(lazy(() => import('../sections/user/user-change-password')));
 const AddEditUser = Loadable(lazy(() => import('../pages/user/add-edit-user')));
 const RoleList = Loadable(lazy(() => import('../pages/roles/role-list')));
 const AddEditRole = Loadable(lazy(() => import('../pages/roles/add-edit-role')));

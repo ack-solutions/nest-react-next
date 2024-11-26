@@ -12,7 +12,6 @@ import { useResponsive } from '@libs/react-core';
 import Scrollbar from '@admin/app/components/scrollbar/scrollbar';
 import { Logo } from '@admin/app/components';
 
-
 export const navVerticalConfig = (config?: NavbarConfigProps) => ({
   itemGap: config?.itemGap || 4,
   iconSize: config?.iconSize || 24,
@@ -53,8 +52,7 @@ export default function Navbar({ openNav, onCloseNav }: NavbarProps) {
       }}
     >
       <>
-        <Logo sx={{ mt: 3, mb: 1, display: 'block', mx: 'auto' }} />
-
+        <Logo sx={{ width: 180, height: 48, my: 2, mx: 'auto' }} />
         <Stack>
           {navData.map((group, index) => (
             <NavbarGroup

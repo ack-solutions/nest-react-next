@@ -65,7 +65,7 @@ export default function NavbarMini() {
 				}}
 			>
 
-				<Logo small sx={{ mx: 'auto', width: 50, my: 2 }} />
+				<Logo sx={{ mx: 'auto', width: 50, my: 2 }} />
 
 				<Stack>
 					{navData.map(

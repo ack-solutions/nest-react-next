@@ -2,7 +2,7 @@ import { Container, Tab, Tabs } from '@mui/material'
 import { SyntheticEvent, useCallback, useState } from 'react'
 import { UserService } from '@libs/react-core';
 import General from '@admin/app/sections/user/general';
-import UserChangePassword from './user-change-password';
+import UserChangePassword from '../../sections/user/user-change-password';
 import Page from '@admin/app/components/page';
 import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
