@@ -65,11 +65,7 @@ const AddEditUser = () => {
                         { name: `${userId ? 'Edit User' : 'Add User'}` },
                     ]}
                 />
-                <Card>
-                    <CardContent>
-                        <AddEditUserForm onSubmit={handleSubmit} values={user} />
-                    </CardContent>
-                </Card>
+                <AddEditUserForm onSubmit={handleSubmit} values={user} />
             </Container>
         </Page>
     )

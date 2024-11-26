@@ -37,6 +37,7 @@ export class UserService extends CrudService<User> {
         return new Role({ id })
       });
     }    
+
     return entity as User;
   }
 

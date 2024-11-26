@@ -8,7 +8,6 @@ import { object, ref, string } from 'yup';
 
 const userService = UserService.getInstance<UserService>();
 
-
 const validationSchema = object().shape({
     oldPassword: string().label('Old Password').required(),
     password: string().label('New Password').required().matches(
