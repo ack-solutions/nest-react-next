@@ -4,11 +4,9 @@ import {
     Button,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { map, omit, } from 'lodash';
 import { RoleService, useToasty } from '@libs/react-core';
 import { IRole } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
-import AddEditRoleDialog from '../../sections/role/add-edit-role-dialog';
 import { DataTable, DataTableColumn, DataTableHandle, TableActionMenu } from '@admin/app/components';
 import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
 import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
@@ -38,7 +36,7 @@ export default function RoleList() {
                 deleteConfirm(
                     {
                         title: row.deletedAt ? "Permanent Delete" : "Delete",
-                        description: `Are you sure you want to ${row.deletedAt ? "permanent delete" : "delete"} this user?`
+                        description: `Are you sure you want to ${row.deletedAt ? "permanent delete" : "delete"} this role?`
                     })
                     .then(async () => {
                         try {
@@ -55,7 +53,7 @@ export default function RoleList() {
                                     });
                             }
                             datatableRef?.current?.refresh();
-                            showToasty('User successfully deleted');
+                            showToasty('Role successfully deleted');
                         } catch (error: any) {
                             showToasty(error, 'error');
                         }

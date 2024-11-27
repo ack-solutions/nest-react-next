@@ -49,9 +49,9 @@ export const PATH_DASHBOARD = {
   changePassword: {
     root: path(ROOTS_DASHBOARD, '/change-password'),
   },
- 
+
   settings: {
-    payroll: path(ROOTS_DASHBOARD, '/settings/payroll'),
+    root: path(ROOTS_DASHBOARD, '/settings'),
     business: path(ROOTS_DASHBOARD, '/settings/business'),
   },
 };

@@ -6,3 +6,4 @@ export * from './lib/permission';
 export * from './lib/role';
 export * from './lib/user';
 export * from './lib/notification-template';
+export * from './lib/setting';
