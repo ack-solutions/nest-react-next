@@ -1,4 +1,5 @@
 import { NotificationTemplate } from "../modules/notification-template/notification-template.entity";
+import { Page } from "../modules/page/page.entity";
 import { Permission } from "../modules/permission/permission.entity";
 import { Role } from "../modules/role/role.entity";
 import { Setting } from "../modules/setting/setting.entity";
@@ -11,5 +12,6 @@ export const AllEntities = [
     User,
     Verification,
     NotificationTemplate,
-    Setting
+    Setting,
+    Page
 ]

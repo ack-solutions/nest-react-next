@@ -118,6 +118,14 @@ export function useNavData() {
             icon: ICONS.setting,
             staticPaths: [PATH_DASHBOARD.settings.root]
         },
+        {
+            id: 'pages',
+            groupName: 'Management',
+            title: 'Pages',
+            path: PATH_DASHBOARD.page.root,
+            icon: ICONS.page,
+            staticPaths: [PATH_DASHBOARD.page.root]
+        },
     ]), [])
 
     const groupedItems = [

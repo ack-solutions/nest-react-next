@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { RequestContextMiddleware } from './core/request-context/request-context.middleware';
 import { NotificationTemplateModule } from './modules/notification-template/notification-template.module';
 import { SettingModule } from './modules/setting/setting.module';
+import { PageModule } from './modules/page/page.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { SettingModule } from './modules/setting/setting.module';
     RoleModule,
     PermissionModule,
     NotificationTemplateModule,
-    SettingModule
+    SettingModule,
+    PageModule
   ],
   controllers: [],
   providers: [],
@@ -27,5 +29,5 @@ export class ApiModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(RequestContextMiddleware).forRoutes('*');
   }
-  
+
 }
