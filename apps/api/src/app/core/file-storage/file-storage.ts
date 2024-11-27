@@ -35,7 +35,7 @@ export class FileStorage {
 			...this.config,
 			...config,
 			provider: (process.env.FILE_PROVIDER ||
-				's3') as FileStorageProviderEnum,
+				'local') as FileStorageProviderEnum,
 		};
 		return this;
 	}

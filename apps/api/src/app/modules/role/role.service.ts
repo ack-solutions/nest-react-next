@@ -5,7 +5,6 @@ import { Role } from './role.entity';
 import { IRole } from '@libs/types';
 import { CrudService } from '@api/app/core/crud';
 
-
 @Injectable()
 export class RoleService extends CrudService<IRole> {
   constructor(

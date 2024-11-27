@@ -8,18 +8,24 @@ import {
   Post,
   Put,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiTags } from '@nestjs/swagger';
 import { UserDTO } from './dto/user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from '../auth/decorator/current-user';
-import {  IChangePasswordInput, IUser } from '@libs/types';
+import { IChangePasswordInput, IUser } from '@libs/types';
 import { CrudController } from '../../core/crud';
 import { User } from './user.entity';
 import { RequestContext } from '@api/app/core/request-context/request-context';
 import * as bcrypt from 'bcryptjs';
 import { hashPassword } from '@api/app/utils';
+import { join } from 'path';
+import moment from 'moment';
+import { FileStorage, UploadedFileStorage } from '@api/app/core/file-storage';
+import { RequestDataTypeInterceptor } from '@api/app/core/request-data-type.interceptor';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('User')
 @Controller('user')
@@ -45,32 +51,29 @@ export class UsersController extends CrudController(UserDTO)<IUser> {
 
   @HttpCode(HttpStatus.ACCEPTED)
   @UseGuards(AuthGuard('jwt'))
-  // @UseInterceptors(RequestDataTypeInterceptor)
-  // @UseInterceptors(
-  //   FileInterceptor('photo', {
-  //     storage: new FileStorage().storage({
-  //       dest: () => {
-  //         return join('photo', moment().format('YYYY/MM'));
-  //       },
-  //       prefix: 'photo',
-  //     }),
-  //   })
-  // )
+  @UseInterceptors(RequestDataTypeInterceptor)
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      storage: new FileStorage().storage({
+        dest: () => {
+          return join('avatar', moment().format('YYYY/MM'));
+        },
+        prefix: 'avatar',
+      }),
+    })
+  )
   @Put('update/profile')
   async updateProfile(
     @Body() entity: any,
-    // @UploadedFileStorage() photo
+    @UploadedFileStorage() avatar
   ): Promise<User> {
-    // if (photo?.key) {
-    //   entity.photo = photo?.key;
-    //   await resizeImage(entity.photo, {
-    //     height: 200,
-    //   });
-    // }
+    if (avatar?.key) {
+      entity.avatar = avatar?.key;
+    }
     return this.userService.updateProfile(entity);
   }
-  
-  
+
+
   @HttpCode(HttpStatus.ACCEPTED)
   @Post('change-password')
   @UseGuards(AuthGuard('jwt'))

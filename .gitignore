@@ -49,3 +49,4 @@ out
 # env file
 .env
 ormlogs.log
+/public
