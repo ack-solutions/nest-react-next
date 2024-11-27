@@ -17,7 +17,7 @@ export class UserService extends CRUDService<any> {
   // }
 
   updateProfile(request: Partial<IUser>) {
-    return this.instanceApi.put<IUser>(`${this.apiPath}/update/profile`, request).then((resp) => {
+    return this.instanceApi.put<IUser>(`${this.apiPath}/update/profile`, toFormData(request)).then((resp) => {
       return this.mapResponse(resp.data);
     })
   }
@@ -33,7 +33,7 @@ export class UserService extends CRUDService<any> {
   }
 
   changePassword(request: any) {
-    return this.instanceApi.post(`${this.apiPath }/change-password`, request).then((resp) => {
+    return this.instanceApi.post(`${this.apiPath}/change-password`, request).then((resp) => {
       return resp.data;
     })
   }

@@ -10,7 +10,7 @@ import { useAuth, UserService, useToasty } from '@libs/react-core';
 import PhoneNumberInput from '@admin/app/components/form/phone-number-input';
 import PhoneNumberField from '@admin/app/components/form/formik/phone-number-field';
 import { UserStatusEnum } from '@libs/types';
-import { startCase } from 'lodash';
+import { pick, startCase } from 'lodash';
 
 const userService = UserService.getInstance<UserService>();
 
@@ -37,15 +37,20 @@ const General = () => {
 
   const handleSubmitForm = useCallback(
     (values: any, action: FormikHelpers<any>) => {
-      userService.updateProfile(values).then((data) => {
+      const request = {
+        ...pick(values, 'avatar', 'status', 'firstName', 'lastName', 'email', 'phoneNumber', 'aboutMe', 'address'),
+      }
+      userService.updateProfile(request).then((data) => {
         setUser({
           ...user,
           ...data,
         })
         showToasty('User profile successfully updated')
         action.setSubmitting(false)
+        action.resetForm()
       }).catch((error) => {
         showToasty(error, 'error')
+        action.setSubmitting(false)
       })
     },
     [showToasty],
