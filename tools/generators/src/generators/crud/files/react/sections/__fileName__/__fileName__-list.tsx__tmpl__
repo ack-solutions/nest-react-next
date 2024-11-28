@@ -1,0 +1,102 @@
+import React, { useState, useCallback, useRef } from 'react';
+import { Container, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { DataTable, DataTableColumn, DataTableHandle, TableActionMenu } from '@admin/app/components';
+import Page from '@admin/app/components/page';
+import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
+import { PATH_DASHBOARD } from '@admin/app/routes/paths';
+import { {{ className }}Service } from './{{fileName}}-service';
+import AddEdit{ { className } }Dialog from './add-edit-{{fileName}}-dialog';
+
+const {{ classNameLower }}Service = {{ className }}Service.getInstance();
+
+export default function { { className } } List() {
+    const navigate = useNavigate();
+    const [items, setItems] = useState([]);
+    const [total, setTotal] = useState(0);
+    const datatableRef = useRef<DataTableHandle>(null);
+    const [selectedItem, setSelectedItem] = useState(null);
+
+    const handleAddEdit = useCallback(() => {
+        setSelectedItem(null); // Open dialog for adding a new item
+    }, []);
+
+    const handleEdit = useCallback((item) => {
+        setSelectedItem(item); // Open dialog with selected item data for editing
+    }, []);
+
+    const handleDelete = useCallback((id) => {
+        { { classNameLower } } Service.delete(id).then(() => {
+            datatableRef.current.refresh();
+        });
+    }, []);
+
+    const handleDataTableChange = useCallback((filters) => {
+        { { classNameLower } } Service.getMany(filters).then((data) => {
+            setItems(data.items);
+            setTotal(data.total);
+        });
+    }, []);
+
+    const columns: DataTableColumn[] = [
+        {{ #each columns }}
+{
+    name: '{{name}}',
+        label: '{{capitalize name}}',
+            isSearchable: { { isSearchable } },
+    isSortable: { { isSortable } },
+},
+{ {/each } }
+{
+    name: 'action',
+        label: 'Action',
+            render: (row) => (
+                <TableActionMenu
+                    row={row}
+                    onDelete={() => handleDelete(row.id)}
+                    onEdit={() => handleEdit(row)}
+                />
+            ),
+        },
+    ];
+
+return (
+    <Page title="{{className}} Management">
+        <Container>
+            <CustomBreadcrumbs
+                heading="{{className}} List"
+                links={[
+                    { name: 'Dashboard', href: PATH_DASHBOARD.root },
+                    { name: '{{className}}' },
+                ]}
+                action={
+                    <Button variant="contained" onClick={handleAddEdit}>
+                        Add {{ className }}
+                    </Button>
+                }
+            />
+            <DataTable
+                ref={datatableRef}
+                data={items}
+                columns={columns}
+                totalRow={total}
+                defaultOrderBy="createdAt"
+                onChange={handleDataTableChange}
+            />
+            {selectedItem !== null && (
+                <AddEdit{{ className }} Dialog
+                    open={selectedItem !== null}
+                    onClose={() => setSelectedItem(null)}
+                    defaultValues={selectedItem}
+                    onSubmit={(data) => {
+                        { { classNameLower } } Service.save(data).then(() => {
+                            datatableRef.current.refresh();
+                            setSelectedItem(null);
+                        });
+                    }}
+                />
+            )}
+        </Container>
+    </Page>
+);
+}

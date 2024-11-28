@@ -44,9 +44,11 @@ export const PATH_DASHBOARD = {
   profile: {
     root: path(ROOTS_DASHBOARD, '/profile'),
   },
- 
   settings: {
     payroll: path(ROOTS_DASHBOARD, '/settings/payroll'),
     business: path(ROOTS_DASHBOARD, '/settings/business'),
+  },
+  page: {
+    root: path(ROOTS_DASHBOARD, '/page'),
   },
 };

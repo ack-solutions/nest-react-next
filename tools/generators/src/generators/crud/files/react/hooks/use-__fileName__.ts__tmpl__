@@ -1,0 +1,18 @@
+
+import { <%= className %>Service } from '../services/<%= fileName %>.service';
+import { useCrudOperations } from '@libs/react-core';
+
+const <% propertyName %>Service = <%= className %>Service.getInstance<<%= className %>Service>()
+
+export const use<%= className %> = () => {
+
+	const { useGetMany, useGetOne, useCreate, useDelete, useUpdate } = useCrudOperations(<% propertyName %>Service);
+
+	return {
+		useGetMany<%= className %>: useGetMany,
+		useGet<%= className %>ById: useGetOne,
+		useCreate<%= className %>: useCreate,
+		useDelete<%= className %>: useDelete,
+		useUpdate<%= className %>: useUpdate,
+	};
+};

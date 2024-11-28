@@ -120,6 +120,15 @@ export function useNavData() {
                 },
             ],
         },
+        {
+            id: 'manage',
+            groupName: 'Manage',
+            title: 'Page',
+            path: 'page',
+            icon: ICONS.user,
+            permissions: [RoleNameEnum.ADMIN],
+            staticPaths: ['page'],
+        },
     ]), [])
 
     const groupedItems = [

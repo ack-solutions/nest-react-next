@@ -1,15 +1,16 @@
 import {
-  Button,
-  ButtonProps,
-  DialogContentText
+    Button,
+    ButtonProps,
+    DialogContentText,
+    Stack
 } from '@mui/material';
 import React, {
-  FC,
-  useCallback,
-  useContext,
-  useState,
-  createContext,
-  ReactNode
+    FC,
+    useCallback,
+    useContext,
+    useState,
+    createContext,
+    ReactNode
 } from 'react';
 import DefaultDialog, { DefaultDialogProps } from '../components/default-dialog';
 
@@ -18,125 +19,123 @@ export const ConfirmContext = createContext<any>(null);
 
 // Define ConfirmDialog props
 export interface ConfirmDialogProps extends DefaultDialogProps {
-  description?: string;
-  yesText?: string;
-  noText?: string;
-  yesButtonProps?: ButtonProps;
-  noButtonProps?: ButtonProps;
-  resolveReject?: [() => void, () => void];
-  onClose: () => void;
+    message?: string;
+    yesText?: string;
+    noText?: string;
+    yesButtonProps?: ButtonProps;
+    noButtonProps?: ButtonProps;
+    resolveReject?: [() => void, () => void];
+    onClose: () => void;
 }
-
-// Set default props for ConfirmDialog
-export const defaultProps = {
-  title: 'Confirm',
-  description: '',
-  yesText: 'Delete',
-  noText: 'Cancel',
-  dialogProps: {},
-  yesButtonProps: {},
-  noButtonProps: {},
-};
 
 // ConfirmDialog component
 const ConfirmDialog = ({
-  noButtonProps,
-  noText = 'Cancel',
-  yesButtonProps,
-  yesText = 'Delete',
-  description,
-  resolveReject,
-  onClose,
-  ...dialogProps
+    noButtonProps,
+    title = 'Confirm',
+    noText = 'No',
+    yesButtonProps,
+    yesText = 'Yes',
+    message,
+    resolveReject,
+    onClose,
+    ...dialogProps
 }: ConfirmDialogProps) => {
-  const [resolve, reject] = resolveReject || [];
+    const [resolve, reject] = resolveReject || [];
 
-  // Handle cancel button action
-  const handleCancel = useCallback(() => {
-    reject && reject();
-    onClose && onClose();
-  }, [reject, onClose]);
+    // Handle cancel button action
+    const handleCancel = useCallback(() => {
+        reject && reject();
+        onClose && onClose();
+    }, [reject, onClose]);
 
-  // Handle confirm button action
-  const handleConfirm = useCallback(() => {
-    resolve && resolve();
-    onClose && onClose();
-  }, [resolve, onClose]);
+    // Handle confirm button action
+    const handleConfirm = useCallback(() => {
+        resolve && resolve();
+        onClose && onClose();
+    }, [resolve, onClose]);
 
-  return (
-    <DefaultDialog
-      onClose={onClose}
-      maxWidth="xs"
-      fullWidth
-      actions={
-        <>
-          <Button
-            variant="outlined"
-            color="inherit"
+    return (
+        <DefaultDialog
+            onClose={onClose}
+            maxWidth="xs"
             fullWidth
-            {...noButtonProps}
-            onClick={handleCancel}
-          >
-            {noText}
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            fullWidth
-            {...yesButtonProps}
-            onClick={handleConfirm}
-          >
-            {yesText}
-          </Button>
-        </>
-      }
-      {...dialogProps}
-    >
-      {description && <DialogContentText>{description}</DialogContentText>}
-    </DefaultDialog>
-  );
+            actions={
+                <Stack
+                    direction='row'
+                    spacing={2}
+                    justifyContent='end'
+                >
+                    <Button
+                        variant="outlined"
+                        color="inherit"
+                        fullWidth
+                        {...noButtonProps}
+                        onClick={handleCancel}
+                    >
+                        {noText}
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="error"
+                        fullWidth
+                        {...yesButtonProps}
+                        onClick={handleConfirm}
+                    >
+                        {yesText}
+                    </Button>
+                </Stack>
+            }
+            title={title}
+            {...dialogProps}
+        >
+            {message && <DialogContentText>{message}</DialogContentText>}
+        </DefaultDialog>
+    );
 };
 
 export default ConfirmDialog;
 
 // ConfirmProvider Component to provide the confirm dialog context
 interface ConfirmProviderProps {
-  children: ReactNode;
+    children: ReactNode;
 }
 
 export const ConfirmProvider: FC<ConfirmProviderProps> = ({ children }) => {
-  const [dialogProps, setDialogProps] = useState<Partial<ConfirmDialogProps> | null>(null);
-  const [resolveReject, setResolveReject] = useState<[() => void, () => void] | null>(null);
+    const [dialogProps, setDialogProps] = useState<Partial<ConfirmDialogProps> | null>(null);
+    const [resolveReject, setResolveReject] = useState<[() => void, () => void] | null>(null);
 
-  const confirm = (props: Partial<ConfirmDialogProps>) =>
-    new Promise<void>((resolve, reject) => {
-      setDialogProps(props);
-      setResolveReject([resolve, reject]);
-    });
+    const confirm = (options: Partial<ConfirmDialogProps>) =>
+        new Promise<void>((resolve, reject) => {
+            if (typeof options === 'string') {
+                options = { message: options };
+            }
+            setDialogProps(options);
+            setResolveReject([resolve, reject]);
+        });
 
-  const handleClose = () => {
-    setDialogProps(null);
-  };
+    const handleClose = () => {
+        setDialogProps(null);
+    };
 
-  return (
-    <ConfirmContext.Provider value={confirm}>
-      {children}
-      {dialogProps && resolveReject && (
-        <ConfirmDialog
-          {...dialogProps}
-          resolveReject={resolveReject}
-          onClose={handleClose}
-        />
-      )}
-    </ConfirmContext.Provider>
-  );
+    return (
+        <ConfirmContext.Provider value={confirm}>
+            {children}
+            {dialogProps && resolveReject && (
+                <ConfirmDialog
+                    {...dialogProps}
+                    resolveReject={resolveReject}
+                    onClose={handleClose}
+                />
+            )}
+        </ConfirmContext.Provider>
+    );
 };
 
 // useConfirm hook to access the confirm function
 export const useConfirm = () => {
-  const confirm = useContext(ConfirmContext);
-  if (!confirm) {
-    throw new Error('useConfirm must be used within a ConfirmProvider');
-  }
-  return confirm;
+    const confirm = useContext(ConfirmContext);
+    if (!confirm) {
+        throw new Error('useConfirm must be used within a ConfirmProvider');
+    }
+    return confirm;
 };
