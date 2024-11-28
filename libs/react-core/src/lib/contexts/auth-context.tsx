@@ -183,7 +183,7 @@ const AuthProvider = ({ children }: any) => {
     async (user?: IUser | null) => {
       if (!user) {
         try {
-          await userService.getMe().then(async ({ data }) => {
+          await userService.getMe().then(async (data) => {
             user = data
             if (!user) {
               await logout()
@@ -249,6 +249,8 @@ const AuthProvider = ({ children }: any) => {
   useEffect(() => {
     const initialize = async () => {
       const token = await localStorage.getItem('token');
+      console.log(token);
+      
       if (token) {
         await login(token);
       } else {
