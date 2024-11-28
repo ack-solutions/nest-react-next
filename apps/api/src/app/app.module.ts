@@ -30,3 +30,4 @@ import { Configs } from './core/config';
 export class AppModule {
 
 }
+

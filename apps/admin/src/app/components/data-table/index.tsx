@@ -411,7 +411,6 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
         };
 
         onChange && onChange(request);
-        // onChange && onChange(mapFilterGraphQLQuery(request));
       }, [searchText, columns, page, rowsPerPage, orderBy, order, onChange]),
       500
     );

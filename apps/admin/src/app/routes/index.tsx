@@ -23,6 +23,8 @@ const UserProfile = Loadable(lazy(() => import('../pages/user/user-profile')));
 const AddEditUser = Loadable(lazy(() => import('../pages/user/add-edit-user')));
 const RoleList = Loadable(lazy(() => import('../pages/roles/role-list')));
 const PermissionList = Loadable(lazy(() => import('../pages/user/permission-list')));
+// Page
+const PageList = Loadable(lazy(() => import('../pages/page/page-list')));
 
 
 export default function Router() {
@@ -69,6 +71,7 @@ export default function Router() {
                     ],
                 },
                 { path: 'profile', element: <UserProfile />  },
+                { path: 'page', element: <PageList />  },
             ],
         },
         { path: '*', element: <Navigate to="/404" replace /> },

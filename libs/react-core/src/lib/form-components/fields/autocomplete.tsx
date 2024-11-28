@@ -37,7 +37,7 @@ export interface AutocompleteProps extends Omit<MuiAutocompleteProps<any, any, a
     textFieldProps?: TextFieldProps
 }
 
-function Autocomplete({
+export function Autocomplete({
     options = [],
     value: initialValue,
     valueKey,
@@ -326,5 +326,3 @@ function Autocomplete({
         />
     )
 }
-
-export default Autocomplete

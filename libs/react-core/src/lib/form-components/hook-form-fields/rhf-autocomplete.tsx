@@ -1,12 +1,12 @@
 import { Controller, useFormContext } from 'react-hook-form';
 import { useCallback } from 'react';
-import Autocomplete, { AutocompleteProps } from '../fields/autocomplete';
+import { Autocomplete, AutocompleteProps } from '../fields/autocomplete';
 
 export interface RHFAutocompleteProps extends AutocompleteProps {
     name: string;
 }
 
-export default function RHFAutocomplete({
+export function RHFAutocomplete({
     name,
     onChange,
     ...other

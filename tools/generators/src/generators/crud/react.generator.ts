@@ -1,6 +1,5 @@
 import { generateFiles, getProjects, names, ProjectConfiguration, Tree } from "@nx/devkit";
 import { PluginGeneratorSchema } from "./schema";
-import { libraryGenerator } from "@nx/react";
 import { join } from "path";
 
 
@@ -13,23 +12,8 @@ export class ReactGenerator {
         this.names = names(this.options.name);
     }
     async run() {
-     
-        const { name, generateReact } = this.options;
-
+        const { generateReact } = this.options;
         if (generateReact) {
-            // await libraryGenerator(this.tree, {
-            //     name: libName,
-            //     directory: `packages/${name}/react`,
-            //     importPath: `@ackplus-inventory/${name}/react`,
-            //     publishable: true,
-            //     buildable: true,
-            //     bundler: 'vite',
-            //     unitTestRunner: 'vitest',
-            //     linter: 'none',
-            //     style: 'none'
-            // });
-
-            // this.tree.delete(`packages/${name}/api/src/lib`)
             await this.generateFiles();
             this.addExportStatement();
         }
@@ -38,8 +22,6 @@ export class ReactGenerator {
 
 
     generateFiles() {
-        const { name } = this.options;
-
         generateFiles(
             this.tree,
             join(__dirname, 'files', 'react'), // Path to your custom template files

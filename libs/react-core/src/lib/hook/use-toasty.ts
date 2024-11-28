@@ -1,6 +1,6 @@
 
 import { OptionsObject, useSnackbar, VariantType } from 'notistack';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { errorMessage } from '../utils';
 
 export  function useToasty() {
@@ -20,7 +20,8 @@ export  function useToasty() {
     [enqueueSnackbar],
   )
 
-  return {
+  return useMemo(() => ({
     showToasty
-  };
+  }), [showToasty]);
+  
 }
