@@ -11,18 +11,15 @@ export const StyledLabel = styled(Box)<{ ownerState: { color: LabelColor; varian
 
 		const defaultStyle = {
 			...(ownerState.color === 'default' && {
-				// FILLED variant
 				...(filledVariant && {
 					color: isLight ? theme.palette.common.white : theme.palette.grey[800],
 					backgroundColor: theme.palette.text.primary
 				}),
-				// OUTLINED variant
 				...(outlinedVariant && {
 					backgroundColor: 'transparent',
 					color: theme.palette.text.primary,
 					border: `2px solid ${theme.palette.text.primary}`
 				}),
-				// SOFT variant
 				...(softVariant && {
 					color: theme.palette.text.secondary,
 					backgroundColor: alpha(theme.palette.grey[500], 0.16)
@@ -30,21 +27,17 @@ export const StyledLabel = styled(Box)<{ ownerState: { color: LabelColor; varian
 			})
 		};
 
-		// Style for different colors
 		const colorStyle = {
 			...(ownerState.color !== 'default' && {
-				// FILLED variant
 				...(filledVariant && {
 					color: (theme.palette[ownerState.color as keyof Palette] as PaletteColor).contrastText,
 					backgroundColor: (theme.palette[ownerState.color as keyof Palette] as PaletteColor).main
 				}),
-				// OUTLINED variant
 				...(outlinedVariant && {
 					backgroundColor: 'transparent',
 					color: (theme.palette[ownerState.color as keyof Palette] as PaletteColor).main,
 					border: `2px solid ${(theme.palette[ownerState.color as keyof Palette] as PaletteColor).main}`
 				}),
-				// SOFT variant
 				...(softVariant && {
 					color: (theme.palette[ownerState.color as keyof Palette] as PaletteColor)[isLight ? 'dark' : 'light'],
 					backgroundColor: alpha((theme.palette[ownerState.color as keyof Palette] as PaletteColor).main, 0.16)

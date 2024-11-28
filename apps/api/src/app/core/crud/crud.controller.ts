@@ -11,8 +11,6 @@ import {
   Body,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiPropertyOptional, ApiQuery, ApiResponse } from '@nestjs/swagger';
-// import { JwtAuthGuard } from '../guard/jwt-auth.guard';
-// import { RolesGuard } from '../guard/roles.guard';
 import { DeepPartial, FindManyOptions, FindOneOptions } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';
 import { merge } from 'lodash';

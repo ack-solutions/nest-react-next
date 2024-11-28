@@ -32,7 +32,7 @@ const Register = () => {
                 ...verifyData,
             }
 
-            authService.register(request).then(({ data }) => {
+            authService.register(request).then((data) => {
                 action.resetForm();
                 setVerifyData(null)
             }).catch((error) => {

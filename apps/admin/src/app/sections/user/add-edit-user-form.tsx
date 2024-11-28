@@ -21,7 +21,7 @@ const defaultValues = {
     lastName: '',
     email: '',
     phoneNumber: '',
-    status: '',
+    status: UserStatusEnum.INACTIVE,
     roles: []
 };
 

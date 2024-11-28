@@ -48,7 +48,6 @@ const PhoneNumberInput = ({
                 </InputLabel>
             )}
             <MuiTelInput
-                // onlyCountries={['IN']}
                 value={phone}
                 onChange={handlePhoneChange}
                 defaultCountry="IN"

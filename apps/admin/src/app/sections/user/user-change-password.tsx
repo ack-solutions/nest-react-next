@@ -10,10 +10,7 @@ const userService = UserService.getInstance<UserService>();
 
 const validationSchema = object().shape({
     oldPassword: string().label('Old Password').required(),
-    password: string().label('New Password').required().matches(
-        /^(?=.*[a-z])(?=.*[0-9])(?=.{8,})/,
-        "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
-    ),
+    password: string().label('New Password').required(),
     confirmPassword: string().label('Confirm Password').oneOf([ref('password'), null], 'Passwords must match').required(),
 });
 
@@ -24,7 +21,6 @@ const defaultValues = {
 };
 
 const UserChangePassword = () => {
-    const { user } = useAuth();
     const showPassword = useBoolean()
     const showOldPassword = useBoolean()
     const confirmShowPassword = useBoolean()

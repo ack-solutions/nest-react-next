@@ -12,13 +12,7 @@ jobs:
       GH_TOKEN: ${{ secrets.PAT_GITHUB_TOKEN }}  # Set GH_TOKEN from the PAT_GITHUB_TOKEN secret
 
     steps:
-      # Step 2: Set dynamic branch name with the current date
-      - name: Set Dynamic Branch Name
-        id: vars
-        run: echo "BRANCH_NAME=update-from-template-$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-
-
-       # Step 2: Checkout the project repository using SSH
+       # Checkout the project repository using SSH
       - name: Checkout Project Repository
         uses: actions/checkout@v3
         with:
@@ -65,7 +59,7 @@ jobs:
       - name: Fetch Template Repository
         if: env.CHANGES_DETECTED == 'true'
         run: |
-          git checkout -b "${{ env.BRANCH_NAME }}" template/main
+          git checkout -b update-from-template template/main
           git log -3 --oneline
           git push -u origin HEAD --force
 
@@ -76,5 +70,5 @@ jobs:
           gh pr create \
             --title "Update from Template Repository" \
             --body "This PR includes the latest changes from the template repository." \
-            --head "${{ env.BRANCH_NAME }}" \
+            --head update-from-template \
             --base main

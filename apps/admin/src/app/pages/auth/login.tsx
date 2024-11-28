@@ -41,7 +41,7 @@ const Login = () => {
         otp: Number(values?.otp),
         ...verifyData,
       }
-      authService.login(request).then(({ data }) => {
+      authService.login(request).then((data) => {
         login(data?.accessToken, data?.user)
         action.resetForm();
         setVerifyData(null)

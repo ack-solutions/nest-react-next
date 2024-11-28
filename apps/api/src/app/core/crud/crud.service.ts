@@ -15,9 +15,7 @@ import { FindQueryBuilder } from './find-query-builder';
 import { RequestContext } from '../request-context/request-context';
 import { cloneDeep, has } from 'lodash';
 import { IFindOptions, IPaginationResult } from '@libs/types';
-// import { FileStorage } from '../module/file-storage';
 import { BaseEntity } from '../typeorm/base.entity';
-// import { FileStorage } from '../file-storage';
 
 
 export abstract class CrudService<T extends BaseEntity> implements ICrudService<T> {

@@ -119,12 +119,13 @@ export function useNavData() {
             staticPaths: [PATH_DASHBOARD.settings.root]
         },
         {
-            id: 'pages',
-            groupName: 'Management',
-            title: 'Pages',
-            path: PATH_DASHBOARD.page.root,
-            icon: ICONS.page,
-            staticPaths: [PATH_DASHBOARD.page.root]
+            id: 'manage',
+            groupName: 'Manage',
+            title: 'Page',
+            path: 'page',
+            icon: ICONS.user,
+            permissions: [RoleNameEnum.ADMIN],
+            staticPaths: ['page'],
         },
     ]), [])
 

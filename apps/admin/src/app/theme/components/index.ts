@@ -8,10 +8,6 @@ import Table from "./table";
 import Container from "./container";
 import Tabs from "./tabs";
 
-// export const components = {
-//   ...appBar,
-//   ...Card
-// };
 
 export default function ComponentsOverrides(theme: Theme) :any {
   return merge(

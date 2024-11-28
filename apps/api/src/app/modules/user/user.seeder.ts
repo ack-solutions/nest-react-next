@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { find, keyBy, uniqBy } from 'lodash';
 import { Role } from '../role/role.entity';
-import { IUser, RoleNameEnum } from '@libs/types';
+import { IUser, RoleNameEnum, UserStatusEnum } from '@libs/types';
 import { DataFactory, Seeder } from '@api/app/core/nest-seeder';
 import { hashPassword } from '@api/app/utils';
 
@@ -39,6 +39,7 @@ export class UserSeeder implements Seeder {
         roles: [adminRole],
         passwordHash: hashPassword('Test@123'),
         isSuperAdmin: true,
+        status: UserStatusEnum.ACTIVE,
       },
       {
         firstName: 'Admin2',
@@ -47,6 +48,7 @@ export class UserSeeder implements Seeder {
         roles: [adminRole],
         passwordHash: hashPassword('Test@123'),
         isSuperAdmin: false,
+        status: UserStatusEnum.ACTIVE,
       },
       {
         firstName: 'User',
@@ -54,6 +56,7 @@ export class UserSeeder implements Seeder {
         email: 'user@gmail.com',
         roles: [userRole],
         passwordHash: hashPassword('Test@123'),
+        status: UserStatusEnum.ACTIVE,
       },
     ]
 

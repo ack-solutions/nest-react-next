@@ -6,7 +6,7 @@ import {
   Button,
 } from '@mui/material';
 import { has, split, startCase } from 'lodash';
-import { UserService, useToasty } from '@libs/react-core';
+import { UserService, useToasty, useUserQuery } from '@libs/react-core';
 import { IUser, UserStatusEnum } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
 import { DataTableHandle, DataTableColumn, TableActionMenu, DataTable, Label, Icon } from '@admin/app/components';
@@ -22,12 +22,18 @@ const userService = UserService.getInstance<UserService>();
 
 export default function UsersList() {
   const { showToasty } = useToasty();
-  const [users, setUsers] = useState<IUser[] | null>(null);
-  const [total, setTotal] = useState(0);
   const navigate = useNavigate();
   const deleteConfirm = useConfirm();
   const datatableRef = useRef<DataTableHandle>(null);
   const [openPasswordDialog, setOpenPasswordDialog] = useState<any>()
+  const [userRequest, setUserRequest] = useState();
+  const { useGetManyUser, useDeleteUser } = useUserQuery();
+  const { mutate: onDeleteUser } = useDeleteUser()
+  const { data: usersData } = useGetManyUser(userRequest, {
+    enabled: !!userRequest
+  })
+
+
 
   const handleViewUser = useCallback(
     (row: IUser) => {
@@ -37,29 +43,27 @@ export default function UsersList() {
   );
 
   const handleDeleteUser = useCallback(
-    (row: any) => {
+    (row: IUser) => {
+      console.log(row);
+      
       if (row.id) {
         deleteConfirm(
           {
             title: row.deletedAt ? "Permanent Delete" : "Delete",
-            description: `Are you sure you want to ${row.deletedAt ? "permanent delete" : "delete"} this user?`
+            message: `Are you sure you want to ${row.deletedAt ? "permanent delete" : "delete"} this user?`
           })
           .then(async () => {
             try {
-              if (row.deletedAt) {
-                await userService.trashDelete(row.id)
-              }
-              else {
-                await userService.delete(row.id).
-                  then(() => {
-                    // 
-                  })
-                  .catch((error) => {
-                    showToasty(error.message, 'error');
-                  });
-              }
+              onDeleteUser(row.id, {
+                onError: (error) => {
+                  showToasty(error.message, 'error');
+                },
+                onSuccess: () => {
+                  showToasty('User successfully deleted');
+                }
+              })
               datatableRef?.current?.refresh();
-              showToasty('User successfully deleted');
+              // showToasty('User successfully deleted');
             } catch (error: any) {
               showToasty(error, 'error');
             }
@@ -120,10 +124,7 @@ export default function UsersList() {
       },
       relations: ['roles'],
     };
-    userService.getMany(filter).then((data) => {
-      setUsers(data?.items || []);
-      setTotal(data?.total || 0);
-    });
+    setUserRequest(filter)
   }, []);
 
   const columns: DataTableColumn<IUser>[] = [
@@ -217,10 +218,10 @@ export default function UsersList() {
           }
         />
         <DataTable
-          data={users}
+          data={usersData?.items}
           columns={columns}
           ref={datatableRef}
-          totalRow={total}
+          totalRow={usersData?.total}
           defaultOrder='desc'
           defaultOrderBy='createdAt'
           onChange={handleDataTableChange}

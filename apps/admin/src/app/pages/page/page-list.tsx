@@ -1,158 +1,119 @@
-import { DataTable, DataTableColumn, DataTableHandle, TableActionMenu } from '@admin/app/components'
-import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs'
-import Page from '@admin/app/components/page'
-import { useConfirm } from '@admin/app/contexts/confirm-dialog-context'
-import { PATH_DASHBOARD } from '@admin/app/routes/paths'
-import { PageService, useToasty } from '@libs/react-core'
-import { IPage } from '@libs/types'
-import { toDisplayDate } from '@libs/utils'
-import { Button, Container } from '@mui/material'
-import { startCase } from 'lodash'
-import React, { useCallback, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useCallback, useRef } from 'react';
+import { Container, Button } from '@mui/material';
+import { DataTable, DataTableColumn, DataTableHandle, TableActionMenu } from '@admin/app/components';
+import Page from '@admin/app/components/page';
+import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
+import { PATH_DASHBOARD } from '@admin/app/routes/paths';
+import AddEditPageDialog from '../../sections/page/add-edit-page-dialog';
+import { IPage } from '@libs/types';
+import { errorMessage, usePage, useToasty } from '@libs/react-core';
+import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
 
-const pageService = PageService.getInstance<PageService>();
+export default function PageList() {
 
-const PageList = () => {
-  const { showToasty } = useToasty();
-  const [pages, setPages] = useState<IPage[]>(null);
-  const [total, setTotal] = useState(0);
-  const navigate = useNavigate();
-  const deleteConfirm = useConfirm();
-  const datatableRef = useRef<DataTableHandle>(null);
+    const [dataTableFilters, setDataTableFilters] = useState(null);
+    const [selectedItem, setSelectedItem] = useState(null);
+    const datatableRef = useRef<DataTableHandle>(null);
+    const { showToasty } = useToasty();
+    const confirmDialog = useConfirm();
 
-  const handleOpenEditPage = useCallback(
-    (raw: IPage) => () => {
-      navigate(`${PATH_DASHBOARD.page.edit}/${raw?.id}`)
-    },
-    [],
-  )
+    const { useGetManyPage, useDeletePage } = usePage();
+    const { mutateAsync: deletePage } = useDeletePage();
 
-  const handleDeletePage = useCallback(
-    (row: any) => {
-      if (row.id) {
-        deleteConfirm(
-          {
-            title: "Delete",
-            description: `Are you sure you want to delete this page?`
-          })
-          .then(async () => {
-            try {
-              if (row.deletedAt) {
-                await pageService.trashDelete(row.id)
-              }
-              else {
-                await pageService.delete(row.id).
-                  then(() => {
-                    // 
-                  })
-                  .catch((error) => {
-                    showToasty(error.message, 'error');
-                  });
-              }
-              datatableRef?.current?.refresh();
-              showToasty('Page successfully deleted');
-            } catch (error: any) {
-              showToasty(error, 'error');
-            }
-          })
-          .catch(() => {
-            //
-          });
-      }
-
-    },
-    [deleteConfirm, showToasty]
-  );
-
-  const handleDataTableChange = useCallback((filter: any) => {
-    filter = {
-      ...filter,
-      s: {
-        ...filter?.s,
-      },
-    };
-    pageService.getMany(filter).then((data) => {
-      setPages(data?.items || []);
-      setTotal(data?.total || 0);
+    const { data } = useGetManyPage(dataTableFilters, {
+        enabled: Boolean(dataTableFilters), // Disable initial api call
     });
-  }, []);
 
-  const columns: DataTableColumn<IPage>[] = [
-    {
-      name: 'name',
-      label: 'Name',
-      isSearchable: true,
-      isSortable: true,
-    },
-    {
-      name: 'template',
-      label: 'Template',
-      isSearchable: true,
-      isSortable: true,
-      render: (row) => startCase(row?.template)
-    },
-    {
-      name: 'slug',
-      label: 'Slug',
-      isSearchable: true,
-      isSortable: true,
-    },
-    {
-      name: 'createdAt',
-      label: 'Created Date',
-      isSearchable: false,
-      isSortable: true,
-      render: (row) => toDisplayDate(row?.createdAt),
-    },
-    {
-      name: 'action',
-      label: 'Action',
-      isAction: true,
-      render: (row: any) => (
-        <TableActionMenu
-          row={row}
-          onDelete={() => handleDeletePage(row)}
-          {...!row?.deletedAt ? { onEdit: handleOpenEditPage(row) } : {}}
-        />
-      ),
-      props: { sx: { width: 150 } }
-    },
-  ];
-  return (
-    <Page title='Pages'>
-      <Container>
-        <CustomBreadcrumbs
-          heading="Pages"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Pages', href: PATH_DASHBOARD.users.root },
-            { name: 'List' },
-          ]}
-          action={
-            <Button
-              variant='contained'
-              onClick={() => navigate(`${PATH_DASHBOARD.page.add}`)}
-            >
-              Add Page
-            </Button>
-          }
-        />
-        <DataTable
-          data={pages}
-          columns={columns}
-          ref={datatableRef}
-          totalRow={total}
-          defaultOrder='desc'
-          defaultOrderBy='createdAt'
-          onChange={handleDataTableChange}
-          // onRowClick={handleRowClick}
-          hasFilter
-          selectable
-        />
-      </Container>
-    </Page>
-  )
+    const handleAddEdit = useCallback(
+        (item = {}) => () => {
+            setSelectedItem(item); // Open dialog for adding a new item
+        },
+        []
+    );
+
+    const handleDelete = useCallback((id) => {
+        confirmDialog({ message: "Are you sure you want to delete page?" })
+            .then(() => {
+                deletePage(id).then(() => {
+                    datatableRef.current.refresh();
+                    showToasty('Page successfully delete')
+                }).catch((error) => {
+                    showToasty(errorMessage(error, "Error while deleting Page"), 'error');
+                });
+            }).catch(() => {
+                // Nothing
+            })
+    }, [confirmDialog, deletePage, showToasty]);
+
+    const handleDataTableChange = useCallback((filters) => {
+        // Manage filters mapping here.
+        setDataTableFilters(filters)
+    }, []);
+
+    const columns: DataTableColumn<IPage>[] = [
+        {
+            name: 'name',
+            label: 'Name',
+            isSearchable: true,
+            isSortable: true,
+        },
+        {
+            name: 'title',
+            label: 'Title',
+            isSearchable: true,
+            isSortable: true,
+        },
+        {
+            name: 'slug',
+            label: 'Slug',
+        },
+        {
+            name: 'action',
+            label: 'Action',
+            render: (row) => (
+                <TableActionMenu
+                    row={row}
+                    onDelete={() => handleDelete(row.id)}
+                    onEdit={handleAddEdit(row)}
+                />
+            ),
+        },
+    ];
+
+    return (
+        <Page title="Page Management">
+            <Container>
+                <CustomBreadcrumbs
+                    heading="Page List"
+                    links={[
+                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
+                        { name: 'Page' },
+                    ]}
+                    action={
+                        <Button variant="contained" onClick={handleAddEdit()}>
+                            Add Page
+                        </Button>
+                    }
+                />
+                <DataTable
+                    initialLoading
+                    ref={datatableRef}
+                    data={data?.items}
+                    columns={columns}
+                    totalRow={data?.total}
+                    defaultOrderBy="createdAt"
+                    onChange={handleDataTableChange}
+                />
+                {selectedItem !== null && (
+                    <AddEditPageDialog
+                        onClose={() => setSelectedItem(null)}
+                        initialValue={selectedItem}
+                    // onSubmit={(data) => {
+                    //     datatableRef.current.refresh();
+                    // }}
+                    />
+                )}
+            </Container>
+        </Page>
+    );
 }
-
-export default PageList

@@ -96,12 +96,10 @@ export default function UploadAvatar({ error, file, label = "Photo", helperText,
           <PlaceholderStyle
             className="placeholder"
             sx={{
-              // ...(file && {
               opacity: 0,
               color: 'common.white',
               bgcolor: 'grey.900',
               '&:hover': { opacity: 0.72 },
-              // }),
               ...((isDragReject || error) && {
                 bgcolor: 'error.lighter',
               }),

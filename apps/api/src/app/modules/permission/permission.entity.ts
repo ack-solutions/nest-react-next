@@ -10,7 +10,7 @@ import {
 import { Role } from '../role/role.entity';
 
 import { IPermission, IRole } from '@libs/types';
-import { BaseEntity } from '../../core/typeorm/base.entity';
+import { BaseEntity } from '@api/app/core/typeorm/base.entity';
 
 @Entity()
 export class Permission extends BaseEntity implements IPermission {
