@@ -49,7 +49,7 @@ export class UserService extends CrudService<User> {
     }
     if (!request?.roles || request.roles?.length === 0) {
       const userRole = await this.roleRepository.findOne({
-        where: { name: RoleNameEnum.ADMIN },
+        where: { name: RoleNameEnum.USER },
       });
       userEntity.roles = [new Role({ id: userRole.id })];
     }

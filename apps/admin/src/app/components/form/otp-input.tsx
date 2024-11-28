@@ -101,7 +101,7 @@ const OTPInput = ({
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { nativeEvent } = event;
+    const { nativeEvent } = event as any;
     if (!isInputValueValid(event.target.value)) {
 
       if (nativeEvent.data === null && nativeEvent.inputType === 'deleteContentBackward') {
