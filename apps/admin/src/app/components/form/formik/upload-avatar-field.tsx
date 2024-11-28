@@ -43,9 +43,7 @@ export const UploadAvatarField = ({
         <UploadAvatar
             small
             file={fileUrl}
-            // preview={fileUrl}
             label={label}
-            // accept="image/*"
             onDrop={handleDrop}
             error={Boolean(touched[name] && errors[name])}
             {...props}

@@ -9,7 +9,9 @@ export class UserService extends CRUDService<any> {
   protected override  hasFileUpload = true;
 
   getMe() {
-    return this.instanceApi.get<any>(`${this.apiPath}/me`)
+    return this.instanceApi.get<any>(`${this.apiPath}/me`).then((resp) => {
+      return resp.data;
+    })
   }
 
   // updateProfile(request: Partial<IUser>) {
@@ -29,7 +31,9 @@ export class UserService extends CRUDService<any> {
   }
 
   monthPresentDays() {
-    return this.instanceApi.get(`${this.apiPath}/month-present-days`)
+    return this.instanceApi.get(`${this.apiPath}/month-present-days`).then((resp) => {
+      return resp.data;
+    })
   }
 
   changePassword(request: any) {

@@ -6,13 +6,13 @@ import {
   Not,
 } from 'typeorm';
 import { User } from './user.entity';
-import { RoleNameEnum } from '@libs/types';
+import { IChangePasswordInput, IRegisterInput, IUpdateProfileInput, IUser, RoleNameEnum } from '@libs/types';
 import { Role } from '../role';
 import { has, omit } from 'lodash';
 import { hashPassword } from '@api/app/utils';
 import { CrudService } from '@api/app/core/crud';
 import { RequestContext } from '@api/app/core/request-context/request-context';
-
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UserService extends CrudService<User> {
@@ -36,14 +36,13 @@ export class UserService extends CrudService<User> {
       entity.roles = req.roles.map((id) => {
         return new Role({ id })
       });
-    }    
+    }
 
     return entity as User;
   }
 
-  async createUser(request: any) {
+  async createUser(request: IRegisterInput) {
     const userEntity: User = request;
-
 
     if (request.password) {
       userEntity.passwordHash = await hashPassword(request.password.trim());
@@ -79,27 +78,22 @@ export class UserService extends CrudService<User> {
     });
   }
 
-  async updateProfile(entity: any): Promise<User> {
+  async updateProfile(entity: IUpdateProfileInput): Promise<IUser> {
 
     const currentUser = RequestContext.currentUser();
     const userId = currentUser?.id;
-    console.log( { entity },{ userId });
-
     let user;
-
     if (userId) {
-      //find user detail
       user = await this.userRepository.findOne({ where: { id: userId } });
 
-      if (has(entity, 'email') && user?.email !== entity.email) {
-        const exists = await this.checkIfExistsEmail(entity.email);
+      if (has(entity, 'email')) {
+        const exists = await this.checkIfExistsEmail(entity.email,userId);
         if (exists) {
           throw new ConflictException(
             'Email is already taken, Please use other email'
           );
         }
       }
-      //update user
       const userEntity = omit(entity, [
         'roles',
       ]);
@@ -126,5 +120,34 @@ export class UserService extends CrudService<User> {
       },
     });
     return count > 0;
+  }
+
+  async changePassword(entity: IChangePasswordInput) {
+    const currentUser = RequestContext.currentUser();
+    const user = await this.userRepository.findOne({
+      where: {
+        id: currentUser?.id,
+      }
+    });
+    const userPassword = await this.userRepository
+      .createQueryBuilder()
+      .where({
+        id: currentUser.id,
+      })
+      .select('"passwordHash"')
+      .getRawOne();
+
+    const isMatch = await bcrypt.compare(
+      entity.oldPassword,
+      userPassword.passwordHash
+    );
+    if (isMatch) {
+      await this.userRepository.update(user.id, {
+        passwordHash: hashPassword(entity.password)
+      });
+    } else {
+      throw new BadRequestException('Old password is wrong');
+    }
+    return 'Password successfully changed.';
   }
 }

@@ -94,10 +94,8 @@ export  function TableActionMenu({
 
   return (
     <MenuDropdown
-      // ref={dropdownRef}
       anchor={
         <IconButton >
-          {/* <IconMoon size={16} icon="more" /> */}
           <Icon icon="more-vertical-outline" size="medium" />
         </IconButton>
       }
@@ -109,7 +107,6 @@ export  function TableActionMenu({
               onClick={(event) => {
                 event.stopPropagation();
                 action.onClick && action.onClick(event);
-                // handleClose();
               }}
               key={`${action?.title}-${row?.id}`}
             >

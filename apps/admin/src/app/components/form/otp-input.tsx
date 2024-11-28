@@ -103,15 +103,12 @@ const OTPInput = ({
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { nativeEvent } = event;
     if (!isInputValueValid(event.target.value)) {
-      // @ts-expect-error - This was added previosly to handle and edge case
-      // for dealing with keyCode "229 Unidentified" on Android. Check if this is
+
       if (nativeEvent.data === null && nativeEvent.inputType === 'deleteContentBackward') {
         event.preventDefault();
         changeCodeAtFocus('');
         focusInput(activeInput - 1);
       }
-      // Clear the input if it's not valid value because firefox allows
-      // pasting non-numeric characters in a number type input
       event.target.value = '';
     }
   };
@@ -141,8 +138,6 @@ const OTPInput = ({
       event.preventDefault();
       focusInput(activeInput + 1);
     }
-    // React does not trigger onChange when the same value is entered
-    // again. So we need to focus the next input manually in this case.
     else if (event.key === otp[activeInput]) {
       event.preventDefault();
       focusInput(activeInput + 1);

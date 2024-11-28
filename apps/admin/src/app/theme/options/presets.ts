@@ -31,12 +31,6 @@ export const primaryPresets = [
 		dark: '#15234d',
 		darker: '#0b1436',
 		contrastText: '#FFFFFF',
-		// lighter: 'rgb(185, 106, 174)', // increased each RGB value
-		// light: 'rgb(167, 89, 157)', // slightly increased each RGB value
-		// main: 'rgb(152, 73, 141)', // original color
-		// dark: 'rgb(137, 58, 126)', // slightly decreased each RGB value
-		// darker: 'rgb(122, 43, 111)', // decreased each RGB value
-		// contrastText: '#FFFFFF'
 	},
 	// CYAN
 	{

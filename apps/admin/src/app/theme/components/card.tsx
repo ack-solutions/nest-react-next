@@ -1,8 +1,5 @@
 import { Theme } from '@mui/material/styles';
 
-// ----------------------------------------------------------------------
-
-
 export default function Card(theme: Theme) {
   return {
     MuiCard: {
@@ -11,7 +8,7 @@ export default function Card(theme: Theme) {
           boxShadow: theme.customShadows.card,
           borderRadius: theme.shape.borderRadiusMd,
           position: 'relative',
-          zIndex: 0 // Fix Safari overflow: hidden with border radius
+          zIndex: 0 
         }
       }
     },

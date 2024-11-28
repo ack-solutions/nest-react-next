@@ -7,7 +7,7 @@ import moment from 'moment';
 import { ConfigService } from '@nestjs/config';
 import { User, UserService } from '../user';
 import { Verification } from '../user/verification.entity';
-import { ILoginInput, ILoginSendOtpInput, IUser, UserStatusEnum } from '@libs/types';
+import { ILoginInput, ILoginSendOtpInput, IRegisterInput, IUser, UserStatusEnum } from '@libs/types';
 import { includes } from 'lodash';
 import { LoginSuccessDTO } from './dto/login-success.dto';
 import { RegisterInputDTO } from './dto/register-input.dto';
@@ -156,7 +156,7 @@ export class AuthService {
         }
     }
 
-    async register(req: RegisterInputDTO) {
+    async register(req: IRegisterInput) {
         const count = await this.checkIfExistsEmail(req.email);
 
         if (count) {

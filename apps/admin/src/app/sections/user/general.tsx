@@ -1,5 +1,4 @@
-import React from 'react'
-import { Box, Button, Card, CardContent, Container, MenuItem, Stack } from '@mui/material'
+import { Box, Button, Card, CardContent, MenuItem, Stack } from '@mui/material'
 import { Field, Form, Formik, FormikHelpers } from 'formik'
 import { useCallback, useRef } from 'react'
 import { object, string } from 'yup';
@@ -7,7 +6,6 @@ import Grid from '@mui/material/Grid2';
 import { TextField, UploadAvatarField } from '@admin/app/components';
 import { useNavigate } from 'react-router-dom';
 import { useAuth, UserService, useToasty } from '@libs/react-core';
-import PhoneNumberInput from '@admin/app/components/form/phone-number-input';
 import PhoneNumberField from '@admin/app/components/form/formik/phone-number-field';
 import { UserStatusEnum } from '@libs/types';
 import { pick, startCase } from 'lodash';
@@ -37,9 +35,8 @@ const General = () => {
 
   const handleSubmitForm = useCallback(
     (values: any, action: FormikHelpers<any>) => {
-      const request = {
-        ...pick(values, 'avatar', 'status', 'firstName', 'lastName', 'email', 'phoneNumber', 'aboutMe', 'address'),
-      }
+      const request = pick(values, 'avatar', 'status', 'firstName', 'lastName', 'email', 'phoneNumber', 'aboutMe', 'address')
+
       userService.updateProfile(request).then((data) => {
         setUser({
           ...user,

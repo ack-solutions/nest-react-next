@@ -7,6 +7,7 @@ import { LoginInputDTO } from './dto/login-input.dto';
 import { LoginSuccessDTO } from './dto/login-success.dto';
 import { LoginSendOtpDTO } from './dto/login-send-otp.dto';
 import { RegisterInputDTO } from './dto/register-input.dto';
+import { IRegisterInput } from '@libs/types';
 
 
 @ApiTags('Auth')
@@ -71,7 +72,7 @@ export class AuthController {
         description: 'Register Success',
     })
     @Post('register')
-    async register(@Body() req: RegisterInputDTO) {
+    async register(@Body() req: IRegisterInput) {
         return this.authService.register(req);
     }
 

@@ -188,15 +188,10 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   padding: theme.spacing(2, 1, 2, 3),
-  //   [theme.breakpoints.down('md')]: {
-  //     padding: theme.spacing(2, 1, 2, 1),
-  //     flexDirection: 'column',
-  //   },
 }));
 
 const SearchInput = styled(OutlinedInput)(({ theme }) => ({
   width: 320,
-  // borderRadius: 99,
   [theme.breakpoints.down('md')]: {
     width: '100%',
     marginBottom: 16,
@@ -247,8 +242,6 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
     },
     ref
   ) => {
-    const theme = useTheme();
-    // const isMountedRef = useIsMountedRef();
     const [page, setPage] = useState(0);
     const [selected, setSelected] = useState<string[]>([]);
     const [search, setSearch] = useState('');
@@ -411,7 +404,6 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
           ...orderInput,
           ...(filter ? filter : {}),
         };
-
         onChange && onChange(request);
       }, [searchText, columns, page, rowsPerPage, orderBy, order, onChange]),
       500
