@@ -6,8 +6,7 @@ import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-b
 import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 import AddEditPageDialog from '../../sections/page/add-edit-page-dialog';
 import { IPage } from '@libs/types';
-import { usePage } from '@admin/app/hooks/use-page';
-import { errorMessage, useToasty } from '@libs/react-core';
+import { errorMessage, usePage, useToasty } from '@libs/react-core';
 import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
 
 export default function PageList() {

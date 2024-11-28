@@ -8,7 +8,6 @@ import { ConfirmProvider } from './contexts/confirm-dialog-context';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {

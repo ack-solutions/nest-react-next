@@ -5,3 +5,4 @@ export * from './lib/services';
 export * from './lib/contexts';
 export * from './lib/provider';
 export * from './lib/contexts/auth-context';
+export * from './lib/query-hooks';

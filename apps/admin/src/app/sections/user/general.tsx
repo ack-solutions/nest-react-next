@@ -4,7 +4,6 @@ import { useCallback, useRef } from 'react'
 import { object, string } from 'yup';
 import Grid from '@mui/material/Grid2';
 import { TextField, UploadAvatarField } from '@admin/app/components';
-import { useNavigate } from 'react-router-dom';
 import { useAuth, UserService, useToasty } from '@libs/react-core';
 import PhoneNumberField from '@admin/app/components/form/formik/phone-number-field';
 import { UserStatusEnum } from '@libs/types';
@@ -29,19 +28,14 @@ const validationSchema = object().shape({
 
 const General = () => {
   const formRef = useRef<any>();
-  const navigate = useNavigate();
-  const { setUser, user } = useAuth();
+  const { reFetchCurrentUser, currentUser } = useAuth();
   const { showToasty } = useToasty();
 
   const handleSubmitForm = useCallback(
     (values: any, action: FormikHelpers<any>) => {
       const request = pick(values, 'avatar', 'status', 'firstName', 'lastName', 'email', 'phoneNumber', 'aboutMe', 'address')
-
       userService.updateProfile(request).then((data) => {
-        setUser({
-          ...user,
-          ...data,
-        })
+        reFetchCurrentUser()
         showToasty('User profile successfully updated')
         action.setSubmitting(false)
         action.resetForm()
@@ -54,7 +48,7 @@ const General = () => {
   )
   return (
     <Formik
-      initialValues={Object.assign({}, defaultValues, user)}
+      initialValues={Object.assign({}, defaultValues, currentUser)}
       validationSchema={validationSchema}
       onSubmit={handleSubmitForm}
       innerRef={formRef}

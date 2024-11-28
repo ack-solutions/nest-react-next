@@ -4,10 +4,10 @@ import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { DefaultDialog } from '@admin/app/components';
-import { errorMessage, FormContainer, RHFTextField, useToasty } from '@libs/react-core';
+import { errorMessage, FormContainer, RHFTextField, usePage, useToasty } from '@libs/react-core';
 import { object, string } from 'yup';
 import { IPage } from '@libs/types';
-import { usePage } from '@admin/app/hooks/use-page';
+
 
 
 export interface AddEditPageDialogProps {

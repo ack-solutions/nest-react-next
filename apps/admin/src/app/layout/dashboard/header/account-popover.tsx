@@ -16,7 +16,7 @@ export default function AccountPopover() {
     },
   ];
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { currentUser, logout } = useAuth();
 
   const handleLogout = async () => {
     try {
@@ -42,7 +42,7 @@ export default function AccountPopover() {
           disableElevation
         >
           <Avatar
-            alt={user?.name}
+            alt={currentUser?.name}
             // src={user?.photoUrl || '/image/default-user.png'}
             sx={{
               width: { xs: 48, sm: 48 },
@@ -56,7 +56,7 @@ export default function AccountPopover() {
             fontWeight={500}
             display={{ xs: 'none', sm: 'block' }}
           >
-            {startCase(user?.name)}
+            {startCase(currentUser?.name)}
           </Typography>
         </Button>
       )}
@@ -65,7 +65,7 @@ export default function AccountPopover() {
         <Box sx={{ minWidth: 200 }}>
           <Box sx={{ my: 1.5, px: 2.5 }}>
             <Typography variant="subtitle2" noWrap>
-              {startCase(user?.name)}
+              {startCase(currentUser?.name)}
             </Typography>
 
             <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>

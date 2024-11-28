@@ -5,21 +5,21 @@ import {
 import axios from 'axios';
 import { chain, map } from 'lodash';
 import useAccess from './react-access-control/use-access';
-import { UserService } from '../services/user.service';
 import { instanceApi } from '../utils';
+import { useUserQuery } from '../query-hooks';
 
 interface IUser {
-  name?:string
+  name?: string
 }
 
 export interface AuthState {
   isAuthenticated: boolean,
   isInitialized: boolean,
-  user: IUser | null,
+  currentUser: IUser | null,
   token?: string,
   login: (token: string, user?: IUser) => Promise<any>,
   logout: () => void,
-  setUser: (user?: IUser) => void;
+  reFetchCurrentUser: (user?: IUser) => void;
   addLogoutListener?: (value?: any) => void;
   addLoginListener?: (value?: any) => void;
   removeLoginListener?: (value?: any) => void;
@@ -28,21 +28,18 @@ export interface AuthState {
 
 const initialState: Partial<AuthState> = Object.freeze({
   isAuthenticated: false,
-  user: null,
   token: '',
   isInitialized: false,
 });
 
 const defaultValue: any = {
   login: () => Promise.resolve(),
-  logout: () => { 
+  logout: () => {
     //
   },
 }
 
 export const AuthContext = createContext<AuthState>(defaultValue);
-
-const userService = UserService.getInstance<UserService>();
 
 const reducer = (state: any, action: any) => {
   switch (action.type) {
@@ -70,7 +67,6 @@ const reducer = (state: any, action: any) => {
       return {
         ...state,
         isAuthenticated: false,
-        user: null,
         token: null,
       };
     }
@@ -92,16 +88,25 @@ const setSession = async (accessToken?: string | null): Promise<void> => {
 };
 
 
-
 const AuthProvider = ({ children }: any) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { define } = useAccess();
+  const [token, setToken] = useState(null)
   const [loginListeners, setLoginListeners] = useState<any>([]);
   const [logoutListeners, setLogoutListeners] = useState<any>([]);
+  const { useGetMe } = useUserQuery();
+  const { data: currentUser, refetch: refetchUserData } = useGetMe({
+    enabled: Boolean(token),
+    throwOnError: (error, query) => {
+      logout()
+      throw error
+    },
+  });
+
 
   const logout = useCallback(
     async () => {
-      logoutListeners.forEach((listener:any) => listener());
+      logoutListeners.forEach((listener: any) => listener());
       setSession(null);
       dispatch({ type: 'LOGOUT' });
     },
@@ -110,7 +115,7 @@ const AuthProvider = ({ children }: any) => {
 
 
   const initPermissions = useCallback(
-    (user:any) => {
+    (user: any) => {
       const roles = map(user?.roles, 'name');
       const permissions = chain(user?.roles).map((role) => map(role.permissions, 'name')).flatten().value();
       define({
@@ -121,82 +126,9 @@ const AuthProvider = ({ children }: any) => {
     [define],
   )
 
-  // const setCurrentBusiness = useCallback(
-  //   (business: IBusiness) => {
-  //     dispatch({
-  //       type: 'UPDATE',
-  //       payload: {
-  //         currentBusiness: business,
-  //       }
-  //     });
-  //     setBusinessInSession(business?.id)
-  //   },
-  //   [],
-  // )
-
-
-  // const initCurrentBusiness = useCallback(
-  //   async (user) => {
-  //     try {
-  //       const localStorageCurrentBusinessId = localStorage.getItem('currentBusinessId') || null;
-  //       if (localStorageCurrentBusinessId) {
-  //         const business = await businessService.get(localStorageCurrentBusinessId);
-  //         if (business.data) {
-  //           setCurrentBusiness(business.data);
-  //         }
-  //       } else {
-  //         const localStorageCurrentBusinessId =
-  //           localStorage.getItem('currentBusinessId');
-
-  //         if (localStorageCurrentBusinessId) {
-  //           const business = await businessService.get(
-  //             localStorageCurrentBusinessId
-  //           );
-  //           if (business.data) {
-  //             setCurrentBusiness(business.data);
-  //           }
-
-  //         } else {
-  //           const businessResponse = await businessService.get(
-  //             user?.businesses[0]?.id
-  //           );
-  //           const defaultBusiness = businessResponse.data;
-
-  //           if (
-  //             user?.roles.some((item) => item.name === RoleNameEnum.SUPER_ADMIN)
-  //           ) {
-  //             const superAdminBusinessResponse = await businessService.getAll();
-  //             setCurrentBusiness(superAdminBusinessResponse.items[0]);
-  //           } else {
-  //             setCurrentBusiness(defaultBusiness);
-  //           }
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   },
-  //   [setCurrentBusiness],
-  // )
-
-  const setUser = useCallback(
+  const reFetchCurrentUser = useCallback(
     async (user?: IUser | null) => {
-      if (!user) {
-        try {
-          await userService.getMe().then(async (data) => {
-            user = data
-            if (!user) {
-              await logout()
-              return
-            }
-          });
-        } catch (error) {
-          await logout()
-          return
-        }
-      }
-      //await initCurrentBusiness(user);
-      // setOrganizationInSession(user.organizationId);
+      refetchUserData()
 
       initPermissions(user);
       dispatch({
@@ -211,46 +143,39 @@ const AuthProvider = ({ children }: any) => {
 
 
   const login = useCallback(
-    async (token?:string, user?: any) => {
+    async (token?: string, user?: any) => {
       await setSession(token);
-      if (user) {
-        await setUser(user)
-      }
-      else {
-        await setUser(null)
-      }
+      setToken(token)
       dispatch({
         type: 'SIGN_IN',
         payload: {
           token,
         }
       });
-      loginListeners.forEach((listener:any) => listener(user));
+      loginListeners.forEach((listener: any) => listener(user));
     },
-    [setUser, loginListeners],
+    [loginListeners],
   );
 
-  const addLoginListener = (listener:any) => {
-    setLoginListeners((prevListeners:any) => [...prevListeners, listener]);
+  const addLoginListener = (listener: any) => {
+    setLoginListeners((prevListeners: any) => [...prevListeners, listener]);
   };
 
-  const addLogoutListener = (listener:any) => {
-    setLogoutListeners((prevListeners:any) => [...prevListeners, listener]);
+  const addLogoutListener = (listener: any) => {
+    setLogoutListeners((prevListeners: any) => [...prevListeners, listener]);
   };
 
-  const removeLoginListener = (listener:any) => {
-    setLoginListeners((prevListeners:any) => prevListeners.filter((l:any) => l != listener));
+  const removeLoginListener = (listener: any) => {
+    setLoginListeners((prevListeners: any) => prevListeners.filter((l: any) => l != listener));
   };
 
-  const removeLogoutListener = (listener:any) => {
-    setLogoutListeners((prevListeners:any) => prevListeners.filter((l:any) => l != listener));
+  const removeLogoutListener = (listener: any) => {
+    setLogoutListeners((prevListeners: any) => prevListeners.filter((l: any) => l != listener));
   };
 
   useEffect(() => {
     const initialize = async () => {
       const token = await localStorage.getItem('token');
-      console.log(token);
-      
       if (token) {
         await login(token);
       } else {
@@ -267,18 +192,18 @@ const AuthProvider = ({ children }: any) => {
     <AuthContext.Provider value={{
       login,
       logout,
-      setUser,
+      reFetchCurrentUser,
       addLoginListener,
       addLogoutListener,
       removeLoginListener,
       removeLogoutListener,
+      currentUser,
       ...state,
     }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
 
 export default AuthProvider;
 

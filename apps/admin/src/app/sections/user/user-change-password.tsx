@@ -21,7 +21,6 @@ const defaultValues = {
 };
 
 const UserChangePassword = () => {
-    const { user } = useAuth();
     const showPassword = useBoolean()
     const showOldPassword = useBoolean()
     const confirmShowPassword = useBoolean()

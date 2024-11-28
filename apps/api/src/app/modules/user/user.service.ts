@@ -79,13 +79,11 @@ export class UserService extends CrudService<User> {
   }
 
   async updateProfile(entity: IUpdateProfileInput): Promise<IUser> {
-
     const currentUser = RequestContext.currentUser();
     const userId = currentUser?.id;
     let user;
     if (userId) {
       user = await this.userRepository.findOne({ where: { id: userId } });
-
       if (has(entity, 'email')) {
         const exists = await this.checkIfExistsEmail(entity.email,userId);
         if (exists) {
