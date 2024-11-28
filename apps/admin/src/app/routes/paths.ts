@@ -52,7 +52,7 @@ export const PATH_DASHBOARD = {
   page: {
     root: path(ROOTS_DASHBOARD, '/pages'),
     add: path(ROOTS_DASHBOARD, '/pages/add'),
-    edit: path(ROOTS_DASHBOARD, '/pages/edit/:pageId'),
+    edit: path(ROOTS_DASHBOARD, '/pages/edit'),
   },
   settings: {
     root: path(ROOTS_DASHBOARD, '/settings'),

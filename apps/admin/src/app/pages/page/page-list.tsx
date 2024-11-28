@@ -23,6 +23,8 @@ const PageList = () => {
 
   const handleOpenEditPage = useCallback(
     (raw: IPage) => () => {
+      console.log(`${PATH_DASHBOARD.page.edit}/${raw?.id}`);
+      
       navigate(`${PATH_DASHBOARD.page.edit}/${raw?.id}`)
     },
     [],

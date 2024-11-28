@@ -9,3 +9,7 @@ export interface IPage extends IBaseEntity {
     content?: string;
     template?: string;
 }
+
+export enum PageTemplateEnum {
+    DEFAULT = 'default',
+}
