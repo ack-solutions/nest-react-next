@@ -2,10 +2,6 @@ import { Quill } from 'react-quill';
 import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
 import QuillEditorToolbarStyle from './QuillEditorToolbarStyle';
-// //
-// import QuillEditorToolbarStyle from './QuillEditorToolbarStyle';
-
-// // ----------------------------------------------------------------------
 
 const FONT_FAMILY = ['Arial', 'Tahoma', 'Georgia', 'Impact', 'Verdana'];
 

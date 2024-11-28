@@ -1,11 +1,8 @@
-import ReactQuill, { ReactQuillProps } from 'react-quill';
-// material
 import { styled } from '@mui/material/styles';
 import { Box, BoxProps } from '@mui/material';
-//
 import EditorToolbar, { formats, redoChange, undoChange } from './QuillEditorToolbar';
+import ReactQuill, { ReactQuillProps } from 'react-quill';
 
-// ----------------------------------------------------------------------
 
 const RootStyle = styled(Box)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
@@ -29,8 +26,6 @@ const RootStyle = styled(Box)(({ theme }) => ({
     }
   }
 }));
-
-// ----------------------------------------------------------------------
 
 export interface QuillEditorProps extends ReactQuillProps {
   id?: string;

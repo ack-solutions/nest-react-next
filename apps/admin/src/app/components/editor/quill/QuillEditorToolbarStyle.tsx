@@ -1,7 +1,5 @@
 import { styled } from '@mui/material/styles';
 
-// ----------------------------------------------------------------------
-
 const QuillEditorToolbarStyle = styled('div')(({ theme }) => {
   const isRTL = theme.direction === 'rtl';
 

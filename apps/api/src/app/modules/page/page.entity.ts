@@ -24,7 +24,7 @@ export class Page extends BaseEntity implements IPage {
 
     @ApiProperty()
     @IsString()
-    @Column()
+    @Column({ nullable: true })
     key?: string;
 
     @ApiProperty()
