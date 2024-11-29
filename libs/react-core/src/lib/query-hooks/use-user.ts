@@ -1,12 +1,13 @@
 
-import { useCrudOperations, UserService } from '@libs/react-core';
+import { UpdateQueryOptions, useCrudOperations, UserService } from '@libs/react-core';
 import { IUser } from '@libs/types';
-import { DefinedInitialDataOptions, useQuery } from '@tanstack/react-query';
+import { DefinedInitialDataOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const service = UserService.getInstance<UserService>();
 
 export const useUserQuery = () => {
     const { useGetMany, useGetOne, useCreate, useDelete, useUpdate } = useCrudOperations(service);
+    const queryClient = useQueryClient();
 
     const useGetMe = (options?: Partial<DefinedInitialDataOptions<any, Error, IUser>>) => useQuery({
         queryKey: [service.getQueryKey('me')],
@@ -14,8 +15,26 @@ export const useUserQuery = () => {
         ...options,
     });
 
+    const useUpdateProfile = (options?: UpdateQueryOptions<Partial<IUser>, Error, IUser>) => useMutation({
+        mutationFn: (input: Partial<IUser>) => service.updateProfile(input), 
+        onSuccess: (data) => {
+            if (!options?.disableCacheUpdate) {
+                queryClient.invalidateQueries({
+                    predicate: (query) =>
+                        query.queryKey[0] === service.getQueryKey('get') && query.queryKey[1] === data.id 
+                });
+                queryClient.invalidateQueries({
+                    predicate: (query) =>
+                        query.queryKey[0] === service.getQueryKey('get-all') || query.queryKey[0] === service.getQueryKey('data-grid')
+                });
+            }
+        },
+        ...options,
+    });
+
     return {
         useGetMe,
+        useUpdateProfile,
         useGetManyUser: useGetMany,
         useGetUserById: useGetOne,
         useCreateUser: useCreate,

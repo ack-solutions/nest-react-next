@@ -20,5 +20,5 @@
     "src/**/*.spec.jsx",
     "src/**/*.test.jsx"
   ],
-  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx", "../../apps/admin/src/app/contexts/confirm-dialog-context.tsx"]
+  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx", "../../apps/admin/src/app/contexts/confirm-dialog-context.tsx", "src/lib/components/image.tsx"]
 }

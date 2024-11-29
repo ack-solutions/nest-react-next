@@ -6,7 +6,7 @@ import {
   Button,
 } from '@mui/material';
 import { has, split, startCase } from 'lodash';
-import { UserService, useToasty, useUserQuery } from '@libs/react-core';
+import { useToasty, useUserQuery } from '@libs/react-core';
 import { IUser, UserStatusEnum } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
 import { DataTableHandle, DataTableColumn, TableActionMenu, DataTable, Label, Icon } from '@admin/app/components';
@@ -16,9 +16,6 @@ import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-b
 import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 import { useNavigate } from 'react-router-dom';
 import ChangePasswordDialog from '@admin/app/sections/user/change-password-dialog';
-
-const userService = UserService.getInstance<UserService>();
-
 
 export default function UsersList() {
   const { showToasty } = useToasty();
@@ -33,8 +30,6 @@ export default function UsersList() {
     enabled: !!userRequest
   })
 
-
-
   const handleViewUser = useCallback(
     (row: IUser) => {
       // 
@@ -44,8 +39,6 @@ export default function UsersList() {
 
   const handleDeleteUser = useCallback(
     (row: IUser) => {
-      console.log(row);
-      
       if (row.id) {
         deleteConfirm(
           {
@@ -63,7 +56,6 @@ export default function UsersList() {
                 }
               })
               datatableRef?.current?.refresh();
-              // showToasty('User successfully deleted');
             } catch (error: any) {
               showToasty(error, 'error');
             }

@@ -6,7 +6,7 @@ export interface IUser extends IBaseEntity {
   firstName?: string;
   lastName?: string;
   email?: string;
-  phoneNumber?: string;
+  phoneNumber?: number;
   avatar?: string;
   passwordHash?: string;
   isSuperAdmin?: boolean;

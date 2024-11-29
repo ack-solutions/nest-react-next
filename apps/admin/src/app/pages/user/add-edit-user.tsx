@@ -1,10 +1,9 @@
-import { Card, CardContent, Container } from '@mui/material'
-import React, { useCallback, useEffect, useState } from 'react'
+import { Container } from '@mui/material'
+import { useCallback } from 'react'
 import AddEditUserForm from '../../sections/user/add-edit-user-form'
 import { IRole, IUser } from '@libs/types'
 import { useNavigate, useParams } from 'react-router-dom'
-import { UserService, useToasty } from '@libs/react-core'
-import { FormikHelpers } from 'formik'
+import { UserService, useToasty, useUserQuery } from '@libs/react-core'
 import Page from '@admin/app/components/page'
 import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs'
 import { PATH_DASHBOARD } from '@admin/app/routes/paths'
@@ -15,44 +14,48 @@ const AddEditUser = () => {
     const { id: userId } = useParams();
     const { showToasty } = useToasty();
     const navigate = useNavigate();
-    const [user, setUser] = useState<IUser>({});
+    const { useUpdateUser, useCreateUser, useGetUserById } = useUserQuery()
+    const { mutate: updateUser } = useUpdateUser()
+    const { mutate: createUser } = useCreateUser()
+    const { data: userData } = useGetUserById(userId, {
+        relations: ['roles'],
+    }, {
+        select: (data) => {
+            const rolesIds = data?.roles?.map((role: IRole) => role?.id)
+            return {
+                ...data,
+                phoneNumber: Number(data?.phoneNumber),
+                roles: rolesIds,
+            };
+        },
+    })
 
     const handleSubmit = useCallback(
-        (value?: IUser, action?: FormikHelpers<any>) => {
-            if (value?.id) {
-                userService.update(value?.id, value).then((resp) => {
-                    showToasty('User Successfully Updated')
-                    action?.setSubmitting(false)
+        (values: IUser) => {
+            const options = {
+                onSuccess: (data) => {
+                    showToasty(
+                        values?.id
+                            ? 'User updated successfully'
+                            : 'User added successfully'
+                    );
                     navigate(PATH_DASHBOARD.users.root)
-                }).catch((error => {
-                    showToasty(error, 'error')
-                }))
-            } else {
-                userService.create(value).then((resp) => {
-                    showToasty('User Successfully Added')
-                    action?.setSubmitting(false)
-                    navigate(PATH_DASHBOARD.users.root)
-                }).catch((error => {
-                    showToasty(error, 'error')
-                }))
+                },
+                onError: (error) => {
+                    console.log(error)
+                    showToasty(error, 'error');
+                }
             }
-        },
-        [],
-    )
 
-    useEffect(() => {
-        if (userId) {
-            userService
-                .getOne(userId, {
-                    relations: ['roles'],
-                })
-                .then((data) => {
-                    const rolesIds = data?.roles?.map((role: IRole) => role?.id)
-                    setUser({ ...data, roles: rolesIds });
-                })
-                .catch((error) => { });
-        }
-    }, [userId]);
+            if (values?.id) {
+                updateUser(values, options);
+            } else {
+                createUser(values, options);
+            }
+
+        },
+        [createUser, showToasty, updateUser]
+    );
 
     return (
         <Page title={`${userId ? 'Edit User' : 'Add User'}`}>
@@ -65,7 +68,7 @@ const AddEditUser = () => {
                         { name: `${userId ? 'Edit User' : 'Add User'}` },
                     ]}
                 />
-                <AddEditUserForm onSubmit={handleSubmit} values={user} />
+                <AddEditUserForm onSubmit={handleSubmit} values={!!userData && userData} />
             </Container>
         </Page>
     )

@@ -1,7 +1,7 @@
 
 import { Column, Entity, AfterLoad, ManyToMany, JoinTable } from "typeorm";
 import { Role } from "../role/role.entity";
-import { IsBoolean, IsDateString, IsEmail, IsEnum, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDateString, IsEmail, IsEnum, IsNumberString, IsOptional, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { IUser, UserStatusEnum } from "@libs/types";
 import { BaseEntity } from "@api/app/core/typeorm/base.entity";
@@ -43,7 +43,8 @@ export class User extends BaseEntity implements IUser {
   @ApiProperty()
   @Column('character', { length: 20, nullable: true })
   @IsOptional()
-  phoneNumber?: string;
+  @IsNumberString()
+  phoneNumber?: number;
 
   @ApiProperty()
   @Column({ nullable: true })
