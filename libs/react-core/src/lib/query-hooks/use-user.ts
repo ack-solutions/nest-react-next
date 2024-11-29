@@ -1,6 +1,6 @@
 
 import { UpdateQueryOptions, useCrudOperations, UserService } from '@libs/react-core';
-import { IUser } from '@libs/types';
+import { IChangePasswordInput, IUser } from '@libs/types';
 import { DefinedInitialDataOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const service = UserService.getInstance<UserService>();
@@ -32,9 +32,27 @@ export const useUserQuery = () => {
         ...options,
     });
 
+    const useChangePassword = (options?: UpdateQueryOptions<Partial<IChangePasswordInput>, Error, IChangePasswordInput>) => useMutation({
+        mutationFn: (input: Partial<IChangePasswordInput>) => service.changePassword(input), 
+        onSuccess: (data) => {
+            if (!options?.disableCacheUpdate) {
+                queryClient.invalidateQueries({
+                    predicate: (query) =>
+                        query.queryKey[0] === service.getQueryKey('get') && query.queryKey[1] === data.id 
+                });
+                queryClient.invalidateQueries({
+                    predicate: (query) =>
+                        query.queryKey[0] === service.getQueryKey('get-all') || query.queryKey[0] === service.getQueryKey('data-grid')
+                });
+            }
+        },
+        ...options,
+    });
+
     return {
         useGetMe,
         useUpdateProfile,
+        useChangePassword,
         useGetManyUser: useGetMany,
         useGetUserById: useGetOne,
         useCreateUser: useCreate,
