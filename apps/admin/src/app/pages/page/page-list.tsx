@@ -6,8 +6,7 @@ import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-b
 import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 import AddEditPageDialog from '../../sections/page/add-edit-page-dialog';
 import { IPage } from '@libs/types';
-import { usePage } from '@admin/app/hooks/use-page';
-import { errorMessage, useToasty } from '@libs/react-core';
+import { errorMessage, usePage, useToasty } from '@libs/react-core';
 import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
 
 export default function PageList() {
@@ -22,12 +21,12 @@ export default function PageList() {
     const { mutateAsync: deletePage } = useDeletePage();
 
     const { data } = useGetManyPage(dataTableFilters, {
-        enabled: Boolean(dataTableFilters), // Disable initial api call
+        enabled: Boolean(dataTableFilters), 
     });
 
     const handleAddEdit = useCallback(
         (item = {}) => () => {
-            setSelectedItem(item); // Open dialog for adding a new item
+            setSelectedItem(item);
         },
         []
     );

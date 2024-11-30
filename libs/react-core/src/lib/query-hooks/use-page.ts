@@ -1,11 +1,10 @@
-import { PageService } from '../services/page.service';
 import { useCrudOperations } from '@libs/react-core';
+import { PageService } from '../services/page.service';
 
 const Service = PageService.getInstance<PageService>();
 
 export const usePage = () => {
-    const { useGetMany, useGetOne, useCreate, useDelete, useUpdate } =
-        useCrudOperations(Service);
+    const { useGetMany, useGetOne, useCreate, useDelete, useUpdate } = useCrudOperations(Service);
 
     return {
         useGetManyPage: useGetMany,

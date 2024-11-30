@@ -1,13 +1,15 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
-import { PageService } from './page.service';
+import { IPage } from '@libs/types';
 import { CrudController } from '@api/app/core/crud';
-import { Page } from './page.entity';
-
+import { PageDTO } from './dto/page.dto';
+import { PageService } from './page.service';
 @ApiTags('Page')
-@Controller('page')
-export class PageController extends CrudController(Page)<Page> {
-    constructor(private readonly pageService: PageService) {
+@Controller("page")
+@UseGuards(AuthGuard('jwt'))
+export class PageController extends CrudController(PageDTO)<IPage> {
+    constructor(private pageService: PageService) {
         super(pageService);
     }
 }

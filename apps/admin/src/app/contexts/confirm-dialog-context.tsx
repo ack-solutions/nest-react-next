@@ -14,10 +14,8 @@ import React, {
 } from 'react';
 import DefaultDialog, { DefaultDialogProps } from '../components/default-dialog';
 
-// Create ConfirmContext with a default value of null
 export const ConfirmContext = createContext<any>(null);
 
-// Define ConfirmDialog props
 export interface ConfirmDialogProps extends DefaultDialogProps {
     message?: string;
     yesText?: string;
@@ -94,8 +92,6 @@ const ConfirmDialog = ({
 };
 
 export default ConfirmDialog;
-
-// ConfirmProvider Component to provide the confirm dialog context
 interface ConfirmProviderProps {
     children: ReactNode;
 }
@@ -131,7 +127,6 @@ export const ConfirmProvider: FC<ConfirmProviderProps> = ({ children }) => {
     );
 };
 
-// useConfirm hook to access the confirm function
 export const useConfirm = () => {
     const confirm = useContext(ConfirmContext);
     if (!confirm) {

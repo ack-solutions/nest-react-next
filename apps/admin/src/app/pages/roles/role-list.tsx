@@ -4,70 +4,29 @@ import {
     Button,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { map, omit, } from 'lodash';
-import { RoleService, useToasty } from '@libs/react-core';
+import { useRoleQuery, useToasty } from '@libs/react-core';
 import { IRole } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
-import AddEditRoleDialog from '../../sections/role/add-edit-role-dialog';
 import { DataTable, DataTableColumn, DataTableHandle, TableActionMenu } from '@admin/app/components';
 import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
 import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
 import Page from '@admin/app/components/page';
 import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 
-const roleService = RoleService.getInstance<RoleService>();
-
 export default function RoleList() {
     const { showToasty } = useToasty();
-    const [roles, setRoles] = useState<IRole[] | null>(null);
-    const [total, setTotal] = useState(0);
     const navigate = useNavigate();
     const deleteConfirm = useConfirm();
     const datatableRef = useRef<DataTableHandle>(null);
-    const [selectRole, setSelectRole] = useState<any>()
-
-    const handleOpenAddEditRoleDialog = useCallback(
+    const [roleRequest, setRoleRequest] = useState()
+    const { useGetManyRole, useDeleteRole } = useRoleQuery();
+    const { data: roleData } = useGetManyRole(roleRequest, {
+        enabled: !!roleRequest
+    });
+    const { mutate: onDeleteRole } = useDeleteRole()
+    const handleOpenEditRole = useCallback(
         (row: IRole) => () => {
-            setSelectRole(row)
-        },
-        [],
-    )
-
-    const handleCloseAddEditRoleDialog = useCallback(
-        () => {
-            setSelectRole(null)
-        },
-        [],
-    )
-
-    const handleSubmitForm = useCallback(
-        (value: IRole, action: any) => {
-            const request = {
-                ...omit(value, ['id', 'createdAt', 'updatedAt', 'deletedAt',]),
-                permissions: map(value.permissions, (value) => {
-                    return { id: value }
-                })
-            }
-
-            if (value?.id) {
-                roleService.update(value?.id, request).then(() => {
-                    showToasty('Role updated Successfully')
-                    action.setSubmitting(false)
-                    handleCloseAddEditRoleDialog()
-                    datatableRef?.current?.refresh();
-                }).catch((error) => {
-                    showToasty(error, 'error')
-                })
-            } else {
-                roleService.create(request).then(() => {
-                    action.setSubmitting(false)
-                    showToasty('Role updated Successfully')
-                    datatableRef?.current?.refresh();
-                    handleCloseAddEditRoleDialog()
-                }).catch((error) => {
-                    showToasty(error, 'error')
-                })
-            }
+            navigate(`${PATH_DASHBOARD.users.editRole}/${row?.id}`)
         },
         [],
     )
@@ -78,30 +37,25 @@ export default function RoleList() {
                 deleteConfirm(
                     {
                         title: row.deletedAt ? "Permanent Delete" : "Delete",
-                        description: `Are you sure you want to ${row.deletedAt ? "permanent delete" : "delete"} this user?`
+                        message: `Are you sure you want to ${row.deletedAt ? "permanent delete" : "delete"} this role?`
                     })
                     .then(async () => {
                         try {
-                            if (row.deletedAt) {
-                                await roleService.trashDelete(row.id)
-                            }
-                            else {
-                                await roleService.delete(row.id).
-                                    then(() => {
-                                        // 
-                                    })
-                                    .catch((error) => {
-                                        showToasty(error.message, 'error');
-                                    });
-                            }
+                            onDeleteRole(row.id, {
+                                onError: (error) => {
+                                    showToasty(error.message, 'error');
+                                },
+                                onSuccess: () => {
+                                    showToasty('Role successfully deleted');
+                                }
+                            })
                             datatableRef?.current?.refresh();
-                            showToasty('User successfully deleted');
                         } catch (error: any) {
                             showToasty(error, 'error');
                         }
                     })
-                    .catch(() => {
-                        //
+                    .catch((error) => {
+                        showToasty(error, 'error');
                     });
             }
 
@@ -117,10 +71,7 @@ export default function RoleList() {
             },
             relations: ['permissions']
         };
-        roleService.getMany(filter).then((data) => {
-            setRoles(data?.items || []);
-            setTotal(data?.total || 0);
-        });
+        setRoleRequest(filter)
     }, []);
 
 
@@ -145,41 +96,41 @@ export default function RoleList() {
                 <TableActionMenu
                     row={row}
                     onDelete={() => handleDeleteUser(row)}
-                    {...!row?.deletedAt ? { onEdit: handleOpenAddEditRoleDialog(row) } : {}}
+                    {...!row?.deletedAt ? { onEdit: handleOpenEditRole(row) } : {}}
                 />
             ),
+            props: { sx: { width: 150 } }
         },
     ];
 
     return (
         <Page title='Roles'>
-            <Container maxWidth={false}>
+            <Container>
                 <CustomBreadcrumbs
-                    heading="Users"
+                    heading="Roles"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: 'Role', href: PATH_DASHBOARD.users.roles },
+                        { name: 'Roles', href: PATH_DASHBOARD.users.roles },
                         { name: 'List' },
                     ]}
                     action={
                         <Button
                             variant='contained'
-                            onClick={handleOpenAddEditRoleDialog({})}
+                            onClick={() => navigate(PATH_DASHBOARD.users.addRole)}
                         >
                             Add Role
                         </Button>
                     }
                 />
                 <DataTable
-                    data={roles}
+                    data={roleData?.items}
                     columns={columns}
                     ref={datatableRef}
-                    totalRow={total}
+                    totalRow={roleData?.total}
                     defaultOrder='desc'
                     defaultOrderBy='createdAt'
                     onChange={handleDataTableChange}
                 />
-                {selectRole && <AddEditRoleDialog onSubmit={handleSubmitForm} onClose={handleCloseAddEditRoleDialog} roleValue={selectRole} />}
             </Container>
         </Page>
     );

@@ -14,7 +14,6 @@ const RootStyle = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  //backgroundColor: theme.palette.background.paper,
   backgroundColor: '#f5f5f5',
   '& .wrapper': {
     position: 'absolute',

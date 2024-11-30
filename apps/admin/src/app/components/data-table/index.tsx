@@ -22,6 +22,7 @@ import {
   Stack,
   Divider,
   BoxProps,
+  Card,
 } from '@mui/material';
 import {
   forwardRef,
@@ -152,7 +153,7 @@ export interface DataTableChangeEvent {
   };
 }
 
-export interface DataTableProps {
+export interface DataTableProps extends Omit<BoxProps, 'onChange' | 'onSelect'> {
   columns: DataTableColumn<any>[];
   data: any[] | null;
   defaultOrder?: 'asc' | 'desc';
@@ -187,15 +188,10 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   padding: theme.spacing(2, 1, 2, 3),
-  //   [theme.breakpoints.down('md')]: {
-  //     padding: theme.spacing(2, 1, 2, 1),
-  //     flexDirection: 'column',
-  //   },
 }));
 
 const SearchInput = styled(OutlinedInput)(({ theme }) => ({
   width: 320,
-  // borderRadius: 99,
   [theme.breakpoints.down('md')]: {
     width: '100%',
     marginBottom: 16,
@@ -242,11 +238,10 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
       extraFilter,
       showPagination = true,
       noOptionsText,
+      ...props
     },
     ref
   ) => {
-    const theme = useTheme();
-    // const isMountedRef = useIsMountedRef();
     const [page, setPage] = useState(0);
     const [selected, setSelected] = useState<string[]>([]);
     const [search, setSearch] = useState('');
@@ -409,7 +404,6 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
           ...orderInput,
           ...(filter ? filter : {}),
         };
-
         onChange && onChange(request);
       }, [searchText, columns, page, rowsPerPage, orderBy, order, onChange]),
       500
@@ -433,7 +427,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
       (collapsible ? 1 : 0);
 
     return (
-      <Box {...cardProps} className="data-table" width="100%">
+      <Box component={Card} className="data-table" width="100%" {...props}>
         {detailRowTitle && (
           <>
             <Stack
@@ -494,9 +488,6 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                   </Stack>
                 </Stack>
               )}
-
-              {topAction && topAction}
-
               {selected.length > 0 &&
                 renderBulkAction &&
                 renderBulkAction(selected)}

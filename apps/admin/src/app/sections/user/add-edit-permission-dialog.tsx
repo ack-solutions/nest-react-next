@@ -1,26 +1,22 @@
-
 import { DefaultDialog } from '@admin/app/components';
-import {  PermissionService, useToasty } from '@libs/react-core';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { FormContainer, RHFSelect, RHFTextField, useRoleQuery } from '@libs/react-core';
+import { IPermission } from '@libs/types';
 import { Button, Stack } from '@mui/material'
-import { Field, Form, Formik, FormikHelpers } from 'formik';
-import { TextField } from 'formik-mui';
-import { omit } from 'lodash';
-import { useSnackbar } from 'notistack';
-import { useCallback, useRef } from 'react'
+import { map } from 'lodash';
+import { useEffect, useRef } from 'react'
+import { useForm } from 'react-hook-form';
 import { object, string } from 'yup';
-
 
 interface AddEditPermissionDialogProps {
     onClose: (value?: any) => void;
     values?: any;
-    onSubmit: (value?: any, action?: FormikHelpers<any>) => void;
+    onSubmit: (value?: any) => void;
 }
-
-const permissionService = PermissionService.getInstance<PermissionService>()
 
 const defaultValues = {
     name: '',
-    // isActive: true,
+    roles: []
 };
 
 const validationSchema = object().shape({
@@ -28,7 +24,23 @@ const validationSchema = object().shape({
 });
 
 const AddEditPermissionDialog = ({ onClose, values, onSubmit }: AddEditPermissionDialogProps) => {
-    const formRef = useRef<any>();
+    const { useGetManyRole } = useRoleQuery()
+    const { data: roleData } = useGetManyRole()
+
+    const formContext = useForm({
+        defaultValues,
+        resolver: yupResolver(validationSchema),
+    })
+    const { reset, handleSubmit, } = formContext;
+
+
+    useEffect(() => {
+        reset({
+            ...values,
+            roles: map(values.roles, 'id')
+        })
+    }, [reset, values]);
+
     return (
         <DefaultDialog
             maxWidth='xs'
@@ -39,34 +51,45 @@ const AddEditPermissionDialog = ({ onClose, values, onSubmit }: AddEditPermissio
                     <Button variant="outlined" onClick={() => { onClose() }}>
                         Cancel
                     </Button>
-                    <Button variant="contained" color="primary" onClick={() => formRef?.current?.handleSubmit()}>
+                    <Button variant="contained" color="primary" onClick={handleSubmit(onSubmit)}>
                         Save
                     </Button>
                 </>
             }
         >
-            <Formik
-                initialValues={Object.assign({}, defaultValues, values)}
+            <FormContainer
+                FormProps={{
+                    id: "add-edit-form-user"
+                }}
+                formContext={formContext}
                 validationSchema={validationSchema}
-                onSubmit={onSubmit}
-                innerRef={formRef}
-                enableReinitialize
+                onSuccess={onSubmit}
             >
-                {({ handleSubmit }) => (
-                    <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-                        <Stack spacing={2}>
-                            <Field
-                                fullWidth
-                                required
-                                name='name'
-                                label='Name'
-                                component={TextField}
-                            />
-                        </Stack>
+                <Stack spacing={2}>
+                    <RHFTextField
+                        fullWidth
+                        required
+                        name='name'
+                        label='Name'
+                    />
+                    <RHFSelect
+                        fullWidth
+                        required
+                        name='roles'
+                        label='Roles'
+                        valueKey='id'
+                        labelKey='name'
+                        isMultiple
+                        options={roleData?.items}
+                        slotProps={{
+                            select: {
+                                multiple: true
+                            }
+                        }}
+                    />
+                </Stack>
 
-                    </Form>
-                )}
-            </Formik>
+            </FormContainer>
         </DefaultDialog>
     )
 }

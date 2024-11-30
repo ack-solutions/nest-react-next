@@ -39,16 +39,27 @@ export const PATH_DASHBOARD = {
     edit: path(ROOTS_DASHBOARD, '/users/edit'),
     add: path(ROOTS_DASHBOARD, '/users/add'),
     roles: path(ROOTS_DASHBOARD, '/users/roles'),
+    editRole: path(ROOTS_DASHBOARD, '/users/roles/edit'),
+    addRole: path(ROOTS_DASHBOARD, '/users/roles/add'),
     permissions: path(ROOTS_DASHBOARD, '/users/permissions'),
   },
   profile: {
     root: path(ROOTS_DASHBOARD, '/profile'),
   },
-  settings: {
-    payroll: path(ROOTS_DASHBOARD, '/settings/payroll'),
-    business: path(ROOTS_DASHBOARD, '/settings/business'),
+  changePassword: {
+    root: path(ROOTS_DASHBOARD, '/change-password'),
   },
   page: {
-    root: path(ROOTS_DASHBOARD, '/page'),
+    root: path(ROOTS_DASHBOARD, '/pages'),
+    add: path(ROOTS_DASHBOARD, '/pages/add'),
+    edit: path(ROOTS_DASHBOARD, '/pages/edit/:pageId'),
   },
+ 
+  settings: {
+    root: path(ROOTS_DASHBOARD, '/settings'),
+    business: path(ROOTS_DASHBOARD, '/settings/business'),
+  },
+  // page: {
+  //   root: path(ROOTS_DASHBOARD, '/page'),
+  // },
 };

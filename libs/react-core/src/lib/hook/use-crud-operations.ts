@@ -46,68 +46,24 @@ export function useCrudOperations<T extends IBaseEntity>(service: CRUDService<T>
                         query.queryKey[0] === service.getQueryKey('get-all') || query.queryKey[0] === service.getQueryKey('data-grid')
                 })
 
-                // Set data so will not main get api call again.
-                // queryClient.setQueryData(
-                //     [service.getQueryKey('get'), data.id],
-                //     (oldData: Partial<T>) => ({ ...oldData, ...data }))
-
-                // Update data in List
-                // queryClient.setQueriesData(
-                //     {
-                //         predicate: (query) => query.queryKey[0] === service.getQueryKey('get-all'),
-                //     },
-                //     (oldData: any) => ({
-                //         ...oldData,
-                //         data: [data, ...oldData.data]
-                //     })
-                // )
             }
         },
         ...options,
     });
 
-
     const useUpdate = (options?: UpdateQueryOptions<Partial<T>, Error, T>) => useMutation({
         mutationFn: ({ id, ...input }: Partial<T>) => service.update(id as any, input as Partial<T>),
         onSuccess: (data) => {
             if (!options?.disableCacheUpdate) {
-
-
                 queryClient.invalidateQueries({
                     predicate: (query) =>
                         query.queryKey[0] === service.getQueryKey('get') && query.queryKey[1] === data.id
                 })
-
                 queryClient.invalidateQueries({
                     predicate: (query) =>
                         query.queryKey[0] === service.getQueryKey('get-all') || query.queryKey[0] === service.getQueryKey('data-grid')
                 })
 
-                // // Update cache data for list
-                // queryClient.setQueryData(
-                //     [service.getQueryKey('get'), data.id],
-                //     (oldData: Partial<T>) => oldData ? Object.assign(oldData, data) : data)
-
-                // // Update cache data for list
-                // queryClient.setQueriesData(
-                //     {
-                //         predicate: (query) => query.queryKey[0] === service.getQueryKey('get-all') ||  || query.queryKey[0] === service.getQueryKey('data-grid'),
-                //     },
-                //     (oldData: IPagination<any>) => {
-
-                //         const index = findIndex(oldData?.data, { id: data.id });
-                //         let updatedData = oldData ? [...oldData.data] : [];
-                //         if (index >= 0) {
-                //             updatedData.splice(index, 1, data);
-                //         } else {
-                //             updatedData = [data, ...updatedData];
-                //         }
-                //         return {
-                //             ...oldData,
-                //             data: updatedData
-                //         }
-                //     }
-                // )
             }
         },
         ...options,
@@ -116,13 +72,12 @@ export function useCrudOperations<T extends IBaseEntity>(service: CRUDService<T>
     const useDelete = (options?: any) => useMutation<string, Error, any>({
         mutationFn: (id: string) => service.delete(id),
         onSuccess: (_data, variable) => {
-            // Remove cache data for get one
+
             queryClient.invalidateQueries({
                 predicate: (query) =>
                     query.queryKey[0] === service.getQueryKey('get') && query.queryKey[1] === variable
             })
 
-            // Remove cache data for list
             queryClient.invalidateQueries({
                 predicate: (query) =>
                     query.queryKey[0] === service.getQueryKey('get-all') || query.queryKey[0] === service.getQueryKey('data-grid')
@@ -131,24 +86,22 @@ export function useCrudOperations<T extends IBaseEntity>(service: CRUDService<T>
         ...options,
     });
 
-    // const useBulkUpdate = (options?: UpdateQueryOptions<Partial<T>[], Error, T[]>) => useMutation({
-    //     mutationFn: (input) => service.bulkUpdate(input) as any,
-    //     onSuccess: (data) => {
+    const useTrashDelete = (options?: any) => useMutation<string, Error, any>({
+        mutationFn: (id: string) => service.trashDelete(id),
+        onSuccess: (_data, variable) => {
 
-    //         if (!options?.disableCacheUpdate) {
-    //             queryClient.invalidateQueries({
-    //                 predicate: (query) =>
-    //                     query.queryKey[0] === service.getQueryKey('get')
-    //             })
-    //             queryClient.invalidateQueries({
-    //                 predicate: (query) =>
-    //                     query.queryKey[0] === service.getQueryKey('get-all') || query.queryKey[0] === service.getQueryKey('data-grid')
-    //             })
-    //         }
-    //     },
-    //     ...options,
-    // });
+            queryClient.invalidateQueries({
+                predicate: (query) =>
+                    query.queryKey[0] === service.getQueryKey('get') && query.queryKey[1] === variable
+            })
 
+            queryClient.invalidateQueries({
+                predicate: (query) =>
+                    query.queryKey[0] === service.getQueryKey('get-all') || query.queryKey[0] === service.getQueryKey('data-grid')
+            })
+        },
+        ...options,
+    });
 
-    return { useGetMany, useGetOne, useCreate, useUpdate, useDelete };
+    return { useGetMany, useGetOne, useCreate, useUpdate, useDelete, useTrashDelete };
 }

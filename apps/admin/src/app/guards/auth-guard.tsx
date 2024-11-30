@@ -14,14 +14,12 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   const { pathname } = useLocation();
   const [requestedLocation, setRequestedLocation] = useState<string | null>(null);
   if (!isInitialized) {
-    // Here Loading Screen
     return <LoadingScreen />;
   }
   if (!isAuthenticated) {
     if (pathname !== requestedLocation) {
       setRequestedLocation(pathname);
     }
-    // Here Login Component Import
     return <Navigate to={PATH_AUTH.login} />;
   }
 

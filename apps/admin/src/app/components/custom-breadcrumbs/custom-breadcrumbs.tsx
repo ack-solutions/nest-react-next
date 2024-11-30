@@ -57,7 +57,7 @@ export default function CustomBreadcrumbs({
 
           {/* BREADCRUMBS */}
           {links?.length && (
-            <Breadcrumbs separator={<Separator />} {...other}>
+            <Breadcrumbs separator={<Separator />}  {...other}>
               {links?.map((link) => (
                 <LinkItem
                   key={link.name || ''}

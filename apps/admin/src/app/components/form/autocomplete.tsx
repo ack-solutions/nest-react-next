@@ -65,8 +65,6 @@ const Autocomplete = ({
       const val = e.target.value || '';
       if (freeSolo && val && !multiple) {
         let item: any;
-
-        // Destructure getOptionLabel from props, providing a default function if it's undefined
         const { getOptionLabel = (option: any) => option[renderKey] || '' } = props;
 
         item = find(options, (option: any) => getOptionLabel(option) === val);
@@ -111,7 +109,6 @@ const Autocomplete = ({
             }}
           />
         )}
-        // {...props}
       />
     </Box>
   );

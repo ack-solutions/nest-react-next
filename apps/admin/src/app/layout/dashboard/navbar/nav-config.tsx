@@ -69,7 +69,6 @@ const ICONS = {
 
 export function useNavData() {
 
-
     const navigationItems = useMemo(() => ([
         {
             id: 'dashboard',
@@ -78,15 +77,6 @@ export function useNavData() {
             path: PATH_DASHBOARD.root,
             icon: ICONS.dashboard,
             staticPaths: [PATH_DASHBOARD.root]
-        },
-        {
-            id: 'reports',
-            groupName: 'OVERVIEW',
-            title: 'Reports',
-            path: PATH_DASHBOARD.reports.root,
-            icon: ICONS.reports,
-            permissions: [RoleNameEnum.ADMIN],
-            staticPaths: [PATH_DASHBOARD.reports.root]
         },
         {
             id: 'users',
@@ -119,6 +109,14 @@ export function useNavData() {
                     staticPaths: [PATH_DASHBOARD.users.permissions],
                 },
             ],
+        },
+        {
+            id: 'settings',
+            groupName: 'Management',
+            title: 'Settings',
+            path: PATH_DASHBOARD.settings.root,
+            icon: ICONS.setting,
+            staticPaths: [PATH_DASHBOARD.settings.root]
         },
         {
             id: 'manage',

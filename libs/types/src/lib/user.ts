@@ -6,7 +6,7 @@ export interface IUser extends IBaseEntity {
   firstName?: string;
   lastName?: string;
   email?: string;
-  phoneNumber?: string;
+  phoneNumber?: number;
   avatar?: string;
   passwordHash?: string;
   isSuperAdmin?: boolean;
@@ -33,3 +33,23 @@ export enum UserStatusEnum {
 }
 
 
+export interface IChangePasswordInput {
+  oldPassword?: string,
+  password?: string,
+  confirmPassword?: string,
+}
+
+export interface IUpdateProfileInput extends Omit<IUser, 'id'> {
+  [x: string]: any;
+}
+
+export interface IRegisterInput {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  avatar?: string;
+  password?: string;
+  otp?: number;
+  roles?: any[];
+  emailVerifiedAt?: Date;
+}

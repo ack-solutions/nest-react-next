@@ -1,9 +1,7 @@
 import { ErrorMessage, FieldProps } from 'formik';
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
-import { Box, Button, Card, CardContent, CardHeader, Checkbox, FormControlLabel, FormHelperText, Grid, Stack, TextField } from '@mui/material';
+import { Box, Button, Card, CardContent, CardHeader, Checkbox, FormControlLabel, FormHelperText, Grid, InputLabel, Stack, TextField, useTheme } from '@mui/material';
 import { cloneDeep, isEqual } from 'lodash';
-import Label from '../../label/label';
-
 export interface PermissionSelectFieldProps extends FieldProps {
   options: Array<{ value: any; label: string }>;
   label: string | ReactNode;
@@ -20,10 +18,12 @@ export const PermissionSelectField = ({
 
   column,
   renderValue,
-  renderLabel
+  renderLabel,
+  ...props
 }: PermissionSelectFieldProps) => {
   const [selected, setSelected] = useState<any>({});
   const [searchValue, setSearchValue] = useState('');
+  const theme = useTheme();
 
   const options = useMemo(() => {
     if (searchValue && searchValue != '') {
@@ -91,14 +91,22 @@ export const PermissionSelectField = ({
 
   return (
     <Box>
-      {label && (<Label>{label}</Label>)}
-
+      {label && (
+        <InputLabel
+          margin='dense'
+          sx={{
+            ...theme.typography.body2,
+            color: 'text.secondary', mb: 0.5
+          }}
+        >
+          {label}
+        </InputLabel>
+      )}
       <FormHelperText color="error"><ErrorMessage name={name} /></FormHelperText>
 
       <Card sx={{
         border: '1px solid',
         borderColor: `rgba(0, 0, 0, 0.23)`,
-        // p: 2,
         display: 'flex',
         flexDirection: 'column',
         maxHeight: 400,
