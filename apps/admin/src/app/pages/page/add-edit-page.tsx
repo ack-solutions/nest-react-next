@@ -5,10 +5,6 @@ import { Container } from '@mui/material'
 import { useParams } from 'react-router-dom'
 
 const AddEditPage = () => {
-    const { pageId } = useParams();
-
-    console.log(pageId);
-
     return (
         <Page title='Pages'>
             <Container>

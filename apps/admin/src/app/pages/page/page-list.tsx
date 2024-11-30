@@ -21,12 +21,12 @@ export default function PageList() {
     const { mutateAsync: deletePage } = useDeletePage();
 
     const { data } = useGetManyPage(dataTableFilters, {
-        enabled: Boolean(dataTableFilters), // Disable initial api call
+        enabled: Boolean(dataTableFilters), 
     });
 
     const handleAddEdit = useCallback(
         (item = {}) => () => {
-            setSelectedItem(item); // Open dialog for adding a new item
+            setSelectedItem(item);
         },
         []
     );

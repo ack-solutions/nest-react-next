@@ -10,11 +10,6 @@ export class Setting extends BaseEntity implements ISetting {
     @ApiProperty()
     @IsString()
     @Column()
-    name?: string;
-
-    @ApiProperty()
-    @IsString()
-    @Column()
     key?: string;
 
     @ApiProperty()

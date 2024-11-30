@@ -15,25 +15,27 @@ export class SettingService extends CrudService<Setting> {
   }
 
   async updateSetting(request: any) {
-    const keys = Object.keys(request.settings)
-
+    const keys = Object.keys(request.settings);
+    const updatedSettings = [];
+  
     for (let index = 0; index < keys.length; index++) {
       const key = keys[index];
       const settingKey = await this.repository.findOne({ where: { key } });
-
+  
       if (settingKey) {
-        await this.repository.update({ key: key }, {
-          value: request.settings[key]
-        })
-      } else {
-        await this.repository.save(new Setting({
-          key,
-          name: key,
+        updatedSettings.push({
+          ...settingKey,
           value: request.settings[key],
-        }))
+        });
+      } else {
+        updatedSettings.push(new Setting({
+          key,
+          value: request.settings[key],
+        }));
       }
     }
-    return { message: 'SuccessFully Updated' }
+    await this.repository.save(updatedSettings);
+    return { message: 'Successfully Updated' };
   }
 
 
