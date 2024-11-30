@@ -4,13 +4,11 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
-  Box,
   Stack,
   Tooltip,
 } from '@mui/material';
-import { Icon } from '../icon';
 import { MenuDropdown } from '../menu-dropdown/menu-dropdown';
-import { useAccess } from '@libs/react-core';
+import { Icon, useAccess } from '@libs/react-core';
 
 export interface TableAction {
   icon: any;
@@ -28,7 +26,7 @@ type TableActionMenuProps = {
   children?: any;
 };
 
-export  function TableActionMenu({
+export function TableActionMenu({
   crudPermissionKey,
   children,
   onDelete,
@@ -100,8 +98,8 @@ export  function TableActionMenu({
         </IconButton>
       }
     >
-      {({  }) => (
-        <Box>
+      {({ }) => (
+        <>
           {crudActions.map((action, index) => (
             <MenuItem
               onClick={(event) => {
@@ -120,7 +118,7 @@ export  function TableActionMenu({
             </MenuItem>
           ))}
           {children}
-        </Box>
+        </>
       )}
     </MenuDropdown>
   );

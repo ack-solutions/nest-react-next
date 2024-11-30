@@ -6,7 +6,8 @@ import { IconButton } from '@mui/material';
 import { string, object } from 'yup';
 import { LoadingButton } from '@mui/lab';
 import Page from '@admin/app/components/page';
-import { Icon, OtpInputField } from '@admin/app/components';
+import { OtpInputField } from '@admin/app/components';
+import { Icon } from '@libs/react-core';
 
 
 export interface VerifyOtpProps {

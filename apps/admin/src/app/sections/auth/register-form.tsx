@@ -6,9 +6,8 @@ import React, { useCallback } from 'react'
 import { Link as RouterLink } from 'react-router-dom';
 import { boolean, object, string } from 'yup';
 import { PATH_AUTH } from '../../routes/paths';
-import { useBoolean } from '@libs/react-core';
+import { Icon, useBoolean } from '@libs/react-core';
 import { TextField } from '@admin/app/components/form/formik';
-import { Icon } from '@admin/app/components';
 export interface RegisterFromProps {
     onSubmit?: (
         value: any,

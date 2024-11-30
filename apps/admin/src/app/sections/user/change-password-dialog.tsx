@@ -1,6 +1,6 @@
-import { DefaultDialog, Icon, TextField } from '@admin/app/components'
+import { DefaultDialog } from '@admin/app/components'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { FormContainer, RHFTextField, useBoolean, UserService, useToasty, useUserQuery } from '@libs/react-core'
+import { FormContainer, Icon, RHFTextField, useBoolean, useToasty, useUserQuery } from '@libs/react-core'
 import { IUser } from '@libs/types'
 import { Button, IconButton, InputAdornment, Stack, useTheme } from '@mui/material'
 import { pick } from 'lodash'

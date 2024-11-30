@@ -9,7 +9,7 @@ import {
   useMediaQuery,
   useTheme
 } from '@mui/material';
-import { Icon } from './icon';
+import { Icon } from '@libs/react-core';
 
 export interface DefaultDialogProps extends Omit<DialogProps, 'open'> {
   open?: boolean;

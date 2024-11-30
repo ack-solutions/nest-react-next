@@ -7,7 +7,7 @@ import {
   Warning as WarningIcon,
   Error as ErrorIcon,
 } from '@mui/icons-material';
-import { Icon } from '@admin/app/components/icon';
+import { Icon } from '../components/icon';
 
 function SnackbarStyles() {
   const theme = useTheme();

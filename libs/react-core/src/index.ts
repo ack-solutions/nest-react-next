@@ -1,4 +1,5 @@
 export * from './lib/utils';
+export * from './lib/components';
 export * from './lib/form-components';
 export * from './lib/hook';
 export * from './lib/services';

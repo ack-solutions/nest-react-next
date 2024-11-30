@@ -1,6 +1,5 @@
-import { Icon } from '@admin/app/components';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormContainer, RHFTextField, useBoolean, useToasty, useUserQuery } from '@libs/react-core';
+import { FormContainer, Icon, RHFTextField, useBoolean, useToasty, useUserQuery } from '@libs/react-core';
 import { Button, Card, CardContent, CardHeader, Container, IconButton, InputAdornment, Stack, useTheme } from '@mui/material'
 import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form';

@@ -8,7 +8,7 @@ interface IconProps extends Omit<TypographyProps, 'className' | 'variant'> {
   size?: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | number;
 }
 
-export  function Icon({
+export function Icon({
   icon,
   sx,
   size='medium',

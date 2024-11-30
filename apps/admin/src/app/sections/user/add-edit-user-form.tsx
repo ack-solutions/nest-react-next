@@ -1,5 +1,4 @@
-import { Icon } from '@admin/app/components';
-import { FormContainer, RHFSelect, RHFTextField, RHFUploadAvatar, useBoolean, useRoleQuery } from '@libs/react-core';
+import { FormContainer, Icon, RHFSelect, RHFTextField, RHFUploadAvatar, useBoolean, useRoleQuery } from '@libs/react-core';
 import { IUser, UserStatusEnum } from '@libs/types';
 import { Button, Card, CardContent, IconButton, InputAdornment, MenuItem, Stack, useTheme } from '@mui/material';
 import { startCase } from 'lodash';

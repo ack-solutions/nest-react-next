@@ -4,10 +4,9 @@ import { HEADER, NAV } from '../../config';
 import { useLocation } from 'react-router-dom';
 import { useScroll, UseScrollOptions } from 'framer-motion';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import {  useResponsive } from '@libs/react-core';
+import {  Icon, useResponsive } from '@libs/react-core';
 import AccountPopover from './account-popover';
 import { bgBlur } from '../../../theme/styles';
-import { Icon } from '@admin/app/components';
 
 
 
