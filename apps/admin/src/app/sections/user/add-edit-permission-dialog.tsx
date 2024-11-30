@@ -1,7 +1,9 @@
 import { DefaultDialog } from '@admin/app/components';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormContainer, RHFSelect, RHFTextField, useRoleQuery } from '@libs/react-core';
+import { IPermission } from '@libs/types';
 import { Button, Stack } from '@mui/material'
+import { map } from 'lodash';
 import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form';
 import { object, string } from 'yup';
@@ -35,6 +37,7 @@ const AddEditPermissionDialog = ({ onClose, values, onSubmit }: AddEditPermissio
     useEffect(() => {
         reset({
             ...values,
+            roles: map(values.roles, 'id')
         })
     }, [reset, values]);
 

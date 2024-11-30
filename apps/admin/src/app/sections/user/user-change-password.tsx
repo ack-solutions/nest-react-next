@@ -41,7 +41,6 @@ const UserChangePassword = () => {
                     reset();
                 },
                 onError: (error) => {
-                    console.log(error)
                     showToasty(error, 'error');
                     reset();
                 }

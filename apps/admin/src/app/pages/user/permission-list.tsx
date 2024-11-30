@@ -26,18 +26,7 @@ export default function PermissionList() {
     const { mutate: updatePermission } = useUpdatePermission()
     const { mutate: deletePermission } = useDeletePermission()
 
-    const { data: permissionData } = useGetManyPermission(permissionRequest, {
-        select: (data) => {
-            const updatedData = data?.items?.map((item: any) => ({
-                ...item,
-                roles: item.roles.map((role: any) => role.id),
-            }));
-            return {
-                ...data,
-                items: updatedData,
-            };
-        },
-    })
+    const { data: permissionData } = useGetManyPermission(permissionRequest)
 
     const handleOpenAddEditRoleDialog = useCallback(
         (row: IRole) => {

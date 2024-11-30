@@ -52,8 +52,9 @@ const General = () => {
     },
     [showToasty],
   )
+  
   useEffect(() => {
-    reset({ ...currentUser })
+    reset({ ...currentUser})
   }, [reset, currentUser]);
 
   return (

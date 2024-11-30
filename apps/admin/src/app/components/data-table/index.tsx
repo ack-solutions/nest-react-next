@@ -488,9 +488,6 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                   </Stack>
                 </Stack>
               )}
-
-              {/* {topAction && topAction} */}
-
               {selected.length > 0 &&
                 renderBulkAction &&
                 renderBulkAction(selected)}

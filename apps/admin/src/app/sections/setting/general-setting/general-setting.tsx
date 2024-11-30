@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   Button,
   Card,
@@ -8,13 +8,12 @@ import {
   Container,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { NotificationTemplateService, SettingService, useToasty } from '@libs/react-core';
+import { FormContainer, RHFTextField, SettingService, useSettingQuery, useToasty } from '@libs/react-core';
 import { object, string } from 'yup';
-import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import Page from '@admin/app/components/page';
-import { TextField } from '@admin/app/components';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
-const notificationTemplate = NotificationTemplateService.getInstance<NotificationTemplateService>();
 const settingService = SettingService.getInstance<SettingService>();
 
 const defaultValues = {
@@ -32,13 +31,19 @@ const validationSchema = object().shape({
 const GeneralSetting = () => {
   const [settings, setSettings] = useState<any>({});
   const { showToasty } = useToasty();
-  const formRef = useRef<FormikProps<any>>();
+  const formContext = useForm({
+    defaultValues,
+    resolver: yupResolver(validationSchema),
+  })
+  const { useGetManySetting } = useSettingQuery();
+  const { data, isSuccess } = useGetManySetting();
 
-  const handleSubmit = useCallback((values?: any, action?: FormikHelpers<any>) => {
+  const { reset } = formContext;
+
+  const handleSubmitForm = useCallback((values?: any) => {
     settingService
       .updateSetting(values)
       .then(() => {
-        action.setSubmitting(false);
         showToasty('Setting Successfully Updated ');
       })
       .catch((error) => {
@@ -48,50 +53,52 @@ const GeneralSetting = () => {
   }, []);
 
   useEffect(() => {
-    settingService.getMany({ page: 1, limit: 20 }).then((data) => {
+    if (isSuccess) {
       let values: any = {};
-      console.log(data);
       data.items.forEach((settingData) => {
         values[settingData.key] = settingData.value;
       });
       setSettings({ settings: { ...values } });
-    });
-  }, []);
+    }
+
+  }, [data]);
+
+  useEffect(() => {
+    reset({
+      ...settings,
+    })
+  }, [reset, settings]);
 
   return (
     <Page title="GeneralSetting">
       <Container maxWidth={false}>
-        <Formik
-          initialValues={Object.assign({}, defaultValues, settings)}
+        <FormContainer
+          FormProps={{
+            id: "add-edit-form-setting"
+          }}
+          formContext={formContext}
           validationSchema={validationSchema}
-          enableReinitialize
-          onSubmit={handleSubmit}
-          innerRef={formRef}
+          onSuccess={handleSubmitForm}
         >
-          {({ handleSubmit, values, setFieldValue }) => (
-            <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-              <Grid container spacing={4}>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Card>
-                    <CardHeader title='Contact Us Email' />
-                    <CardContent>
-                      <Field
-                        fullWidth
-                        type="email"
-                        name="settings[contactUsEmail]"
-                        label="Contact Us Admin Email"
-                        component={TextField}
-                      />
-                    </CardContent>
-                    <CardActions>
-                      <Button variant='contained' type='submit'>Save</Button>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              </Grid>
-            </Form>
-          )}
-        </Formik>
+          <Grid container spacing={4}>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <Card>
+                <CardHeader title='Contact Us Email' />
+                <CardContent>
+                  <RHFTextField
+                    fullWidth
+                    type="email"
+                    name="settings[contactUsEmail]"
+                    label="Contact Us Admin Email"
+                  />
+                </CardContent>
+                <CardActions>
+                  <Button variant='contained' type='submit'>Save</Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          </Grid>
+        </FormContainer>
       </Container>
     </Page>
   );

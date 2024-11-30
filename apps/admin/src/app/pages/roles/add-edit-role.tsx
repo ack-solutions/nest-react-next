@@ -24,7 +24,7 @@ const AddEditRole = () => {
     const { id: roleId } = useParams();
     const { showToasty } = useToasty();
     const navigate = useNavigate();
-    
+
     const { useUpdateRole, useCreateRole, useGetRoleById } = useRoleQuery();
     const { useGetManyPermission } = usePermissionQuery();
     const { mutateAsync: updateRole } = useUpdateRole();
@@ -32,17 +32,6 @@ const AddEditRole = () => {
     const { data: permissionData, isLoading } = useGetManyPermission({ limit: 999, page: 1 });
     const { data: roleValues } = useGetRoleById(roleId, {
         relations: ['permissions'],
-        select: {
-            permissions: { id: true },
-        },
-    }, {
-        select: (data) => {
-            const permissions = map(data.permissions, 'id');
-            return {
-                ...data,
-                permissions,
-            };
-        },
     });
     const formContext = useForm({
         defaultValues,
@@ -82,6 +71,7 @@ const AddEditRole = () => {
     useEffect(() => {
         reset({
             ...roleValues,
+            permissions: map(roleValues?.permissions, 'id')
         })
     }, [reset, roleValues]);
 

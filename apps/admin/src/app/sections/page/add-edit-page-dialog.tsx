@@ -29,7 +29,6 @@ export default function AddEditPageDialog({
     initialValue,
     onSubmit,
 }: AddEditPageDialogProps) {
-
     const { useUpdatePage, useCreatePage } = usePage();
     const { mutateAsync: updatePage } = useUpdatePage();
     const { mutateAsync: createPage } = useCreatePage();

@@ -47,10 +47,6 @@ const AddEditNotificationTemplateDialog = ({
 
     const handleSubmitForm = useCallback(
         (value: INotificationTemplate) => {
-            const request = {
-                ...omit(value, ['id', 'createdAt', 'updatedAt', 'deletedAt']),
-            };
-
             const options = {
                 onSuccess: (data) => {
                     showToasty(
@@ -65,9 +61,9 @@ const AddEditNotificationTemplateDialog = ({
                 }
             }
             if (value?.id) {
-                updateNotificationTemplate(request, options);
+                updateNotificationTemplate(value, options);
             } else {
-                createNotificationTemplate(request, options);
+                createNotificationTemplate(value, options);
             }
         },
         [onClose, showToasty],
@@ -97,7 +93,7 @@ const AddEditNotificationTemplateDialog = ({
         >
             <FormContainer
                 FormProps={{
-                    id: "add-edit-form-user"
+                    id: "add-edit-form-notification-template"
                 }}
                 formContext={formContext}
                 validationSchema={validationSchema}

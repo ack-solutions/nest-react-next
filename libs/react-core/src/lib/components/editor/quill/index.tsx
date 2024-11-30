@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import { Box, BoxProps } from '@mui/material';
-import EditorToolbar, { formats, redoChange, undoChange } from './QuillEditorToolbar';
+import EditorToolbar, { formats, redoChange, undoChange } from './quill-editor-toolbar';
 import ReactQuill, { ReactQuillProps } from 'react-quill';
 
 
