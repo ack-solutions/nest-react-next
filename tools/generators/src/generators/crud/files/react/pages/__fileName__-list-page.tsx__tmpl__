@@ -1,0 +1,116 @@
+import React, { useState, useCallback, useRef } from 'react';
+import { Container, Button } from '@mui/material';
+import { DataTable, DataTableColumn, DataTableHandle, TableActionMenu } from '@admin/app/components';
+import <%= className %> from '@admin/app/components/<%= fileName %>';
+import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
+import { PATH_DASHBOARD } from '@admin/app/routes/paths';
+import AddEdit<%= className %>Dialog from '../../sections/<%= fileName %>/add-edit-<%= fileName %>-dialog';
+import { I<%= className %> } from '@libs/types';
+import { errorMessage, use<%= className %>, useToasty } from '@libs/react-core';
+import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
+
+export default function <%= className %>List() {
+
+    const [dataTableFilters, setDataTableFilters] = useState(null);
+    const [selectedItem, setSelectedItem] = useState(null);
+    const datatableRef = useRef<DataTableHandle>(null);
+    const { showToasty } = useToasty();
+    const confirmDialog = useConfirm();
+
+    const { useGetMany<%= className %>, useDelete<%= className %> } = use<%= className %>();
+    const { mutateAsync: delete<%= className %> } = useDelete<%= className %>();
+
+    const { data } = useGetMany<%= className %>(dataTableFilters, {
+        enabled: Boolean(dataTableFilters), 
+    });
+
+    const handleAddEdit = useCallback(
+        (item = {}) => () => {
+            setSelectedItem(item);
+        },
+        []
+    );
+
+    const handleDelete = useCallback((id) => {
+        confirmDialog({ message: "Are you sure you want to delete page?" })
+            .then(() => {
+                delete<%= className %>(id).then(() => {
+                    datatableRef.current.refresh();
+                    showToasty('<%= className %> successfully delete')
+                }).catch((error) => {
+                    showToasty(errorMessage(error, "Error while deleting <%= className %>"), 'error');
+                });
+            }).catch(() => {
+                // Nothing
+            })
+    }, [confirmDialog, delete<%= className %>, showToasty]);
+
+    const handleDataTableChange = useCallback((filters) => {
+        // Manage filters mapping here.
+        setDataTableFilters(filters)
+    }, []);
+
+    const columns: DataTableColumn<I<%= className %>>[] = [
+        {
+            name: 'name',
+            label: 'Name',
+            isSearchable: true,
+            isSortable: true,
+        },
+        {
+            name: 'title',
+            label: 'Title',
+            isSearchable: true,
+            isSortable: true,
+        },
+        {
+            name: 'slug',
+            label: 'Slug',
+        },
+        {
+            name: 'action',
+            label: 'Action',
+            render: (row) => (
+                <TableActionMenu
+                    row={row}
+                    onDelete={() => handleDelete(row.id)}
+                    onEdit={handleAddEdit(row)}
+                />
+            ),
+        },
+    ];
+
+    return (
+        <Page title="<%= title %>">
+            <Container>
+                <CustomBreadcrumbs
+                    heading="<%= title %> List"
+                    links={[
+                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
+                        { name: '<%= title %>' },
+                    ]}
+                    action={
+                        <Button variant="contained" onClick={handleAddEdit()}>
+                            Add <%= title %>
+                        </Button>
+                    }
+                />
+                <DataTable
+                    initialLoading
+                    ref={datatableRef}
+                    data={data?.items}
+                    columns={columns}
+                    totalRow={data?.total}
+                    defaultOrderBy="createdAt"
+                    onChange={handleDataTableChange}
+                />
+                {selectedItem !== null && (
+                    <AddEdit<%= className %>Dialog
+                        onClose={() => setSelectedItem(null)}
+                        initialValue={selectedItem}
+                    />
+                )}
+            </Container>
+        </Page>
+    );
+}

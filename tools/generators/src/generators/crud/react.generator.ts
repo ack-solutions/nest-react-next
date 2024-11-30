@@ -1,15 +1,27 @@
 import { generateFiles, getProjects, names, ProjectConfiguration, Tree } from "@nx/devkit";
 import { PluginGeneratorSchema } from "./schema";
 import { join } from "path";
+import { toTitleCase } from "../../utils/to-title-case";
 
 
 export class ReactGenerator {
     projects: Map<string, ProjectConfiguration>;
-    names: { name: string; className: string; propertyName: string; constantName: string; fileName: string; };
+   
+    names: {
+        name: string;
+        title: string;
+        className: string;
+        propertyName: string;
+        constantName: string;
+        fileName: string;
+    };
 
     constructor(private tree: Tree, private options: PluginGeneratorSchema) {
         this.projects = getProjects(this.tree);
-        this.names = names(this.options.name);
+        this.names = {
+           ...names(this.options.name),
+            title: toTitleCase(this.options.name)
+        };
     }
     async run() {
         const { generateReact } = this.options;
@@ -31,7 +43,7 @@ export class ReactGenerator {
     }
 
 
-    addExportStatement(){
+    addExportStatement() {
         const indexPath = `${this.projects.get('types').root}/src/index.ts`;
 
         // Check if index.ts exists
