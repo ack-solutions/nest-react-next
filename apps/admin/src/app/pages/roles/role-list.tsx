@@ -4,27 +4,26 @@ import {
     Button,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { map, omit, } from 'lodash';
-import { RoleService, useToasty } from '@libs/react-core';
+import { useRoleQuery, useToasty } from '@libs/react-core';
 import { IRole } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
-import AddEditRoleDialog from '../../sections/role/add-edit-role-dialog';
 import { DataTable, DataTableColumn, DataTableHandle, TableActionMenu } from '@admin/app/components';
 import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
 import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
 import Page from '@admin/app/components/page';
 import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 
-const roleService = RoleService.getInstance<RoleService>();
-
 export default function RoleList() {
     const { showToasty } = useToasty();
-    const [roles, setRoles] = useState<IRole[] | null>(null);
-    const [total, setTotal] = useState(0);
     const navigate = useNavigate();
     const deleteConfirm = useConfirm();
     const datatableRef = useRef<DataTableHandle>(null);
-
+    const [roleRequest, setRoleRequest] = useState()
+    const { useGetManyRole, useDeleteRole } = useRoleQuery();
+    const { data: roleData } = useGetManyRole(roleRequest, {
+        enabled: !!roleRequest
+    });
+    const { mutate: onDeleteRole } = useDeleteRole()
     const handleOpenEditRole = useCallback(
         (row: IRole) => () => {
             navigate(`${PATH_DASHBOARD.users.editRole}/${row?.id}`)
@@ -38,30 +37,25 @@ export default function RoleList() {
                 deleteConfirm(
                     {
                         title: row.deletedAt ? "Permanent Delete" : "Delete",
-                        description: `Are you sure you want to ${row.deletedAt ? "permanent delete" : "delete"} this user?`
+                        message: `Are you sure you want to ${row.deletedAt ? "permanent delete" : "delete"} this role?`
                     })
                     .then(async () => {
                         try {
-                            if (row.deletedAt) {
-                                await roleService.trashDelete(row.id)
-                            }
-                            else {
-                                await roleService.delete(row.id).
-                                    then(() => {
-                                        // 
-                                    })
-                                    .catch((error) => {
-                                        showToasty(error.message, 'error');
-                                    });
-                            }
+                            onDeleteRole(row.id, {
+                                onError: (error) => {
+                                    showToasty(error.message, 'error');
+                                },
+                                onSuccess: () => {
+                                    showToasty('Role successfully deleted');
+                                }
+                            })
                             datatableRef?.current?.refresh();
-                            showToasty('User successfully deleted');
                         } catch (error: any) {
                             showToasty(error, 'error');
                         }
                     })
-                    .catch(() => {
-                        //
+                    .catch((error) => {
+                        showToasty(error, 'error');
                     });
             }
 
@@ -77,10 +71,7 @@ export default function RoleList() {
             },
             relations: ['permissions']
         };
-        roleService.getMany(filter).then((data) => {
-            setRoles(data?.items || []);
-            setTotal(data?.total || 0);
-        });
+        setRoleRequest(filter)
     }, []);
 
 
@@ -132,10 +123,10 @@ export default function RoleList() {
                     }
                 />
                 <DataTable
-                    data={roles}
+                    data={roleData?.items}
                     columns={columns}
                     ref={datatableRef}
-                    totalRow={total}
+                    totalRow={roleData?.total}
                     defaultOrder='desc'
                     defaultOrderBy='createdAt'
                     onChange={handleDataTableChange}

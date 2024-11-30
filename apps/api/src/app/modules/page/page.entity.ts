@@ -1,44 +1,52 @@
-import { Entity, Column } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-    IsString,
-    IsEnum,
-    IsOptional,
-} from 'class-validator';
+import { IsString } from 'class-validator';
 import { BaseEntity } from '@api/app/core/typeorm/base.entity';
-import { IPage, PageStatusEnum } from '@libs/types';
+import { IPage } from '@libs/types';
+import { generateSlug } from '@api/app/utils/str-to-slug';
 
 @Entity()
 export class Page extends BaseEntity implements IPage {
-  
-    @ApiProperty({ type: String })
+    @ApiProperty()
     @IsString()
-    @IsOptional()
+    @Column()
+    name?: string;
+
+    @ApiProperty()
+    @IsString()
     @Column()
     title?: string;
 
-    @ApiProperty({ type: String })
+    @ApiProperty()
     @IsString()
-    @IsOptional()
     @Column({ nullable: true })
     slug?: string;
 
-    @ApiProperty({ type: String })
+    @ApiProperty()
     @IsString()
-    @IsOptional()
-    @Column({ type: 'text' , nullable: true })
+    @Column({ nullable: true })
+    key?: string;
+
+    @ApiProperty()
+    @IsString()
+    @Column("text", { nullable: true })
+    value?: string;
+
+    @ApiProperty()
+    @IsString()
+    @Column('text', { nullable: true })
     content?: string;
 
-    @ApiProperty({ type: String })
-    @IsString()
-    @IsOptional()
-    @Column({ nullable: true })
-    name?: string;
+    @Column({ default: 'default' })
+    template?: string;
 
-    @ApiProperty({ type: String, enum: PageStatusEnum })
-    @IsEnum(PageStatusEnum)
-    @IsOptional()
-    @Column({ type: 'text', default: PageStatusEnum.DRAFT })
-    status?: PageStatusEnum;
-
+    @BeforeInsert()
+    async createSlug() {
+      this.slug = await generateSlug(Page, this.name, this.id);
+    }
+  
+    @BeforeUpdate()
+    async updateSlug() {
+      this.slug = await generateSlug(Page, this.name, this.id);
+    }
 }

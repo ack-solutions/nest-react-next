@@ -16,7 +16,10 @@ export class UploadedFile {
 export function toFormData(obj: any, form?: any, namespace?: any) {
   const fd = form || new FormData();
   let formKey;
+  console.log(fd,5455);
+  
   for (const property in obj) {
+    console.log(obj[property],2232223);
     let value = obj[property];
     if (namespace) {
       if (isNaN(property as any)) {

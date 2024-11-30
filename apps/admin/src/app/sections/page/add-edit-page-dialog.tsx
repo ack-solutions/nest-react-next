@@ -8,8 +8,6 @@ import { errorMessage, FormContainer, RHFTextField, usePage, useToasty } from '@
 import { object, string } from 'yup';
 import { IPage } from '@libs/types';
 
-
-
 export interface AddEditPageDialogProps {
     onSubmit?: (values: IPage) => void;
     onClose?: () => void;
@@ -31,7 +29,6 @@ export default function AddEditPageDialog({
     initialValue,
     onSubmit,
 }: AddEditPageDialogProps) {
-
     const { useUpdatePage, useCreatePage } = usePage();
     const { mutateAsync: updatePage } = useUpdatePage();
     const { mutateAsync: createPage } = useCreatePage();
@@ -71,7 +68,6 @@ export default function AddEditPageDialog({
     )
 
     useEffect(() => {
-        // Load Value in form
         reset({
             ...initialValue,
         })

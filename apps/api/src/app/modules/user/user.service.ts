@@ -29,6 +29,7 @@ export class UserService extends CrudService<User> {
   }
 
   async beforeSave(entity: DeepPartial<any>, req): Promise<User> {
+
     if (has(req, 'password') && req?.password) {
       entity.passwordHash = await hashPassword(req.password);
     }

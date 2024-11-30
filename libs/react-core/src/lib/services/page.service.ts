@@ -1,6 +1,7 @@
-import { IPage } from '@libs/types';
-import { CRUDService } from '@libs/react-core';
+import { IPage } from "@libs/types";
+import { CRUDService } from "./crud-service";
 
 export class PageService extends CRUDService<IPage> {
-    protected apiPath = 'page';
+  protected apiPath = 'page';
+
 }

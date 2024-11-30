@@ -7,10 +7,9 @@ import { chain, map } from 'lodash';
 import useAccess from './react-access-control/use-access';
 import { instanceApi } from '../utils';
 import { useUserQuery } from '../query-hooks';
+import { IUser } from '@libs/types';
 
-interface IUser {
-  name?: string
-}
+
 
 export interface AuthState {
   isAuthenticated: boolean,

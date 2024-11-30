@@ -1,171 +1,170 @@
-import { Box, Button, Card, CardContent, MenuItem, Stack } from '@mui/material'
-import { Field, Form, Formik, FormikHelpers } from 'formik'
-import { useCallback, useRef } from 'react'
-import { object, string } from 'yup';
+import { Button, Card, CardContent, MenuItem, Stack } from '@mui/material'
+import { useCallback, useEffect } from 'react'
+import { number, object, string } from 'yup';
 import Grid from '@mui/material/Grid2';
-import { TextField, UploadAvatarField } from '@admin/app/components';
-import { useAuth, UserService, useToasty } from '@libs/react-core';
-import PhoneNumberField from '@admin/app/components/form/formik/phone-number-field';
-import { UserStatusEnum } from '@libs/types';
+import { FormContainer, RHFTextField, RHFUploadAvatar, useAuth, UserService, useToasty, useUserQuery } from '@libs/react-core';
+import { IUser, UserStatusEnum } from '@libs/types';
 import { pick, startCase } from 'lodash';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
-const userService = UserService.getInstance<UserService>();
-
-const defaultValues: any = {
+const defaultValues: IUser = {
   firstName: '',
   lastName: '',
   email: '',
-  phoneNumber: '',
+  phoneNumber: null,
   avatar: '',
+  status: UserStatusEnum.INACTIVE,
 };
 
-const validationSchema = object().shape({
+const validationSchema = yupResolver(object().shape({
   firstName: string().trim().required().label('First Name'),
   lastName: string().trim().required().label('Last Name'),
   email: string().trim().required().label('Email'),
-  phoneNumber: string().required().label('Phone Number'),
-});
+  phoneNumber: number().required().label('Phone Number'),
+}));
 
 const General = () => {
-  const formRef = useRef<any>();
   const { reFetchCurrentUser, currentUser } = useAuth();
   const { showToasty } = useToasty();
+  const { useUpdateProfile } = useUserQuery()
+  const { mutate: updateProfile } = useUpdateProfile()
+  const formContext = useForm({
+    defaultValues,
+    resolver: validationSchema,
+  })
+  const { reset } = formContext;
 
   const handleSubmitForm = useCallback(
-    (values: any, action: FormikHelpers<any>) => {
-      const request = pick(values, 'avatar', 'status', 'firstName', 'lastName', 'email', 'phoneNumber', 'aboutMe', 'address')
-      userService.updateProfile(request).then((data) => {
-        reFetchCurrentUser()
-        showToasty('User profile successfully updated')
-        action.setSubmitting(false)
-        action.resetForm()
-      }).catch((error) => {
-        showToasty(error, 'error')
-        action.setSubmitting(false)
-      })
+    (values) => {
+      const request = pick(values, 'status', 'firstName', 'lastName', 'email', 'phoneNumber', 'aboutMe', 'address')
+      const options = {
+        onSuccess: (data) => {
+          showToasty('User profile successfully updated');
+          reFetchCurrentUser()
+        },
+        onError: (error) => {
+          console.log(error)
+          showToasty(error, 'error');
+        }
+      }
+      updateProfile(request, options);
     },
     [showToasty],
   )
+  
+  useEffect(() => {
+    reset({ ...currentUser})
+  }, [reset, currentUser]);
+
   return (
-    <Formik
-      initialValues={Object.assign({}, defaultValues, currentUser)}
+    <FormContainer
+      FormProps={{
+        id: "update-user-profile"
+      }}
+      formContext={formContext}
       validationSchema={validationSchema}
-      onSubmit={handleSubmitForm}
-      innerRef={formRef}
-      enableReinitialize
+      onSuccess={handleSubmitForm}
     >
-      {({ handleSubmit, values }) => (
-        <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12, sm: 3 }}>
-              <Card>
-                <CardContent>
-                  <Field
-                    small
-                    name='avatar'
-                    label="avatar"
-                    type="file"
-                    accept="image/*"
-                    previewUrl={values.avatarUrl}
-                    component={UploadAvatarField}
+      <Grid container spacing={2}>
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <Card>
+            <CardContent>
+              <RHFUploadAvatar
+                small
+                name='avatar'
+                label="avatar"
+                previewUrl={currentUser?.avatarUrl}
+              />
+              <RHFTextField
+                fullWidth
+                required
+                name='status'
+                label='Status'
+                select
+                sx={{
+                  mt: 2
+                }}
+              >
+                {Object.values(UserStatusEnum).map((status, index) => (
+                  <MenuItem value={status} key={index}>
+                    {startCase(status)}
+                  </MenuItem>
+                ))}
+              </RHFTextField>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 9 }}>
+          <Card>
+            <CardContent>
+              <Grid container spacing={2}>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <RHFTextField
+                    fullWidth
+                    required
+                    name='firstName'
+                    label='First Name'
                   />
-                  <Box>
-                    <Field
-                      fullWidth
-                      required
-                      name='status'
-                      label='Status'
-                      component={TextField}
-                      select
-                    >
-                      {Object.values(UserStatusEnum).map((status, index) => (
-                        <MenuItem value={status} key={index}>
-                          {startCase(status)}
-                        </MenuItem>
-                      ))}
-                    </Field>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 9 }}>
-              <Card>
-                <CardContent>
-                  <Grid container spacing={2}>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                      <Field
-                        fullWidth
-                        required
-                        name='firstName'
-                        label='First Name'
-                        component={TextField}
-                      />
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                      <Field
-                        fullWidth
-                        required
-                        name='lastName'
-                        label='Last Name'
-                        component={TextField}
-                      />
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                      <Field
-                        fullWidth
-                        required
-                        name='email'
-                        label='Email'
-                        component={TextField}
-                      />
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                      <Field
-                        fullWidth
-                        required
-                        name='phoneNumber'
-                        label='Phone Number'
-                        component={PhoneNumberField}
-                      />
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                      <Field
-                        fullWidth
-                        name='aboutMe'
-                        label='About'
-                        component={TextField}
-                        multiline
-                        rows={2}
-                      />
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                      <Field
-                        fullWidth
-                        name='address'
-                        label='Address'
-                        component={TextField}
-                        multiline
-                        rows={2}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Stack
-                    direction='row'
-                    spacing={2}
-                    justifyContent='flex-end'
-                    mt={2}
-                  >
-                    <Button variant='contained' type='submit'>
-                      Update
-                    </Button>
-                  </Stack>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        </Form>
-      )}
-    </Formik>
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <RHFTextField
+                    fullWidth
+                    required
+                    name='lastName'
+                    label='Last Name'
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <RHFTextField
+                    fullWidth
+                    required
+                    name='email'
+                    label='Email'
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <RHFTextField
+                    fullWidth
+                    required
+                    name='phoneNumber'
+                    label='Phone Number'
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <RHFTextField
+                    fullWidth
+                    name='aboutMe'
+                    label='About'
+                    multiline
+                    rows={2}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <RHFTextField
+                    fullWidth
+                    name='address'
+                    label='Address'
+                    multiline
+                    rows={2}
+                  />
+                </Grid>
+              </Grid>
+              <Stack
+                direction='row'
+                spacing={2}
+                justifyContent='flex-end'
+                mt={2}
+              >
+                <Button variant='contained' type='submit'>
+                  Update
+                </Button>
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </FormContainer>
   )
 }
 

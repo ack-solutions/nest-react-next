@@ -41,6 +41,19 @@ export default function Card(theme: Theme) {
           }
         }
       }
+    },
+    MuiCardActions: {
+      styleOverrides: {
+        root: {
+          padding: theme.spacing(3),
+          [theme.breakpoints.down('lg')]: {
+            padding: theme.spacing(2.5),
+          },
+          [theme.breakpoints.down('sm')]: {
+            padding: theme.spacing(2),
+          }
+        }
+      }
     }
   };
 }

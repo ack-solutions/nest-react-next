@@ -5,5 +5,6 @@ export * from './lib/crud';
 export * from './lib/permission';
 export * from './lib/role';
 export * from './lib/user';
-export * from './lib/page';
 export * from './lib/notification-template';
+export * from './lib/setting';
+export * from './lib/page';

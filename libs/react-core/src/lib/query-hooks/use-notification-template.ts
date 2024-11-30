@@ -1,16 +1,16 @@
 
-import { RoleService, useCrudOperations } from '@libs/react-core';
+import { NotificationTemplateService,  useCrudOperations } from '@libs/react-core';
 
-const service = RoleService.getInstance<RoleService>();
+const service = NotificationTemplateService.getInstance<NotificationTemplateService>();
 
-export const useRoleQuery = () => {
+export const useNotificationTemplateQuery = () => {
     const { useGetMany, useGetOne, useCreate, useDelete, useUpdate } = useCrudOperations(service);
 
     return {
-        useGetManyRole: useGetMany,
-        useGetRoleById: useGetOne,
-        useCreateRole: useCreate,
-        useDeleteRole: useDelete,
-        useUpdateRole: useUpdate,
+        useGetManyNotificationTemplate: useGetMany,
+        useGetNotificationTemplateById: useGetOne,
+        useCreateNotificationTemplate: useCreate,
+        useDeleteNotificationTemplate: useDelete,
+        useUpdateNotificationTemplate: useUpdate,
     };
 };

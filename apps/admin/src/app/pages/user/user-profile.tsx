@@ -1,6 +1,5 @@
 import { Container, Tab, Tabs } from '@mui/material'
 import { SyntheticEvent, useCallback, useState } from 'react'
-import { UserService } from '@libs/react-core';
 import General from '@admin/app/sections/user/general';
 import UserChangePassword from '../../sections/user/user-change-password';
 import Page from '@admin/app/components/page';

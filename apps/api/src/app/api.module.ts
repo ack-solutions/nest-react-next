@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { RequestContextMiddleware } from './core/request-context/request-context.middleware';
 import { PageModule } from './modules/page/page.module';
 import { NotificationTemplateModule } from './modules/notification-template/notification-template.module';
+import { SettingModule } from './modules/setting/setting.module';
 
 @Module({
     imports: [
@@ -16,7 +17,8 @@ import { NotificationTemplateModule } from './modules/notification-template/noti
         RoleModule,
         PermissionModule,
         PageModule,
-        NotificationTemplateModule
+        NotificationTemplateModule,
+        SettingModule
     ],
     controllers: [],
     providers: [],

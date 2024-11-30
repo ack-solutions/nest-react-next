@@ -1,4 +1,3 @@
-// @mui
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { useNavData } from './nav-config';
@@ -64,9 +63,7 @@ export default function NavbarMini() {
 					...hideScroll.x
 				}}
 			>
-
 				<Logo sx={{ mx: 'auto', width: 50, my: 2 }} />
-
 				<Stack>
 					{navData.map(
 						(group, index) => (
@@ -80,7 +77,6 @@ export default function NavbarMini() {
 					)}
 				</Stack>
 			</Stack>
-
 		</Box>
 	);
 }

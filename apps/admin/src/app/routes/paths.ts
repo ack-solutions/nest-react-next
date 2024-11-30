@@ -49,12 +49,17 @@ export const PATH_DASHBOARD = {
   changePassword: {
     root: path(ROOTS_DASHBOARD, '/change-password'),
   },
+  page: {
+    root: path(ROOTS_DASHBOARD, '/pages'),
+    add: path(ROOTS_DASHBOARD, '/pages/add'),
+    edit: path(ROOTS_DASHBOARD, '/pages/edit/:pageId'),
+  },
  
   settings: {
-    payroll: path(ROOTS_DASHBOARD, '/settings/payroll'),
+    root: path(ROOTS_DASHBOARD, '/settings'),
     business: path(ROOTS_DASHBOARD, '/settings/business'),
   },
-  page: {
-    root: path(ROOTS_DASHBOARD, '/page'),
-  },
+  // page: {
+  //   root: path(ROOTS_DASHBOARD, '/page'),
+  // },
 };
