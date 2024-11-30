@@ -1,26 +1,27 @@
 import { DataTable, DataTableColumn, DataTableHandle, TableActionMenu } from '@admin/app/components'
 import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
-import { NotificationTemplateService, useToasty } from '@libs/react-core';
+import { useNotificationTemplateQuery, useToasty } from '@libs/react-core';
 import { INotificationTemplate } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
 import { Box, Button } from '@mui/material';
-import React, { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import AddEditNotificationTemplateDialog from './add-edit-notification-template-dialog';
 import { startCase } from 'lodash';
 
-const notificationTemplateService = NotificationTemplateService.getInstance<NotificationTemplateService>();
-
 const NotificationSetting = () => {
-    const [notificationTemplates, setNotificationTemplates] = useState<INotificationTemplate[]>()
     const [notificationTemplate, setNotificationTemplate] = useState<INotificationTemplate>()
-    const [total, setTotal] = useState(0);
     const { showToasty } = useToasty();
     const deleteConfirm = useConfirm();
     const datatableRef = useRef<DataTableHandle>(null);
+    const [notificationTemplateRequest, setNotificationTemplateRequest] = useState()
+    const { useGetManyNotificationTemplate, useDeleteNotificationTemplate } = useNotificationTemplateQuery()
+    const { data: notificationData, refetch } = useGetManyNotificationTemplate(notificationTemplateRequest, {
+        enabled: !!notificationTemplateRequest
+    })
+    const { mutate: deleteNotificationTemplate } = useDeleteNotificationTemplate()
 
     const handleOpenEditNotificationTemplateDialog = useCallback(
         (value?: INotificationTemplate) => () => {
-            console.log(value);
             setNotificationTemplate(value)
         },
         [],
@@ -29,10 +30,11 @@ const NotificationSetting = () => {
         (isRefresh) => {
             setNotificationTemplate(null)
             if (isRefresh) {
+                refetch()
                 datatableRef.current.refresh()
             }
         },
-        [],
+        [datatableRef],
     )
 
     const handleDataTableChange = useCallback((filter: any) => {
@@ -42,10 +44,7 @@ const NotificationSetting = () => {
                 ...filter?.s,
             },
         };
-        notificationTemplateService.getMany(filter).then((data) => {
-            setNotificationTemplates(data?.items || []);
-            setTotal(data?.total || 0);
-        });
+        setNotificationTemplateRequest(filter)
     }, []);
 
     const handleDeleteNotificationTemplate = useCallback(
@@ -54,24 +53,20 @@ const NotificationSetting = () => {
                 deleteConfirm(
                     {
                         title: row.deletedAt ? "Permanent Delete" : "Delete",
-                        description: `Are you sure you want to ${row.deletedAt ? "permanent delete" : "delete"} this notification template?`
+                        message: `Are you sure you want to ${row.deletedAt ? "permanent delete" : "delete"} this notification template?`
                     })
                     .then(async () => {
+
                         try {
-                            if (row.deletedAt) {
-                                await notificationTemplateService.trashDelete(row.id)
-                            }
-                            else {
-                                await notificationTemplateService.delete(row.id).
-                                    then(() => {
-                                        // 
-                                    })
-                                    .catch((error) => {
-                                        showToasty(error.message, 'error');
-                                    });
-                            }
+                            deleteNotificationTemplate(row.id, {
+                                onError: (error) => {
+                                    showToasty(error.message, 'error');
+                                },
+                                onSuccess: () => {
+                                    showToasty('Notification Template successfully deleted');
+                                }
+                            })
                             datatableRef?.current?.refresh();
-                            showToasty('Notification Template successfully deleted');
                         } catch (error: any) {
                             showToasty(error, 'error');
                         }
@@ -134,10 +129,10 @@ const NotificationSetting = () => {
     return (
         <Box>
             <DataTable
-                data={notificationTemplates}
+                data={notificationData?.items}
                 columns={columns}
                 ref={datatableRef}
-                totalRow={total}
+                totalRow={notificationData?.total}
                 defaultOrder='desc'
                 defaultOrderBy='createdAt'
                 onChange={handleDataTableChange}

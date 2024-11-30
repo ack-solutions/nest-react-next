@@ -2,7 +2,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 // @mui
 import MenuItem from '@mui/material/MenuItem';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
-import { get } from 'lodash';
+import { get, isArray } from 'lodash';
 
 type RHFSelectProps = TextFieldProps & {
 	name: string;
@@ -12,6 +12,7 @@ type RHFSelectProps = TextFieldProps & {
 	options?: any[];
 	valueKey?: string;
 	labelKey?: string;
+	isMultiple?: boolean
 };
 
 export function RHFSelect({
@@ -24,6 +25,7 @@ export function RHFSelect({
 	valueKey,
 	labelKey,
 	slotProps,
+	isMultiple,
 	...other
 }: RHFSelectProps) {
 	const { control } = useFormContext();
@@ -37,7 +39,7 @@ export function RHFSelect({
 			render={({ field, fieldState: { error } }) => (
 				<TextField
 					{...field}
-					value={(field.value === undefined || field.value === '') ? null : field.value}
+					value={isMultiple ? (isArray(field.value) ? field.value : []) : (field.value === undefined || field.value === '') ? null : field.value}
 					select
 					fullWidth
 					error={!!error}

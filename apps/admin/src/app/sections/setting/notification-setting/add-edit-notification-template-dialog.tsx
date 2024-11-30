@@ -1,15 +1,13 @@
-import { DefaultDialog, TextField } from '@admin/app/components'
+import { DefaultDialog } from '@admin/app/components'
 import { INotificationTemplate } from '@libs/types';
 import { Button } from '@mui/material';
-import { Field, Form, Formik, FormikHelpers } from 'formik';
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect } from 'react'
 import { object, string } from 'yup';
 import Grid from '@mui/material/Grid2';
-import TextEditorField from '@admin/app/components/form/formik/text-editer-field';
-import { NotificationTemplateService, useToasty } from '@libs/react-core';
+import { FormContainer, RHFTextEditor, RHFTextField, useNotificationTemplateQuery, useToasty } from '@libs/react-core';
 import { omit } from 'lodash';
-
-const notificationTemplateService = NotificationTemplateService.getInstance<NotificationTemplateService>();
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 export interface AddEditNotificationTemplateDialogProps {
     onClose?: (value?: any) => void;
@@ -32,47 +30,54 @@ const validationSchema = object().shape({
     emailBody: string().trim().label('Email Body'),
 });
 
-
 const AddEditNotificationTemplateDialog = ({
     onClose,
     templateValues
 }: AddEditNotificationTemplateDialogProps) => {
-    const formRef = useRef<any>();
     const { showToasty } = useToasty()
+    const { useCreateNotificationTemplate, useUpdateNotificationTemplate } = useNotificationTemplateQuery();
+    const { mutate: createNotificationTemplate } = useCreateNotificationTemplate()
+    const { mutate: updateNotificationTemplate } = useUpdateNotificationTemplate()
+
+    const formContext = useForm({
+        defaultValues,
+        resolver: yupResolver(validationSchema),
+    })
+    const { reset, handleSubmit } = formContext;
 
     const handleSubmitForm = useCallback(
-        (value: INotificationTemplate, action: FormikHelpers<any>) => {
+        (value: INotificationTemplate) => {
             const request = {
                 ...omit(value, ['id', 'createdAt', 'updatedAt', 'deletedAt']),
             };
+
+            const options = {
+                onSuccess: (data) => {
+                    showToasty(
+                        value?.id
+                            ? 'Notification template updated successfully'
+                            : 'Notification template added successfully'
+                    );
+                    onClose && onClose({ isRefresh: true });
+                },
+                onError: (error) => {
+                    showToasty(error, 'error');
+                }
+            }
             if (value?.id) {
-                notificationTemplateService
-                    .update(value?.id, request)
-                    .then((resp) => {
-                        showToasty(`Notification template updated successfully .`);
-                        action.setSubmitting(false);
-                        onClose && onClose({ isRefresh: true });
-                    })
-                    .catch((error) => {
-                        action.setSubmitting(false);
-                        showToasty(error, 'error');
-                    });
+                updateNotificationTemplate(request, options);
             } else {
-                notificationTemplateService
-                    .create(request)
-                    .then((resp) => {
-                        showToasty(`Notification template added successfully .`);
-                        action.setSubmitting(false);
-                        onClose && onClose({ isRefresh: true });
-                    })
-                    .catch((error) => {
-                        action.setSubmitting(false);
-                        showToasty(error, 'error');
-                    });
+                createNotificationTemplate(request, options);
             }
         },
-        [],
+        [onClose, showToasty],
     )
+
+    useEffect(() => {
+        reset({
+            ...templateValues,
+        })
+    }, [reset, templateValues]);
 
     return (
         <DefaultDialog
@@ -84,73 +89,64 @@ const AddEditNotificationTemplateDialog = ({
                     <Button variant="outlined" onClick={() => { onClose() }}>
                         Cancel
                     </Button>
-                    <Button variant="contained" color="primary" onClick={() => formRef?.current?.handleSubmit()}>
+                    <Button variant="contained" color="primary" onClick={handleSubmit(handleSubmitForm)}>
                         Save
                     </Button>
                 </>
             }
         >
-            <Formik
-                initialValues={Object.assign({}, defaultValues, templateValues)}
+            <FormContainer
+                FormProps={{
+                    id: "add-edit-form-user"
+                }}
+                formContext={formContext}
                 validationSchema={validationSchema}
-                onSubmit={handleSubmitForm}
-                innerRef={formRef}
-                enableReinitialize
+                onSuccess={handleSubmitForm}
             >
-                {({ handleSubmit }) => (
-                    <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-                        <Grid spacing={3} container >
-                            <Grid size={{ xs: 12, sm: 6 }}>
-                                <Field
-                                    fullWidth
-                                    name="title"
-                                    label="Title (only seen by admins)"
-                                    component={TextField}
-                                    placeholder='Title'
-                                />
-                            </Grid>
-                            <Grid size={{ xs: 12, sm: 6 }}>
-                                <Field
-                                    fullWidth
-                                    required
-                                    name="slug"
-                                    label="Slug"
-                                    component={TextField}
-                                    helperText='will be automatically generated from your title, if left empty.'
-                                />
-                            </Grid>
-                            <Grid size={{ xs: 12, sm: 6 }}>
-                                <Field
-                                    fullWidth
-                                    required
-                                    name="emailSubject"
-                                    label="Email Subject"
-                                    component={TextField}
-                                    placeholder='Email Subject'
-                                />
-                            </Grid>
-                            <Grid size={{ xs: 12, sm: 6 }}>
-                                <Field
-                                    fullWidth
-                                    required
-                                    name="event"
-                                    label="Event"
-                                    component={TextField}
-                                    placeholder='Event'
-                                />
-                            </Grid>
-                            <Grid size={{ xs: 12 }}>
-                                <Field
-                                    fullWidth
-                                    name="emailBody"
-                                    label="Email Body"
-                                    component={TextEditorField}
-                                />
-                            </Grid>
-                        </Grid>
-                    </Form>
-                )}
-            </Formik>
+                <Grid spacing={3} container >
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                        <RHFTextField
+                            fullWidth
+                            name="title"
+                            label="Title (only seen by admins)"
+                            placeholder='Title'
+                        />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                        <RHFTextField
+                            fullWidth
+                            required
+                            name="slug"
+                            label="Slug"
+                            helperText='will be automatically generated from your title, if left empty.'
+                        />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                        <RHFTextField
+                            fullWidth
+                            required
+                            name="emailSubject"
+                            label="Email Subject"
+                            placeholder='Email Subject'
+                        />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                        <RHFTextField
+                            fullWidth
+                            required
+                            name="event"
+                            label="Event"
+                            placeholder='Event'
+                        />
+                    </Grid>
+                    <Grid size={{ xs: 12 }}>
+                        <RHFTextEditor
+                            name="emailBody"
+                            label="Email Body"
+                        />
+                    </Grid>
+                </Grid>
+            </FormContainer>
         </DefaultDialog>
     )
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   Button,
   Card,
@@ -6,9 +6,6 @@ import {
   CardContent,
   CardHeader,
   Container,
-  IconButton,
-  MenuItem,
-  Stack,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { NotificationTemplateService, SettingService, useToasty } from '@libs/react-core';

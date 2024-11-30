@@ -3,12 +3,10 @@ import { useCallback } from 'react'
 import AddEditUserForm from '../../sections/user/add-edit-user-form'
 import { IRole, IUser } from '@libs/types'
 import { useNavigate, useParams } from 'react-router-dom'
-import { UserService, useToasty, useUserQuery } from '@libs/react-core'
+import { useToasty, useUserQuery } from '@libs/react-core'
 import Page from '@admin/app/components/page'
 import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs'
 import { PATH_DASHBOARD } from '@admin/app/routes/paths'
-
-const userService = UserService.getInstance<UserService>();
 
 const AddEditUser = () => {
     const { id: userId } = useParams();
@@ -42,7 +40,6 @@ const AddEditUser = () => {
                     navigate(PATH_DASHBOARD.users.root)
                 },
                 onError: (error) => {
-                    console.log(error)
                     showToasty(error, 'error');
                 }
             }
