@@ -3,6 +3,7 @@ import { DeepPartial, DeleteResult, FindManyOptions, FindOneOptions, FindOptions
 
 
 export interface ICrudService<T> {
+  getAll(criteria?: IFindOptions): Promise<T[]>;
   getMany(criteria?: IFindOptions): Promise<IPaginationResult<T>>;
   getOne(criteria: string | number | FindOneOptions<T>): Promise<T>;
   create(entity: DeepPartial<T>, options?: SaveOptions): Promise<T>;
@@ -10,6 +11,5 @@ export interface ICrudService<T> {
   count(filter?: FindManyOptions<T>): Promise<number>;
   delete(criteria: string | number | any): Promise<DeleteResult>;
   restore?(criteria: string | number | FindOptions<T>): Promise<DeleteResult>;
-  trashDelete?(criteria: string | number | FindOptions<T>): Promise<DeleteResult>;
-  bulkDelete?(criteria: Array<string | number> | FindOptions<T>): Promise<DeleteResult>;
+  permanentDelete?(criteria: string | number | FindOptions<T>): Promise<T>;
 }

@@ -14,7 +14,7 @@ import { ApiBody, ApiOperation, ApiPropertyOptional, ApiQuery, ApiResponse } fro
 import { DeepPartial, FindManyOptions, FindOneOptions } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';
 import { merge } from 'lodash';
-import { DeleteManyInputDTO, GetManyInputDTO } from './dto/get-many-input.dto';
+import { DeleteManyInputDTO, RestoreManyInputDTO, GetManyInputDTO } from './dto/get-many-input.dto';
 import { ICrudControllerOptions, IFindOptions, IPaginationResult } from '@libs/types';
 import { ICrudService } from '../../types/crud.service';
 
@@ -60,9 +60,30 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
     async count(
       @Query() filter: FindManyOptions,
       ..._extra: any
-    ): Promise<any> {
-      const count = this.crudService.count(filter);
+    ): Promise<{ [x: string]: number }> {
+      const count = await this.crudService.count(filter);
       return { count }
+    }
+
+    @ApiOperation({ summary: 'Get All' })
+    @ApiResponse({
+      status: HttpStatus.BAD_REQUEST,
+      description: 'Failed',
+    })
+    @ApiResponse({
+      type: CountDto,
+      status: HttpStatus.OK,
+      description: 'Success',
+    })
+    @ApiQuery({
+      type: GetManyInputDTO
+    })
+    @Get('all')
+    async getAll(
+      @Query() filter: IFindOptions,
+      ..._extra: any
+    ): Promise<T[]> {
+      return this.crudService.getAll(filter);
     }
 
     @ApiOperation({ summary: 'Get Many' })
@@ -172,6 +193,47 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
       return this.crudService.delete(id);
     }
 
+
+    @ApiOperation({ summary: 'Restore form Trash' })
+    @ApiResponse({
+      status: HttpStatus.BAD_REQUEST,
+      description: 'Failed',
+    })
+    @ApiResponse({
+      status: HttpStatus.OK,
+      description: 'Success',
+    })
+    @HttpCode(HttpStatus.ACCEPTED)
+    @Put(':id/restore')
+    @UseGuards(AuthGuard('jwt'))
+    async restore(
+      @Param('id') id: string,
+      ..._extra: any
+    ) {
+      return this.crudService.restore(id);
+    }
+
+
+
+    @ApiOperation({ summary: 'Delete form Trash' })
+    @ApiResponse({
+      status: HttpStatus.BAD_REQUEST,
+      description: 'Failed',
+    })
+    @ApiResponse({
+      status: HttpStatus.OK,
+      description: 'Success',
+    })
+    @HttpCode(HttpStatus.ACCEPTED)
+    @Delete(':id/trash')
+    @UseGuards(AuthGuard('jwt'))
+    async permanentDelete(
+      @Param('id') id: string,
+      ..._extra: any
+    ) {
+      return this.crudService.permanentDelete(id);
+    }
+
     @ApiOperation({ summary: 'Bulk Delete' })
     @ApiResponse({
       status: HttpStatus.BAD_REQUEST,
@@ -182,7 +244,7 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
       description: 'Success',
     })
     @HttpCode(HttpStatus.ACCEPTED)
-    @Delete()
+    @Delete('bulk')
     @UseGuards(AuthGuard('jwt'))
     async bulkDelete(
       @Query() request: DeleteManyInputDTO,
@@ -191,44 +253,45 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
       return this.crudService.delete(request);
     }
 
+    @ApiOperation({ summary: 'Bulk Restore form Trash' })
+    @ApiResponse({
+      status: HttpStatus.BAD_REQUEST,
+      description: 'Failed',
+    })
+    @ApiResponse({
+      status: HttpStatus.OK,
+      description: 'Success',
+    })
+    @HttpCode(HttpStatus.ACCEPTED)
+    @Put('bulk/restore')
 
-    // @ApiOperation({ summary: 'Restore form Trash' })
-    // @ApiResponse({
-    //   status: HttpStatus.BAD_REQUEST,
-    //   description: 'Failed',
-    // })
-    // @ApiResponse({
-    //   status: HttpStatus.OK,
-    //   description: 'Success',
-    // })
-    // @HttpCode(HttpStatus.ACCEPTED)
-    // @Put(':id/restore')
-    // // @UseGuards(JwtAuthGuard, RolesGuard)
-    // async restore(
-    //   @Param('id') id: string,
-    //   ..._extra: any
-    // ) {
-    //   return this.crudService.restore(id);
-    // }
+    @UseGuards(AuthGuard('jwt'))
+    async bulkRestore(
+      @Query() request: RestoreManyInputDTO,
+      ..._extra: any
+    ) {
+      return this.crudService.restore(request as FindOneOptions<T>);
+    }
 
-    // @ApiOperation({ summary: 'Delete form Trash' })
-    // @ApiResponse({
-    //   status: HttpStatus.BAD_REQUEST,
-    //   description: 'Failed',
-    // })
-    // @ApiResponse({
-    //   status: HttpStatus.OK,
-    //   description: 'Success',
-    // })
-    // @HttpCode(HttpStatus.ACCEPTED)
-    // @Delete(':id/trash')
-    // // @UseGuards(JwtAuthGuard, RolesGuard)
-    // async trashDelete(
-    //   @Param('id') id: string,
-    //   ..._extra: any
-    // ) {
-    //   return this.crudService.trashDelete(id);
-    // }
+
+    @ApiOperation({ summary: 'Bulk Permanent Delete' })
+    @ApiResponse({
+      status: HttpStatus.BAD_REQUEST,
+      description: 'Failed',
+    })
+    @ApiResponse({
+      status: HttpStatus.OK,
+      description: 'Success',
+    })
+    @HttpCode(HttpStatus.ACCEPTED)
+    @Delete('bulk/trash')
+    @UseGuards(AuthGuard('jwt'))
+    async bulkPermanentDelete(
+      @Query() request: DeleteManyInputDTO,
+      ..._extra: any
+    ): Promise<any> {
+      return this.crudService.permanentDelete(request as FindOneOptions<T>);
+    }
 
   }
 

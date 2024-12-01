@@ -29,7 +29,6 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
 
   }
 
-
   protected async beforeSave(entity: T, _request?: any) {
     return entity;
   }
@@ -40,6 +39,14 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
 
   public async count(filter?: FindManyOptions<T>): Promise<number> {
     return await this.repository.count(filter);
+  }
+
+  public getAll(filter: IFindOptions): Promise<T[]> {
+    filter.where = this.mapUserIdInWhereForUser(filter.where as any, 'getAll');
+    const builder = new FindQueryBuilder(this.repository, filter)
+    builder.createDistinctQuery()
+    this.doGetMany(builder, filter)
+    return builder.getMany();
   }
 
   public async getMany(filter: IFindOptions): Promise<IPaginationResult<T>> {
@@ -85,7 +92,7 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
     partialEntity: DeepPartial<T>
   ): Promise<T> {
     try {
-      let findCondition :any;
+      let findCondition: any;
       if (typeof criteria === 'string' || typeof criteria === 'number') {
         findCondition = { id: criteria };
       } else {
@@ -176,7 +183,7 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected mapUserIdInWhereForUser(where: FindOptionsWhere<T> | FindOptionsWhere<T>[], _hookType: 'getMany' | 'getOne') {
+  protected mapUserIdInWhereForUser(where: FindOptionsWhere<T> | FindOptionsWhere<T>[], _hookType: 'getMany' | 'getOne' | 'getAll') {
     const user = RequestContext.currentUser()
     const hasUserIdColumn = this.repository.metadata.columns.filter((column) => column.propertyName === 'userId')?.length > 0;
     if (this.isUserRole() && hasUserIdColumn) {

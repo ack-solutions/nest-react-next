@@ -232,5 +232,12 @@ export class GetManyInputDTO<T> implements IFindOptions {
 export class DeleteManyInputDTO {
     @ApiPropertyOptional({ type: [String] })
     @IsArray()
-    id?: string[]
+    id: string[]
+}
+
+
+export class RestoreManyInputDTO {
+    @ApiPropertyOptional({ type: [String] })
+    @IsArray()
+    id: string[]
 }
