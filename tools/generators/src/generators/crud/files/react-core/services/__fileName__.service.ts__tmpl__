@@ -1,5 +1,5 @@
 import { I<%= className %> } from '@libs/types';
-import { CRUDService } from '@libs/react-core';
+import { CRUDService } from './crud-service';
 
 export class <%= className %>Service extends CRUDService<I<%= className %>> {
   protected apiPath = '<%= fileName %>';

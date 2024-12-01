@@ -1,0 +1,93 @@
+import { useState, useCallback } from 'react';
+import { Container, Button } from '@mui/material';
+import Page from '@admin/app/components/page';
+import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
+import { PATH_DASHBOARD } from '@admin/app/routes/paths';
+import AddEdit<%= className %>Dialog from '../../sections/<%= fileName %>/add-edit-<%= fileName %>-dialog';
+import { errorMessage, use<%= className %>, useToasty } from '@libs/react-core';
+import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
+import <%= className %>ListTable from '@admin/app/sections/<%= fileName %>/<%= fileName %>-list-table';
+import { I<%= className %> } from '@libs/types';
+
+export default function <%= className %>List() {
+    const [selectedItem, setSelectedItem] = useState(null);
+    const { showToasty } = useToasty();
+    const confirmDialog = useConfirm();
+
+    const { useDelete<%= className %> } = use<%= className %>();
+    const { mutateAsync: delete<%= className %> } = useDelete<%= className %>();
+
+
+    const handleAddEditClose = useCallback(
+        () => {
+            setSelectedItem(null);
+        },
+        []
+    );
+
+    const handleAddEdit = useCallback(
+        (item: Partial<I<%= className %>> = {}) => {
+            setSelectedItem(item);
+        },
+        []
+    );
+
+    const handleDelete = useCallback(
+        (row: I<%= className %>) => {
+            confirmDialog({ message: 'Are you sure you want to delete <%= title %>?' })
+                .then(() => {
+                    delete<%= className %>(row.id)
+                        .then(() => {
+                            showToasty('<%= title %> successfully delete');
+                        })
+                        .catch((error) => {
+                            showToasty(
+                                errorMessage(
+                                    error,
+                                    'Error while deleting <%= title %>'
+                                ),
+                                'error'
+                            );
+                        });
+                })
+                .catch(() => {
+                    // Nothing
+                });
+        },
+        [confirmDialog, delete<%= className %>, showToasty]
+    );
+
+    return (
+        <Page title="<%= className %>">
+            <Container>
+                <CustomBreadcrumbs
+                    heading="<%= title %> List"
+                    links={[
+                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
+                        { name: '<%= title %>' },
+                    ]}
+                    action={
+                        <Button
+                            variant="contained"
+                            onClick={() => handleAddEdit()}
+                        >
+                            Add <%= title %>
+                        </Button>
+                    }
+                />
+                <<%= className %>ListTable
+                    onEdit={handleAddEdit}
+                    onDelete={handleDelete}
+                />
+
+                {selectedItem && (
+                    <AddEdit<%= className %>Dialog
+                        initialValue={selectedItem}
+                        onClose={handleAddEditClose}
+                    />
+                )}
+
+            </Container>
+        </Page>
+    );
+}
