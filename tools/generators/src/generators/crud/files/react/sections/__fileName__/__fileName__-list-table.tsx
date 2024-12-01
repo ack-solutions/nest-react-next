@@ -38,8 +38,8 @@ export default function <%= className %>ListTable({
 
     const columns: DataTableColumn<I<%= className %>>[] = [
          <% columns.forEach(column => { %>{
-            name: <%= column.normalizeName.propertyName %>,
-            label: <%= column.normalizeName.name %>,
+            name: '<%= column.normalizeName.propertyName %>',
+            label: '<%= column.normalizeName.name %>',
         },<% }) %>
         {
             name: 'action',
