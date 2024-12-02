@@ -61,7 +61,6 @@ module.exports = [
             "indent": ["error", 4],
             '@typescript-eslint/ban-ts-comment': 'off',
             '@typescript-eslint/no-unused-vars': 'warn',
-            '@typescript-eslint/no-empty-object-type': 'warn',
             '@typescript-eslint/no-explicit-any': 'off',
             '@typescript-eslint/no-empty-interface': 'off',
             '@typescript-eslint/no-empty-object-type': 'off'
