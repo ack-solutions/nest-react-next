@@ -11,75 +11,75 @@ import IndexVerify from '@admin/app/sections/auth/verify-otp/Index-verify';
 import Page from '@admin/app/components/page';
 
 const ContentStyle = styled('div')(() => ({
-  maxWidth: 530,
-  margin: 'auto',
-  display: 'flex',
-  minHeight: '100vh',
-  flexDirection: 'column',
-  justifyContent: 'center',
+    maxWidth: 530,
+    margin: 'auto',
+    display: 'flex',
+    minHeight: '100vh',
+    flexDirection: 'column',
+    justifyContent: 'center',
 }));
 
 
 const authService = AuthService.getInstance<AuthService>()
 
 export default function ForgetPassword() {
-  const [resetForm, setResetForm] = useState(false);
-  const [email, setEmail] = useState<any>(null);
+    const [resetForm, setResetForm] = useState(false);
+    const [email, setEmail] = useState<any>(null);
 
-  const handleSendOtp = useCallback(
-    async (values: any, actions: FormikHelpers<any>) => {
-      try {
-        setEmail(values.email)
-        await authService.sendOtp(values).then(() => {
-          setResetForm(true);
-          actions.resetForm();
-        })
-      } catch (error) {
-        actions.setErrors({ afterSubmit: errorMessage(error) });
-      }
-      actions.setSubmitting(false);
-    },
-    [],
-  )
+    const handleSendOtp = useCallback(
+        async (values: any, actions: FormikHelpers<any>) => {
+            try {
+                setEmail(values.email)
+                await authService.sendOtp(values).then(() => {
+                    setResetForm(true);
+                    actions.resetForm();
+                })
+            } catch (error) {
+                actions.setErrors({ afterSubmit: errorMessage(error) });
+            }
+            actions.setSubmitting(false);
+        },
+        [],
+    )
 
-  return (
-    <Page title='Forgot Password'>
-      <Container maxWidth="sm">
-        <ContentStyle>
-          {!resetForm ? (
-            <Box sx={{
-              maxWidth: 480,
-              width: '100%',
-              p: 2,
-            }}>
-              <Typography variant="h2">
+    return (
+        <Page title='Forgot Password'>
+            <Container maxWidth="sm">
+                <ContentStyle>
+                    {!resetForm ? (
+                        <Box sx={{
+                            maxWidth: 480,
+                            width: '100%',
+                            p: 2,
+                        }}>
+                            <Typography variant="h2">
                 Forget Password
-              </Typography>
-              <Typography sx={{ color: 'text.secondary', mb: 2 }}>
+                            </Typography>
+                            <Typography sx={{ color: 'text.secondary', mb: 2 }}>
                 Enter you email to forget your password, we will send you the OTP
-              </Typography>
+                            </Typography>
 
-              <ForgetPasswordForm
-                onSubmit={handleSendOtp}
-              />
+                            <ForgetPasswordForm
+                                onSubmit={handleSendOtp}
+                            />
 
-              <Button
-                fullWidth
-                size="large"
-                component={RouterLink}
-                to={PATH_AUTH.login}
-                sx={{ mt: 1 }}
-              >
+                            <Button
+                                fullWidth
+                                size="large"
+                                component={RouterLink}
+                                to={PATH_AUTH.login}
+                                sx={{ mt: 1 }}
+                            >
                 Back
-              </Button>
-            </Box>
-          ) : (
-            <IndexVerify email={email} />
-          )}
-        </ContentStyle>
-      </Container>
+                            </Button>
+                        </Box>
+                    ) : (
+                        <IndexVerify email={email} />
+                    )}
+                </ContentStyle>
+            </Container>
 
-    </Page>
+        </Page>
 
-  );
+    );
 }

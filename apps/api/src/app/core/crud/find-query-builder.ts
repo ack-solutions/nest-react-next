@@ -245,58 +245,58 @@ export class FindQueryBuilder<T> {
 
         switch (operator) {
 
-            case "$iLike":
-            case "$like":
-                conditionString = `${columnName}::TEXT ${operator == '$like' ? 'LIKE' : 'ILIKE'}  :value_${this.whereIndex}::TEXT`
-                conditionValue = { [`value_${this.whereIndex}`]: `${value}` }
-                break;
+        case "$iLike":
+        case "$like":
+            conditionString = `${columnName}::TEXT ${operator == '$like' ? 'LIKE' : 'ILIKE'}  :value_${this.whereIndex}::TEXT`
+            conditionValue = { [`value_${this.whereIndex}`]: `${value}` }
+            break;
 
-            case "$lte":
-            case "$lt":
-                conditionString = `${columnName} ${operator == '$lte' ? '<=' : '<'}  :value_${this.whereIndex}`
+        case "$lte":
+        case "$lt":
+            conditionString = `${columnName} ${operator == '$lte' ? '<=' : '<'}  :value_${this.whereIndex}`
+            conditionValue = { [`value_${this.whereIndex}`]: value }
+            break;
+
+        case "$gte":
+        case "$gt":
+            conditionString = `${columnName} ${operator == '$gte' ? '>=' : '>'}  :value_${this.whereIndex}`
+            conditionValue = { [`value_${this.whereIndex}`]: value }
+            break;
+
+        case "$eq":
+        case "$notEq":
+            if (value) {
+                conditionString = `${columnName} ${operator == '$notEq' ? '!=' : '='}  :value_${this.whereIndex}`
                 conditionValue = { [`value_${this.whereIndex}`]: value }
-                break;
+            }
+            break;
 
-            case "$gte":
-            case "$gt":
-                conditionString = `${columnName} ${operator == '$gte' ? '>=' : '>'}  :value_${this.whereIndex}`
+        case "$isNull":
+        case "$notNull":
+            conditionString = `${columnName} ${operator == '$isNull' ? 'IS NULL' : 'IS NOT NULL'}`
+            break;
+
+        case "$in":
+        case "$notIn":
+            if (value?.length > 0) {
+                conditionString = `${columnName} ${operator == '$notIn' ? 'NOT IN' : 'IN'} (:...value_${this.whereIndex})`
                 conditionValue = { [`value_${this.whereIndex}`]: value }
-                break;
+            } else {
+                throw Error(`${columnName} aspects array but received ${typeof value}`)
+            }
+            break;
 
-            case "$eq":
-            case "$notEq":
-                if (value) {
-                    conditionString = `${columnName} ${operator == '$notEq' ? '!=' : '='}  :value_${this.whereIndex}`
-                    conditionValue = { [`value_${this.whereIndex}`]: value }
-                }
-                break;
+        case "$between":
+            if (value?.length == 2) {
+                conditionString = `${columnName} BETWEEN  :startValue_${this.whereIndex} AND :endValue_${this.whereIndex}`
+                conditionValue = { [`startValue_${this.whereIndex}`]: value[0], [`endValue_${this.whereIndex}`]: value[1] }
+            } else {
+                throw Error(`${columnName} aspects array with two value`)
+            }
+            break;
 
-            case "$isNull":
-            case "$notNull":
-                conditionString = `${columnName} ${operator == '$isNull' ? 'IS NULL' : 'IS NOT NULL'}`
-                break;
-
-            case "$in":
-            case "$notIn":
-                if (value?.length > 0) {
-                    conditionString = `${columnName} ${operator == '$notIn' ? 'NOT IN' : 'IN'} (:...value_${this.whereIndex})`
-                    conditionValue = { [`value_${this.whereIndex}`]: value }
-                } else {
-                    throw Error(`${columnName} aspects array but received ${typeof value}`)
-                }
-                break;
-
-            case "$between":
-                if (value?.length == 2) {
-                    conditionString = `${columnName} BETWEEN  :startValue_${this.whereIndex} AND :endValue_${this.whereIndex}`
-                    conditionValue = { [`startValue_${this.whereIndex}`]: value[0], [`endValue_${this.whereIndex}`]: value[1] }
-                } else {
-                    throw Error(`${columnName} aspects array with two value`)
-                }
-                break;
-
-            default:
-                throw Error(`${operator} operator not supported`)
+        default:
+            throw Error(`${operator} operator not supported`)
         }
 
         return { conditionString, conditionValue }

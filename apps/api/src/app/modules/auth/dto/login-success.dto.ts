@@ -8,11 +8,11 @@ export class LoginSuccessDTO implements ILoginSuccess {
 
   @ApiProperty()
   @IsString()
-  accessToken: string;
+      accessToken: string;
 
   @ApiProperty({ type: () =>  UserDTO })
   @IsString()
-  user: UserDTO;
+      user: UserDTO;
 
 }
 

@@ -9,12 +9,12 @@ import { CrudController } from '../../core/crud';
 @ApiTags('Permission')
 @Controller("permission")
 @UseGuards(
-  AuthGuard('jwt')
+    AuthGuard('jwt')
 )
 export class PermissionController extends CrudController(PermissionDTO)<Permission> {
 
-  constructor(permissionService: PermissionService) {
-    super(permissionService);
-  }
+    constructor(permissionService: PermissionService) {
+        super(permissionService);
+    }
 
 }

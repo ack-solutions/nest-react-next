@@ -14,15 +14,15 @@ export type PropertyMetadataType = {
 
 
 export class FactoryMetadataStorageHost {
-  private properties = new Array<PropertyMetadataType>();
+    private properties = new Array<PropertyMetadataType>();
 
-  addPropertyMetadata(metadata: PropertyMetadataType): void {
-    this.properties.push(metadata);
-  }
+    addPropertyMetadata(metadata: PropertyMetadataType): void {
+        this.properties.push(metadata);
+    }
 
-  getPropertyMetadatasByTarget(target: Type<unknown>): PropertyMetadataType[] {
-    return this.properties.filter(property => property.target === target);
-  }
+    getPropertyMetadatasByTarget(target: Type<unknown>): PropertyMetadataType[] {
+        return this.properties.filter(property => property.target === target);
+    }
 }
 
 const globalRef = global as any;

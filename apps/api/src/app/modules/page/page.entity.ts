@@ -10,43 +10,43 @@ export class Page extends BaseEntity implements IPage {
     @ApiProperty()
     @IsString()
     @Column()
-    name?: string;
+        name?: string;
 
     @ApiProperty()
     @IsString()
     @Column()
-    title?: string;
+        title?: string;
 
     @ApiProperty()
     @IsString()
     @Column({ nullable: true })
-    slug?: string;
+        slug?: string;
 
     @ApiProperty()
     @IsString()
     @Column({ nullable: true })
-    key?: string;
+        key?: string;
 
     @ApiProperty()
     @IsString()
     @Column("text", { nullable: true })
-    value?: string;
+        value?: string;
 
     @ApiProperty()
     @IsString()
     @Column('text', { nullable: true })
-    content?: string;
+        content?: string;
 
     @Column({ default: 'default' })
-    template?: string;
+        template?: string;
 
     @BeforeInsert()
     async createSlug() {
-      this.slug = await generateSlug(Page, this.name, this.id);
+        this.slug = await generateSlug(Page, this.name, this.id);
     }
   
     @BeforeUpdate()
     async updateSlug() {
-      this.slug = await generateSlug(Page, this.name, this.id);
+        this.slug = await generateSlug(Page, this.name, this.id);
     }
 }

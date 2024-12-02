@@ -5,30 +5,30 @@ import { NavbarConfigProps, NavigationItem } from "../../../types/navigation";
 import NavbarItem from "./navbar-item";
 
 export function useActiveLinkByStaticPaths(staticPaths?: string[], isMatchFull?: boolean): boolean {
-  const { pathname } = useLocation();
-  let isInStaticPaths
-  if (isMatchFull) {
-    isInStaticPaths = staticPaths?.some((staticPath) => pathname === staticPath);
-  }
-  else {
-    isInStaticPaths = staticPaths?.some((staticPath) => pathname?.includes(staticPath));
-  }
+    const { pathname } = useLocation();
+    let isInStaticPaths
+    if (isMatchFull) {
+        isInStaticPaths = staticPaths?.some((staticPath) => pathname === staticPath);
+    }
+    else {
+        isInStaticPaths = staticPaths?.some((staticPath) => pathname?.includes(staticPath));
+    }
 
-  return isInStaticPaths ?? false;
+    return isInStaticPaths ?? false;
 }
 
 export function useActiveLink(path: string, deep = true): boolean {
-  const { pathname } = useLocation();
+    const { pathname } = useLocation();
 
-  const checkPath = path.startsWith('#');
+    const checkPath = path.startsWith('#');
 
-  const currentPath = path === '/' ? '/' : `${path}/`;
+    const currentPath = path === '/' ? '/' : `${path}/`;
 
-  const normalActive = !checkPath && pathname === currentPath;
+    const normalActive = !checkPath && pathname === currentPath;
 
-  const deepActive = !checkPath && pathname?.includes(currentPath);
+    const deepActive = !checkPath && pathname?.includes(currentPath);
 
-  return deep && deepActive ? deepActive : normalActive;
+    return deep && deepActive ? deepActive : normalActive;
 }
 
 interface NavbarListRootProps {
@@ -41,82 +41,82 @@ interface NavbarListRootProps {
 
 
 export default function NavbarList({ data, depth, hasChild, config, isMini }: NavbarListRootProps) {
-  const { pathname } = useLocation();
-  const navRef = useRef(null);
-  const active = useActiveLinkByStaticPaths(data.staticPaths ? data.staticPaths : [], !!config?.fullPatchMatch);
-  const externalLink = data.path.includes('http');
-  const [open, setOpen] = useState(active);
+    const { pathname } = useLocation();
+    const navRef = useRef(null);
+    const active = useActiveLinkByStaticPaths(data.staticPaths ? data.staticPaths : [], !!config?.fullPatchMatch);
+    const externalLink = data.path.includes('http');
+    const [open, setOpen] = useState(active);
 
-  const handleToggle = useCallback(() => {
-    setOpen((prev) => !prev);
-  }, []);
+    const handleToggle = useCallback(() => {
+        setOpen((prev) => !prev);
+    }, []);
 
-  const handleClose = useCallback(() => {
-    setOpen(false);
-  }, []);
+    const handleClose = useCallback(() => {
+        setOpen(false);
+    }, []);
 
-  const handleOpen = useCallback(() => {
-    setOpen(true);
-  }, []);
+    const handleOpen = useCallback(() => {
+        setOpen(true);
+    }, []);
 
-  useEffect(() => {
-    if (!active) {
-      handleClose();
-    }
+    useEffect(() => {
+        if (!active) {
+            handleClose();
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+    }, [pathname]);
 
-  return (
-    <>
-      <NavbarItem
-        ref={navRef}
-        item={data}
-        depth={depth}
-        open={open}
-        active={active}
-        externalLink={externalLink}
-        onClick={handleToggle}
-        config={config}
-        {...isMini && {
-          onMouseEnter: handleOpen,
-          onMouseLeave: handleClose,
-          isMini: true
-        }}
-      />
+    return (
+        <>
+            <NavbarItem
+                ref={navRef}
+                item={data}
+                depth={depth}
+                open={open}
+                active={active}
+                externalLink={externalLink}
+                onClick={handleToggle}
+                config={config}
+                {...isMini && {
+                    onMouseEnter: handleOpen,
+                    onMouseLeave: handleClose,
+                    isMini: true
+                }}
+            />
 
-      {(hasChild && !isMini) && (
-        <Collapse in={open} unmountOnExit>
-          <NavbarSubList data={data.children} depth={depth} config={config} />
-        </Collapse>
-      )}
-      {(hasChild && isMini) && (
-        <Popover
-          open={open}
-          anchorEl={navRef?.current}
-          anchorOrigin={{ vertical: 'center', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'center', horizontal: 'left' }}
-          slotProps={{
-            paper: {
-              onMouseEnter: handleOpen,
-              onMouseLeave: handleClose,
-              sx: {
-                mt: 0.5,
-                width: 160,
-                ...(open && {
-                  pointerEvents: 'auto'
-                })
-              }
-            }
-          }}
-          sx={{
-            pointerEvents: 'none'
-          }}
-        >
-          <NavbarSubList data={data.children} depth={depth} config={config} />
-        </Popover>
-      )}
-    </>
-  );
+            {(hasChild && !isMini) && (
+                <Collapse in={open} unmountOnExit>
+                    <NavbarSubList data={data.children} depth={depth} config={config} />
+                </Collapse>
+            )}
+            {(hasChild && isMini) && (
+                <Popover
+                    open={open}
+                    anchorEl={navRef?.current}
+                    anchorOrigin={{ vertical: 'center', horizontal: 'right' }}
+                    transformOrigin={{ vertical: 'center', horizontal: 'left' }}
+                    slotProps={{
+                        paper: {
+                            onMouseEnter: handleOpen,
+                            onMouseLeave: handleClose,
+                            sx: {
+                                mt: 0.5,
+                                width: 160,
+                                ...(open && {
+                                    pointerEvents: 'auto'
+                                })
+                            }
+                        }
+                    }}
+                    sx={{
+                        pointerEvents: 'none'
+                    }}
+                >
+                    <NavbarSubList data={data.children} depth={depth} config={config} />
+                </Popover>
+            )}
+        </>
+    );
 }
 
 type NavbarListSubProps = {
@@ -126,17 +126,17 @@ type NavbarListSubProps = {
 };
 
 function NavbarSubList({ data, depth, config }: NavbarListSubProps) {
-  return (
-    <>
-      {data?.map((list) => (
-        <NavbarList
-          key={list.title + list.path}
-          data={list}
-          depth={depth + 1}
-          hasChild={!!list.children}
-          config={{ ...config, ...(list.config || {}) }}
-        />
-      ))}
-    </>
-  );
+    return (
+        <>
+            {data?.map((list) => (
+                <NavbarList
+                    key={list.title + list.path}
+                    data={list}
+                    depth={depth + 1}
+                    hasChild={!!list.children}
+                    config={{ ...config, ...(list.config || {}) }}
+                />
+            ))}
+        </>
+    );
 }

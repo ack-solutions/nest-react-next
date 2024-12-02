@@ -9,54 +9,54 @@ export interface ForgetPasswordFormProps {
   values?: any;
 }
 const defaultValues = {
-  email: '',
+    email: '',
 }
 
 const validationSchema = object().shape({
-  email: string().label('Email').email().required(),
+    email: string().label('Email').email().required(),
 });
 
 const ForgetPasswordForm = ({
-  onSubmit,
-  values: initialValues,
+    onSubmit,
+    values: initialValues,
 }: ForgetPasswordFormProps) => {
 
-  return (
-    <Formik
-      initialValues={Object.assign({}, defaultValues, initialValues)}
-      onSubmit={onSubmit}
-      validationSchema={validationSchema}
-    >
-      {({ handleSubmit, isSubmitting, errors }) => (
-        <Stack spacing={3}>
-          <Box pb={2} pt={0}>
-            {errors?.afterSubmit && (
-              <Alert severity="error">{(errors as any)?.afterSubmit}</Alert>
-            )}
-          </Box>
+    return (
+        <Formik
+            initialValues={Object.assign({}, defaultValues, initialValues)}
+            onSubmit={onSubmit}
+            validationSchema={validationSchema}
+        >
+            {({ handleSubmit, isSubmitting, errors }) => (
+                <Stack spacing={3}>
+                    <Box pb={2} pt={0}>
+                        {errors?.afterSubmit && (
+                            <Alert severity="error">{(errors as any)?.afterSubmit}</Alert>
+                        )}
+                    </Box>
 
-          <Field
-            fullWidth
-            name="email"
-            label="Email Address"
-            component={TextField}
-            type="email"
-          />
+                    <Field
+                        fullWidth
+                        name="email"
+                        label="Email Address"
+                        component={TextField}
+                        type="email"
+                    />
 
-          <LoadingButton
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-            onClick={() => handleSubmit()}
-          >
+                    <LoadingButton
+                        fullWidth
+                        size="large"
+                        type="submit"
+                        variant="contained"
+                        loading={isSubmitting}
+                        onClick={() => handleSubmit()}
+                    >
             Send OTP
-          </LoadingButton>
-        </Stack>
-      )}
-    </Formik>
-  );
+                    </LoadingButton>
+                </Stack>
+            )}
+        </Formik>
+    );
 };
 
 export default ForgetPasswordForm;

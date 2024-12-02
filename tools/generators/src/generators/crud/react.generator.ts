@@ -20,7 +20,7 @@ export class ReactGenerator {
     constructor(private tree: Tree, private options: PluginGeneratorSchema) {
         this.projects = getProjects(this.tree);
         this.names = {
-           ...names(this.options.name),
+            ...names(this.options.name),
             title: toTitleCase(this.options.name)
         };
     }

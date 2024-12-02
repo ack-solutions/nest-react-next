@@ -1,10 +1,10 @@
 import { FieldProps } from 'formik';
 import {
-  TextField as MUITextField,
-  TextFieldProps as MUITextFieldProps,
-  Box,
-  SxProps,
-  useTheme,
+    TextField as MUITextField,
+    TextFieldProps as MUITextFieldProps,
+    Box,
+    SxProps,
+    useTheme,
 } from '@mui/material';
 import { fieldToTextField } from 'formik-mui';
 import { memo, ReactNode } from 'react';
@@ -23,44 +23,44 @@ export interface TextFieldProps extends FieldProps, Omit<TextFieldRawProps, 'nam
 
 
 export const TextFieldRaw = memo(({
-  label,
-  sx,
-  inputSx,
-  ...props
+    label,
+    sx,
+    inputSx,
+    ...props
 }: TextFieldRawProps) => {
-  const theme = useTheme()
+    const theme = useTheme()
 
-  return (
-    <Box sx={{ width: '100%', ...sx }}>
-      {label && (
-        <InputLabel
-          disabled={!!props?.disabled}
-          required={!!props?.required}
-          error={!!props?.error}
-          htmlFor={props?.name}
-          margin='dense'
-          sx={{
-            ...theme.typography.body2,
-            color: 'text.secondary',mb:0.5
-          }}
-        >
-          {label}
-        </InputLabel>
-      )}
-      <MUITextField
-        id={props?.name}
-        fullWidth
-        variant='outlined'
-        sx={inputSx}
-        {...omit(props, 'label')}
-      />
-    </Box>
-  );
+    return (
+        <Box sx={{ width: '100%', ...sx }}>
+            {label && (
+                <InputLabel
+                    disabled={!!props?.disabled}
+                    required={!!props?.required}
+                    error={!!props?.error}
+                    htmlFor={props?.name}
+                    margin='dense'
+                    sx={{
+                        ...theme.typography.body2,
+                        color: 'text.secondary',mb:0.5
+                    }}
+                >
+                    {label}
+                </InputLabel>
+            )}
+            <MUITextField
+                id={props?.name}
+                fullWidth
+                variant='outlined'
+                sx={inputSx}
+                {...omit(props, 'label')}
+            />
+        </Box>
+    );
 });
 
 
 const TextField = memo((props: TextFieldProps) => {
-  return <TextFieldRaw inputSx={props.inputSx} {...fieldToTextField(props)} />
+    return <TextFieldRaw inputSx={props.inputSx} {...fieldToTextField(props)} />
 })
 
 export default TextField

@@ -15,39 +15,39 @@ export interface LabelDropdownProps extends Partial<LabelProps> {
 
 
 export const LabelDropdown = ({
-	children,
-	getValue,
-	getLabel,
-	renderOption,
-	selected,
-	options,
-	onChange,
-	...other
+    children,
+    getValue,
+    getLabel,
+    renderOption,
+    selected,
+    options,
+    onChange,
+    ...other
 }: LabelDropdownProps) => (
-	<MenuDropdown
-		anchor={
-			<Label
-				title={getLabel(selected)}
-				endIcon={<ArrowDropDownIcon />}
-				{...other as any}
-			>
-				{getLabel(selected)}
-			</Label>
-		}
-	>
-		{({ handleClose }) => (
-			<>
-				{options?.map((option) => renderOption ? renderOption(option) : (
-					<MenuItem
-						key={getLabel(selected)}
-						selected={getValue(selected) === getValue(option)}
-						onClick={() => { onChange(option); handleClose() }}
-					>
-						{getLabel(option)}
-					</MenuItem>
-				))}
-			</>
-		)}
+    <MenuDropdown
+        anchor={
+            <Label
+                title={getLabel(selected)}
+                endIcon={<ArrowDropDownIcon />}
+                {...other as any}
+            >
+                {getLabel(selected)}
+            </Label>
+        }
+    >
+        {({ handleClose }) => (
+            <>
+                {options?.map((option) => renderOption ? renderOption(option) : (
+                    <MenuItem
+                        key={getLabel(selected)}
+                        selected={getValue(selected) === getValue(option)}
+                        onClick={() => { onChange(option); handleClose() }}
+                    >
+                        {getLabel(option)}
+                    </MenuItem>
+                ))}
+            </>
+        )}
 
-	</MenuDropdown>
+    </MenuDropdown>
 );

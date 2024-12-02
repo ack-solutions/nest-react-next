@@ -11,9 +11,9 @@ import { CrudController } from '@api/app/core/crud';
 @Controller("setting")
 @UseGuards(AuthGuard('jwt'))
 export class SettingController extends CrudController(SettingDTO)<Setting> {
-  constructor(private settingService: SettingService) {
-    super(settingService);
-  }
+    constructor(private settingService: SettingService) {
+        super(settingService);
+    }
 
   @ApiOperation({ summary: 'Update Setting' })
   @ApiResponse({
@@ -26,11 +26,11 @@ export class SettingController extends CrudController(SettingDTO)<Setting> {
   })
   @UseGuards(AuthGuard('jwt'))
   @Post('setting')
-  async updateSetting(
+    async updateSetting(
       @Body() request?: any,
-  ) {
-      return this.settingService.updateSetting(request);
-  }
+    ) {
+        return this.settingService.updateSetting(request);
+    }
 
 
 }

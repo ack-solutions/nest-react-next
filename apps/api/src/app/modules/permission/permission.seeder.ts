@@ -24,54 +24,54 @@ type RolePermissionsMap = {
 @Injectable()
 export class PermissionSeeder implements Seeder {
 
-  defaultActions = ['list', 'create', 'show', 'update', 'delete', 'trash-delete', 'trash-restore'];
+    defaultActions = ['list', 'create', 'show', 'update', 'delete', 'trash-delete', 'trash-restore'];
 
-  constructor(
+    constructor(
     @InjectRepository(Permission)
     private permissionRepository: Repository<Permission>,
 
     @InjectRepository(Role)
     private roleRepository: Repository<Role>
-  ) { }
+    ) { }
 
-  async seed() {
+    async seed() {
     // Remove Old Permissions 
-    await this.drop()
+        await this.drop()
 
-    const roles = await this.roleRepository.find();
+        const roles = await this.roleRepository.find();
 
-    const rolePermissions: RolePermissionsMap = {
-      [RoleNameEnum.ADMIN]: [
-        { entity: 'user' },
-        { entity: 'role' },
-        { entity: 'permissions' },
-      ],
-      // Additional roles can be added here
-    };
+        const rolePermissions: RolePermissionsMap = {
+            [RoleNameEnum.ADMIN]: [
+                { entity: 'user' },
+                { entity: 'role' },
+                { entity: 'permissions' },
+            ],
+            // Additional roles can be added here
+        };
 
-    const permissions = [];
-    for (const [roleName, entities] of Object.entries(rolePermissions)) {
-      const role = find(roles, { name: roleName });
-      if (role) {
-        for (const { entity, actions } of entities) {
-          const entityActions = actions ?? this.defaultActions;
-          permissions.push(...this.generatePermissionsForEntity(entity, entityActions, [role]));
+        const permissions = [];
+        for (const [roleName, entities] of Object.entries(rolePermissions)) {
+            const role = find(roles, { name: roleName });
+            if (role) {
+                for (const { entity, actions } of entities) {
+                    const entityActions = actions ?? this.defaultActions;
+                    permissions.push(...this.generatePermissionsForEntity(entity, entityActions, [role]));
+                }
+            }
         }
-      }
+
+        return await this.permissionRepository.save(permissions);
     }
 
-    return await this.permissionRepository.save(permissions);
-  }
+    async drop() {
+        return await this.permissionRepository.query(`TRUNCATE TABLE "${this.permissionRepository.metadata.tableName}" CASCADE`);
+    }
 
-  async drop() {
-    return await this.permissionRepository.query(`TRUNCATE TABLE "${this.permissionRepository.metadata.tableName}" CASCADE`);
-  }
-
-  private generatePermissionsForEntity(entity: string, actions: string[], roles: Role[]): Permission[] {
-    return actions.map((action) => {
-      const permissionName = `${entity} ${action}`;
-      return new Permission({ name: permissionName, roles });
-    });
-  }
+    private generatePermissionsForEntity(entity: string, actions: string[], roles: Role[]): Permission[] {
+        return actions.map((action) => {
+            const permissionName = `${entity} ${action}`;
+            return new Permission({ name: permissionName, roles });
+        });
+    }
 }
 

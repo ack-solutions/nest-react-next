@@ -13,75 +13,75 @@ export interface ResetPasswordProps {
 }
 
 const RootStyle = styled(Page)(({ theme }) => ({
-	[theme.breakpoints.up('md')]: {
-		display: 'flex',
-	},
+    [theme.breakpoints.up('md')]: {
+        display: 'flex',
+    },
 }));
 
 const ContentStyle = styled('div')(({ theme }) => ({
-	maxWidth: 530,
-	margin: 'auto',
-	display: 'flex',
-	minHeight: '100vh',
-	flexDirection: 'column',
-	justifyContent: 'center',
+    maxWidth: 530,
+    margin: 'auto',
+    display: 'flex',
+    minHeight: '100vh',
+    flexDirection: 'column',
+    justifyContent: 'center',
 }));
 
 const authService = AuthService.getInstance<AuthService>();
 
 const ResetPassword = ({
-	onCloseModal,
-	email,
-	otp,
+    onCloseModal,
+    email,
+    otp,
 }: ResetPasswordProps) => {
-	const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
+    const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 
-	const handleResetPassword = useCallback(
-    async (values:any, actions: FormikHelpers<any>) => {
-      try {
-        const request = {
-          ...values,
-          email,
-          otp
-        }
-        await authService.resetPassword(request).then((data) => {
-          actions.resetForm();
-					setIsSuccessDialogOpen(true);
-        })
-      } catch (error) {
-        actions.setErrors({ afterSubmit: errorMessage(error) });
-      }
+    const handleResetPassword = useCallback(
+        async (values:any, actions: FormikHelpers<any>) => {
+            try {
+                const request = {
+                    ...values,
+                    email,
+                    otp
+                }
+                await authService.resetPassword(request).then((data) => {
+                    actions.resetForm();
+                    setIsSuccessDialogOpen(true);
+                })
+            } catch (error) {
+                actions.setErrors({ afterSubmit: errorMessage(error) });
+            }
 
-      actions.setSubmitting(false);
-    },
-    [email, otp],
-  )
+            actions.setSubmitting(false);
+        },
+        [email, otp],
+    )
 
-	const handleSuccessDialogClose = () => {
-		setIsSuccessDialogOpen(false);
-	};
+    const handleSuccessDialogClose = () => {
+        setIsSuccessDialogOpen(false);
+    };
 
-	return (
-		<RootStyle title="Reset Password | Minimal UI">
-			<Container maxWidth="sm">
-					<ContentStyle>
-						<Box >
-							<Typography variant="h2" >
+    return (
+        <RootStyle title="Reset Password | Minimal UI">
+            <Container maxWidth="sm">
+                <ContentStyle>
+                    <Box >
+                        <Typography variant="h2" >
 								Reset Password
-							</Typography>
-							<Typography sx={{ color: 'text.secondary', mb: 5 }}>
+                        </Typography>
+                        <Typography sx={{ color: 'text.secondary', mb: 5 }}>
 								Enter your password to access the app next time.
-							</Typography>
-							<ResetPasswordForm onSubmit={handleResetPassword} />
-						</Box>
+                        </Typography>
+                        <ResetPasswordForm onSubmit={handleResetPassword} />
+                    </Box>
 
-					</ContentStyle>
-			</Container>
-			{isSuccessDialogOpen ? (
-				<SuccessDialog onClose={handleSuccessDialogClose} />
-			):null}
-		</RootStyle>
-	);
+                </ContentStyle>
+            </Container>
+            {isSuccessDialogOpen ? (
+                <SuccessDialog onClose={handleSuccessDialogClose} />
+            ):null}
+        </RootStyle>
+    );
 }
 
 export default ResetPassword;

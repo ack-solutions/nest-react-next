@@ -10,51 +10,51 @@ export interface WithAccessOptions {
 }
 
 const withAccess = ({
-	permissions,
-	resource,
-	...props
+    permissions,
+    resource,
+    ...props
 }: WithAccessOptions) => {
 
-	return (WrappedComponent:never): ReactNode => {
+    return (WrappedComponent:never): ReactNode => {
 
-		const { onDeny } = React.useContext(context)
-		const { hasAnyPermission } = useAccess()
+        const { onDeny } = React.useContext(context)
+        const { hasAnyPermission } = useAccess()
 
-		if (!permissions) {
-			return WrappedComponent
-			//throw new Error('No permissions were passed to withAccess')
-		}
+        if (!permissions) {
+            return WrappedComponent
+            //throw new Error('No permissions were passed to withAccess')
+        }
 
-		if (permissions.length === 0) {
-			return WrappedComponent
-		}
+        if (permissions.length === 0) {
+            return WrappedComponent
+        }
 
-		const allowed = hasAnyPermission(permissions, { resource })
+        const allowed = hasAnyPermission(permissions, { resource })
 
-		if (allowed) {
-			return WrappedComponent
-		}
+        if (allowed) {
+            return WrappedComponent
+        }
 
 
-		const nextAction =
+        const nextAction =
 			typeof props.onDeny === 'function'
-				? props.onDeny
-				: typeof onDeny === 'function'
-					? onDeny
-					: null
+			    ? props.onDeny
+			    : typeof onDeny === 'function'
+			        ? onDeny
+			        : null
 
-		if (!nextAction) {
-			console.warn(
-				'withAccess does not have have a provided onDeny callback. While this is not an error, you could potentially improve the user experience by implementing one.'
-			)
-			return null
+        if (!nextAction) {
+            console.warn(
+                'withAccess does not have have a provided onDeny callback. While this is not an error, you could potentially improve the user experience by implementing one.'
+            )
+            return null
 
-		}
+        }
 
-		return nextAction() || null
+        return nextAction() || null
 
 
-	}
+    }
 }
 
 export default withAccess

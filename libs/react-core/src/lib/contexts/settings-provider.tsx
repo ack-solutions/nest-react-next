@@ -17,12 +17,12 @@ export interface SettingsValueProps {
 	primaryColor: 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red';
 };
 export const initialSetting = {
-	colorScheme: 'light',
-	contrast: 'default',
-	navLayout: 'vertical',
-	primaryColor: 'default',
-	navColor: 'integrate',
-	compactLayout: false,
+    colorScheme: 'light',
+    contrast: 'default',
+    navLayout: 'vertical',
+    primaryColor: 'default',
+    navColor: 'integrate',
+    compactLayout: false,
 } as const;
 
 export type SettingsContextProps = SettingsValueProps & {
@@ -39,39 +39,39 @@ export const SettingsContext = createContext({} as SettingsContextProps);
 
 
 export function SettingsProvider({ children, defaultSettings }: SettingsProviderProps) {
-	const { state, update, reset } = useLocalStorage(STORAGE_KEY, Object.assign({}, initialSetting, defaultSettings));
-	const [openDrawer, setOpenDrawer] = useState(false);
+    const { state, update, reset } = useLocalStorage(STORAGE_KEY, Object.assign({}, initialSetting, defaultSettings));
+    const [openDrawer, setOpenDrawer] = useState(false);
 
-	const onToggleDrawer = useCallback(() => {
-		setOpenDrawer((prev) => !prev);
-	}, []);
+    const onToggleDrawer = useCallback(() => {
+        setOpenDrawer((prev) => !prev);
+    }, []);
 
-	const onCloseDrawer = useCallback(() => {
-		setOpenDrawer(false);
-	}, []);
+    const onCloseDrawer = useCallback(() => {
+        setOpenDrawer(false);
+    }, []);
 
-	const canReset = !isEqual(state, defaultSettings);
+    const canReset = !isEqual(state, defaultSettings);
 
-	const memoizedValue = useMemo(
-		() => ({
-			...state,
-			onUpdate: update,
-			canReset,
-			onReset: reset,
-			open: openDrawer,
-			onToggle: onToggleDrawer,
-			onClose: onCloseDrawer
-		}),
-		[reset, update, state, canReset, openDrawer, onCloseDrawer, onToggleDrawer]
-	);
+    const memoizedValue = useMemo(
+        () => ({
+            ...state,
+            onUpdate: update,
+            canReset,
+            onReset: reset,
+            open: openDrawer,
+            onToggle: onToggleDrawer,
+            onClose: onCloseDrawer
+        }),
+        [reset, update, state, canReset, openDrawer, onCloseDrawer, onToggleDrawer]
+    );
 
-	return <SettingsContext.Provider value={memoizedValue}>{children}</SettingsContext.Provider>;
+    return <SettingsContext.Provider value={memoizedValue}>{children}</SettingsContext.Provider>;
 }
 
 export const useSettingsContext = () => {
-	const context = useContext(SettingsContext);
+    const context = useContext(SettingsContext);
 
-	if (!context) throw new Error('useSettingsContext must be use inside SettingsProvider');
+    if (!context) throw new Error('useSettingsContext must be use inside SettingsProvider');
 
-	return context;
+    return context;
 };

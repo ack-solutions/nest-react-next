@@ -4,54 +4,54 @@ import { FileStorage } from '../file-storage';
 // sharp.cache(false);
 
 export async function createThumb(filePath, size) {
-	const fileParts = filePath.split('.');
-	fileParts[0] = `${fileParts[0]}-thumb`;
-	const newPath = fileParts.join('.');
+    const fileParts = filePath.split('.');
+    fileParts[0] = `${fileParts[0]}-thumb`;
+    const newPath = fileParts.join('.');
 
-	// await sharp(filePath)
-	// 	.resize({
-	// 		withoutEnlargement: true,
-	// 		...size,
-	// 	})
-	// 	.webp({ force: false, quality: 70 })
-	// 	.jpeg({ progressive: true, force: false, quality: 70 })
-	// 	.png({ progressive: true, force: false, compressionLevel: 7 })
-	// 	.toFile(newPath);
+    // await sharp(filePath)
+    // 	.resize({
+    // 		withoutEnlargement: true,
+    // 		...size,
+    // 	})
+    // 	.webp({ force: false, quality: 70 })
+    // 	.jpeg({ progressive: true, force: false, quality: 70 })
+    // 	.png({ progressive: true, force: false, compressionLevel: 7 })
+    // 	.toFile(newPath);
 
-	return newPath;
+    return newPath;
 }
 
 export async function resizeImage(filePath, size) {
-	try {
-		const fileParts = filePath.split('.');
-		fileParts[0] = `${fileParts[0]}-orig`;
-		const newPath = fileParts.join('.');
+    try {
+        const fileParts = filePath.split('.');
+        fileParts[0] = `${fileParts[0]}-orig`;
+        const newPath = fileParts.join('.');
 
-		await new Promise((resolve, reject) => {
-			copyFile(filePath, newPath, (error) => {
-				if (error) {
-					reject(error);
-				}
-				resolve(newPath);
-			});
-		});
+        await new Promise((resolve, reject) => {
+            copyFile(filePath, newPath, (error) => {
+                if (error) {
+                    reject(error);
+                }
+                resolve(newPath);
+            });
+        });
 
-		filePath = new FileStorage().getProvider().path(filePath);
+        filePath = new FileStorage().getProvider().path(filePath);
 
-		// const buffer = await sharp(filePath)
-		// 	.resize({
-		// 		withoutEnlargement: true,
-		// 		...size,
-		// 	})
-		// 	.webp({ force: false, quality: 70 })
-		// 	.jpeg({ progressive: true, force: false, quality: 70 })
-		// 	.png({ progressive: true, force: false, compressionLevel: 7 })
-		// 	.toBuffer();
+        // const buffer = await sharp(filePath)
+        // 	.resize({
+        // 		withoutEnlargement: true,
+        // 		...size,
+        // 	})
+        // 	.webp({ force: false, quality: 70 })
+        // 	.jpeg({ progressive: true, force: false, quality: 70 })
+        // 	.png({ progressive: true, force: false, compressionLevel: 7 })
+        // 	.toBuffer();
 
-		// await sharp(buffer).toFile(filePath);
-	} catch (error) {
-		console.log(error);
-	}
+        // await sharp(buffer).toFile(filePath);
+    } catch (error) {
+        console.log(error);
+    }
 
-	return filePath;
+    return filePath;
 }

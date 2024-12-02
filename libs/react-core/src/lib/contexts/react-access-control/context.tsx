@@ -5,14 +5,14 @@ interface IDefineInput {
 	permissions: string[];
 }
 const initialState = {
-	isLoaded: false,
-	permissions: [],
-	roles: [],
-	resources: {},
-	define: (options: IDefineInput) => { 
-		//
-	},
-	onDeny: () => { return null }
+    isLoaded: false,
+    permissions: [],
+    roles: [],
+    resources: {},
+    define: (options: IDefineInput) => { 
+        //
+    },
+    onDeny: () => { return null }
 }
 
 const AccessContext = createContext(initialState)
@@ -33,18 +33,18 @@ export interface AccessProviderProps {
 }
 
 export const AccessProvider = ({ children, onDeny }: AccessProviderProps) => {
-	const [state, setState] = useState(initialState)
+    const [state, setState] = useState(initialState)
 
-	const define = useCallback(
-		(values: string[]) => setState(prevState => ({
-			...prevState,
-			...values,
-			isLoaded: true
-		})),
-		[],
-	)
+    const define = useCallback(
+        (values: string[]) => setState(prevState => ({
+            ...prevState,
+            ...values,
+            isLoaded: true
+        })),
+        [],
+    )
 
-	const providerValue:any = { ...state, onDeny, define }
+    const providerValue:any = { ...state, onDeny, define }
 
-	return <AccessContext.Provider value={providerValue}>{children}</AccessContext.Provider>
+    return <AccessContext.Provider value={providerValue}>{children}</AccessContext.Provider>
 }
