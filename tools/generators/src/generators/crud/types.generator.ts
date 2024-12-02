@@ -4,7 +4,7 @@ import { prompt } from 'enquirer';
 import { join } from "path";
 
 export class TypesGenerator {
-    
+
     projects: Map<string, ProjectConfiguration>;
     names: { name: string; className: string; propertyName: string; constantName: string; fileName: string; };
 
@@ -18,7 +18,7 @@ export class TypesGenerator {
     }
 
     async run() {
-        const {  generateApi } = this.options;
+        const { generateApi } = this.options;
         if (generateApi) {
 
             this.options.columns = []
@@ -126,7 +126,10 @@ export class TypesGenerator {
             columnOptionsString: '',
         };
 
-        const columnOptions = { nullable: column.nullable, type: null };
+        const columnOptions = {
+            nullable: true, // column.nullable ,
+            type: null
+        };
 
         switch (column.type) {
             case 'text':

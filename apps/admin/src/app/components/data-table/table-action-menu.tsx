@@ -99,10 +99,11 @@ export function TableActionMenu({
 
   if (crudActions.length <= 2) {
     return (
-      <Stack spacing={1} direction="row">
+      <Stack spacing={0.5} direction="row">
         {crudActions.map((action) => (
           <Tooltip key={`${action?.title}-${row?.id}`} title={action?.title}>
             <IconButton
+              size="small"
               onClick={(event) => {
                 event.stopPropagation();
                 action.onClick && action.onClick(event);

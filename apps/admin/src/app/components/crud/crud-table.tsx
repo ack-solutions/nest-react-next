@@ -142,6 +142,7 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                 .then(() => {
                     bulkDeleteItems(rowIds)
                         .then(() => {
+                            datatableRef.current.clearSelection();
                             showToasty(`The ${crudName} has been successfully deleted`);
                         })
                         .catch((error) => {
@@ -167,6 +168,7 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                 .then(() => {
                     bulkRestoreItems(rowIds)
                         .then(() => {
+                            datatableRef.current.clearSelection();
                             showToasty(`The ${crudName} has been successfully restored`);
                         })
                         .catch((error) => {
@@ -192,6 +194,7 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                 .then(() => {
                     bulkDeleteForeverItems(rowIds)
                         .then(() => {
+                            datatableRef.current.clearSelection();
                             showToasty(`The ${crudName} has been successfully deleted permanently`);
                         })
                         .catch((error) => {
@@ -241,7 +244,7 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                 label: 'Action',
                 props: {
                     sx: {
-                        maxWidth: '50px',
+                        width: 120,
                     }
                 },
                 render: (row: IBaseEntity) => (

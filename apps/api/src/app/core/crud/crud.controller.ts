@@ -267,7 +267,7 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         @Put('restore/bulk')
         @UseGuards(AuthGuard('jwt'))
         async bulkRestore(
-            @Query() request: RestoreManyInputDTO,
+            @Body() request: RestoreManyInputDTO,
             ..._extra: any
         ) {
             return this.crudService.restore({
