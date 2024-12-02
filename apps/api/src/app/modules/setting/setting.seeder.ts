@@ -6,20 +6,20 @@ import { Seeder } from '@api/app/core/nest-seeder';
 
 @Injectable()
 export class SettingSeeder implements Seeder {
-  constructor(
+    constructor(
     @InjectRepository(Setting)
     private repo: Repository<Setting>
-  ) {}
+    ) {}
 
-  async seed() {
-    const rows = [];
+    async seed() {
+        const rows = [];
 
-    return await this.repo.save(rows);
-  }
+        return await this.repo.save(rows);
+    }
 
-  async drop() {
-    return await this.repo.query(
-      `TRUNCATE TABLE "${this.repo.metadata.tableName}" CASCADE`
-    );
-  }
+    async drop() {
+        return await this.repo.query(
+            `TRUNCATE TABLE "${this.repo.metadata.tableName}" CASCADE`
+        );
+    }
 }

@@ -7,10 +7,10 @@ import { CrudService } from '@api/app/core/crud';
 
 @Injectable()
 export class RoleService extends CrudService<IRole> {
-  constructor(
+    constructor(
     @InjectRepository(Role)
-    repository: Repository<Role>
-  ) {
-    super(repository);
-  }
+        repository: Repository<Role>
+    ) {
+        super(repository);
+    }
 }

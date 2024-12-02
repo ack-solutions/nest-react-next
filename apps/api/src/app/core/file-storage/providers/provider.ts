@@ -3,11 +3,11 @@ import { FileStorageOption, FileSystem, UploadedFile } from '../types';
 import { GetObjectCommandInput } from '@aws-sdk/client-s3';
 
 export abstract class Provider<T> {
-	resolvePath(dest: string | CallableFunction, newFileName: string) {
-		throw new Error('Method not implemented.');
-	}
-	static instance: any;
-	tenantId?: string;
+    resolvePath(dest: string | CallableFunction, newFileName: string) {
+        throw new Error('Method not implemented.');
+    }
+    static instance: any;
+    tenantId?: string;
 	abstract name: string;
 	abstract config: FileSystem;
 
@@ -23,6 +23,6 @@ export abstract class Provider<T> {
 	abstract getInstance(): T;
 
 	mapUploadedFile(file): UploadedFile {
-		return file;
+	    return file;
 	}
 }

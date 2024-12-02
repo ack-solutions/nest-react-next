@@ -9,10 +9,10 @@ type GuestGuardProps = {
 };
 
 export default function GuestGuard({ children }: GuestGuardProps) {
-  const { isAuthenticated } = useAuth();
-  if (isAuthenticated) {
-    return <Navigate to={PATH_DASHBOARD.root} />;
-  }
+    const { isAuthenticated } = useAuth();
+    if (isAuthenticated) {
+        return <Navigate to={PATH_DASHBOARD.root} />;
+    }
 
-  return <>{children}</>;
+    return <>{children}</>;
 }

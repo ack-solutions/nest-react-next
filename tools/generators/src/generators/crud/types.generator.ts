@@ -132,65 +132,65 @@ export class TypesGenerator {
         };
 
         switch (column.type) {
-            case 'text':
-                mappedColumn.tsType = 'string';
-                mappedColumn.validationDecorators.push('@IsString()');
-                mappedColumn.swaggerType = 'String';
-                columnOptions.type = 'text';
-                break;
-            case 'string':
-                mappedColumn.tsType = 'string';
-                mappedColumn.validationDecorators.push('@IsString()');
-                mappedColumn.swaggerType = 'String';
-                break;
-            case 'number':
-                mappedColumn.tsType = 'number';
-                mappedColumn.validationDecorators.push('@IsNumber()');
-                mappedColumn.swaggerType = 'Number';
-                break;
-            case 'boolean':
-                mappedColumn.tsType = 'boolean';
-                mappedColumn.validationDecorators.push('@IsBoolean()');
-                mappedColumn.swaggerType = 'Boolean';
-                break;
-            case 'date-time':
-                mappedColumn.tsType = 'Date';
-                mappedColumn.validationDecorators.push('@IsDateString()');
-                mappedColumn.swaggerType = 'String';
-                break;
-            case 'date':
-                columnOptions.type = 'date';
-                mappedColumn.tsType = 'Date';
-                mappedColumn.validationDecorators.push('@IsDateString()');
-                mappedColumn.swaggerType = 'String';
-                break;
-            case 'time':
-                columnOptions.type = 'time';
-                mappedColumn.tsType = 'string';
-                mappedColumn.validationDecorators.push('@IsString()');
-                mappedColumn.swaggerType = 'String';
-                break;
-            case 'enum':
-                columnOptions.type = 'text';
-                mappedColumn.enumValues = column.enumValues
-                mappedColumn.tsType = `${names(this.options.name).className}${names(column.name).className}Enum`;
-                mappedColumn.validationDecorators.push(`@IsEnum(${mappedColumn.tsType})`);
-                mappedColumn.swaggerType = 'String';
-                break;
-            case 'uuid':
-                mappedColumn.tsType = 'string';
-                mappedColumn.validationDecorators.push('@IsUUID()');
-                mappedColumn.swaggerType = 'String';
-                break;
-            case 'json':
-                columnOptions.type = 'jsonb';
-                mappedColumn.tsType = 'any';
-                mappedColumn.swaggerType = 'any';
-                break;
-            default:
-                mappedColumn.tsType = 'any';
-                mappedColumn.swaggerType = 'any';
-                break;
+        case 'text':
+            mappedColumn.tsType = 'string';
+            mappedColumn.validationDecorators.push('@IsString()');
+            mappedColumn.swaggerType = 'String';
+            columnOptions.type = 'text';
+            break;
+        case 'string':
+            mappedColumn.tsType = 'string';
+            mappedColumn.validationDecorators.push('@IsString()');
+            mappedColumn.swaggerType = 'String';
+            break;
+        case 'number':
+            mappedColumn.tsType = 'number';
+            mappedColumn.validationDecorators.push('@IsNumber()');
+            mappedColumn.swaggerType = 'Number';
+            break;
+        case 'boolean':
+            mappedColumn.tsType = 'boolean';
+            mappedColumn.validationDecorators.push('@IsBoolean()');
+            mappedColumn.swaggerType = 'Boolean';
+            break;
+        case 'date-time':
+            mappedColumn.tsType = 'Date';
+            mappedColumn.validationDecorators.push('@IsDateString()');
+            mappedColumn.swaggerType = 'String';
+            break;
+        case 'date':
+            columnOptions.type = 'date';
+            mappedColumn.tsType = 'Date';
+            mappedColumn.validationDecorators.push('@IsDateString()');
+            mappedColumn.swaggerType = 'String';
+            break;
+        case 'time':
+            columnOptions.type = 'time';
+            mappedColumn.tsType = 'string';
+            mappedColumn.validationDecorators.push('@IsString()');
+            mappedColumn.swaggerType = 'String';
+            break;
+        case 'enum':
+            columnOptions.type = 'text';
+            mappedColumn.enumValues = column.enumValues
+            mappedColumn.tsType = `${names(this.options.name).className}${names(column.name).className}Enum`;
+            mappedColumn.validationDecorators.push(`@IsEnum(${mappedColumn.tsType})`);
+            mappedColumn.swaggerType = 'String';
+            break;
+        case 'uuid':
+            mappedColumn.tsType = 'string';
+            mappedColumn.validationDecorators.push('@IsUUID()');
+            mappedColumn.swaggerType = 'String';
+            break;
+        case 'json':
+            columnOptions.type = 'jsonb';
+            mappedColumn.tsType = 'any';
+            mappedColumn.swaggerType = 'any';
+            break;
+        default:
+            mappedColumn.tsType = 'any';
+            mappedColumn.swaggerType = 'any';
+            break;
         }
 
         mappedColumn.columnOptionsString = this.mapColumnOptions(columnOptions);

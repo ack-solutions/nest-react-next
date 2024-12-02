@@ -16,57 +16,57 @@ type RHFSelectProps = TextFieldProps & {
 };
 
 export function RHFSelect({
-	name,
-	helperText,
-	children,
-	native,
-	nullable = true,
-	options,
-	valueKey,
-	labelKey,
-	slotProps,
-	isMultiple,
-	...other
+    name,
+    helperText,
+    children,
+    native,
+    nullable = true,
+    options,
+    valueKey,
+    labelKey,
+    slotProps,
+    isMultiple,
+    ...other
 }: RHFSelectProps) {
-	const { control } = useFormContext();
+    const { control } = useFormContext();
 
-	const OptionsComponent = native ? 'option' : MenuItem;
+    const OptionsComponent = native ? 'option' : MenuItem;
 
-	return (
-		<Controller
-			name={name}
-			control={control}
-			render={({ field, fieldState: { error } }) => (
-				<TextField
-					{...field}
-					value={isMultiple ? (isArray(field.value) ? field.value : []) : (field.value === undefined || field.value === '') ? null : field.value}
-					select
-					fullWidth
-					error={!!error}
-					helperText={error ? error?.message : helperText}
-					slotProps={{
-						...slotProps,
-						select: {
-							...slotProps.select,
-							native,
-						}
-					}}
-					{...other}
-				>
-					{nullable && (
-						<OptionsComponent value={null} />
-					)}
-					{options?.map((option) => (
-						<OptionsComponent
-							key={get(option, valueKey)}
-							value={get(option, valueKey)}
-						>
-							{get(option, labelKey)}
-						</OptionsComponent>
-					))}
-					{children}
-				</TextField>
-			)}
-		/>
-	);
+    return (
+        <Controller
+            name={name}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+                <TextField
+                    {...field}
+                    value={isMultiple ? (isArray(field.value) ? field.value : []) : (field.value === undefined || field.value === '') ? null : field.value}
+                    select
+                    fullWidth
+                    error={!!error}
+                    helperText={error ? error?.message : helperText}
+                    slotProps={{
+                        ...slotProps,
+                        select: {
+                            ...slotProps.select,
+                            native,
+                        }
+                    }}
+                    {...other}
+                >
+                    {nullable && (
+                        <OptionsComponent value={null} />
+                    )}
+                    {options?.map((option) => (
+                        <OptionsComponent
+                            key={get(option, valueKey)}
+                            value={get(option, valueKey)}
+                        >
+                            {get(option, labelKey)}
+                        </OptionsComponent>
+                    ))}
+                    {children}
+                </TextField>
+            )}
+        />
+    );
 }

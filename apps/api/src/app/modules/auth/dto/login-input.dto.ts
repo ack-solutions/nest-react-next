@@ -6,15 +6,15 @@ export class LoginInputDTO implements ILoginInput {
 
   @ApiProperty()
   @IsString()
-  email: string;
+      email: string;
 
   @ApiProperty()
   @IsString()
-  password: string;
+      password: string;
 
   @ApiProperty()
   @IsNumber()
-  otp: number;
+      otp: number;
 
 }
 

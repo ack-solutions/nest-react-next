@@ -1,12 +1,12 @@
 import { useState, useCallback } from 'react';
 import { Container, Button } from '@mui/material';
-import Page from '@admin/app/components/page';
-import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
-import { PATH_DASHBOARD } from '@admin/app/routes/paths';
+import Page from '../../components/page';
+import CustomBreadcrumbs from '../../components/custom-breadcrumbs/custom-breadcrumbs';
+import { PATH_DASHBOARD } from '../../routes/paths';
 import AddEdit<%= className %>Dialog from '../../sections/<%= fileName %>/add-edit-<%= fileName %>-dialog';
 import { use<%= className %>, useToasty } from '@libs/react-core';
-import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
-import <%= className %>ListTable from '@admin/app/sections/<%= fileName %>/<%= fileName %>-list-table';
+import { useConfirm } from '../../contexts/confirm-dialog-context';
+import <%= className %>ListTable from '../../sections/<%= fileName %>/<%= fileName %>-list-table';
 import { I<%= className %> } from '@libs/types';
 
 export default function <%= className %>List() {

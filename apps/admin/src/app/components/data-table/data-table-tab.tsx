@@ -16,35 +16,35 @@ export interface DataTableTabProps extends Omit<TabsProps, 'onChange'> {
 }
 
 const DataTableTab= ({
-  tabs,
-  currentTab,
-  onChange,
-  ...props
+    tabs,
+    currentTab,
+    onChange,
+    ...props
 }: DataTableTabProps) => {
-  return (
-    <Tabs
-      {...props}
-      variant="scrollable"
-      scrollButtons="auto"
-      value={currentTab}
-      onChange={(event, tab) => onChange(event, tab)}
-      sx={{ px: 2, bgcolor: 'background.neutral' }}
-    >
-      {tabs?.map((tab:any) => (
-        <Tab
-          disableRipple
-          key={tab.value}
-          value={tab.value}
-          label={
-            <Stack spacing={1} direction="row" alignItems="center">
-              <Label color={tab.color}> {tab.count} </Label>
-              <div>{tab.label}</div>
-            </Stack>
-          }
-        />
-      ))}
-    </Tabs>
-  );
+    return (
+        <Tabs
+            {...props}
+            variant="scrollable"
+            scrollButtons="auto"
+            value={currentTab}
+            onChange={(event, tab) => onChange(event, tab)}
+            sx={{ px: 2, bgcolor: 'background.neutral' }}
+        >
+            {tabs?.map((tab:any) => (
+                <Tab
+                    disableRipple
+                    key={tab.value}
+                    value={tab.value}
+                    label={
+                        <Stack spacing={1} direction="row" alignItems="center">
+                            <Label color={tab.color}> {tab.count} </Label>
+                            <div>{tab.label}</div>
+                        </Stack>
+                    }
+                />
+            ))}
+        </Tabs>
+    );
 };
 
 export default DataTableTab;

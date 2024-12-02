@@ -8,24 +8,24 @@ export class PaginationOptionsDTO {
   @Type(() => Number)
   @IsInt()
   @Min(0)
-  skip?: number;
+      skip?: number;
 
   @ApiPropertyOptional({ description: 'Maximum number of items to return', example: 10 })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  take?: number;
+      take?: number;
 }
 
 export class OrderOptionsDTO {
   @ApiPropertyOptional({ description: 'Order by field', example: 'name' })
   @IsOptional()
-  orderBy?: string;
+      orderBy?: string;
 
   @ApiPropertyOptional({ description: 'Order direction', example: 'ASC', enum: ['ASC', 'DESC'] })
   @IsOptional()
-  orderDirection?: 'ASC' | 'DESC';
+      orderDirection?: 'ASC' | 'DESC';
 }
 
 export class FindManyOptionsDTO {
@@ -33,13 +33,13 @@ export class FindManyOptionsDTO {
   @IsOptional()
   @ValidateNested()
   @Type(() => PaginationOptionsDTO)
-  pagination?: PaginationOptionsDTO;
+      pagination?: PaginationOptionsDTO;
 
   @ApiPropertyOptional({ description: 'Ordering options', type: OrderOptionsDTO })
   @IsOptional()
   @ValidateNested()
   @Type(() => OrderOptionsDTO)
-  order?: OrderOptionsDTO;
+      order?: OrderOptionsDTO;
 
-  // Add more properties here as needed, such as filters
+    // Add more properties here as needed, such as filters
 }

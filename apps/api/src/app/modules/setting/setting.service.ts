@@ -7,36 +7,36 @@ import { CrudService } from '@api/app/core/crud';
 
 @Injectable()
 export class SettingService extends CrudService<Setting> {
-  constructor(
+    constructor(
     @InjectRepository(Setting)
-    repository: Repository<Setting>
-  ) {
-    super(repository);
-  }
-
-  async updateSetting(request: any) {
-    const keys = Object.keys(request.settings);
-    const updatedSettings = [];
-  
-    for (let index = 0; index < keys.length; index++) {
-      const key = keys[index];
-      const settingKey = await this.repository.findOne({ where: { key } });
-  
-      if (settingKey) {
-        updatedSettings.push({
-          ...settingKey,
-          value: request.settings[key],
-        });
-      } else {
-        updatedSettings.push(new Setting({
-          key,
-          value: request.settings[key],
-        }));
-      }
+        repository: Repository<Setting>
+    ) {
+        super(repository);
     }
-    await this.repository.save(updatedSettings);
-    return { message: 'Successfully Updated' };
-  }
+
+    async updateSetting(request: any) {
+        const keys = Object.keys(request.settings);
+        const updatedSettings = [];
+  
+        for (let index = 0; index < keys.length; index++) {
+            const key = keys[index];
+            const settingKey = await this.repository.findOne({ where: { key } });
+  
+            if (settingKey) {
+                updatedSettings.push({
+                    ...settingKey,
+                    value: request.settings[key],
+                });
+            } else {
+                updatedSettings.push(new Setting({
+                    key,
+                    value: request.settings[key],
+                }));
+            }
+        }
+        await this.repository.save(updatedSettings);
+        return { message: 'Successfully Updated' };
+    }
 
 
 }

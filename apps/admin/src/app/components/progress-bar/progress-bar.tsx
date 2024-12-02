@@ -3,17 +3,17 @@ import NProgress from 'nprogress';
 import StyledProgressBar from './styles';
 
 export default function ProgressBar() {
-  NProgress.configure({
-    showSpinner: false,
-  });
+    NProgress.configure({
+        showSpinner: false,
+    });
 
-  useMemo(() => {
-    NProgress.start();
-  }, []);
+    useMemo(() => {
+        NProgress.start();
+    }, []);
 
-  useEffect(() => {
-    NProgress.done();
-  }, []);
+    useEffect(() => {
+        NProgress.done();
+    }, []);
 
-  return <StyledProgressBar />;
+    return <StyledProgressBar />;
 }

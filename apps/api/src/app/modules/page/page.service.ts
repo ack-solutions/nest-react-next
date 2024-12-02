@@ -8,10 +8,10 @@ import { Page } from './page.entity';
 
 @Injectable()
 export class PageService extends CrudService<IPage> {
-  constructor(
+    constructor(
     @InjectRepository(Page)
-    repository: Repository<Page>
-  ) {
-    super(repository);
-  }
+        repository: Repository<Page>
+    ) {
+        super(repository);
+    }
 }

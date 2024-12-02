@@ -13,11 +13,11 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <StrictMode>
-    <HelmetProvider>
-      <HashRouter>
-        <App />
-      </HashRouter>
-    </HelmetProvider>
-  </StrictMode>
+    <StrictMode>
+        <HelmetProvider>
+            <HashRouter>
+                <App />
+            </HashRouter>
+        </HelmetProvider>
+    </StrictMode>
 );

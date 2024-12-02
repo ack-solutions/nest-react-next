@@ -4,15 +4,15 @@ import { UserDTO } from "../../user/dto/user.dto";
 
 export class RegisterInputDTO extends UserDTO {
 
-  // @ApiProperty()
-  // password?: string;
+    // @ApiProperty()
+    // password?: string;
 
   @ApiProperty()
-  otp?: string;
+      otp?: string;
 
   @ApiPropertyOptional({type:[String]})
   @IsOptional()
-  roles?: any[];
+      roles?: any[];
 
 }
 

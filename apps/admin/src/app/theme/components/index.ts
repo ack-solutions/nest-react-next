@@ -10,12 +10,12 @@ import Tabs from "./tabs";
 
 
 export default function ComponentsOverrides(theme: Theme): any {
-  return merge(
-    appBar(theme),
-    Card(theme),
-    Breadcrumbs(theme),
-    Table(theme),
-    Container(theme),
-    Tabs(theme),
-  )
+    return merge(
+        appBar(theme),
+        Card(theme),
+        Breadcrumbs(theme),
+        Table(theme),
+        Container(theme),
+        Tabs(theme),
+    )
 }

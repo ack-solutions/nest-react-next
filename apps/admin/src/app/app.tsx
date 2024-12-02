@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 import { AccessProvider, AuthProvider, NotistackProvider, SettingsProvider } from '@libs/react-core';
 
 import AppRoutes from './app-routes';

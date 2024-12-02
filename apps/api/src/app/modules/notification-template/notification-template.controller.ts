@@ -11,7 +11,7 @@ import { NotificationTemplateService } from './notification-template..service';
 @Controller("notification-template")
 @UseGuards(AuthGuard('jwt'))
 export class NotificationTemplateController extends CrudController(NotificationTemplateDTO)<INotificationTemplate> {
-  constructor(private notificationTemplateService: NotificationTemplateService) {
-    super(notificationTemplateService);
-  }
+    constructor(private notificationTemplateService: NotificationTemplateService) {
+        super(notificationTemplateService);
+    }
 }

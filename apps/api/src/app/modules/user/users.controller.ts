@@ -1,14 +1,14 @@
 import {
-  BadRequestException,
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Put,
-  UseGuards,
-  UseInterceptors,
+    BadRequestException,
+    Body,
+    Controller,
+    Get,
+    HttpCode,
+    HttpStatus,
+    Post,
+    Put,
+    UseGuards,
+    UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -31,46 +31,46 @@ import { FileInterceptor } from '@nestjs/platform-express';
 @Controller('user')
 @UseGuards()
 export class UsersController extends CrudController(UserDTO)<IUser> {
-  constructor(private userService: UserService) {
-    super(userService);
-  }
+    constructor(private userService: UserService) {
+        super(userService);
+    }
 
   @Get('me')
   @UseGuards(AuthGuard('jwt'))
-  async findCurrentUser(@CurrentUser() user: IUser): Promise<IUser> {
-    return this.userService.userRepository.findOne({
-      where: {
-        id: user?.id,
-      },
-      relations: [
-        'roles',
-        'roles.permissions',
-      ],
-    });
-  }
+    async findCurrentUser(@CurrentUser() user: IUser): Promise<IUser> {
+        return this.userService.userRepository.findOne({
+            where: {
+                id: user?.id,
+            },
+            relations: [
+                'roles',
+                'roles.permissions',
+            ],
+        });
+    }
 
   @HttpCode(HttpStatus.ACCEPTED)
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(RequestDataTypeInterceptor)
   @UseInterceptors(
-    FileInterceptor('avatar', {
-      storage: new FileStorage().storage({
-        dest: () => {
-          return join('avatar', moment().format('YYYY/MM'));
-        },
-        prefix: 'avatar',
-      }),
-    })
+      FileInterceptor('avatar', {
+          storage: new FileStorage().storage({
+              dest: () => {
+                  return join('avatar', moment().format('YYYY/MM'));
+              },
+              prefix: 'avatar',
+          }),
+      })
   )
   @Put('update/profile')
   async updateProfile(
     @Body() entity: IUpdateProfileInput,
     @UploadedFileStorage() avatar
   ): Promise<User> {
-    if (avatar?.key) {
-      entity.avatar = avatar?.key;
-    }
-    return this.userService.updateProfile(entity);
+      if (avatar?.key) {
+          entity.avatar = avatar?.key;
+      }
+      return this.userService.updateProfile(entity);
   }
 
 
@@ -78,7 +78,7 @@ export class UsersController extends CrudController(UserDTO)<IUser> {
   @Post('change-password')
   @UseGuards(AuthGuard('jwt'))
   async changePassword(@Body() entity: IChangePasswordInput) {
-    return this.userService.changePassword(entity);
+      return this.userService.changePassword(entity);
   }
 
 }

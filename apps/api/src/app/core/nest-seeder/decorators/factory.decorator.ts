@@ -6,11 +6,11 @@ export type FactoryValue = BaseType | Array<BaseType>;
 export type FactoryValueGenerator = (faker?: Faker, ctx?: Record<string, any>) => FactoryValue;
 
 export function Factory(generator: FactoryValueGenerator | FactoryValue, dependsOn?: string[]) {
-  return (target: Record<string, any>, propertyKey: string | symbol): void => {
-    FactoryMetadataStorage.addPropertyMetadata({
-      target: target.constructor,
-      propertyKey: propertyKey as string,
-      arg: { generator, dependsOn },
-    });
-  };
+    return (target: Record<string, any>, propertyKey: string | symbol): void => {
+        FactoryMetadataStorage.addPropertyMetadata({
+            target: target.constructor,
+            propertyKey: propertyKey as string,
+            arg: { generator, dependsOn },
+        });
+    };
 }

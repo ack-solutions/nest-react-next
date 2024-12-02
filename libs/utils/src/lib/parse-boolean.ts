@@ -1,6 +1,6 @@
 
 export function parseBoolean(value:string | number | boolean) {
-  switch (value) {
+    switch (value) {
     case true:
     case "true":
     case 1:
@@ -9,8 +9,8 @@ export function parseBoolean(value:string | number | boolean) {
     case "yes":
     case "YES":
     case "Yes":
-      return true;
+        return true;
     default:
-      return false;
-  }
+        return false;
+    }
 }

@@ -5,9 +5,9 @@ import { SettingController } from './setting.controller';
 import { Setting } from './setting.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Setting])],
-  controllers: [SettingController],
-  providers: [SettingService],
-  exports: [SettingService],
+    imports: [TypeOrmModule.forFeature([Setting])],
+    controllers: [SettingController],
+    providers: [SettingService],
+    exports: [SettingService],
 })
 export class SettingModule {}

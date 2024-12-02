@@ -6,11 +6,11 @@ export class LoginSendOtpDTO implements ILoginSendOtpInput {
 
   @ApiProperty()
   @IsString()
-  email: string;
+      email: string;
 
   @ApiProperty()
   @IsString()
-  password: string;
+      password: string;
 
 }
 

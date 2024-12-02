@@ -4,21 +4,21 @@ import { NavbarConfigProps, NavigationItem } from '../../../types/navigation';
 import NavbarList from './navbar-list';
 
 const StyledSubheader = styled(ListSubheader)<{ config?: NavbarConfigProps; }>(({ config, theme }) => ({
-  ...theme.typography.overline,
-  fontSize: 11,
-  cursor: 'pointer',
-  display: 'inline-flex',
-  padding: config?.itemPadding,
-  paddingTop: theme.spacing(2),
-  marginBottom: config?.itemGap,
-  paddingBottom: theme.spacing(1),
-  color: theme.palette.text.disabled,
-  transition: theme.transitions.create(['color'], {
-    duration: theme.transitions.duration.shortest
-  }),
-  '&:hover': {
-    color: theme.palette.text.primary
-  }
+    ...theme.typography.overline,
+    fontSize: 11,
+    cursor: 'pointer',
+    display: 'inline-flex',
+    padding: config?.itemPadding,
+    paddingTop: theme.spacing(2),
+    marginBottom: config?.itemGap,
+    paddingBottom: theme.spacing(1),
+    color: theme.palette.text.disabled,
+    transition: theme.transitions.create(['color'], {
+        duration: theme.transitions.duration.shortest
+    }),
+    '&:hover': {
+        color: theme.palette.text.primary
+    }
 }));
 
 interface NavGroupProps {
@@ -30,63 +30,63 @@ interface NavGroupProps {
 };
 
 export function NavbarGroup({ subheader, items, config, initialStatus, isMini }: NavGroupProps) {
-  const [open, setOpen] = useState(!initialStatus);
+    const [open, setOpen] = useState(!initialStatus);
 
-  const handleToggle = useCallback(() => {
-    setOpen((state) => !state);
-  }, []);
+    const handleToggle = useCallback(() => {
+        setOpen((state) => !state);
+    }, []);
 
-  if (isMini) {
+    if (isMini) {
+        return (
+            items.map((list) => (
+                <NavbarList
+                    key={list.id || list.title}
+                    data={list}
+                    depth={1}
+                    hasChild={!!list.children}
+                    config={config}
+                    isMini={isMini}
+                />
+            )))
+
+    }
+
     return (
-      items.map((list) => (
-        <NavbarList
-          key={list.id || list.title}
-          data={list}
-          depth={1}
-          hasChild={!!list.children}
-          config={config}
-          isMini={isMini}
-        />
-      )))
+        <List disablePadding sx={{ px: 2 }}>
+            {subheader ? (
+                <>
+                    <StyledSubheader
+                        disableGutters
+                        disableSticky
+                        onClick={handleToggle}
+                        config={config}
+                    >
+                        {subheader}
+                    </StyledSubheader>
 
-  }
-
-  return (
-    <List disablePadding sx={{ px: 2 }}>
-      {subheader ? (
-        <>
-          <StyledSubheader
-            disableGutters
-            disableSticky
-            onClick={handleToggle}
-            config={config}
-          >
-            {subheader}
-          </StyledSubheader>
-
-          <Collapse in={open}>
-            {items.map((list) => (
-              <NavbarList
-                key={list.id || list.title}
-                data={list}
-                depth={1}
-                hasChild={!!list.children}
-                config={config}
-              />
+                    <Collapse in={open}>
+                        {items.map((list) => (
+                            <NavbarList
+                                key={list.id || list.title}
+                                data={list}
+                                depth={1}
+                                hasChild={!!list.children}
+                                config={config}
+                            />
+                        ))}
+                    </Collapse>
+                </>
+            ) : items.map((list) => (
+                <NavbarList
+                    key={list.id || list.title}
+                    data={list}
+                    depth={1}
+                    hasChild={!!list.children}
+                    config={config}
+                />
             ))}
-          </Collapse>
-        </>
-      ) : items.map((list) => (
-        <NavbarList
-          key={list.id || list.title}
-          data={list}
-          depth={1}
-          hasChild={!!list.children}
-          config={config}
-        />
-      ))}
-    </List>
-  )
+        </List>
+    )
 }
 
 export default NavbarGroup

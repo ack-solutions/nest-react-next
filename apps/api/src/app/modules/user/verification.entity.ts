@@ -12,20 +12,20 @@ export class Verification extends BaseEntity  implements IVerification {
   @ApiPropertyOptional()
   @IsString()
   @Column({ nullable: true })
-  email?: string;
+      email?: string;
 
   @ApiPropertyOptional()
   @IsNumber()
   @Column()
-  otp: number;
+      otp: number;
 
   @ApiPropertyOptional()
   @IsString()
   @Column({ length: 20, nullable: true })
-  phoneNumber?: string;
+      phoneNumber?: string;
 
   @ApiPropertyOptional()
   @Column({ nullable: true })
-  userId?: string;
+      userId?: string;
 
 }

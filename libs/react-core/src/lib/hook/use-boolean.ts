@@ -11,46 +11,46 @@ export interface UseBooleanReturn {
 };
 
 export function useBoolean(defaultValue = false): UseBooleanReturn {
-  const [value, setValue] = useState(defaultValue);
-  const [data, setData] = useState(null);
+    const [value, setValue] = useState(defaultValue);
+    const [data, setData] = useState(null);
 
-  const onTrue = useCallback(() => {
-    setValue(true);
-  }, []);
+    const onTrue = useCallback(() => {
+        setValue(true);
+    }, []);
 
-  const onFalse = useCallback(() => {
-    setValue(false);
-  }, []);
+    const onFalse = useCallback(() => {
+        setValue(false);
+    }, []);
 
-  const onToggle = useCallback(() => {
-    setValue((prev) => !prev);
-  }, []);
+    const onToggle = useCallback(() => {
+        setValue((prev) => !prev);
+    }, []);
 
-  const onSetData = useCallback(
-    (value = null) => {
-      if (value) {
-        setValue(true)
-      } else {
-        setValue(false)
-      }
-      setData(value)
-    },
-    [],
-  )
+    const onSetData = useCallback(
+        (value = null) => {
+            if (value) {
+                setValue(true)
+            } else {
+                setValue(false)
+            }
+            setData(value)
+        },
+        [],
+    )
 
 
-  const memoizedValue = useMemo(
-    () => ({
-      value,
-      data,
-      onTrue,
-      onFalse,
-      onToggle,
-      onSetData,
-      setValue,
-    }),
-    [data, value, onTrue, onFalse, onToggle, setValue, onSetData]
-  );
+    const memoizedValue = useMemo(
+        () => ({
+            value,
+            data,
+            onTrue,
+            onFalse,
+            onToggle,
+            onSetData,
+            setValue,
+        }),
+        [data, value, onTrue, onFalse, onToggle, setValue, onSetData]
+    );
 
-  return memoizedValue;
+    return memoizedValue;
 }

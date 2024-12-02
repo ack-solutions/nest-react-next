@@ -12,27 +12,27 @@ import { Verification } from '../user/verification.entity';
 import { JwtConfigService } from './jwt-config.service';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true }), 
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useClass: JwtConfigService
-    }),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
-    TypeOrmModule.forFeature([User, Verification]),
-    // NotificationModule,
-    // SMSModule,
-    forwardRef(() => UsersModule),
-  ],
-  controllers: [
-    AuthController
-  ],
-  providers: [
-    AuthService,
-    JwtStrategy,
-    IfJwtStrategy,
+    imports: [
+        ConfigModule.forRoot({ isGlobal: true }), 
+        JwtModule.registerAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useClass: JwtConfigService
+        }),
+        PassportModule.register({ defaultStrategy: 'jwt' }),
+        TypeOrmModule.forFeature([User, Verification]),
+        // NotificationModule,
+        // SMSModule,
+        forwardRef(() => UsersModule),
+    ],
+    controllers: [
+        AuthController
+    ],
+    providers: [
+        AuthService,
+        JwtStrategy,
+        IfJwtStrategy,
     // FacebookStrategy,
-  ]
+    ]
 })
 export class AuthModule { }

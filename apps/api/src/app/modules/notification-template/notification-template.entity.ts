@@ -12,36 +12,36 @@ export class NotificationTemplate extends BaseEntity implements INotificationTem
   @ApiProperty()
   @IsString()
   @Column({ length: 191, nullable: true })
-  title?: string;
+      title?: string;
 
   @ApiProperty()
   @IsString()
   @Column({ nullable: true, length: 1000 })
-  emailSubject?: string;
+      emailSubject?: string;
 
   @ApiProperty()
   @IsString()
   @Column("text", { nullable: true })
-  emailBody?: string;
+      emailBody?: string;
 
   @ApiProperty({ type: String, })
   @IsString()
   @Column({ length: 255, nullable: true })
-  slug?: string;
+      slug?: string;
 
   @ApiProperty()
   @IsString()
   @Column({ nullable: true })
-  event?: string;
+      event?: string;
   
   @BeforeInsert()
   async createSlug() {
-    this.slug = await generateSlug(NotificationTemplate, this.title, this.id);
+      this.slug = await generateSlug(NotificationTemplate, this.title, this.id);
   }
 
   @BeforeUpdate()
   async updateSlug() {
-    this.slug = await generateSlug(NotificationTemplate, this.title, this.id);
+      this.slug = await generateSlug(NotificationTemplate, this.title, this.id);
   }
 
 }

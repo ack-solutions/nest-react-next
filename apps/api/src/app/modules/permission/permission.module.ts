@@ -6,11 +6,11 @@ import { PermissionController } from './permission.controller';
 import { Permission } from './permission.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Permission]),
-  ],
-  controllers: [PermissionController],
-  providers: [PermissionService],
-  exports: [PermissionService]
+    imports: [
+        TypeOrmModule.forFeature([Permission]),
+    ],
+    controllers: [PermissionController],
+    providers: [PermissionService],
+    exports: [PermissionService]
 })
 export class PermissionModule { }

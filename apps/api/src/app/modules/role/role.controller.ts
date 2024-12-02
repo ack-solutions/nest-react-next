@@ -11,7 +11,7 @@ import { CrudController } from '@api/app/core/crud';
 @Controller("role")
 @UseGuards(AuthGuard('jwt'))
 export class RoleController extends CrudController(RoleDTO)<IRole> {
-  constructor(private roleService: RoleService) {
-    super(roleService);
-  }
+    constructor(private roleService: RoleService) {
+        super(roleService);
+    }
 }

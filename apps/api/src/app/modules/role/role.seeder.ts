@@ -10,32 +10,32 @@ import { keyBy } from 'lodash';
 
 @Injectable()
 export class RoleSeeder implements Seeder {
-  constructor(
+    constructor(
     @InjectRepository(Role)
     private repo: Repository<Role>,
-  ) { }
+    ) { }
 
-  async seed() {
+    async seed() {
 
-    const oldRoles = await this.repo.find();
-    const roleByName = keyBy(oldRoles, 'name')
+        const oldRoles = await this.repo.find();
+        const roleByName = keyBy(oldRoles, 'name')
 
-    const systemRoles = Object.values(RoleNameEnum).map((name) => {
-      if (roleByName[name]){
-        return null;
-      }
-      return new Role({
-        name: name,
-        isSystemRole: true,
-      },)
-    }).filter(Boolean);
+        const systemRoles = Object.values(RoleNameEnum).map((name) => {
+            if (roleByName[name]){
+                return null;
+            }
+            return new Role({
+                name: name,
+                isSystemRole: true,
+            },)
+        }).filter(Boolean);
 
-    await this.repo.save(systemRoles);
-  }
+        await this.repo.save(systemRoles);
+    }
 
-  async drop() {
-    return await this.repo.query(
-      `TRUNCATE TABLE "${this.repo.metadata.tableName}" CASCADE`
-    );
-  }
+    async drop() {
+        return await this.repo.query(
+            `TRUNCATE TABLE "${this.repo.metadata.tableName}" CASCADE`
+        );
+    }
 }
