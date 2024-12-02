@@ -2,11 +2,11 @@ import { useState, useCallback, useRef, MutableRefObject } from 'react';
 import {
     DataTableColumn,
     DataTableHandle,
-} from '@admin/app/components';
+} from '../../components';
 import { I<%= className %> } from '@libs/types';
 import { use<%= className %> } from '@libs/react-core';
 import { Tabs, Tab, Card, Divider } from '@mui/material';
-import { CrudTable, CrudTableActions } from '@admin/app/components/crud/crud-table';
+import { CrudTable, CrudTableActions } from '../../components/crud/crud-table';
 
 export interface <%= className %>ListTableProps {
     datatableRef?: MutableRefObject<DataTableHandle>;
