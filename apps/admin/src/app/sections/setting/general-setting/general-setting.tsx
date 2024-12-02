@@ -54,7 +54,7 @@ const GeneralSetting = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      let values: any = {};
+      const values: any = {};
       data.items.forEach((settingData) => {
         values[settingData.key] = settingData.value;
       });
