@@ -9,17 +9,18 @@ import { PageModule } from './modules/page/page.module';
 import { NotificationTemplateModule } from './modules/notification-template/notification-template.module';
 import { SettingModule } from './modules/setting/setting.module';
 
+const Modules = [
+    UsersModule,
+    AuthModule,
+    RoleModule,
+    PermissionModule,
+    PageModule,
+    NotificationTemplateModule,
+    SettingModule,
+];
+
 @Module({
-    imports: [
-        ConfigModule,
-        UsersModule,
-        AuthModule,
-        RoleModule,
-        PermissionModule,
-        PageModule,
-        NotificationTemplateModule,
-        SettingModule
-    ],
+    imports: [ConfigModule, ...Modules],
     controllers: [],
     providers: [],
 })

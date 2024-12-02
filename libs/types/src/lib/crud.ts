@@ -82,7 +82,8 @@ export type IOrderBy = { [x: string]: OrderDirectionEnum }
 export interface IFindOptions extends IPaginationRequest {
   select?: string[],
   relations?: string[],
+  withDeleted?: boolean,
+  onlyDeleted?: boolean,
   where?: IWhereCondition | IWhereCondition[],
   order?: IOrderBy | IOrderBy[];
 }
-

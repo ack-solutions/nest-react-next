@@ -9,7 +9,7 @@ import {
   useTheme,
 } from '@mui/material';
 
-import LinkItem from './linkItem';
+import LinkItem from './breadcrumbs-ink';
 
 export type BreadcrumbsLinkProps = {
   name?: string;

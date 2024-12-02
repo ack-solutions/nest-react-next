@@ -9,7 +9,7 @@ import Container from "./container";
 import Tabs from "./tabs";
 
 
-export default function ComponentsOverrides(theme: Theme) :any {
+export default function ComponentsOverrides(theme: Theme): any {
   return merge(
     appBar(theme),
     Card(theme),

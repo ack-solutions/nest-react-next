@@ -23,6 +23,7 @@ import {
   Divider,
   BoxProps,
   Card,
+  alpha,
 } from '@mui/material';
 import {
   forwardRef,
@@ -179,7 +180,7 @@ export interface DataTableProps extends Omit<BoxProps, 'onChange' | 'onSelect'> 
   size?: 'small' | 'medium';
   topAction?: ReactNode;
   showPagination?: boolean;
-  extraFilter?: () => JSX.Element;
+  extraFilter?: ReactNode;
   noOptionsText?: ReactNode;
 }
 
@@ -427,7 +428,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
       (collapsible ? 1 : 0);
 
     return (
-      <Box component={Card} className="data-table" width="100%" {...props}>
+      <Box className="data-table" width="100%" {...props}>
         {detailRowTitle && (
           <>
             <Stack
@@ -454,45 +455,50 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
           </>
         )}
         {hasFilter && (
-          <Stack>
-            <StyledToolbar>
-              {selected.length > 0 ? (
-                <Typography component="div" variant="subtitle1">
-                  {selected.length} selected
-                </Typography>
-              ) : (
-                <Stack
-                  direction={{ xs: 'column', sm: "row" }}
-                  spacing={2}
-                  justifyContent="space-between"
-                  width="100%"
-                >
-                  <SearchInput
-                    value={search}
-                    onChange={handleSearchChange}
-                    placeholder="Search..."
-                    size="small"
-                    type="search"
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <SearchOutlinedIcon />
-                      </InputAdornment>
-                    }
-                  />
-                  <Stack
-                    spacing={2}
-                    direction="row"
-                    justifyContent="end"
-                  >
-                    {extraFilter && extraFilter()}
-                  </Stack>
-                </Stack>
-              )}
+          <StyledToolbar>
+            <Stack
+              direction={{ xs: 'column', sm: "row" }}
+              spacing={2}
+              justifyContent="space-between"
+              width="100%"
+            >
+              <SearchInput
+                value={search}
+                onChange={handleSearchChange}
+                placeholder="Search..."
+                size="small"
+                type="search"
+                startAdornment={
+                  <InputAdornment position="start">
+                    <SearchOutlinedIcon />
+                  </InputAdornment>
+                }
+              />
+              <Stack
+                spacing={2}
+                direction="row"
+                justifyContent="end"
+              >
+                {extraFilter}
+              </Stack>
+            </Stack>
+          </StyledToolbar>
+        )}
+        {selected?.length > 0 && (
+          <>
+            <Divider />
+            <StyledToolbar sx={{
+              backgroundColor: (theme) => alpha(theme.palette.success.main, 0.2),
+              color: (theme) => theme.palette.success.main,
+            }}>
+              <Typography component="div" variant="subtitle1">
+                {selected.length} rows selected
+              </Typography>
               {selected.length > 0 &&
                 renderBulkAction &&
                 renderBulkAction(selected)}
             </StyledToolbar>
-          </Stack>
+          </>
         )}
         {/* <Scrollbar> */}
         <TableContainer>

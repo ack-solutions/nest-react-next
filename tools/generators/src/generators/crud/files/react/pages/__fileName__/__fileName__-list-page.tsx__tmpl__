@@ -1,0 +1,59 @@
+import { useState, useCallback } from 'react';
+import { Container, Button } from '@mui/material';
+import Page from '@admin/app/components/page';
+import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
+import { PATH_DASHBOARD } from '@admin/app/routes/paths';
+import AddEdit<%= className %>Dialog from '../../sections/<%= fileName %>/add-edit-<%= fileName %>-dialog';
+import { use<%= className %>, useToasty } from '@libs/react-core';
+import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
+import <%= className %>ListTable from '@admin/app/sections/<%= fileName %>/<%= fileName %>-list-table';
+import { I<%= className %> } from '@libs/types';
+
+export default function <%= className %>List() {
+    const [selectedItem, setSelectedItem] = useState(null);
+    const { showToasty } = useToasty();
+    const confirmDialog = useConfirm();
+
+    const { useDelete<%= className %> } = use<%= className %>();
+    const { mutateAsync: delete<%= className %> } = useDelete<%= className %>();
+
+    const handleAddEditClose = useCallback(() => {
+        setSelectedItem(null);
+    }, []);
+
+    const handleAddEdit = useCallback((item: Partial<I<%= className %>> = {}) => {
+        setSelectedItem(item);
+    }, []);
+
+    return (
+        <Page title="<%= className %>">
+            <Container>
+                <CustomBreadcrumbs
+                    heading="<%= className %> List"
+                    links={[
+                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
+                        { name: '<%= className %>' },
+                    ]}
+                    action={
+                        <Button
+                            variant="contained"
+                            onClick={() => handleAddEdit()}
+                        >
+                            Add <%= className %>
+                        </Button>
+                    }
+                />
+                <<%= className %>ListTable
+                    onEdit={handleAddEdit}
+                />
+
+                {selectedItem && (
+                    <AddEdit<%= className %>Dialog
+                        initialValue={selectedItem}
+                        onClose={handleAddEditClose}
+                    />
+                )}
+            </Container>
+        </Page>
+    );
+}

@@ -5,11 +5,21 @@ import { IPaginationRequest } from '@libs/types';
 import { toFormData } from '../utils/form';
 
 export abstract class CRUDService<T> extends Service {
- 
+
   protected abstract apiPath: string;
   protected fillable: string[] = [];
 
   protected hasFileUpload = false;
+
+  getAll(request: any = {}) {
+    return this.instanceApi
+      .get(`${this.apiPath}/all`, {
+        params: request,
+      })
+      .then(({ data }) => {
+        return data?.map((file: T) => this.mapResponse(file))
+      });
+  }
 
   getMany(request: IPaginationRequest = {}) {
     return this.instanceApi
@@ -19,6 +29,7 @@ export abstract class CRUDService<T> extends Service {
       .then(({ data }) => {
         return {
           ...data,
+          total: parseInt(data.total + ''),
           items: data.items?.map((file: T) => this.mapResponse(file)),
         };
       });
@@ -72,7 +83,7 @@ export abstract class CRUDService<T> extends Service {
     return this.instanceApi
       .get<T>(`${this.apiPath}/count`, { params: request })
       .then(({ data }) => {
-        return data;
+        return parseInt(data + '');
       });
   }
 
@@ -80,7 +91,7 @@ export abstract class CRUDService<T> extends Service {
     return this.instanceApi.delete<T>(`${this.apiPath}/${id}`);
   }
 
-  trashDelete(id: string) {
+  permanentDelete(id: string) {
     return this.instanceApi.delete<T>(`${this.apiPath}/${id}/trash`)
   }
 
@@ -89,8 +100,20 @@ export abstract class CRUDService<T> extends Service {
   }
 
   bulkDelete(ids: string[] | number[]) {
-    return this.instanceApi.delete<T>(`${this.apiPath}`, {
-      params: { ids: ids?.join(',') },
+    return this.instanceApi.delete<T>(`${this.apiPath}/delete/bulk`, {
+      params: { ids: ids },
+    });
+  }
+
+  bulkRestore(ids: string[] | number[]) {
+    return this.instanceApi.put<T>(`${this.apiPath}/restore/bulk`, {
+      ids: ids
+    })
+  }
+
+  bulkPermanentDelete(ids: string[] | number[]) {
+    return this.instanceApi.delete<T>(`${this.apiPath}/trash/bulk`, {
+      params: { ids: ids },
     });
   }
 

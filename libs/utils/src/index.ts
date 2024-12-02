@@ -6,3 +6,4 @@ export * from './lib/str-to-slug';
 export * from './lib/parse-boolean';
 export * from './lib/search';
 export * from './lib/date';
+export * from '../../../tools/generators/src/utils/to-title-case';
