@@ -1,17 +1,22 @@
 import { useCrudOperations } from '../hook';
 import { <%= className %>Service } from '../services/<%= fileName %>.service';
 
-const <% propertyName %>Service = <%= className %>Service.getInstance<<%= className %>Service>()
+const <% propertyName %>Service = <%= className %>Service.getInstance<<%= className %>Service>();
 
 export const use<%= className %> = () => {
+    const { useGetMany, useGetOne, useCreate, useUpdate, useDelete, useRestore, useDeleteForever, useBulkDelete, useBulkDeleteForever, useBulkRestore } =
+        useCrudOperations(<% propertyName %>Service);
 
-	const { useGetMany, useGetOne, useCreate, useDelete, useUpdate } = useCrudOperations(<% propertyName %>Service);
-
-	return {
-		useGetMany<%= className %>: useGetMany,
-		useGet<%= className %>ById: useGetOne,
-		useCreate<%= className %>: useCreate,
-		useDelete<%= className %>: useDelete,
-		useUpdate<%= className %>: useUpdate,
-	};
+    return {
+        useGetMany<%= className %>: useGetMany,
+        useGet<%= className %>ById: useGetOne,
+        useCreate<%= className %>: useCreate,
+        useDelete<%= className %>: useDelete,
+        useUpdate<%= className %>: useUpdate,
+        useRestore<%= className %>: useRestore,
+        useDeleteForever<%= className %>: useDeleteForever,
+        useBulkDelete<%= className %>: useBulkDelete,
+        useBulkDeleteForever<%= className %>: useBulkDeleteForever,
+        useBulkRestore<%= className %>: useBulkRestore
+    };
 };

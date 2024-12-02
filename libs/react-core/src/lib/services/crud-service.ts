@@ -29,6 +29,7 @@ export abstract class CRUDService<T> extends Service {
       .then(({ data }) => {
         return {
           ...data,
+          total: parseInt(data.total + ''),
           items: data.items?.map((file: T) => this.mapResponse(file)),
         };
       });
@@ -82,7 +83,7 @@ export abstract class CRUDService<T> extends Service {
     return this.instanceApi
       .get<T>(`${this.apiPath}/count`, { params: request })
       .then(({ data }) => {
-        return data;
+        return parseInt(data + '');
       });
   }
 
@@ -99,19 +100,19 @@ export abstract class CRUDService<T> extends Service {
   }
 
   bulkDelete(ids: string[] | number[]) {
-    return this.instanceApi.delete<T>(`${this.apiPath}/bulk`, {
+    return this.instanceApi.delete<T>(`${this.apiPath}/delete/bulk`, {
       params: { ids: ids },
     });
   }
 
   bulkRestore(ids: string[] | number[]) {
-    return this.instanceApi.put<T>(`${this.apiPath}/bulk/restore`, {
+    return this.instanceApi.put<T>(`${this.apiPath}/restore/bulk`, {
       ids: ids
     })
   }
 
   bulkPermanentDelete(ids: string[] | number[]) {
-    return this.instanceApi.delete<T>(`${this.apiPath}/bulk/trash`, {
+    return this.instanceApi.delete<T>(`${this.apiPath}/trash/bulk`, {
       params: { ids: ids },
     });
   }

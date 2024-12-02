@@ -63,7 +63,7 @@ export function useCrudOperations<T extends IBaseEntity>(service: CRUDService<T>
         ...options,
     });
 
-    const usePermanentDelete = (options?: any) => useMutation<string, Error, any>({
+    const useDeleteForever = (options?: any) => useMutation<string, Error, any>({
         mutationFn: (id: string) => service.permanentDelete(id),
         onSuccess: (_data, variable) => {
             invalidListQueryCache(queryClient, service)
@@ -73,7 +73,7 @@ export function useCrudOperations<T extends IBaseEntity>(service: CRUDService<T>
     });
 
 
-    const useTrashRestore = (options?: any) => useMutation<string, Error, any>({
+    const useRestore = (options?: any) => useMutation<string, Error, any>({
         mutationFn: (id: string) => service.restore(id),
         onSuccess: (_data, variable) => {
             invalidListQueryCache(queryClient, service)
@@ -109,7 +109,7 @@ export function useCrudOperations<T extends IBaseEntity>(service: CRUDService<T>
 
 
 
-    const useBulkPermanentDelete = (options?: any) => useMutation<string, Error, any>({
+    const useBulkDeleteForever = (options?: any) => useMutation<string, Error, any>({
         mutationFn: (ids: string[]) => service.bulkPermanentDelete(ids),
         onSuccess: (_data, variable: string[]) => {
             variable.map((id) => {
@@ -128,11 +128,11 @@ export function useCrudOperations<T extends IBaseEntity>(service: CRUDService<T>
         useCreate,
         useUpdate,
         useDelete,
-        usePermanentDelete,
-        useTrashRestore,
+        useDeleteForever,
+        useRestore,
         useBulkDelete,
         useBulkRestore,
-        useBulkPermanentDelete,
+        useBulkDeleteForever,
     };
 }
 

@@ -1,68 +1,104 @@
 import { useState, useCallback, useRef, MutableRefObject } from 'react';
 import {
-    DataTable,
     DataTableColumn,
     DataTableHandle,
-    TableActionMenu,
 } from '@admin/app/components';
 import { I<%= className %> } from '@libs/types';
 import { use<%= className %> } from '@libs/react-core';
-import { useForkRef } from '@mui/material';
+import { Tabs, Tab, Card, Divider } from '@mui/material';
+import { CrudTable, CrudTableActions } from '@admin/app/components/crud/crud-table';
 
 export interface <%= className %>ListTableProps {
-    datatableRef?: MutableRefObject<DataTableHandle>,
-    onEdit: (updatedValue: Partial<I<%= className %>>) => void,
-    onDelete: (item: I<%= className %>) => void,
+    datatableRef?: MutableRefObject<DataTableHandle>;
+    onEdit?: (row: I<%= className %>) => void
 }
 
+const filterTabs = [
+    {
+        label: 'All',
+        value: 'all'
+    },
+]
+
+export interface <%= className %>ListFilters {
+    status?: string;
+}
+
+
 export default function <%= className %>ListTable({
-    datatableRef: parentComponentDatatableRef,
-    onEdit,
-    onDelete,
+    onEdit
 }: <%= className %>ListTableProps) {
 
-    const [dataTableFilters, setDataTableFilters] = useState(null);
-    const datatableRef = useRef<DataTableHandle>(null);
-    const handleDatatableRef = useForkRef(parentComponentDatatableRef, datatableRef)
-
-    const { useGetMany<%= className %> } = use<%= className %>();
-
-    const { data } = useGetMany<%= className %>(dataTableFilters, {
-        enabled: Boolean(dataTableFilters),
+    const [customFilters, setCustomFilters] = useState<<%= className %>ListFilters>({
+        status: 'all'
     });
+    const datatableRef = useRef<CrudTableActions>(null);
 
-    const handleDataTableChange = useCallback((filters) => {
-        // Manage filters mapping here.
-        setDataTableFilters(filters);
-    }, []);
+    const { useGetMany<%= className %>, useDelete<%= className %>, useRestore<%= className %>, useDeleteForever<%= className %>, useBulkDelete<%= className %>, useBulkRestore<%= className %>, useBulkDeleteForever<%= className %> } = use<%= className %>();
+
+
+    const handleTabChange = useCallback(
+        (_event, value) => {
+            setCustomFilters((state) => ({
+                status: value,
+            }))
+            datatableRef.current.applyFilters((state) => ({
+                ...state,
+                status: value,
+            }))
+        },
+        [],
+    )
 
     const columns: DataTableColumn<I<%= className %>>[] = [
-         <% columns.forEach(column => { %>{
+       <% columns.forEach(column => { %>{
             name: '<%= column.normalizeName.propertyName %>',
             label: '<%= column.normalizeName.name %>',
         },<% }) %>
-        {
-            name: 'action',
-            label: 'Action',
-            render: (row) => (
-                <TableActionMenu
-                    row={row}
-                    onDelete={() => onDelete(row)}
-                    onEdit={() => onEdit(row)}
-                />
-            ),
-        },
     ];
 
     return (
-        <DataTable
-            initialLoading
-            ref={handleDatatableRef}
-            data={data?.items}
-            columns={columns}
-            totalRow={data?.total}
-            defaultOrderBy="createdAt"
-            onChange={handleDataTableChange}
-        />
+        <Card>
+            <Tabs
+                value={customFilters?.status}
+                onChange={handleTabChange}
+                sx={{ px: 3 }}
+            >
+                {filterTabs.map((tab) => (
+                    <Tab
+                        key={tab.value}
+                        iconPosition="end"
+                        value={tab.value}
+                        label={tab.label}
+                        disableRipple
+                    // icon={
+                    //     <Label
+                    //         variant={tab.value === customFilters?.status ? 'filled' : 'soft'}
+                    //         color={'default'}
+                    //     >
+                    //         {data?.total}
+                    //     </Label>
+                    // }
+                    />
+                ))}
+            </Tabs>
+            <Divider />
+            <CrudTable
+                hasSoftDelete
+                crudName="<%= className %>"
+                crudOperationHooks={{
+                    useGetMany: useGetMany<%= className %>,
+                    useDelete: useDelete<%= className %>,
+                    useRestore: useRestore<%= className %>,
+                    useDeleteForever: useDeleteForever<%= className %>,
+                    useBulkDelete: useBulkDelete<%= className %>,
+                    useBulkRestore: useBulkRestore<%= className %>,
+                    useBulkDeleteForever: useBulkDeleteForever<%= className %>
+                }}
+                onEdit={onEdit}
+                ref={datatableRef}
+                columns={columns}
+            />
+        </Card>
     );
 }

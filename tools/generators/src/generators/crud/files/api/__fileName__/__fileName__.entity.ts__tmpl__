@@ -1,9 +1,9 @@
 import { Entity, Column } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsString, IsInt, IsBoolean, IsDate, IsUUID, IsEnum,
-  IsNumber,
-  IsOptional
+    IsString, IsInt, IsBoolean, IsDate, IsUUID, IsEnum,
+    IsNumber,
+    IsOptional
 } from 'class-validator';
 import { BaseEntity } from "@api/app/core/typeorm/base.entity";
 import {I<%= className %><% columns.forEach(column => {if (column.enumValues){ %>, <%= column.tsType %><% }}) %>} from '@libs/types';
@@ -11,11 +11,11 @@ import {I<%= className %><% columns.forEach(column => {if (column.enumValues){ %
 
 @Entity()
 export class <%= className %> extends BaseEntity implements I<%= className %>{
-  <% columns.forEach(column => { %>
-  @ApiProperty({ type: <%= column.swaggerType %> <% if (column.type === 'enum') { %>, enum: <%= column.tsType %><% } %> })
-  @Column(<%- column.columnOptionsString %>)
-  <%- column.validationDecorators.join('\n') %>
-  @IsOptional()
-  <%= column.normalizeName.propertyName %>?: <%= column.tsType %>;
-  <% }) %>
+    <% columns.forEach(column => { %>
+    @ApiProperty({ type: <%= column.swaggerType %> <% if (column.type === 'enum') { %>, enum: <%= column.tsType %><% } %> })
+    <%- column.validationDecorators.join('\n') %>
+    @IsOptional()
+    @Column(<%- column.columnOptionsString %>)
+    <%= column.normalizeName.propertyName %>?: <%= column.tsType %>;
+    <% }) %>
 }

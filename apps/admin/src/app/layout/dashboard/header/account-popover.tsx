@@ -1,9 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, Button } from '@mui/material';
 import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
-import {  useAccess, useAuth } from '@libs/react-core';
+import {  MenuDropdown, useAccess, useAuth } from '@libs/react-core';
 import { startCase } from 'lodash';
-import { MenuDropdown } from '@admin/app/components';
 
 
 export default function AccountPopover() {

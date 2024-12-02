@@ -115,60 +115,60 @@ class WhereConditionDTO implements IWhereCondition {
 
     //[x: string]: string | number | ConditionOperatorDTO;
     @ApiPropertyOptional({
-      description: `Column Name of entity, You can select any one operator from list $eq, $in or etc... \n
+        description: `Column Name of entity, You can select any one operator from list $eq, $in or etc... \n
       i.e {"firstName": { "$eq" : "test"}, "lastName": {"$like": "%test%"}}
       {"firstName":  "test", "lastName": {"$like": "%test%"}}
       `,
-      type: () => ConditionOperatorDTO,
+        type: () => ConditionOperatorDTO,
     })
     columnName: string | number | ConditionOperatorDTO;
 
     @ApiPropertyOptional({
-      description: `If you want "and" condition, you can pass object or array of object  \n
+        description: `If you want "and" condition, you can pass object or array of object  \n
       i.e {"$and": {"firstName": { "$eq" : "test"}, "lastName": {"$like": "%test%"} } \n
       {"$and": [{"firstName": { "$eq" : "test"}}, {"lastName": {"$like": "%test%"}] }
       `,
-      type: () => [WhereConditionDTO],
-      
-      // oneOf: [
-      //   {
-      //     type: 'object',
-      //     $ref: getSchemaPath(WhereConditionDTO)
-      //   },
-      //   {
-      //     type: 'array',
-      //     items: {
-      //       type: 'object',
-      //       $ref: getSchemaPath(WhereConditionDTO)
-      //     }
-      //   }
-      // ]
+        type: () => [WhereConditionDTO],
+
+        // oneOf: [
+        //   {
+        //     type: 'object',
+        //     $ref: getSchemaPath(WhereConditionDTO)
+        //   },
+        //   {
+        //     type: 'array',
+        //     items: {
+        //       type: 'object',
+        //       $ref: getSchemaPath(WhereConditionDTO)
+        //     }
+        //   }
+        // ]
     })
     $and: WhereConditionDTO | WhereConditionDTO[]
 
     @ApiPropertyOptional({
-      description: `If you want "or" condition, you can pass object or array of object  \n
+        description: `If you want "or" condition, you can pass object or array of object  \n
       i.e {"$or": {"firstName": { "$eq" : "test"}, "lastName": {"$like": "%test%"} } \n
       {"$or": [{"firstName": { "$eq" : "test"}}, {"lastName": {"$like": "%test%"}] }
       `,
-      type: () => [WhereConditionDTO],
-      // oneOf: [
-      //   {
-      //     type: 'object',
-      //     $ref: getSchemaPath(WhereConditionDTO)
-      //   },
-      //   {
-      //     type: 'array',
-      //     items: {
-      //       type: 'object',
-      //       $ref: getSchemaPath(WhereConditionDTO)
-      //     }
-      //   }
-      // ]
+        type: () => [WhereConditionDTO],
+        // oneOf: [
+        //   {
+        //     type: 'object',
+        //     $ref: getSchemaPath(WhereConditionDTO)
+        //   },
+        //   {
+        //     type: 'array',
+        //     items: {
+        //       type: 'object',
+        //       $ref: getSchemaPath(WhereConditionDTO)
+        //     }
+        //   }
+        // ]
     })
     $or: WhereConditionDTO | WhereConditionDTO[]
 
-  }
+}
 
 
 export class OrderByDTO<T> implements IOrderBy {
@@ -185,6 +185,14 @@ export class GetManyInputDTO<T> implements IFindOptions {
     @ApiPropertyOptional({ type: [String] })
     @IsArray()
     select?: string[]
+
+    @ApiPropertyOptional({ type: Boolean })
+    @IsArray()
+    onlyDeleted?: boolean
+
+    @ApiPropertyOptional({ type: Boolean })
+    @IsArray()
+    withDeleted?: boolean
 
     @ApiPropertyOptional({ type: [String] })
     @IsArray()
@@ -232,12 +240,12 @@ export class GetManyInputDTO<T> implements IFindOptions {
 export class DeleteManyInputDTO {
     @ApiPropertyOptional({ type: [String] })
     @IsArray()
-    id: string[]
+    ids: string[]
 }
 
 
 export class RestoreManyInputDTO {
     @ApiPropertyOptional({ type: [String] })
     @IsArray()
-    id: string[]
+    ids: string[]
 }

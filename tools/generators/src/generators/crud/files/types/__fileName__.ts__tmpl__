@@ -1,16 +1,15 @@
 import { IBaseEntity } from "./base-entity";
 
 export interface I<%= className %> extends IBaseEntity {
-  <% columns.forEach(column => { %>
-  <%= column.normalizeName.propertyName %>?: <%= column.tsType %>; <% }) %>
+    <% columns.forEach(column => { %>
+    <%= column.normalizeName.propertyName %>?: <%= column.tsType %>; <% }) %>
 }
 
 
 <% columns.forEach(column => { %>
 <% if (column.enumValues) { %>
 export enum <%= column.tsType %> {
-  <%- column.enumValues.map(value => `${value.toUpperCase()} = '${value}'`).join(',\n  ') %>
+    <%- column.enumValues.map(value => `${value.toUpperCase()} = '${value}'`).join(',\n  ') %>
 }
 <% } %>
 <% }) %>
-

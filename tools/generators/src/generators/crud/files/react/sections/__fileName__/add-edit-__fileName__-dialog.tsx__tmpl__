@@ -27,6 +27,7 @@ export default function AddEdit<%= className %>Dialog({
     initialValue,
     onSubmit,
 }: AddEdit<%= className %>DialogProps) {
+
     const { useUpdate<%= className %>, useCreate<%= className %> } = use<%= className %>();
     const { mutateAsync: update<%= className %> } = useUpdate<%= className %>();
     const { mutateAsync: create<%= className %> } = useCreate<%= className %>();

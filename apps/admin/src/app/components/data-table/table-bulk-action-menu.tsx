@@ -9,9 +9,7 @@ import {
 } from '@mui/material';
 import { Icon, MenuDropdown, useAccess } from '@libs/react-core';
 import {
-  VisibilityOutlined as VisibilityOutlinedIcon,
   DeleteOutlined as DeleteOutlinedIcon,
-  EditOutlined as EditOutlinedIcon,
   RestoreOutlined as RestoreOutlinedIcon,
   DeleteForeverOutlined as DeleteForeverOutlinedIcon,
 } from '@mui/icons-material';
@@ -22,80 +20,63 @@ export interface TableAction {
   permission?: string | string[];
   onClick?: (event?: any) => void;
 }
-type TableActionMenuProps = {
-  onDelete?: (row?: any) => void;
-  onEdit?: (row?: any) => void;
-  onView?: (row?: any) => void;
-  onRestore?: (row?: any) => void;
-  onDeleteForever?: (row?: any) => void;
+type TableBulkActionMenuProps = {
+  onDelete?: (row?: any[]) => void;
+  onDeleteForever?: (row?: any[]) => void;
+  onRestore?: (row?: any[]) => void;
   row?: any;
   actions?: TableAction[];
   crudPermissionKey?: string;
   children?: any;
 };
 
-export function TableActionMenu({
+export function TableBulkActionMenu({
   crudPermissionKey,
   children,
   onDelete,
-  onEdit,
-  onView,
-  onRestore,
   onDeleteForever,
+  onRestore,
   row,
   actions,
-}: TableActionMenuProps) {
+}: TableBulkActionMenuProps) {
   const { hasAnyPermission } = useAccess();
 
-  const crudActions: TableAction[] = useMemo(() => {
-    const otherActions = (actions || [])?.filter(
-      (action) => !action.permission || hasAnyPermission(action.permission)
-    );
+  const crudActions: TableAction[] = useMemo(
+    () => {
+      const otherActions = (actions || [])?.filter(
+        (action) => !action.permission || hasAnyPermission(action.permission)
+      );
 
-    return [
-      ...otherActions,
-      ...onView
-        ? [{
-          icon: <VisibilityOutlinedIcon />,
-          title: 'Preview',
-          permission: `show-${crudPermissionKey}`,
-          onClick: onView,
-        }]
-        : [],
-      ...onEdit
-        ? [{
-          icon: <EditOutlinedIcon />,
-          title: 'Edit',
-          permission: `update-${crudPermissionKey}`,
-          onClick: onEdit,
-        }]
-        : [],
-      ...onDelete
-        ? [{
-          icon: <DeleteOutlinedIcon />,
-          title: 'Delete',
-          permission: `delete-${crudPermissionKey}`,
-          onClick: onDelete,
-        }]
-        : [],
-      ...onRestore
-        ? [{
-          icon: <RestoreOutlinedIcon />,
-          title: 'Restore',
-          permission: `restore-${crudPermissionKey}`,
-          onClick: onRestore,
-        }]
-        : [],
-      ...onDeleteForever
-        ? [{
-          icon: <DeleteForeverOutlinedIcon />,
-          title: 'Delete Forever',
-          permission: `trash-delete-${crudPermissionKey}`,
-          onClick: onDeleteForever,
-        }]
-        : [],
-    ].filter((item) => item);
-  }, [actions, onView, crudPermissionKey, onEdit, hasAnyPermission, onDelete]);
+      return [
+        ...otherActions,
+        ...onDelete
+          ? [{
+            icon: <DeleteOutlinedIcon />,
+            title: 'Delete',
+            permission: `delete-${crudPermissionKey}`,
+            onClick: onDelete,
+          }]
+          : [],
+        ...onRestore
+          ? [{
+            icon: <RestoreOutlinedIcon />,
+            title: 'Restore',
+            permission: `restore-${crudPermissionKey}`,
+            onClick: onRestore,
+          }]
+          : [],
+        ...onDeleteForever
+          ? [{
+            icon: <DeleteForeverOutlinedIcon />,
+            title: 'Permanent delete',
+            permission: `trash-delete-${crudPermissionKey}`,
+            onClick: onDeleteForever,
+          }]
+          : [],
+      ].filter((item) => item);
+    },
+    [actions, crudPermissionKey, hasAnyPermission, onDelete]
+  );
 
   if (crudActions.length <= 2) {
     return (
@@ -119,7 +100,7 @@ export function TableActionMenu({
   return (
     <MenuDropdown
       anchor={
-        <IconButton >
+        <IconButton>
           <Icon icon="more-vertical-outline" size="medium" />
         </IconButton>
       }
