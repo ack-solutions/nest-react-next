@@ -1,52 +1,63 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { Entity, Column, BeforeInsert, BeforeUpdate } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import {
+    IsString,
+    IsInt,
+    IsBoolean,
+    IsDate,
+    IsUUID,
+    IsEnum,
+    IsNumber,
+    IsOptional,
+} from 'class-validator';
 import { BaseEntity } from '@api/app/core/typeorm/base.entity';
-import { IPage } from '@libs/types';
-import { generateSlug } from '@api/app/utils/str-to-slug';
+import { IPage, PageStatusEnum } from '@libs/types';
+import { generateSlug } from '@api/app/utils';
 
 @Entity()
 export class Page extends BaseEntity implements IPage {
-    @ApiProperty()
+    @ApiProperty({ type: String })
     @IsString()
-    @Column()
-        name?: string;
-
-    @ApiProperty()
-    @IsString()
-    @Column()
-        title?: string;
-
-    @ApiProperty()
-    @IsString()
+    @IsOptional()
     @Column({ nullable: true })
-        slug?: string;
+    title?: string;
 
-    @ApiProperty()
+    @ApiProperty({ type: String })
     @IsString()
+    @IsOptional()
     @Column({ nullable: true })
-        key?: string;
+    slug?: string;
 
-    @ApiProperty()
+    @ApiProperty({ type: String })
     @IsString()
-    @Column("text", { nullable: true })
-        value?: string;
+    @IsOptional()
+    @Column({ type: 'text', nullable: true })
+    content?: string;
 
-    @ApiProperty()
+    @ApiProperty({ type: String, enum: PageStatusEnum })
+    @IsEnum(PageStatusEnum)
+    @IsOptional()
+    @Column({ type: 'text', nullable: true })
+    status?: PageStatusEnum;
+
+    @ApiProperty({ type: Object })
+    @IsOptional()
+    @Column({ type: 'jsonb', nullable: true })
+    metaData?: any;
+
+    @ApiProperty({ type: String })
     @IsString()
-    @Column('text', { nullable: true })
-        content?: string;
-
-    @Column({ default: 'default' })
-        template?: string;
+    @IsOptional()
+    @Column({ nullable: true })
+    name?: string;
 
     @BeforeInsert()
     async createSlug() {
-        this.slug = await generateSlug(Page, this.name, this.id);
+        this.slug = await generateSlug(Page, this.title, this.id);
     }
-  
+
     @BeforeUpdate()
     async updateSlug() {
-        this.slug = await generateSlug(Page, this.name, this.id);
+        this.slug = await generateSlug(Page, this.title, this.id);
     }
 }

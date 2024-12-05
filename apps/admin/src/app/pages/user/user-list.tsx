@@ -32,7 +32,7 @@ export default function UsersList() {
 
     const handleViewUser = useCallback(
         (row: IUser) => {
-            // 
+            //
         },
         [navigate]
     );
@@ -192,7 +192,7 @@ export default function UsersList() {
 
     return (
         <Page title='Users'>
-            <Container>
+            <Container maxWidth={false}>
                 <CustomBreadcrumbs
                     heading="Users"
                     links={[
@@ -205,7 +205,7 @@ export default function UsersList() {
                             variant='contained'
                             onClick={() => navigate(`${PATH_DASHBOARD.users.add}`)}
                         >
-              Add User
+                            Add User
                         </Button>
                     }
                 />
@@ -226,5 +226,3 @@ export default function UsersList() {
         </Page>
     );
 }
-
-

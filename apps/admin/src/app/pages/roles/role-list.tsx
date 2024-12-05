@@ -105,7 +105,7 @@ export default function RoleList() {
 
     return (
         <Page title='Roles'>
-            <Container>
+            <Container maxWidth={false}>
                 <CustomBreadcrumbs
                     heading="Roles"
                     links={[
@@ -135,5 +135,3 @@ export default function RoleList() {
         </Page>
     );
 }
-
-

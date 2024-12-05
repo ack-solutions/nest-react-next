@@ -77,7 +77,7 @@ const AddEditRole = () => {
 
     return (
         <Page title={`${roleId ? 'Edit Role' : 'Add Role'}`}>
-            <Container>
+            <Container maxWidth={false}>
                 <CustomBreadcrumbs
                     heading={`${roleId ? 'Edit Role' : 'Add Role'}`}
                     links={[

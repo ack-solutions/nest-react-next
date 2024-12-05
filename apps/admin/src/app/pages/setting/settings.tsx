@@ -18,7 +18,7 @@ const Settings = () => {
 
     return (
         <Page title='Settings'>
-            <Container>
+            <Container maxWidth={false}>
                 <CustomBreadcrumbs
                     heading="Settings"
                     links={[

@@ -1,11 +1,16 @@
-import { IBaseEntity } from "./base-entity";
+import { IBaseEntity } from './base-entity';
 
 export interface IPage extends IBaseEntity {
-    name?: string;
     title?: string;
     slug?: string;
-    key?: string;
-    value?: string;
     content?: string;
-    template?: string;
+    status?: PageStatusEnum;
+    metaData?: any;
+    name?: string;
+}
+
+export enum PageStatusEnum {
+    DRAFT = 'draft',
+    PUBLISHED = 'published',
+    UNPUBLISHED = 'unpublished',
 }

@@ -143,7 +143,7 @@ export default function PermissionList() {
 
     return (
         <Page title='Permissions'>
-            <Container>
+            <Container maxWidth={false}>
                 <CustomBreadcrumbs
                     heading="Permissions"
                     links={[
@@ -176,5 +176,3 @@ export default function PermissionList() {
         </Page>
     );
 }
-
-

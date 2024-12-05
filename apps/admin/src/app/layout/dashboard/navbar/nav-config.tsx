@@ -123,7 +123,7 @@ export function useNavData() {
             groupName: 'Manage',
             title: 'Page',
             path: 'page',
-            icon: ICONS.user,
+            icon: ICONS.page,
             permissions: [RoleNameEnum.ADMIN],
             staticPaths: ['page'],
         },
