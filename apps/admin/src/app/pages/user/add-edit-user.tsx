@@ -30,6 +30,8 @@ const AddEditUser = () => {
 
     const handleSubmit = useCallback(
         (values: IUser) => {
+            console.log(values, 'frontend');
+
             const options = {
                 onSuccess: (data) => {
                     showToasty(

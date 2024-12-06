@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, Button } from '@mui/material';
 import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
-import {  MenuDropdown, useAccess, useAuth } from '@libs/react-core';
+import { MenuDropdown, useAccess, useAuth } from '@libs/react-core';
 import { startCase } from 'lodash';
 
 
@@ -42,7 +42,7 @@ export default function AccountPopover() {
                 >
                     <Avatar
                         alt={currentUser?.name}
-                        // src={user?.photoUrl || '/image/default-user.png'}
+                        src={currentUser?.avatarUrl}
                         sx={{
                             width: { xs: 48, sm: 48 },
                             height: { xs: 48, sm: 48 },
@@ -88,7 +88,7 @@ export default function AccountPopover() {
                     <Divider sx={{ borderStyle: 'dashed' }} />
 
                     <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-            Logout
+                        Logout
                     </MenuItem>
                 </Box>
             )}

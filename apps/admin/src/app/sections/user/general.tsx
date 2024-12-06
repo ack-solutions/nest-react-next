@@ -37,7 +37,7 @@ const General = () => {
 
     const handleSubmitForm = useCallback(
         (values) => {
-            const request = pick(values, 'status', 'firstName', 'lastName', 'email', 'phoneNumber', 'aboutMe', 'address')
+            const request = pick(values, 'status', 'firstName', 'lastName', 'email', 'phoneNumber', 'aboutMe', 'address', 'avatar')
             const options = {
                 onSuccess: (data) => {
                     showToasty('User profile successfully updated');
@@ -52,9 +52,9 @@ const General = () => {
         },
         [showToasty],
     )
-  
+
     useEffect(() => {
-        reset({ ...currentUser})
+        reset({ ...currentUser })
     }, [reset, currentUser]);
 
     return (
@@ -157,7 +157,7 @@ const General = () => {
                                 mt={2}
                             >
                                 <Button variant='contained' type='submit'>
-                  Update
+                                    Update
                                 </Button>
                             </Stack>
                         </CardContent>

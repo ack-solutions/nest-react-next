@@ -18,8 +18,8 @@ export interface CrudTableProps extends Partial<Omit<DataTableProps, 'ref'>> {
     crudName: string;
     hasSoftDelete?: boolean;
     onEdit?: (updatedValue: Partial<any>) => void;
-    rowActions?: TableAction[];
-    bulkActions?: TableAction[];
+    rowActions?: (row) => TableAction[];
+    bulkActions?: (rows: any[]) => TableAction[];
 }
 
 export interface CrudTableActions {
@@ -35,8 +35,8 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
     crudOperationHooks,
     crudName,
     hasSoftDelete,
-    rowActions = [],
-    bulkActions = [],
+    rowActions,
+    bulkActions,
     onEdit,
     columns: initialColumn,
     ...props
@@ -256,8 +256,8 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                         } : {
                             onDelete: () => handleDelete(row)
                         })}
-                        onEdit={() => onEdit(row)}
-                        actions={rowActions}
+                        onEdit={() => onEdit && onEdit(row)}
+                        actions={rowActions ? rowActions(row) : []}
                     />
                 ),
             },
@@ -282,6 +282,7 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                     } : {
                         onDelete: () => handleBulkDelete(selectedRowIds)
                     })}
+                    actions={bulkActions ? bulkActions(selectedRowIds) : []}
                 />
             )}
             extraFilter={(

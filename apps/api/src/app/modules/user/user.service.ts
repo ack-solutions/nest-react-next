@@ -19,17 +19,16 @@ export class UserService extends CrudService<User> {
     protected hasSoftDelete = true;
 
     constructor(
-    @InjectRepository(User)
-    public readonly userRepository: Repository<User>,
-    @InjectRepository(Role)
-    public readonly roleRepository: Repository<Role>,
+        @InjectRepository(User)
+        public readonly userRepository: Repository<User>,
+        @InjectRepository(Role)
+        public readonly roleRepository: Repository<Role>,
 
     ) {
         super(userRepository);
     }
 
     async beforeSave(entity: DeepPartial<any>, req): Promise<User> {
-
         if (has(req, 'password') && req?.password) {
             entity.passwordHash = await hashPassword(req.password);
         }
@@ -86,7 +85,7 @@ export class UserService extends CrudService<User> {
         if (userId) {
             user = await this.userRepository.findOne({ where: { id: userId } });
             if (has(entity, 'email')) {
-                const exists = await this.checkIfExistsEmail(entity.email,userId);
+                const exists = await this.checkIfExistsEmail(entity.email, userId);
                 if (exists) {
                     throw new ConflictException(
                         'Email is already taken, Please use other email'
