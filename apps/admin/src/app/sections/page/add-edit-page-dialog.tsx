@@ -13,10 +13,9 @@ import {
     usePage,
     useToasty,
 } from '@libs/react-core';
-import { array, object, string } from 'yup';
+import { array, mixed, object, string } from 'yup';
 import { IPage, PageStatusEnum } from '@libs/types';
 import { startCase } from 'lodash';
-import { TableView } from '@mui/icons-material';
 
 export interface AddEditPageDialogProps {
     onSubmit?: (values: IPage) => void;
@@ -35,7 +34,8 @@ const validationSchema = object({
         })
     ).label('Meta Data'),
     name: string().label('name').required(),
-    status: string().label('Status').required(),
+    // status: string().label('Status').required(),
+    status: mixed<PageStatusEnum>().oneOf(Object.values(PageStatusEnum)).label('Status').required(),
 });
 
 const defaultValues: IPage = {
@@ -44,7 +44,7 @@ const defaultValues: IPage = {
     content: '',
     metaData: [{ key: '', value: '' }],
     name: '',
-    status: '' as any
+    status: PageStatusEnum.DRAFT
 };
 
 
@@ -59,9 +59,9 @@ export default function AddEditPageDialog({
     const { showToasty } = useToasty();
     const [tabValue, setTabValue] = useState('basic')
 
-    const formContext = useForm({
+    const formContext = useForm<IPage>({
         defaultValues,
-        resolver: yupResolver(validationSchema) as any,
+        resolver: yupResolver(validationSchema),
     });
     const { reset, handleSubmit, control } = formContext;
 
@@ -76,8 +76,6 @@ export default function AddEditPageDialog({
 
     const handleSubmitForm = useCallback(
         async (values: IPage) => {
-            console.log(values);
-
             try {
                 let resp;
                 if (initialValue?.id) {

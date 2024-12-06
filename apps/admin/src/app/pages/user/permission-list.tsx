@@ -3,6 +3,7 @@ import { useState, useCallback, useRef } from 'react';
 import {
     Container,
     Button,
+    Card,
 } from '@mui/material';
 import { usePermissionQuery } from '@libs/react-core';
 import { IPermission, IRole } from '@libs/types';
@@ -84,22 +85,24 @@ export default function PermissionList() {
                         <Button variant='contained' onClick={() => handleOpenAddEditRoleDialog({})}>Add Permission</Button>
                     }
                 />
-                <CrudTable
-                    hasSoftDelete
-                    crudName="Permission"
-                    crudOperationHooks={{
-                        useGetMany: useGetManyPermission,
-                        useDelete: useDeletePermission,
-                        useRestore: useRestorePermission,
-                        useDeleteForever: useDeleteForeverPermission,
-                        useBulkDelete: useBulkDeletePermission,
-                        useBulkRestore: useBulkRestorePermission,
-                        useBulkDeleteForever: useBulkDeleteForeverPermission,
-                    }}
-                    onEdit={handleOpenAddEditRoleDialog}
-                    ref={datatableRef}
-                    columns={columns}
-                />
+                <Card>
+                    <CrudTable
+                        hasSoftDelete
+                        crudName="Permission"
+                        crudOperationHooks={{
+                            useGetMany: useGetManyPermission,
+                            useDelete: useDeletePermission,
+                            useRestore: useRestorePermission,
+                            useDeleteForever: useDeleteForeverPermission,
+                            useBulkDelete: useBulkDeletePermission,
+                            useBulkRestore: useBulkRestorePermission,
+                            useBulkDeleteForever: useBulkDeleteForeverPermission,
+                        }}
+                        onEdit={handleOpenAddEditRoleDialog}
+                        ref={datatableRef}
+                        columns={columns}
+                    />
+                </Card>
                 {selectPermission && (
                     <AddEditPermissionDialog
                         onClose={handleCloseAddEditRoleDialog}

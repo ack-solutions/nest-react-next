@@ -4,18 +4,11 @@ import Page from '../../components/page';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs/custom-breadcrumbs';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import AddEditPageDialog from '../../sections/page/add-edit-page-dialog';
-import { usePage, useToasty } from '@libs/react-core';
-import { useConfirm } from '../../contexts/confirm-dialog-context';
 import PageListTable from '../../sections/page/page-list-table';
 import { IPage } from '@libs/types';
 
 export default function PageList() {
     const [selectedItem, setSelectedItem] = useState(null);
-    const { showToasty } = useToasty();
-    const confirmDialog = useConfirm();
-
-    const { useDeletePage } = usePage();
-    const { mutateAsync: deletePage } = useDeletePage();
 
     const handleAddEditClose = useCallback(() => {
         setSelectedItem(null);
