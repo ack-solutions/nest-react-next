@@ -22,7 +22,7 @@ const NotificationSetting = () => {
     } = useNotificationTemplateQuery()
 
     const handleOpenEditNotificationTemplateDialog = useCallback(
-        (value?: INotificationTemplate) => () => {
+        (value?: INotificationTemplate) => {
             setNotificationTemplate(value)
         },
         [],

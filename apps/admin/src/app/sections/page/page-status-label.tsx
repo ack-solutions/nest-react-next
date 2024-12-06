@@ -1,27 +1,25 @@
-import React from 'react'
 import { useMemo } from 'react';
 import { startCase } from 'lodash';
-import { useTheme } from '@mui/material';
 import { Label, LabelColor, LabelProps } from '@libs/react-core';
-import { UserStatusEnum } from '@libs/types';
+import { PageStatusEnum } from '@libs/types';
 
 
-export interface UserStatusLabelProps extends LabelProps {
+export interface PageStatusLabelProps extends LabelProps {
     label?: string;
 }
 
-const UserStatusLabel = ({ label }: UserStatusLabelProps) => {
+const PageStatusLabel = ({ label }: PageStatusLabelProps) => {
 
     const color: LabelColor = useMemo(() => {
         switch (label) {
 
-            case UserStatusEnum.ACTIVE:
+            case PageStatusEnum.DRAFT:
                 return 'primary'
 
-            case UserStatusEnum.INACTIVE:
-                return 'error'
+            case PageStatusEnum.PUBLISHED:
+                return 'success'
 
-            case UserStatusEnum.PENDING:
+            case PageStatusEnum.UNPUBLISHED:
                 return 'warning'
 
             default:
@@ -37,4 +35,4 @@ const UserStatusLabel = ({ label }: UserStatusLabelProps) => {
 
 }
 
-export default UserStatusLabel
+export default PageStatusLabel

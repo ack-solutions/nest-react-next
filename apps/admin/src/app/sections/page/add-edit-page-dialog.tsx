@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Button, Card, CardContent, IconButton, MenuItem, Stack, Tab, Tabs } from '@mui/material';
+import { Button, Card, CardContent, Container, IconButton, MenuItem, Stack, Tab, Tabs } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -146,90 +146,92 @@ export default function AddEditPageDialog({
                 </>
             }
         >
-            <FormContainer
-                FormProps={{
-                    id: 'add-edit-page-form',
-                }}
-                formContext={formContext}
-                validationSchema={validationSchema}
-                onSuccess={handleSubmitForm}
-            >
-                <Tabs
-                    value={tabValue}
-                    onChange={handleTabChange}
-                    sx={{ px: 3, mb: 2 }}
+            <Container>
+                <FormContainer
+                    FormProps={{
+                        id: 'add-edit-page-form',
+                    }}
+                    formContext={formContext}
+                    validationSchema={validationSchema}
+                    onSuccess={handleSubmitForm}
                 >
-                    <Tab
-                        value='basic'
-                        label='Basic'
-                        disableRipple
-                    />
-                    <Tab
-                        value='meta'
-                        label='Meta'
-                        disableRipple
-                    />
-                </Tabs>
-                {tabValue === 'basic' && (
-                    <Stack spacing={2} >
-                        <Stack spacing={2} direction='row' >
-                            <RHFTextField label="Title" name="title" fullWidth />
-                            <RHFTextField label="Name" name="name" fullWidth />
-                        </Stack>
-                        <Stack spacing={2} direction='row' >
-                            <RHFTextField
-                                label="Status"
-                                name="status"
-                                fullWidth
-                                select
-                            >
-                                {Object.values(PageStatusEnum).map((status, index) => (
-                                    <MenuItem key={index} value={status}>
-                                        {startCase(status)}
-                                    </MenuItem>
-                                ))}
-                            </RHFTextField>
-                            <RHFTextField label="Slug" name="slug" fullWidth />
-                        </Stack>
-                        <RHFTextEditor
-                            name='content'
-                            label='Content'
+                    <Tabs
+                        value={tabValue}
+                        onChange={handleTabChange}
+                        sx={{ px: 3, mb: 2 }}
+                    >
+                        <Tab
+                            value='basic'
+                            label='Basic'
+                            disableRipple
                         />
-                    </Stack>
-                )}
-                {tabValue === 'meta' && (
-                    <Card>
-                        <CardContent>
-                            <Stack spacing={2}>
-                                {fields?.map((field, index) => (
-                                    <Stack
-                                        spacing={2}
-                                        direction='row'
-                                        alignItems='center'
-                                        key={field?.id}
-                                    >
-                                        <RHFTextField label="Key" name={`metaData.${index}.key`} fullWidth />
-                                        <RHFTextField label="Value" name={`metaData.${index}.value`} fullWidth />
-                                        <IconButton type="button" onClick={() => remove(index)}>
-                                            <Icon icon='trash' />
-                                        </IconButton>
-                                    </Stack>
-                                ))}
+                        <Tab
+                            value='meta'
+                            label='Meta'
+                            disableRipple
+                        />
+                    </Tabs>
+                    {tabValue === 'basic' && (
+                        <Stack spacing={2} >
+                            <Stack spacing={2} direction='row' >
+                                <RHFTextField label="Title" name="title" fullWidth />
+                                <RHFTextField label="Name" name="name" fullWidth />
                             </Stack>
-                            <Button
-                                variant='contained'
-                                type="button"
-                                onClick={() => append({ key: '', value: '' })}
-                                sx={{
-                                    mt: 2
-                                }}
-                            >
-                                Add MetaData
-                            </Button>
-                        </CardContent>
-                    </Card>
-                )}
-            </FormContainer>
+                            <Stack spacing={2} direction='row' >
+                                <RHFTextField
+                                    label="Status"
+                                    name="status"
+                                    fullWidth
+                                    select
+                                >
+                                    {Object.values(PageStatusEnum).map((status, index) => (
+                                        <MenuItem key={index} value={status}>
+                                            {startCase(status)}
+                                        </MenuItem>
+                                    ))}
+                                </RHFTextField>
+                                <RHFTextField label="Slug" name="slug" fullWidth />
+                            </Stack>
+                            <RHFTextEditor
+                                name='content'
+                                label='Content'
+                            />
+                        </Stack>
+                    )}
+                    {tabValue === 'meta' && (
+                        <Card>
+                            <CardContent>
+                                <Stack spacing={2}>
+                                    {fields?.map((field, index) => (
+                                        <Stack
+                                            spacing={2}
+                                            direction='row'
+                                            alignItems='center'
+                                            key={field?.id}
+                                        >
+                                            <RHFTextField label="Key" name={`metaData.${index}.key`} fullWidth />
+                                            <RHFTextField label="Value" name={`metaData.${index}.value`} fullWidth />
+                                            <IconButton type="button" onClick={() => remove(index)}>
+                                                <Icon icon='trash' />
+                                            </IconButton>
+                                        </Stack>
+                                    ))}
+                                </Stack>
+                                <Button
+                                    variant='contained'
+                                    type="button"
+                                    onClick={() => append({ key: '', value: '' })}
+                                    sx={{
+                                        mt: 2
+                                    }}
+                                >
+                                    Add MetaData
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    )}
+                </FormContainer>
+            </Container>
         </DefaultDialog>
     );
 }

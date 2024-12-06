@@ -6,6 +6,7 @@ import { Tabs, Tab, Card, Divider, Typography } from '@mui/material';
 import { CrudTable, CrudTableActions } from '../../components/crud/crud-table';
 import StatusLabel from 'libs/react-core/src/lib/components/status-label';
 import { startCase } from 'lodash';
+import PageStatusLabel from './page-status-label';
 
 export interface PageListTableProps {
     datatableRef?: MutableRefObject<DataTableHandle>;
@@ -80,7 +81,7 @@ export default function PageListTable({ onEdit }: PageListTableProps) {
         {
             name: 'status',
             label: 'status',
-            render: (row) => <StatusLabel label={row?.status} />
+            render: (row) => <PageStatusLabel label={row?.status} />
         },
         // {
         //     name: 'metaData',

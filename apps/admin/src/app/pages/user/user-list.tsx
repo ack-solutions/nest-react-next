@@ -17,7 +17,7 @@ import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 import { useNavigate } from 'react-router-dom';
 import ChangePasswordDialog from '@admin/app/sections/user/change-password-dialog';
 import { CrudTable, CrudTableActions } from '@admin/app/components/crud/crud-table';
-import UserStatusLabel from '@admin/app/sections/user/user-status-label';
+import UserStatusLabel from '@admin/app/components/user/user-status-label';
 import UserWithAvatar from '@admin/app/components/user/user-with-avatar';
 
 export default function UsersList() {
