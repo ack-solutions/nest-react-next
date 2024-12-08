@@ -126,7 +126,7 @@ export abstract class CRUDService<T> extends Service {
   }
 
 
-  getQueryKey(method?: 'get-all' | 'get-one' | 'create' | 'update' | 'delete' | 'trash-delete' | 'restore' | string) {
+  getQueryKey(method?: 'get-all' | 'get-one' | 'get-all' | string) {
       return [this.apiPath, method].filter(Boolean).join('/')
   }
 }
