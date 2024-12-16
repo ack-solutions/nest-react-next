@@ -30,7 +30,7 @@ export function useCrudOperations<T extends IBaseEntity>(service: CRUDService<T>
 
 
     const useGetOne = (id?: any, params?: any, options?: Partial<DefinedInitialDataOptions<T>>) => useQuery({
-        queryKey: [service.getQueryKey('get'), id],
+        queryKey: [service.getQueryKey('get-one'), id],
         queryFn: () => service.getOne(id, params),
         enabled: !!id,
         ...options,
