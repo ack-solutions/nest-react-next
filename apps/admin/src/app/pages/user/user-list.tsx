@@ -120,23 +120,6 @@ export default function UsersList() {
             isSortable: true,
             render: (row) => toDisplayDate(row?.createdAt),
         },
-        // {
-        //     name: 'action',
-        //     label: 'Action',
-        //     isAction: true,
-        //     render: (row: any) => (
-        //         <TableActionMenu
-        //             row={row}
-        //             {...!row?.deletedAt ? { onView: () => handleViewUser(row), onEdit: () => handleOpenAddEditUser(row) } : {}}
-        //             actions={[{
-        //                 onClick: () => handleChangePassword(row),
-        //                 icon: <Icon icon="lock-circle" />,
-        //                 title: 'Change Password'
-        //             }]}
-        //             {...!row?.isSuperAdmin ? { onDelete: () => handleDeleteUser(row) } : {}}
-        //         />
-        //     ),
-        // },
     ];
 
     return (

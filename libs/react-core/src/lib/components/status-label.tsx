@@ -29,6 +29,7 @@ const StatusLabel = ({
 
             case 'rejected':
                 return 'error'
+
             case 'approved':
                 return 'success'
 
@@ -45,7 +46,7 @@ const StatusLabel = ({
                 return 'error'
 
             default:
-                return 'secondary'
+                return 'default'
         }
     }, [theme, label])
 

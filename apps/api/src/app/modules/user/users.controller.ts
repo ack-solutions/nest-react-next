@@ -51,7 +51,6 @@ export class UsersController extends CrudController(UserDTO)<IUser> {
         });
     }
 
-    @UseInterceptors(RequestDataTypeInterceptor)
     @UseInterceptors(
         FileInterceptor('avatar', {
             storage: new FileStorage().storage({
@@ -60,7 +59,8 @@ export class UsersController extends CrudController(UserDTO)<IUser> {
                 },
                 prefix: 'avatar',
             }),
-        })
+        }),
+        RequestDataTypeInterceptor
     )
     @Post()
     async create(@Body() req: DeepPartial<User>, @UploadedFileStorage() avatar) {
@@ -70,7 +70,6 @@ export class UsersController extends CrudController(UserDTO)<IUser> {
         return super.create(req);
     }
 
-    @UseInterceptors(RequestDataTypeInterceptor)
     @UseInterceptors(
         FileInterceptor('avatar', {
             storage: new FileStorage().storage({
@@ -79,7 +78,8 @@ export class UsersController extends CrudController(UserDTO)<IUser> {
                 },
                 prefix: 'avatar',
             }),
-        })
+        }),
+        RequestDataTypeInterceptor
     )
     @Put(':id')
     async update(
@@ -96,7 +96,6 @@ export class UsersController extends CrudController(UserDTO)<IUser> {
 
     @HttpCode(HttpStatus.ACCEPTED)
     @UseGuards(AuthGuard('jwt'))
-    @UseInterceptors(RequestDataTypeInterceptor)
     @UseInterceptors(
         FileInterceptor('avatar', {
             storage: new FileStorage().storage({
@@ -105,7 +104,8 @@ export class UsersController extends CrudController(UserDTO)<IUser> {
                 },
                 prefix: 'avatar',
             }),
-        })
+        }),
+        RequestDataTypeInterceptor
     )
     @Put('update/profile')
     async updateProfile(

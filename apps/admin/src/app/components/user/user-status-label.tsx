@@ -22,7 +22,7 @@ const UserStatusLabel = ({ label }: UserStatusLabelProps) => {
                 return 'warning'
 
             default:
-                return 'secondary'
+                return 'default'
         }
     }, [label])
 

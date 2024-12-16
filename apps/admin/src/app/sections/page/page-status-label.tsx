@@ -21,9 +21,6 @@ const PageStatusLabel = ({ label }: PageStatusLabelProps) => {
 
             case PageStatusEnum.UNPUBLISHED:
                 return 'warning'
-
-            default:
-                return 'secondary'
         }
     }, [label])
 
