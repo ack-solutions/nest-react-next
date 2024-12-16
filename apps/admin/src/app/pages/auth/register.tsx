@@ -1,9 +1,11 @@
-import React, { useCallback, useState } from 'react'
-import AuthLayout from '../../sections/auth/auth-layout'
-import { Box, Stack, Typography } from '@mui/material'
-import RegisterForm from '../../sections/auth/register-form'
-import LoginOtpVerification from '../../sections/auth/login-otp-verification'
 import { AuthService, errorMessage } from '@libs/react-core'
+import { Box, Stack, Typography } from '@mui/material'
+import { useCallback, useState } from 'react'
+
+import AuthLayout from '../../sections/auth/auth-layout'
+import LoginOtpVerification from '../../sections/auth/login-otp-verification'
+import RegisterForm from '../../sections/auth/register-form'
+
 
 const authService = AuthService.getInstance<AuthService>()
 
@@ -45,7 +47,7 @@ const Register = () => {
     )
 
     return (
-        <AuthLayout rootTitle={"Register | Next React"} src={''} >
+        <AuthLayout rootTitle={"Register | Next React"} >
             <Box
                 sx={{
                     maxWidth: 480,
@@ -53,9 +55,16 @@ const Register = () => {
                     p: 2,
                 }}
             >
-                <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
+                <Stack
+                    direction="row"
+                    alignItems="center"
+                    sx={{ mb: 5 }}
+                >
                     <Box sx={{ flexGrow: 1 }}>
-                        <Typography variant="h1" gutterBottom>
+                        <Typography
+                            variant="h1"
+                            gutterBottom
+                        >
                             Register
                         </Typography>
                     </Box>

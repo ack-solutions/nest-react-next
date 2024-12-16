@@ -7,6 +7,8 @@ import { pick } from 'lodash'
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { object, ref, string } from 'yup'
+
+
 export interface ChangePasswordDialogProps {
     onClose?: () => void
     values?: IUser
@@ -44,7 +46,7 @@ const ChangePasswordDialog = ({ onClose, values: initialValue }: ChangePasswordD
                 id: initialValue?.id,
             }
             const options = {
-                onSuccess: (data) => {
+                onSuccess: () => {
                     showToasty('Password Successfully updated')
                     reset()
                     onClose && onClose()
@@ -56,7 +58,7 @@ const ChangePasswordDialog = ({ onClose, values: initialValue }: ChangePasswordD
                 }
             }
             updateUser(request, options);
-        }, [initialValue]
+        }, [initialValue?.id, onClose, reset, showToasty, updateUser]
     )
 
     return (
@@ -83,7 +85,10 @@ const ChangePasswordDialog = ({ onClose, values: initialValue }: ChangePasswordD
                             input: {
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                        <IconButton onClick={() => showPassword.onToggle()} edge="end">
+                                        <IconButton
+                                            onClick={() => showPassword.onToggle()}
+                                            edge="end"
+                                        >
                                             <Icon
                                                 icon={showPassword.value ? 'eye' : 'eye-slash'}
                                                 color={theme.palette.grey[500]}
@@ -104,7 +109,10 @@ const ChangePasswordDialog = ({ onClose, values: initialValue }: ChangePasswordD
                             input: {
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                        <IconButton onClick={() => confirmShowPassword.onToggle()} edge="end">
+                                        <IconButton
+                                            onClick={() => confirmShowPassword.onToggle()}
+                                            edge="end"
+                                        >
                                             <Icon
                                                 icon={confirmShowPassword.value ? 'eye' : 'eye-slash'}
                                                 color={theme.palette.grey[500]}
@@ -115,7 +123,10 @@ const ChangePasswordDialog = ({ onClose, values: initialValue }: ChangePasswordD
                             }
                         }}
                     />
-                    <Button type='submit' variant='contained'>
+                    <Button
+                        type='submit'
+                        variant='contained'
+                    >
                         Change Password
                     </Button>
                 </Stack>

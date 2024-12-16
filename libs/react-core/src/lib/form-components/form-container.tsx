@@ -1,3 +1,4 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { FormEventHandler, FormHTMLAttributes, PropsWithChildren } from 'react'
 import {
     FormProvider,
@@ -8,7 +9,7 @@ import {
     UseFormReturn,
 } from 'react-hook-form'
 import { FieldValues } from 'react-hook-form/dist/types/fields'
-import { yupResolver } from '@hookform/resolvers/yup';
+
 
 export type FormContainerProps<T extends FieldValues = FieldValues> =
     PropsWithChildren<
@@ -35,7 +36,13 @@ export function FormContainer<TFieldValues extends FieldValues = FieldValues>({
     if (!formContext) {
         return (
             <FormProviderWithoutContext<TFieldValues>
-                {...{ onSuccess, onError, FormProps, children, ...useFormProps }}
+                {...{
+                    onSuccess,
+                    onError,
+                    FormProps,
+                    children,
+                    ...useFormProps 
+                }}
             />
         )
     }

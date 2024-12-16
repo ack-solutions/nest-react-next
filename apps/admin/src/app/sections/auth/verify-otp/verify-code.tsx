@@ -1,20 +1,20 @@
 
-import { styled } from '@mui/material/styles';
-import { Box, Button, Link, Container, Typography, Alert, Stack } from '@mui/material';
-import { Field, Form, Formik, FormikHelpers } from 'formik';
-import { IconButton } from '@mui/material';
-import { string, object } from 'yup';
-import { LoadingButton } from '@mui/lab';
-import Page from '@admin/app/components/page';
 import { OtpInputField } from '@admin/app/components';
+import Page from '@admin/app/components/page';
 import { Icon } from '@libs/react-core';
+import { LoadingButton } from '@mui/lab';
+import { Box, Button, Link, Container, Typography, Stack, Alert } from '@mui/material';
+import { IconButton } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { Field, Form, Formik, FormikHelpers } from 'formik';
+import { string, object } from 'yup';
 
 
 export interface VerifyOtpProps {
-  onSubmit: (values: any, action: FormikHelpers<any>) => void;
-  onResendOtp?: () => void;
-  onBackRegister: () => void;
-  email?: string;
+    onSubmit: (values: any, action: FormikHelpers<any>) => void;
+    onResendOtp?: () => void;
+    onBackRegister: () => void;
+    email?: string;
 }
 
 const RootStyle = styled(Page)(({ theme }) => ({
@@ -43,18 +43,27 @@ export default function VerifyCode({
             <Button
                 size="small"
                 onClick={() => onBackRegister()}
-                startIcon={<Icon icon='back-arrow' width={20} height={20} />}
-                sx={{ position: 'absolute', top: 0, left: 0, m: 2 }}
+                startIcon={<Icon
+                    icon='back-arrow'
+                    width={20}
+                    height={20}
+                />}
+                sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    m: 2
+                }}
             >
-        Back to login
+                Back to login
             </Button>
             <Container>
                 <Box >
                     <Typography variant="h1">
-            Enter OTP Code
+                        Enter OTP Code
                     </Typography>
                     <Typography sx={{ color: 'text.secondary' }}>
-            Enter 4 - digits code we send you on
+                        Enter 4 - digits code we send you on
                     </Typography>
 
                     <Box
@@ -72,18 +81,27 @@ export default function VerifyCode({
                         </IconButton>
                     </Box>
 
-                    <Box sx={{ mt: 5, mb: 3 }}>
+                    <Box
+                        sx={{
+                            mt: 5,
+                            mb: 3
+                        }}
+                    >
                         <Formik
                             initialValues={Object.assign({}, { otp: '' })}
                             validationSchema={VeryFySchema}
                             onSubmit={onSubmit}
                         >
-                            {({ errors, isSubmitting, handleSubmit }) => (
-                                <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+                            {({ isSubmitting, handleSubmit, errors }) => (
+                                <Form
+                                    autoComplete="off"
+                                    noValidate
+                                    onSubmit={handleSubmit}
+                                >
                                     <Stack spacing={3}>
-                                        {/* {errors?.afterSubmit && (
-                      <Alert severity="error">{(errors as any)?.afterSubmit}</Alert>
-                    )} */}
+                                        {errors?.afterSubmit && (
+                                            <Alert severity="error">{(errors as any)?.afterSubmit}</Alert>
+                                        )}
                                         <Box>
                                             <Field
                                                 name="otp"
@@ -99,7 +117,7 @@ export default function VerifyCode({
                                             loading={isSubmitting}
                                             onClick={() => handleSubmit()}
                                         >
-                      Submit
+                                            Submit
                                         </LoadingButton>
                                     </Stack>
 
@@ -108,14 +126,14 @@ export default function VerifyCode({
                                         variant="body2"
                                         align="center"
                                     >
-                    Don't have a code? &nbsp;
+                                        Don't have a code? &nbsp;
                                         <Link
                                             sx={{ cursor: 'pointer' }}
                                             variant="subtitle2"
                                             underline="none"
                                             onClick={onResendOtp}
                                         >
-                      Resend code
+                                            Resend code
                                         </Link>
                                     </Typography>
                                 </Form>

@@ -1,7 +1,10 @@
 
-import { UpdateQueryOptions, useCrudOperations, UserService } from '@libs/react-core';
 import { IChangePasswordInput, IUser } from '@libs/types';
 import { DefinedInitialDataOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { UpdateQueryOptions, useCrudOperations } from '../hook';
+import { UserService } from '../services';
+
 
 const service = UserService.getInstance<UserService>();
 

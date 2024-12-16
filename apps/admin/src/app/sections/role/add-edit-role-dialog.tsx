@@ -8,13 +8,14 @@ import { map } from 'lodash'
 import { useEffect, useRef, useState } from 'react'
 import { object, string } from 'yup'
 
+
 const permissionService = PermissionService.getInstance<PermissionService>();
 const roleService = RoleService.getInstance<RoleService>();
 
 export interface AddEditRoleDialogProps {
-  onClose?: () => void
-  roleValue?: IRole;
-  onSubmit: (value: IRole, action: any) => void
+    onClose?: () => void
+    roleValue?: IRole;
+    onSubmit: (value: IRole, action: any) => void
 }
 
 const defaultValue = {
@@ -30,7 +31,10 @@ const AddEditRoleDialog = ({ onClose, roleValue, onSubmit }: AddEditRoleDialogPr
     const [roleValues, setRoleValues] = useState<any>(null)
 
     useEffect(() => {
-        permissionService.getMany({ limit: 210, page: 1 }).then(({ items }) => {
+        permissionService.getMany({
+            limit: 210,
+            page: 1
+        }).then(({ items }) => {
             setPermissions(items)
 
         }).catch(() => {
@@ -65,9 +69,15 @@ const AddEditRoleDialog = ({ onClose, roleValue, onSubmit }: AddEditRoleDialogPr
             maxWidth='sm'
             title={`${roleValue ? 'Edit' : 'Add'} Role`}
             actions={
-                <Stack direction='row' spacing={2}>
+                <Stack
+                    direction='row'
+                    spacing={2}
+                >
                     <Button onClick={onClose}>Cancel</Button>
-                    <Button variant='contained' onClick={() => formRef.current?.handleSubmit()}>Save</Button>
+                    <Button
+                        variant='contained'
+                        onClick={() => formRef.current?.handleSubmit()}
+                    >Save</Button>
                 </Stack>
             }
         >
@@ -78,8 +88,12 @@ const AddEditRoleDialog = ({ onClose, roleValue, onSubmit }: AddEditRoleDialogPr
                 onSubmit={onSubmit}
                 innerRef={formRef}
             >
-                {({ errors, isSubmitting, handleSubmit, values }) => (
-                    <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+                {({ handleSubmit }) => (
+                    <Form
+                        autoComplete="off"
+                        noValidate
+                        onSubmit={handleSubmit}
+                    >
                         <Stack spacing={2}>
                             <Field
                                 fullWidth

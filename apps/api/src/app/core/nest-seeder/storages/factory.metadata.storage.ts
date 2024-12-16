@@ -1,15 +1,15 @@
-import { PropertyMetadata } from '../interfaces';
 import { Type } from '@nestjs/common';
+
 import { FactoryValue, FactoryValueGenerator } from '../decorators/factory.decorator';
 
 
 export type PropertyMetadataType = {
-  target?: any;
-  propertyKey?: any;
-  arg: {
-    generator: FactoryValueGenerator | FactoryValue,
-    dependsOn?: string[]
-  }
+    target?: any;
+    propertyKey?: any;
+    arg: {
+        generator: FactoryValueGenerator | FactoryValue,
+        dependsOn?: string[]
+    }
 }
 
 
@@ -27,5 +27,5 @@ export class FactoryMetadataStorageHost {
 
 const globalRef = global as any;
 export const FactoryMetadataStorage: FactoryMetadataStorageHost =
-  globalRef.FactoryMetadataStorage ||
-  (globalRef.FactoryMetadataStorage = new FactoryMetadataStorageHost());
+    globalRef.FactoryMetadataStorage ||
+    (globalRef.FactoryMetadataStorage = new FactoryMetadataStorageHost());

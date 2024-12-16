@@ -1,3 +1,4 @@
+import { ICrudControllerOptions, IFindOptions, IPaginationResult } from '@libs/types';
 import {
     Get,
     Put,
@@ -10,12 +11,12 @@ import {
     Post,
     Body,
 } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiPropertyOptional, ApiQuery, ApiResponse } from '@nestjs/swagger';
-import { DeepPartial, FindManyOptions, FindOneOptions, FindOptionsWhere, In } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBody, ApiOperation, ApiPropertyOptional, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { merge } from 'lodash';
+import { DeepPartial, FindManyOptions, FindOneOptions, In } from 'typeorm';
+
 import { DeleteManyInputDTO, RestoreManyInputDTO, GetManyInputDTO } from './dto/get-many-input.dto';
-import { ICrudControllerOptions, IFindOptions, IPaginationResult } from '@libs/types';
 import { ICrudService } from '../../types/crud.service';
 import { BaseEntity } from '../typeorm/base.entity';
 
@@ -24,19 +25,20 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
 
     class PaginationDto {
         @ApiPropertyOptional()
-            count: number;
+        count: number;
 
         @ApiPropertyOptional({
             type: [dto]
         })
-            items: typeof dto[];
+        items: typeof dto[];
     }
 
     class CountDto {
         @ApiPropertyOptional()
-            count: number;
+        count: number;
 
     }
+
     const CreateDTO = options?.createDto || dto
     const UpdateDTO = options?.updateDto || dto
 
@@ -59,8 +61,7 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         })
         @Get('count')
         async count(
-            @Query() filter: FindManyOptions,
-                ..._extra: any
+            @Query() filter: FindManyOptions, ..._extra: any
         ): Promise<{ [x: string]: number }> {
             const count = await this.crudService.count(filter);
             return { count }
@@ -81,8 +82,7 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         })
         @Get('all')
         async getAll(
-            @Query() filter: IFindOptions,
-                ..._extra: any
+            @Query() filter: IFindOptions, ..._extra: any
         ): Promise<T[]> {
             return this.crudService.getAll(filter);
         }
@@ -102,8 +102,7 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         })
         @Get()
         async getMany(
-            @Query() filter?: IFindOptions,
-                ..._extra: any
+            @Query() filter?: IFindOptions, ..._extra: any
         ): Promise<IPaginationResult<T>> {
             return this.crudService.getMany(filter);
         }
@@ -121,8 +120,7 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         @Get(':id')
         async getOne(
             @Param('id') id: string,
-            @Query() queryParams: FindOneOptions<T>,
-                ..._extra: any
+            @Query() queryParams: FindOneOptions<T>, ..._extra: any
         ): Promise<T> {
             const options: any = {
                 where: { id: id }
@@ -148,8 +146,7 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         @Post()
         @UseGuards(AuthGuard('jwt'))
         async create(
-            @Body() entity: DeepPartial<T>,
-                ..._extra: any
+            @Body() entity: DeepPartial<T>, ..._extra: any
         ): Promise<T> {
             return this.crudService.create(entity);
         }
@@ -172,8 +169,7 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         @UseGuards(AuthGuard('jwt'))
         async update(
             @Param('id') id: string,
-            @Body() entity: Partial<typeof dto>,
-                ..._extra: any
+            @Body() entity: Partial<typeof dto>, ..._extra: any
         ): Promise<any> {
             return this.crudService.update(id, entity as any);
         }
@@ -207,8 +203,7 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         @Put(':id/restore')
         @UseGuards(AuthGuard('jwt'))
         async restore(
-            @Param('id') id: string,
-                ..._extra: any
+            @Param('id') id: string, ..._extra: any
         ) {
             return this.crudService.restore(id);
         }
@@ -226,8 +221,7 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         @Delete(':id/trash')
         @UseGuards(AuthGuard('jwt'))
         async permanentDelete(
-            @Param('id') id: string,
-                ..._extra: any
+            @Param('id') id: string, ..._extra: any
         ) {
             return this.crudService.permanentDelete(id);
         }
@@ -245,8 +239,7 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         @Delete('delete/bulk')
         @UseGuards(AuthGuard('jwt'))
         async bulkDelete(
-            @Query() request: DeleteManyInputDTO,
-                ..._extra: any
+            @Query() request: DeleteManyInputDTO, ..._extra: any
         ): Promise<any> {
             return this.crudService.delete({
                 id: In(request.ids) as any
@@ -267,8 +260,7 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         @Put('restore/bulk')
         @UseGuards(AuthGuard('jwt'))
         async bulkRestore(
-            @Body() request: RestoreManyInputDTO,
-                ..._extra: any
+            @Body() request: RestoreManyInputDTO, ..._extra: any
         ) {
             return this.crudService.restore({
                 id: In(request.ids) as any
@@ -288,8 +280,7 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         @Delete('trash/bulk')
         @UseGuards(AuthGuard('jwt'))
         async bulkPermanentDelete(
-            @Query() request: DeleteManyInputDTO,
-                ..._extra: any
+            @Query() request: DeleteManyInputDTO, ..._extra: any
         ): Promise<any> {
             return this.crudService.permanentDelete({
                 id: In(request.ids) as any

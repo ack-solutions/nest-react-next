@@ -1,10 +1,13 @@
+import { Logo } from '@admin/app/components';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+
 import { useNavData } from './nav-config';
-import { NAV } from '../../config';
-import { NavbarConfigProps } from '../../../types/navigation'; import NavbarToggleButton from './navbar-toggle-button';
 import NavbarGroup from './navbar-group';
-import { Logo } from '@admin/app/components';
+import NavbarToggleButton from './navbar-toggle-button';
+import { NavbarConfigProps } from '../../../types/navigation'; 
+import { NAV } from '../../config';
+
 
 export const hideScroll = {
     x: {
@@ -63,7 +66,13 @@ export default function NavbarMini() {
                     ...hideScroll.x
                 }}
             >
-                <Logo sx={{ mx: 'auto', width: 50, my: 2 }} />
+                <Logo
+                    sx={{
+                        mx: 'auto',
+                        width: 50,
+                        my: 2 
+                    }}
+                />
                 <Stack>
                     {navData.map(
                         (group, index) => (

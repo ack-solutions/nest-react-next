@@ -1,6 +1,14 @@
 {
     "eslint.validate": ["json"],
-    "cSpell.words": ["datatable", "hookform", "notistack"],
+    "cSpell.words": [
+        "datatable",
+        "hookform",
+        "notistack",
+        "ackplus",
+        "datatable",
+        "tmpl",
+        "typeorm"
+    ],
     "editor.codeActionsOnSave": {
         "source.fixAll": "explicit",
         "source.fixAll.eslint": "explicit"
@@ -19,10 +27,7 @@
         "**/.git": true,
         "**/.DS_Store": true,
         "**/node_modules": false,
-        "**/public/**/*.png": true,
-        "**/public/**/*.jpg": true,
-        "**/public/**/*.pdf": true,
-        "**/public/**/*.svg": true
+        "**/public/**/": true
     },
     "editor.defaultFormatter": "vscode.typescript-language-features",
     "[jsonc]": {

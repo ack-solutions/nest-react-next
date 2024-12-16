@@ -70,7 +70,10 @@ export function createPaletteChannel(hexPalette: Record<string, string>) {
         channelPalette[`${key}Channel`] = hexToRgbChannel(value);
     });
 
-    return { ...hexPalette, ...channelPalette };
+    return {
+        ...hexPalette,
+        ...channelPalette 
+    };
 }
 
 /**

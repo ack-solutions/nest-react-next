@@ -1,13 +1,15 @@
-import { Field, Formik, FormikHelpers } from 'formik';
-import { Alert, Box, Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import { object, string } from 'yup';
+import { Alert, Box, Stack } from '@mui/material';
+import { Field, Formik, FormikHelpers } from 'formik';
 import { TextField } from 'formik-mui';
+import { object, string } from 'yup';
+
 
 export interface ForgetPasswordFormProps {
   onSubmit: (values: any, action: FormikHelpers<any>) => void;
   values?: any;
 }
+
 const defaultValues = {
     email: '',
 }
@@ -29,7 +31,10 @@ const ForgetPasswordForm = ({
         >
             {({ handleSubmit, isSubmitting, errors }) => (
                 <Stack spacing={3}>
-                    <Box pb={2} pt={0}>
+                    <Box
+                        pb={2}
+                        pt={0}
+                    >
                         {errors?.afterSubmit && (
                             <Alert severity="error">{(errors as any)?.afterSubmit}</Alert>
                         )}

@@ -1,7 +1,8 @@
-import { useMemo } from 'react';
-import { startCase } from 'lodash';
 import { Label, LabelColor, LabelProps } from '@libs/react-core';
 import { UserStatusEnum } from '@libs/types';
+import { startCase } from 'lodash';
+import { useMemo } from 'react';
+
 
 export interface UserStatusLabelProps extends LabelProps {
     label?: string;
@@ -27,7 +28,10 @@ const UserStatusLabel = ({ label }: UserStatusLabelProps) => {
     }, [label])
 
     return (
-        <Label className='status-label' color={color}>
+        <Label
+            className='status-label'
+            color={color}
+        >
             {startCase(label)}
         </Label>
     );

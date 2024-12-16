@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
 
+
 const QuillEditorToolbarStyle = styled('div')(({ theme }) => {
     const isRTL = theme.direction === 'rtl';
 
@@ -96,7 +97,10 @@ const QuillEditorToolbarStyle = styled('div')(({ theme }) => {
 
                 // Align
                 '&.ql-align': {
-                    '& .ql-picker-options': { padding: 0, display: 'flex' },
+                    '& .ql-picker-options': {
+                        padding: 0,
+                        display: 'flex' 
+                    },
                     '& .ql-picker-item': {
                         width: 32,
                         height: 32,

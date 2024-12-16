@@ -1,5 +1,6 @@
 import { IBaseEntity } from "./base-entity";
 
+
 export interface ISetting extends IBaseEntity {
     name?: string;
     key?: string;

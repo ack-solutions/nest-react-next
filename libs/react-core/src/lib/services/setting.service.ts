@@ -1,7 +1,9 @@
 
 import { ISetting } from '@libs/types';
+
 import { CRUDService } from './crud-service';
 import { instanceApi } from '../utils';
+
 
 export class SettingService extends CRUDService<ISetting> {
     protected apiPath = 'setting';

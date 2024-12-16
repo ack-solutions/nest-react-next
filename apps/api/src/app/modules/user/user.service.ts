@@ -1,18 +1,20 @@
+import { CrudService } from '@api/app/core/crud';
+import { RequestContext } from '@api/app/core/request-context/request-context';
+import { hashPassword } from '@api/app/utils';
+import { IChangePasswordInput, IRegisterInput, IUpdateProfileInput, IUser, RoleNameEnum } from '@libs/types';
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcryptjs';
+import { has, omit } from 'lodash';
 import {
     Repository,
     DeepPartial,
     Not,
 } from 'typeorm';
+
 import { User } from './user.entity';
-import { IChangePasswordInput, IRegisterInput, IUpdateProfileInput, IUser, RoleNameEnum } from '@libs/types';
 import { Role } from '../role';
-import { has, omit } from 'lodash';
-import { hashPassword } from '@api/app/utils';
-import { CrudService } from '@api/app/core/crud';
-import { RequestContext } from '@api/app/core/request-context/request-context';
-import * as bcrypt from 'bcryptjs';
+
 
 @Injectable()
 export class UserService extends CrudService<User> {
@@ -96,7 +98,10 @@ export class UserService extends CrudService<User> {
                 'roles',
             ]);
 
-            await this.userRepository.save({ ...user, ...userEntity });
+            await this.userRepository.save({
+                ...user,
+                ...userEntity
+            });
             return await this.userRepository.findOne({
                 where: {
                     id: userId,

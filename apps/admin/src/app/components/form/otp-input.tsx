@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 type AllowedInputTypes = 'password' | 'text' | 'number' | 'tel';
 
 type InputProps = Required<
@@ -200,7 +201,10 @@ const OTPInput = ({
 
     return (
         <div
-            style={Object.assign({ display: 'flex', alignItems: 'center' }, isStyleObject(containerStyle) && containerStyle)}
+            style={Object.assign({
+                display: 'flex',
+                alignItems: 'center' 
+            }, isStyleObject(containerStyle) && containerStyle)}
             className={typeof containerStyle === 'string' ? containerStyle : undefined}
             onPaste={onPaste}
         >
@@ -220,7 +224,10 @@ const OTPInput = ({
                             maxLength: 1,
                             'aria-label': `Please enter OTP character ${index + 1}`,
                             style: Object.assign(
-                                !skipDefaultStyles ? ({ width: '1em', textAlign: 'center' } as const) : {},
+                                !skipDefaultStyles ? ({
+                                    width: '1em',
+                                    textAlign: 'center' 
+                                } as const) : {},
                                 isStyleObject(inputStyle) ? inputStyle : {}
                             ),
                             className: typeof inputStyle === 'string' ? inputStyle : undefined,
@@ -238,4 +245,5 @@ const OTPInput = ({
 };
 
 export type { OTPInputProps, InputProps, AllowedInputTypes };
+
 export default OTPInput;

@@ -1,11 +1,11 @@
 
+import { OtpInputField } from '@admin/app/components';
 import { Alert, Box, Button, Stack, Typography } from '@mui/material'
 import { Field, Form, Formik, FormikHelpers } from 'formik';
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { object, string } from 'yup';
+
 import { PATH_AUTH } from '../../routes/paths';
-import { OtpInputField } from '@admin/app/components';
 
 
 const VeryFySchema = object().shape({
@@ -13,9 +13,9 @@ const VeryFySchema = object().shape({
 });
 
 interface LoginOtpVerificationProps {
-  onSubmit: (value: any, action: FormikHelpers<any>) => void ;
-  onResend?: (val?: any) => void,
-  onGoBack?: () => void,
+    onSubmit: (value: any, action: FormikHelpers<any>) => void;
+    onResend?: (val?: any) => void,
+    onGoBack?: () => void,
 }
 
 
@@ -27,10 +27,10 @@ const LoginOtpVerification = ({
     return (
         <Box>
             <Typography variant="h1">
-        Enter OTP Code
+                Enter OTP Code
             </Typography>
             <Typography sx={{ color: 'text.secondary' }}>
-        Enter 4 - digits code we send you on
+                Enter 4 - digits code we send you on
             </Typography>
 
             <Box
@@ -45,21 +45,36 @@ const LoginOtpVerification = ({
                 </Typography>
             </Box>
 
-            <Box sx={{ mt: 5, mb: 3 }}>
+            <Box
+                sx={{
+                    mt: 5,
+                    mb: 3
+                }}
+            >
                 <Formik
                     initialValues={Object.assign({}, { otp: '' })}
                     validationSchema={VeryFySchema}
                     onSubmit={onSubmit}
                 >
-                    {({ errors, isSubmitting, handleSubmit, values }) => (
-                        <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-                            <Box pb={2} pt={0}>
+                    {({ errors, handleSubmit }) => (
+                        <Form
+                            autoComplete="off"
+                            noValidate
+                            onSubmit={handleSubmit}
+                        >
+                            <Box
+                                pb={2}
+                                pt={0}
+                            >
                                 {(errors as any)?.afterSubmit && (
                                     <Alert severity="error">{(errors as any)?.afterSubmit}</Alert>
                                 )}
                             </Box>
 
-                            <Box display='grid' justifyContent='center'>
+                            <Box
+                                display='grid'
+                                justifyContent='center'
+                            >
                                 <Field
                                     name="otp"
                                     component={OtpInputField}
@@ -74,7 +89,7 @@ const LoginOtpVerification = ({
                                 type="submit"
                                 variant="contained"
                             >
-                Submit
+                                Submit
                             </Button>
 
                             <Stack
@@ -89,14 +104,14 @@ const LoginOtpVerification = ({
                                     sx={{ mt: 1 }}
                                     onClick={onGoBack}
                                 >
-                  Back
+                                    Back
                                 </Button>
                                 <Button
                                     type="submit"
                                     onClick={onResend}
                                     sx={{ mx: 'auto' }}
                                 >
-                  Resend Code
+                                    Resend Code
                                 </Button>
                             </Stack>
 

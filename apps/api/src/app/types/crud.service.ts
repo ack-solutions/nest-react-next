@@ -1,5 +1,5 @@
 import { IFindOptions, IPaginationResult } from '@libs/types';
-import { DeepPartial, DeleteResult, FindManyOptions, FindOneOptions, FindOptions, FindOptionsWhere, SaveOptions, UpdateResult } from 'typeorm';
+import { DeepPartial, DeleteResult, FindManyOptions, FindOneOptions, FindOptionsWhere, SaveOptions, UpdateResult } from 'typeorm';
 
 
 export interface ICrudService<T> {

@@ -1,5 +1,7 @@
 
 import { useMemo, useState, useCallback, Dispatch, SetStateAction } from 'react';
+
+
 export interface UseBooleanReturn {
   value: boolean;
   data: any;
@@ -8,7 +10,9 @@ export interface UseBooleanReturn {
   onToggle: () => void;
   onSetData: (value?: any) => void;
   setValue: Dispatch<SetStateAction<boolean>>;
-};
+}
+
+;
 
 export function useBoolean(defaultValue = false): UseBooleanReturn {
     const [value, setValue] = useState(defaultValue);

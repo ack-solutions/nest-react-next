@@ -1,5 +1,6 @@
 import { IBaseEntity } from './base-entity';
 
+
 export interface IPage extends IBaseEntity {
     title?: string;
     slug?: string;

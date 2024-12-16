@@ -1,5 +1,6 @@
-import { Outlet } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
+import { Outlet } from 'react-router-dom';
+
 
 const RootStyle = styled('div')({
     height: '100vh',

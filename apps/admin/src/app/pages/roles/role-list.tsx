@@ -1,14 +1,15 @@
-import { useCallback } from 'react';
-import {
-    Container,
-    Button,
-} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { IRole } from '@libs/types';
 import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
 import Page from '@admin/app/components/page';
 import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 import RoleListTable from '@admin/app/sections/role/role-list-table';
+import { IRole } from '@libs/types';
+import {
+    Container,
+    Button,
+} from '@mui/material';
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function RoleList() {
     const navigate = useNavigate();
@@ -25,8 +26,14 @@ export default function RoleList() {
                 <CustomBreadcrumbs
                     heading="Roles"
                     links={[
-                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: 'Roles', href: PATH_DASHBOARD.users.roles },
+                        {
+                            name: 'Dashboard',
+                            href: PATH_DASHBOARD.root 
+                        },
+                        {
+                            name: 'Roles',
+                            href: PATH_DASHBOARD.users.roles 
+                        },
                         { name: 'List' },
                     ]}
                     action={

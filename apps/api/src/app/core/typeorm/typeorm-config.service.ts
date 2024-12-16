@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
-import { TlsOptions } from 'tls';
-import { AllEntities } from '../entities';
-import { IDatabaseConfig } from '../config/database';
-import { CustomNamingStrategy } from './custom-naming-strategy';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
+import { TlsOptions } from 'tls';
+
+import { IDatabaseConfig } from '../config/database';
+import { AllEntities } from '../entities';
+import { CustomNamingStrategy } from './custom-naming-strategy';
 
 
 @Injectable()

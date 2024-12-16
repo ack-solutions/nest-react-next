@@ -1,13 +1,16 @@
+import { TextField } from '@admin/app/components/form/formik';
+import { Icon, useBoolean } from '@libs/react-core';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Alert, IconButton, InputAdornment, Link, Stack, useTheme } from '@mui/material';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { CheckboxWithLabel } from 'formik-mui';
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import { Link as RouterLink } from 'react-router-dom';
 import { boolean, object, string } from 'yup';
+
 import { PATH_AUTH } from '../../routes/paths';
-import { Icon, useBoolean } from '@libs/react-core';
-import { TextField } from '@admin/app/components/form/formik';
+
+
 export interface RegisterFromProps {
     onSubmit?: (
         value: any,
@@ -51,7 +54,11 @@ const RegisterFrom = ({ onSubmit }: RegisterFromProps) => {
             onSubmit={handleSubmit}
         >
             {({ errors, isSubmitting, handleSubmit }) => (
-                <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+                <Form
+                    autoComplete="off"
+                    noValidate
+                    onSubmit={handleSubmit}
+                >
                     <Stack spacing={2}>
                         {(errors as any).afterSubmit && (
                             <Alert severity="error">{(errors as any).afterSubmit as any}</Alert>
@@ -87,7 +94,10 @@ const RegisterFrom = ({ onSubmit }: RegisterFromProps) => {
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                        <IconButton onClick={() => showPassword.onToggle()} edge="end">
+                                        <IconButton
+                                            onClick={() => showPassword.onToggle()}
+                                            edge="end"
+                                        >
                                             <Icon
                                                 icon={showPassword.value ? 'eye' : 'eye-slash'}
                                                 color={theme.palette.grey[500]}
@@ -103,7 +113,10 @@ const RegisterFrom = ({ onSubmit }: RegisterFromProps) => {
                         direction="row"
                         alignItems="center"
                         justifyContent="space-between"
-                        sx={{ my: 2, marginLeft: '4px' }}
+                        sx={{
+                            my: 2,
+                            marginLeft: '4px'
+                        }}
                     >
 
                         <Field

@@ -1,12 +1,13 @@
+import { OtpInputField } from '@admin/app/components';
+import { AuthService } from '@libs/react-core';
+import { errorMessage } from '@libs/react-core';
+import { Alert, Box, Button, Container, Stack, Typography, styled } from '@mui/material';
 import { Field, Form, Formik, FormikHelpers } from 'formik'
 import { useCallback, useState } from 'react'
-import { Alert, Box, Button, Container, Stack, Typography, styled } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { object, string } from 'yup';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { AuthService } from '@libs/react-core';
+
 import ResetPassword from '../reset-password';
-import { OtpInputField } from '@admin/app/components';
-import { errorMessage } from '@libs/react-core';
 
 
 const ContentStyle = styled('div')(({ theme }) => ({
@@ -19,8 +20,9 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 
 export interface IndexVerifyProps {
-	email?: string;
+    email?: string;
 }
+
 const VeryFySchema = object().shape({
     otp: string().label('OTP').required(),
 });
@@ -55,7 +57,8 @@ const IndexVerify = ({
     const handleResendOtp = useCallback(
         async () => {
             try {
-                await authService.sendOtp({ email }).then((data) => {
+                await authService.sendOtp({ email }).then(() => {
+                    //
                 })
             } catch (error) {
                 console.log(error)
@@ -77,10 +80,10 @@ const IndexVerify = ({
                 <Container maxWidth="sm">
                     <ContentStyle>
                         <Typography variant="h2">
-							Enter OTP Code
+                            Enter OTP Code
                         </Typography>
                         <Typography sx={{ color: 'text.secondary' }}>
-							Enter 4 - digits code we send you on
+                            Enter 4 - digits code we send you on
                         </Typography>
 
                         <Box
@@ -95,21 +98,36 @@ const IndexVerify = ({
                             </Typography>
                         </Box>
 
-                        <Box sx={{ mt: 5, mb: 3 }}>
+                        <Box
+                            sx={{
+                                mt: 5,
+                                mb: 3
+                            }}
+                        >
                             <Formik
                                 initialValues={Object.assign({}, { otp: '' })}
                                 validationSchema={VeryFySchema}
                                 onSubmit={handleSubmitOtp}
                             >
                                 {({ errors, isSubmitting, handleSubmit, values }) => (
-                                    <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-                                        <Box pb={2} pt={0}>
+                                    <Form
+                                        autoComplete="off"
+                                        noValidate
+                                        onSubmit={handleSubmit}
+                                    >
+                                        <Box
+                                            pb={2}
+                                            pt={0}
+                                        >
                                             {(errors as any).afterSubmit && (
                                                 <Alert severity="error">{(errors as any)?.afterSubmit}</Alert>
                                             )}
                                         </Box>
 
-                                        <Box display='grid' justifyContent='center'>
+                                        <Box
+                                            display='grid'
+                                            justifyContent='center'
+                                        >
                                             <Field
                                                 name="otp"
                                                 component={OtpInputField}
@@ -120,9 +138,9 @@ const IndexVerify = ({
                                             fullWidth
                                             type="submit"
                                             variant="contained"
-                                            // onClick={() => handleSubmitOtp()}
+                                        // onClick={() => handleSubmitOtp()}
                                         >
-											Submit
+                                            Submit
                                         </Button>
 
                                         <Stack
@@ -135,13 +153,13 @@ const IndexVerify = ({
                                                 onClick={() => navigate(-1)}
                                                 sx={{ mt: 1 }}
                                             >
-												Back
+                                                Back
                                             </Button>
                                             <Button
                                                 // type="submit"
                                                 onClick={() => handleResendOtp()}
                                             >
-												Resend Code
+                                                Resend Code
                                             </Button>
                                         </Stack>
 
@@ -157,7 +175,8 @@ const IndexVerify = ({
                 <ResetPassword
                     onCloseModal={handleCloseModal}
                     email={email}
-                    otp={isValidOtp} />
+                    otp={isValidOtp}
+                />
             ) : null}
         </>
     )

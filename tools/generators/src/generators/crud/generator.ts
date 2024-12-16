@@ -2,11 +2,13 @@ import {
     formatFiles,
     Tree,
 } from '@nx/devkit';
-import { PluginGeneratorSchema } from './schema';
+import { execSync } from 'child_process';
+
 import { ApiGenerator } from './api.generator';
 import { ReactGenerator } from './react.generator';
+import { PluginGeneratorSchema } from './schema';
 import { TypesGenerator } from './types.generator';
-import { execSync } from 'child_process';
+
 
 export async function pluginGenerator(tree: Tree, options: PluginGeneratorSchema) {
     const typesGenerator = new TypesGenerator(tree, options);
@@ -21,14 +23,13 @@ export async function pluginGenerator(tree: Tree, options: PluginGeneratorSchema
     await reactGenerator.run()
 
     await formatFiles(tree);
-  
+
     return async () => {
         await runEslintOnFiles(tree);
     };
 
 }
 
-// Helper function to run ESLint on specific files
 function runEslintOnFiles(tree) {
 
     const generatedFiles: string[] = []
@@ -41,7 +42,7 @@ function runEslintOnFiles(tree) {
         }
     });
 
- 
+
     if (generatedFiles.length === 0) {
         console.log('No files to lint.');
         return;

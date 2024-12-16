@@ -1,17 +1,16 @@
-import { useTheme } from '@mui/material/styles';
+import { Icon, useResponsive } from '@libs/react-core';
 import { Stack, AppBar, Toolbar, IconButton } from '@mui/material';
-import { HEADER, NAV } from '../../config';
-import { useLocation } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
 import { useScroll, UseScrollOptions } from 'framer-motion';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import {  Icon, useResponsive } from '@libs/react-core';
+
 import AccountPopover from './account-popover';
 import { bgBlur } from '../../../theme/styles';
-
+import { HEADER, NAV } from '../../config';
 
 
 type Props = {
-  onOpenNav?: VoidFunction;
+    onOpenNav?: VoidFunction;
 };
 
 export function useOffSetTop(top = 0, options?: UseScrollOptions) {
@@ -57,7 +56,10 @@ export default function Header({ onOpenNav }: Props) {
                 direction="row"
                 alignItems="center"
                 justifyContent="flex-end"
-                spacing={{ xs: 0.5, sm: 1 }}
+                spacing={{
+                    xs: 0.5,
+                    sm: 1
+                }}
             >
                 <AccountPopover />
             </Stack>
@@ -68,7 +70,7 @@ export default function Header({ onOpenNav }: Props) {
         <AppBar
             sx={{
                 color: 'transparent',
-                boxShadow:'none',
+                boxShadow: 'none',
                 borderBottom: `dashed 1px ${theme.palette.divider}`,
                 height: HEADER.H_MOBILE,
                 zIndex: theme.zIndex.appBar + 1,

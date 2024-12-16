@@ -1,6 +1,5 @@
-import { tableCellClasses, tableRowClasses } from '@mui/material';
 import { Theme } from '@mui/material';
-import { alpha, borderBottom, fontWeight } from '@mui/system';
+
 
 export default function Table(theme: Theme) {
     return {
@@ -15,7 +14,7 @@ export default function Table(theme: Theme) {
         MuiTableRow: {
             styleOverrides: {
                 root: {
-        
+
                 }
             }
         },
@@ -24,8 +23,8 @@ export default function Table(theme: Theme) {
                 head: {
                     fontWeight: theme.typography.fontWeightSemiBold,
                     backgroundColor: theme.palette.action.hover,
-                    color:theme.palette.action.disabledOpacity,
-                    borderBottom:'none'
+                    color: theme.palette.action.disabledOpacity,
+                    borderBottom: 'none'
                 },
             }
         },

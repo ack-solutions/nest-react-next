@@ -1,6 +1,8 @@
 import { Stack, Tab, Tabs, TabsProps } from '@mui/material';
-import Label from '../label/label';
 import { SyntheticEvent } from 'react';
+
+import Label from '../label/label';
+
 
 interface ITab {
   value: string;
@@ -28,7 +30,10 @@ const DataTableTab= ({
             scrollButtons="auto"
             value={currentTab}
             onChange={(event, tab) => onChange(event, tab)}
-            sx={{ px: 2, bgcolor: 'background.neutral' }}
+            sx={{
+                px: 2,
+                bgcolor: 'background.neutral' 
+            }}
         >
             {tabs?.map((tab:any) => (
                 <Tab
@@ -36,7 +41,11 @@ const DataTableTab= ({
                     key={tab.value}
                     value={tab.value}
                     label={
-                        <Stack spacing={1} direction="row" alignItems="center">
+                        <Stack
+                            spacing={1}
+                            direction="row"
+                            alignItems="center"
+                        >
                             <Label color={tab.color}> {tab.count} </Label>
                             <div>{tab.label}</div>
                         </Stack>

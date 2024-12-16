@@ -1,13 +1,15 @@
-import { ErrorMessage, FieldProps } from 'formik';
-import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Button, Card, CardContent, CardHeader, Checkbox, FormControlLabel, FormHelperText, Grid, InputLabel, Stack, TextField, useTheme } from '@mui/material';
+import { ErrorMessage, FieldProps } from 'formik';
 import { cloneDeep, isEqual } from 'lodash';
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+
+
 export interface PermissionSelectFieldProps extends FieldProps {
-  options: Array<{ value: any; label: string }>;
-  label: string | ReactNode;
-  column: 1 | 2 | 3 | 4 | 6 | 12;
-  renderValue: string;
-  renderLabel: string
+    options: Array<{ value: any; label: string }>;
+    label: string | ReactNode;
+    column: 1 | 2 | 3 | 4 | 6 | 12;
+    renderValue: string;
+    renderLabel: string
 }
 
 export const PermissionSelectField = ({
@@ -46,7 +48,7 @@ export const PermissionSelectField = ({
             setFieldValue(name, values);
             await setSelected(newValues);
         },
-        [selected],
+        [name, selected, setFieldValue],
     );
 
     const handleSearchChange = useCallback(
@@ -70,7 +72,7 @@ export const PermissionSelectField = ({
                 return updatedState;
             })
         },
-        [renderValue, name, options],
+        [options, setFieldValue, name, renderValue],
     )
 
     useEffect(() => {
@@ -96,7 +98,8 @@ export const PermissionSelectField = ({
                     margin='dense'
                     sx={{
                         ...theme.typography.body2,
-                        color: 'text.secondary', mb: 0.5
+                        color: 'text.secondary',
+                        mb: 0.5
                     }}
                 >
                     {label}
@@ -104,19 +107,24 @@ export const PermissionSelectField = ({
             )}
             <FormHelperText color="error"><ErrorMessage name={name} /></FormHelperText>
 
-            <Card sx={{
-                border: '1px solid',
-                borderColor: `rgba(0, 0, 0, 0.23)`,
-                display: 'flex',
-                flexDirection: 'column',
-                maxHeight: 400,
-                overflow: 'hidden',
-            }}>
+            <Card
+                sx={{
+                    border: '1px solid',
+                    borderColor: `rgba(0, 0, 0, 0.23)`,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    maxHeight: 400,
+                    overflow: 'hidden',
+                }}
+            >
                 <CardHeader
                     action={
                         (
                             <Stack
-                                direction={{ xs: 'column', sm: 'row' }}
+                                direction={{
+                                    xs: 'column',
+                                    sm: 'row'
+                                }}
                                 spacing={2}
                             >
                                 <TextField
@@ -128,12 +136,12 @@ export const PermissionSelectField = ({
                                 <Button
                                     onClick={handleSelectToggle(true)}
                                 >
-                  Select All
+                                    Select All
                                 </Button>
                                 <Button
                                     onClick={handleSelectToggle(false)}
                                 >
-                  Unselect All
+                                    Unselect All
                                 </Button>
                             </Stack>
                         )
@@ -152,7 +160,10 @@ export const PermissionSelectField = ({
                         overflow={'auto'}
                     >
                         {options && options.map((option: any, index) => (
-                            <Grid item sm={12 / column}>
+                            <Grid
+                                item
+                                sm={12 / column}
+                            >
                                 <FormControlLabel
                                     key={option[renderValue]}
                                     control={
@@ -172,5 +183,3 @@ export const PermissionSelectField = ({
         </Box>
     );
 };
-
-

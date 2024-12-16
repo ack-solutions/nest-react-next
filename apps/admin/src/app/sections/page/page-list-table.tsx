@@ -1,12 +1,13 @@
-import { useState, useCallback, useRef, MutableRefObject } from 'react';
-import { DataTableColumn, DataTableHandle } from '../../components';
-import { IPage, PageStatusEnum } from '@libs/types';
 import { usePage } from '@libs/react-core';
+import { IPage, PageStatusEnum } from '@libs/types';
 import { Tabs, Tab, Card, Divider, Typography } from '@mui/material';
-import { CrudTable, CrudTableActions } from '../../components/crud/crud-table';
-import StatusLabel from 'libs/react-core/src/lib/components/status-label';
 import { startCase } from 'lodash';
+import { useState, useCallback, useRef, MutableRefObject } from 'react';
+
 import PageStatusLabel from './page-status-label';
+import { DataTableColumn, DataTableHandle } from '../../components';
+import { CrudTable, CrudTableActions } from '../../components/crud/crud-table';
+
 
 export interface PageListTableProps {
     datatableRef?: MutableRefObject<DataTableHandle>;
@@ -53,13 +54,13 @@ export default function PageListTable({ onEdit }: PageListTableProps) {
     } = usePage();
 
     const handleTabChange = useCallback((_event, value) => {
-        setCustomFilters((state) => ({
+        setCustomFilters(() => ({
             status: value,
         }));
         datatableRef.current.applyFilters((state) => ({
             ...state,
             where: {
-                ...value != 'all' ? { status: { $eq: value } } : {},
+                ...value !== 'all' ? { status: { $eq: value } } : {},
             }
         }));
     }, [datatableRef]);

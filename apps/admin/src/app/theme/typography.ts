@@ -47,54 +47,82 @@ export const typography = {
         fontWeight: 800,
         lineHeight: 80 / 64,
         fontSize: 28,
-        ...responsiveFontSizes({ sm: 52, md: 58, lg: 64 })
+        ...responsiveFontSizes({
+            sm: 52,
+            md: 58,
+            lg: 64 
+        })
     },
     h2: {
         fontWeight: 800,
         lineHeight: 64 / 48,
         fontSize: 24,
-        ...responsiveFontSizes({ sm: 22, md: 24 })
+        ...responsiveFontSizes({
+            sm: 22,
+            md: 24 
+        })
     },
     h3: {
         fontWeight: 700,
         lineHeight: 1.5,
         fontSize: 20,
-        ...responsiveFontSizes({ sm: 18, md: 20 })
+        ...responsiveFontSizes({
+            sm: 18,
+            md: 20 
+        })
     },
     h4: {
         fontWeight: 700,
         lineHeight: 1.5,
         fontSize: 18,
-        ...responsiveFontSizes({ sm: 16, md: 18 })
+        ...responsiveFontSizes({
+            sm: 16,
+            md: 18 
+        })
     },
     h5: {
         fontWeight: 700,
         lineHeight: 1.5,
         fontSize: 16,
-        ...responsiveFontSizes({ sm: 14, md: 16 })
+        ...responsiveFontSizes({
+            sm: 14,
+            md: 16 
+        })
     },
     h6: {
         fontWeight: 700,
         lineHeight: 28 / 18,
         fontSize: 14,
-        ...responsiveFontSizes({ sm: 12, md: 14 })
+        ...responsiveFontSizes({
+            sm: 12,
+            md: 14 
+        })
     },
     subtitle1: {
         fontWeight: 600,
         lineHeight: 1.5,
         fontSize: 16,
-        ...responsiveFontSizes({ sm: 14, md: 16 }),
+        ...responsiveFontSizes({
+            sm: 14,
+            md: 16 
+        }),
     },
     subtitle2: {
         fontWeight: 600,
         lineHeight: 22 / 14,
         fontSize: 14,
-        ...responsiveFontSizes({ sm: 12, md: 14 }),
+        ...responsiveFontSizes({
+            sm: 12,
+            md: 14 
+        }),
     },
     body1: {
         lineHeight: 1.5,
         fontSize: 16,
-        ...responsiveFontSizes({ sm: 14, md: 14 }),
+        ...responsiveFontSizes({
+            sm: 14,
+            md: 14 
+        }),
     },
     body2: {
         lineHeight: 22 / 14,

@@ -1,24 +1,26 @@
-import { NestFactory } from '@nestjs/core';
-import { SeederModule, SeederModuleExtraOptions, SeederModuleOptions } from './seeder.module';
-import { SeederService } from './seeder.service';
 import {
     Provider,
     Type,
     DynamicModule,
     ForwardReference,
 } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 import yargs from 'yargs';
+
 import { SeederServiceOptions } from './seeder.interface';
+import { SeederModule, SeederModuleExtraOptions, SeederModuleOptions } from './seeder.module';
+import { SeederService } from './seeder.service';
+
 
 export interface SeederOptions {
-  imports?: Array<
-    Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference
-  >;
-  providers?: Provider[];
+    imports?: Array<
+        Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference
+    >;
+    providers?: Provider[];
 }
 
 export interface SeederRunner {
-  run(extraOptions: SeederModuleExtraOptions): Promise<void>;
+    run(extraOptions: SeederModuleExtraOptions): Promise<void>;
 }
 
 async function bootstrap(options: SeederModuleOptions) {

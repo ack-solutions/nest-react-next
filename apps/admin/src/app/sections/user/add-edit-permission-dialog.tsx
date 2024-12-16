@@ -8,6 +8,7 @@ import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form';
 import { object, string } from 'yup';
 
+
 interface AddEditPermissionDialogProps {
     onClose: (value?: any) => void;
     values?: any;
@@ -38,7 +39,7 @@ const AddEditPermissionDialog = ({ onClose, values }: AddEditPermissionDialogPro
     const handleSubmitForm = useCallback(
         (value: IPermission) => {
             const options = {
-                onSuccess: (data) => {
+                onSuccess: () => {
                     showToasty(
                         value?.id
                             ? 'Permission updated successfully'
@@ -57,7 +58,7 @@ const AddEditPermissionDialog = ({ onClose, values }: AddEditPermissionDialogPro
                 createPermission(value, options);
             }
         },
-        [],
+        [createPermission, onClose, showToasty, updatePermission],
     )
     useEffect(() => {
         reset({
@@ -73,10 +74,17 @@ const AddEditPermissionDialog = ({ onClose, values }: AddEditPermissionDialogPro
             onClose={() => onClose()}
             actions={
                 <>
-                    <Button variant="outlined" onClick={() => { onClose() }}>
+                    <Button
+                        variant="outlined"
+                        onClick={() => { onClose() }}
+                    >
                         Cancel
                     </Button>
-                    <Button variant="contained" color="primary" onClick={handleSubmit(handleSubmitForm)}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleSubmit(handleSubmitForm)}
+                    >
                         Save
                     </Button>
                 </>

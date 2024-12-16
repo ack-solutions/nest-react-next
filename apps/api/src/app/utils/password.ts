@@ -1,4 +1,6 @@
 import * as bcrypt from 'bcrypt';
+
+
 export function generatePassword() {
     let pass = '';
     const str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$';

@@ -1,7 +1,8 @@
 import React, { ReactNode } from 'react'
 
-import useAccess from './use-access'
 import context from './context'
+import useAccess from './use-access'
+
 
 export interface WithAccessOptions {
 	permissions?: string[];

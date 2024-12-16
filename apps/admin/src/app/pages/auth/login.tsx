@@ -1,10 +1,11 @@
-import React, { useCallback, useState } from 'react'
-import { Box, Stack, Typography } from '@mui/material'
+import { AuthService, errorMessage, useAuth } from '@libs/react-core'
 import { ILoginSendOtpInput } from '@libs/types'
+import { Box, Stack, Typography } from '@mui/material'
+import React, { useCallback, useState } from 'react'
+
+import AuthLayout from '../../sections/auth/auth-layout'
 import LoginForm from '../../sections/auth/login-form'
 import LoginOtpVerification from '../../sections/auth/login-otp-verification'
-import { AuthService, errorMessage, useAuth } from '@libs/react-core'
-import AuthLayout from '../../sections/auth/auth-layout'
 
 
 const authService = AuthService.getInstance<AuthService>()
@@ -15,7 +16,7 @@ const Login = () => {
     const handleSendOtp = useCallback(
         (value?: ILoginSendOtpInput, action?: any) => {
             value = value ? value : verifyData
-            authService.sendLoginOtp(value).then(({ data }) => {
+            authService.sendLoginOtp(value).then(() => {
                 setVerifyData(value)
             }).catch((error) => {
                 action?.setErrors({ afterSubmit: errorMessage(error) });
@@ -26,14 +27,6 @@ const Login = () => {
         },
         [verifyData],
     )
-
-    const handleSubmitRegisterForm = useCallback(
-        (value?: any, action?: any) => {
-
-        },
-        [],
-    )
-
 
     const handleLogin = useCallback(
         async (values: any, action: any) => {
@@ -55,10 +48,7 @@ const Login = () => {
     )
 
     return (
-        <AuthLayout
-            //src={"/assets/static/illustrations/inDep_login.png"}
-            rootTitle={"Login | INDep"} src={''}
-        >
+        <AuthLayout rootTitle={"Login | React Next"} >
             {!verifyData ? (
                 <Box
                     sx={{
@@ -67,13 +57,20 @@ const Login = () => {
                         p: 2,
                     }}
                 >
-                    <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
+                    <Stack
+                        direction="row"
+                        alignItems="center"
+                        sx={{ mb: 5 }}
+                    >
                         <Box sx={{ flexGrow: 1 }}>
-                            <Typography variant="h1" gutterBottom>
-                Login
+                            <Typography
+                                variant="h1"
+                                gutterBottom
+                            >
+                                Login
                             </Typography>
                             <Typography sx={{ color: 'text.secondary' }}>
-                Welcome back, log into your account
+                                Welcome back, log into your account
                             </Typography>
                         </Box>
                     </Stack>

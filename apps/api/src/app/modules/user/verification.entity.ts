@@ -1,9 +1,9 @@
 
-import {  Column, Entity } from "typeorm";
+import { BaseEntity } from "@api/app/core/typeorm/base.entity";
+import { IVerification } from "@libs/types";
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { IsNumber, IsString } from "class-validator";
-import { IVerification } from "@libs/types";
-import { BaseEntity } from "@api/app/core/typeorm/base.entity";
+import {  Column, Entity } from "typeorm";
 
 
 @Entity()
@@ -21,7 +21,10 @@ export class Verification extends BaseEntity  implements IVerification {
 
   @ApiPropertyOptional()
   @IsString()
-  @Column({ length: 20, nullable: true })
+  @Column({
+      length: 20,
+      nullable: true 
+  })
       phoneNumber?: string;
 
   @ApiPropertyOptional()

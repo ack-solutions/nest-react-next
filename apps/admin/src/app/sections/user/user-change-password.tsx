@@ -5,6 +5,7 @@ import { useCallback } from 'react'
 import { useForm } from 'react-hook-form';
 import { object, ref, string } from 'yup';
 
+
 const validationSchema = yupResolver(object().shape({
     oldPassword: string().label('Old Password').required(),
     password: string().label('New Password').required(),
@@ -30,7 +31,7 @@ const UserChangePassword = () => {
     const handleSubmitForm = useCallback(
         (values) => {
             const options = {
-                onSuccess: (data) => {
+                onSuccess: () => {
                     showToasty('Password Successfully updated');
                     reset();
                 },
@@ -40,7 +41,7 @@ const UserChangePassword = () => {
                 }
             }
             changePassword(values, options);
-        }, []
+        }, [changePassword, reset, showToasty]
     )
 
     return (
@@ -81,7 +82,10 @@ const UserChangePassword = () => {
                                 justifyContent='flex-end'
                                 mt={2}
                             >
-                                <Button variant='contained' type='submit'>
+                                <Button
+                                    variant='contained'
+                                    type='submit'
+                                >
                                     Change
                                 </Button>
                             </Stack>

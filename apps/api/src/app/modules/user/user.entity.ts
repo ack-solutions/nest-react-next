@@ -1,13 +1,14 @@
 
-import { Column, Entity, AfterLoad, ManyToMany, JoinTable } from "typeorm";
-import { Role } from "../role/role.entity";
-import { IsBoolean, IsDateString, IsEmail, IsEnum, IsNumberString, IsOptional, IsString } from "class-validator";
-import { ApiProperty } from "@nestjs/swagger";
-import { IUser, UserStatusEnum } from "@libs/types";
-import { BaseEntity } from "@api/app/core/typeorm/base.entity";
-import { Factory } from "@api/app/core/nest-seeder";
 import { IsExistInDB } from "@api/app/core/class-validators";
 import { FileStorage } from "@api/app/core/file-storage";
+import { Factory } from "@api/app/core/nest-seeder";
+import { BaseEntity } from "@api/app/core/typeorm/base.entity";
+import { IUser, UserStatusEnum } from "@libs/types";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsBoolean, IsDateString, IsEmail, IsEnum, IsNumberString, IsOptional, IsString } from "class-validator";
+import { Column, Entity, AfterLoad, ManyToMany, JoinTable } from "typeorm";
+
+import { Role } from "../role/role.entity";
 
 
 @Entity()
@@ -26,10 +27,16 @@ export class User extends BaseEntity implements IUser {
       lastName?: string;
 
   @ApiProperty()
-  @Factory((faker, ctx) => faker.internet.email({ firstName: ctx.firstName, lastName: ctx.lastName }), ['firstName', 'lastName'])
+  @Factory((faker, ctx) => faker.internet.email({
+      firstName: ctx.firstName,
+      lastName: ctx.lastName 
+  }), ['firstName', 'lastName'])
   @IsString()
   @IsEmail()
-  @Column({ nullable: true, unique: true })
+  @Column({
+      nullable: true,
+      unique: true 
+  })
   @IsExistInDB({
       entity: User,
       options: {
@@ -41,7 +48,10 @@ export class User extends BaseEntity implements IUser {
 
   @Factory((faker) => '+91' + faker.string.numeric(10))
   @ApiProperty()
-  @Column('character', { length: 20, nullable: true })
+  @Column('character', {
+      length: 20,
+      nullable: true 
+  })
   @IsOptional()
   @IsNumberString()
       phoneNumber?: number;
@@ -57,20 +67,35 @@ export class User extends BaseEntity implements IUser {
       avatar?: string;
 
   @Factory(() => 'Test@123')
-  @Column({ nullable: true, select: false })
+  @Column({
+      nullable: true,
+      select: false 
+  })
       passwordHash?: string;
 
-  @Column({ nullable: true, default: false, update: false, insert: false })
+  @Column({
+      nullable: true,
+      default: false,
+      update: false,
+      insert: false 
+  })
       isSuperAdmin?: boolean;
 
   @ApiProperty({ nullable: true })
   @Factory((faker) => faker.date.past())
   @IsDateString()
   @IsOptional()
-  @Column({ nullable: true, default: null })
+  @Column({
+      nullable: true,
+      default: null 
+  })
       emailVerifiedAt?: Date;
 
-  @ApiProperty({ type: UserStatusEnum, enum: UserStatusEnum, example: UserStatusEnum.ACTIVE })
+  @ApiProperty({
+      type: UserStatusEnum,
+      enum: UserStatusEnum,
+      example: UserStatusEnum.ACTIVE 
+  })
   @Factory((faker) => faker.helpers.enumValue(UserStatusEnum))
   @IsEnum(UserStatusEnum)
   @IsOptional()
@@ -78,13 +103,19 @@ export class User extends BaseEntity implements IUser {
       status?: UserStatusEnum;
 
   @Factory((faker) => faker.datatype.boolean())
-  @ApiProperty({ example: 'string', readOnly: true })
+  @ApiProperty({
+      example: 'string',
+      readOnly: true 
+  })
   @IsBoolean()
   @IsOptional()
   @Column({ default: false })
       isProfileCompleted?: boolean;
 
-  @ApiProperty({ type: [Role], readOnly: true })
+  @ApiProperty({
+      type: [Role],
+      readOnly: true 
+  })
   @ManyToMany(() => Role)
   @JoinTable()
       roles?: Role[];
@@ -98,13 +129,22 @@ export class User extends BaseEntity implements IUser {
   @ApiProperty({ type: String, })
   @IsString()
   @IsOptional()
-  @Column({ length: 200, nullable: true })
+  @Column({
+      length: 200,
+      nullable: true 
+  })
       address?: string;
   
-  @ApiProperty({ example: 'string', readOnly: true })
+  @ApiProperty({
+      example: 'string',
+      readOnly: true 
+  })
       name?: string;
 
-  @ApiProperty({ example: 'string', readOnly: true })
+  @ApiProperty({
+      example: 'string',
+      readOnly: true 
+  })
       avatarUrl?: string;
 
   @AfterLoad()

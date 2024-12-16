@@ -1,13 +1,14 @@
-import { Controller, Post, Body, UseGuards, HttpStatus } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthGuard } from '@nestjs/passport';
-import { ConfigService } from '@nestjs/config';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { LoginInputDTO } from './dto/login-input.dto';
-import { LoginSuccessDTO } from './dto/login-success.dto';
-import { LoginSendOtpDTO } from './dto/login-send-otp.dto';
-import { RegisterInputDTO } from './dto/register-input.dto';
 import { IRegisterInput } from '@libs/types';
+import { Controller, Post, Body, UseGuards, HttpStatus } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+
+import { AuthService } from './auth.service';
+import { LoginInputDTO } from './dto/login-input.dto';
+import { LoginSendOtpDTO } from './dto/login-send-otp.dto';
+import { LoginSuccessDTO } from './dto/login-success.dto';
+import { RegisterInputDTO } from './dto/register-input.dto';
 
 
 @ApiTags('Auth')

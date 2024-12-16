@@ -1,14 +1,15 @@
+import { PATH_DASHBOARD } from '@admin/app/routes/paths';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { FormContainer, Icon, RHFSelect, RHFTextField, RHFUploadAvatar, useBoolean, useRoleQuery } from '@libs/react-core';
 import { IUser, UserStatusEnum } from '@libs/types';
 import { Button, Card, CardContent, IconButton, InputAdornment, MenuItem, Stack, useTheme } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { startCase } from 'lodash';
 import { useEffect } from 'react'
-import { number, object, ref, string } from 'yup';
-import Grid from '@mui/material/Grid2';
-import { useNavigate, useParams } from 'react-router-dom';
-import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { useNavigate, useParams } from 'react-router-dom';
+import { number, object, ref, string } from 'yup';
+
 
 export interface AddEditUserFormProps {
     values?: IUser;
@@ -77,8 +78,16 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
             validationSchema={validationSchema}
             onSuccess={onSubmit}
         >
-            <Grid container spacing={2}>
-                <Grid size={{ xs: 12, sm: 3 }}>
+            <Grid
+                container
+                spacing={2}
+            >
+                <Grid
+                    size={{
+                        xs: 12,
+                        sm: 3 
+                    }}
+                >
                     <Card>
                         <CardContent>
                             <RHFUploadAvatar
@@ -98,7 +107,10 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 }}
                             >
                                 {Object.values(UserStatusEnum).map((status, index) => (
-                                    <MenuItem value={status} key={index}>
+                                    <MenuItem
+                                        value={status}
+                                        key={index}
+                                    >
                                         {startCase(status)}
                                     </MenuItem>
                                 ))}
@@ -106,11 +118,24 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid size={{ xs: 12, sm: 9 }}>
+                <Grid
+                    size={{
+                        xs: 12,
+                        sm: 9 
+                    }}
+                >
                     <Card>
                         <CardContent>
-                            <Grid container spacing={2}>
-                                <Grid size={{ xs: 12, sm: 6 }}>
+                            <Grid
+                                container
+                                spacing={2}
+                            >
+                                <Grid
+                                    size={{
+                                        xs: 12,
+                                        sm: 6 
+                                    }}
+                                >
                                     <RHFTextField
                                         fullWidth
                                         required
@@ -118,7 +143,12 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                         label='First Name'
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6 }}>
+                                <Grid
+                                    size={{
+                                        xs: 12,
+                                        sm: 6 
+                                    }}
+                                >
                                     <RHFTextField
                                         fullWidth
                                         required
@@ -128,7 +158,12 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 </Grid>
                                 {!userId && (
                                     <>
-                                        <Grid size={{ xs: 12, sm: 6 }}>
+                                        <Grid
+                                            size={{
+                                                xs: 12,
+                                                sm: 6 
+                                            }}
+                                        >
                                             <RHFTextField
                                                 fullWidth
                                                 type={showPassword.value ? 'text' : 'password'}
@@ -138,7 +173,10 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                                     input: {
                                                         endAdornment: (
                                                             <InputAdornment position="end">
-                                                                <IconButton onClick={() => showPassword.onToggle()} edge="end">
+                                                                <IconButton
+                                                                    onClick={() => showPassword.onToggle()}
+                                                                    edge="end"
+                                                                >
                                                                     <Icon
                                                                         icon={showPassword.value ? 'eye' : 'eye-slash'}
                                                                         color={theme.palette.grey[500]}
@@ -150,7 +188,12 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                                 }}
                                             />
                                         </Grid>
-                                        <Grid size={{ xs: 12, sm: 6 }}>
+                                        <Grid
+                                            size={{
+                                                xs: 12,
+                                                sm: 6 
+                                            }}
+                                        >
                                             <RHFTextField
                                                 fullWidth
                                                 type={confirmShowPassword.value ? 'text' : 'password'}
@@ -160,7 +203,10 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                                     input: {
                                                         endAdornment: (
                                                             <InputAdornment position="end">
-                                                                <IconButton onClick={() => confirmShowPassword.onToggle()} edge="end">
+                                                                <IconButton
+                                                                    onClick={() => confirmShowPassword.onToggle()}
+                                                                    edge="end"
+                                                                >
                                                                     <Icon
                                                                         icon={confirmShowPassword.value ? 'eye' : 'eye-slash'}
                                                                         color={theme.palette.grey[500]}
@@ -174,7 +220,12 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                         </Grid>
                                     </>
                                 )}
-                                <Grid size={{ xs: 12, sm: 6 }}>
+                                <Grid
+                                    size={{
+                                        xs: 12,
+                                        sm: 6 
+                                    }}
+                                >
                                     <RHFTextField
                                         fullWidth
                                         required
@@ -182,7 +233,12 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                         label='Email'
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6 }}>
+                                <Grid
+                                    size={{
+                                        xs: 12,
+                                        sm: 6 
+                                    }}
+                                >
                                     <RHFTextField
                                         fullWidth
                                         required
@@ -191,7 +247,12 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                         type='number'
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6 }}>
+                                <Grid
+                                    size={{
+                                        xs: 12,
+                                        sm: 6 
+                                    }}
+                                >
                                     <RHFTextField
                                         fullWidth
                                         name='status'
@@ -208,7 +269,12 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                         ))}
                                     </RHFTextField>
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6 }}>
+                                <Grid
+                                    size={{
+                                        xs: 12,
+                                        sm: 6 
+                                    }}
+                                >
                                     <RHFSelect
                                         fullWidth
                                         required
@@ -231,10 +297,16 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 justifyContent='flex-end'
                                 mt={2}
                             >
-                                <Button variant='outlined' onClick={() => navigate(PATH_DASHBOARD.users.root)}>
+                                <Button
+                                    variant='outlined'
+                                    onClick={() => navigate(PATH_DASHBOARD.users.root)}
+                                >
                                     Cancel
                                 </Button>
-                                <Button variant='contained' type='submit'>
+                                <Button
+                                    variant='contained'
+                                    type='submit'
+                                >
                                     Submit
                                 </Button>
                             </Stack>

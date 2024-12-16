@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useState } from 'react'
+import Page from '@admin/app/components/page';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { FormContainer, RHFTextField, SettingService, useSettingQuery, useToasty } from '@libs/react-core';
 import {
     Button,
     Card,
@@ -8,11 +10,10 @@ import {
     Container,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { FormContainer, RHFTextField, SettingService, useSettingQuery, useToasty } from '@libs/react-core';
-import { object, string } from 'yup';
-import Page from '@admin/app/components/page';
+import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { object, string } from 'yup';
+
 
 const settingService = SettingService.getInstance<SettingService>();
 
@@ -80,8 +81,16 @@ const GeneralSetting = () => {
                     validationSchema={validationSchema}
                     onSuccess={handleSubmitForm}
                 >
-                    <Grid container spacing={4}>
-                        <Grid size={{ xs: 12, sm: 6 }}>
+                    <Grid
+                        container
+                        spacing={4}
+                    >
+                        <Grid
+                            size={{
+                                xs: 12,
+                                sm: 6 
+                            }}
+                        >
                             <Card>
                                 <CardHeader title='Contact Us Email' />
                                 <CardContent>
@@ -93,7 +102,10 @@ const GeneralSetting = () => {
                                     />
                                 </CardContent>
                                 <CardActions>
-                                    <Button variant='contained' type='submit'>Save</Button>
+                                    <Button
+                                        variant='contained'
+                                        type='submit'
+                                    >Save</Button>
                                 </CardActions>
                             </Card>
                         </Grid>

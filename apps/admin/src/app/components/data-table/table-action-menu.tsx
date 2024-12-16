@@ -1,12 +1,3 @@
-import { useMemo } from 'react';
-import {
-    IconButton,
-    MenuItem,
-    ListItemIcon,
-    ListItemText,
-    Stack,
-    Tooltip,
-} from '@mui/material';
 import { Icon, MenuDropdown, useAccess } from '@libs/react-core';
 import {
     VisibilityOutlined as VisibilityOutlinedIcon,
@@ -15,6 +6,16 @@ import {
     RestoreOutlined as RestoreOutlinedIcon,
     DeleteForeverOutlined as DeleteForeverOutlinedIcon,
 } from '@mui/icons-material';
+import {
+    IconButton,
+    MenuItem,
+    ListItemIcon,
+    ListItemText,
+    Stack,
+    Tooltip,
+} from '@mui/material';
+import { useMemo } from 'react';
+
 
 export interface TableAction {
   icon: any;
@@ -22,6 +23,7 @@ export interface TableAction {
   permission?: string | string[];
   onClick?: (event?: any) => void;
 }
+
 type TableActionMenuProps = {
   onDelete?: (row?: any) => void;
   onEdit?: (row?: any) => void;
@@ -99,9 +101,15 @@ export function TableActionMenu({
 
     if (crudActions.length <= 2) {
         return (
-            <Stack spacing={0.5} direction="row">
+            <Stack
+                spacing={0.5}
+                direction="row"
+            >
                 {crudActions.map((action) => (
-                    <Tooltip key={`${action?.title}-${row?.id}`} title={action?.title}>
+                    <Tooltip
+                        key={`${action?.title}-${row?.id}`}
+                        title={action?.title}
+                    >
                         <IconButton
                             size="small"
                             onClick={(event) => {
@@ -121,7 +129,10 @@ export function TableActionMenu({
         <MenuDropdown
             anchor={
                 <IconButton >
-                    <Icon icon="more-vertical-outline" size="medium" />
+                    <Icon
+                        icon="more-vertical-outline"
+                        size="medium"
+                    />
                 </IconButton>
             }
         >

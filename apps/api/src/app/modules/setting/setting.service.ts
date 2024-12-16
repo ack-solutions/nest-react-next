@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Setting } from './setting.entity';
 import { CrudService } from '@api/app/core/crud';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { Setting } from './setting.entity';
 
 
 @Injectable()

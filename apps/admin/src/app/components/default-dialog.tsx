@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import { Icon } from '@libs/react-core';
 import {
     Dialog,
     DialogActions,
@@ -9,7 +9,8 @@ import {
     useMediaQuery,
     useTheme
 } from '@mui/material';
-import { Icon } from '@libs/react-core';
+import React, { FC, ReactNode } from 'react';
+
 
 export interface DefaultDialogProps extends Omit<DialogProps, 'open'> {
     open?: boolean;
@@ -40,20 +41,40 @@ const DefaultDialog = ({
         >
 
             {title && (
-                <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <DialogTitle
+                    sx={{
+                        m: 0,
+                        p: 2,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center' 
+                    }}
+                >
                     {title}
                     <IconButton
                         aria-label="close"
                         onClick={onClose}
-                        sx={{ position: 'absolute', right: 8, top: 8 }}
+                        sx={{
+                            position: 'absolute',
+                            right: 8,
+                            top: 8 
+                        }}
                     >
-                        <Icon icon='close' size='small' />
+                        <Icon
+                            icon='close'
+                            size='small'
+                        />
                     </IconButton>
                 </DialogTitle>
             )}
             <DialogContent dividers>{children}</DialogContent>
             {actions && (
-                <DialogActions sx={{ p: 2, justifyContent: 'flex-end' }}>
+                <DialogActions
+                    sx={{
+                        p: 2,
+                        justifyContent: 'flex-end' 
+                    }}
+                >
                     {actions}
                 </DialogActions>
             )}
