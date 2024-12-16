@@ -8,7 +8,6 @@ export abstract class CRUDService<T> extends Service {
 
     protected abstract apiPath: string;
     protected fillable: string[] = [];
-
     protected hasFileUpload = false;
 
     getAll(request: any = {}) {
