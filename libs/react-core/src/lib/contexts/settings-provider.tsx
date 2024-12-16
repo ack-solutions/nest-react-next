@@ -1,13 +1,17 @@
 import isEqual from 'lodash/isEqual';
 import { useMemo, useCallback, useState, useContext, createContext } from 'react';
+
 import { useLocalStorage } from '../hook/use-local-storage';
+
 
 const STORAGE_KEY = 'settings';
 
 interface SettingsProviderProps {
 	children: React.ReactNode;
 	defaultSettings?: SettingsValueProps;
-};
+}
+
+;
 
 export interface SettingsValueProps {
 	compactLayout: boolean;
@@ -15,7 +19,9 @@ export interface SettingsValueProps {
 	contrast: 'default' | 'bold';
 	navLayout: 'vertical' | 'mini';
 	primaryColor: 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red';
-};
+}
+
+;
 export const initialSetting = {
     colorScheme: 'light',
     contrast: 'default',

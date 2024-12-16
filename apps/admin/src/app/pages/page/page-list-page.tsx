@@ -1,11 +1,13 @@
-import { useState, useCallback } from 'react';
+import { IPage } from '@libs/types';
 import { Container, Button } from '@mui/material';
-import Page from '../../components/page';
+import { useState, useCallback } from 'react';
+
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs/custom-breadcrumbs';
+import Page from '../../components/page';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import AddEditPageDialog from '../../sections/page/add-edit-page-dialog';
 import PageListTable from '../../sections/page/page-list-table';
-import { IPage } from '@libs/types';
+
 
 export default function PageList() {
     const [selectedItem, setSelectedItem] = useState(null);
@@ -24,7 +26,10 @@ export default function PageList() {
                 <CustomBreadcrumbs
                     heading="Page List"
                     links={[
-                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
+                        {
+                            name: 'Dashboard',
+                            href: PATH_DASHBOARD.root
+                        },
                         { name: 'Page' },
                     ]}
                     action={

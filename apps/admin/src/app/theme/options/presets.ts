@@ -1,7 +1,9 @@
 // @mui
 import { alpha } from '@mui/material/styles';
-import { palette as themePalette } from '../palette';
 import { omit } from 'lodash';
+
+import { palette as themePalette } from '../palette';
+
 
 export function presets(presetsColor: string) {
     const primary = primaryPresets.find((i) => i.name === presetsColor);

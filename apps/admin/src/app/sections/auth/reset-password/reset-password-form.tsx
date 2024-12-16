@@ -5,9 +5,10 @@ import { IconButton, InputAdornment, Stack, useTheme } from '@mui/material';
 import { Field, Formik, FormikHelpers } from 'formik';
 import { object, ref, string } from 'yup';
 
+
 export interface ResetPasswordFormProps {
-  onSubmit: (values: any, action: FormikHelpers<any>) => void;
-  values?: any;
+    onSubmit: (values: any, action: FormikHelpers<any>) => void;
+    values?: any;
 }
 
 const defaultValues = {
@@ -17,6 +18,7 @@ const defaultValues = {
 
 const RegisterSchema = object().shape({
     password: string().label('New Password').matches(
+        // eslint-disable-next-line no-useless-escape
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
         "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
     ).required(),
@@ -49,7 +51,10 @@ const ResetPasswordForm = ({
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
-                                    <IconButton onClick={() => showPassword.onToggle()} edge="end">
+                                    <IconButton
+                                        onClick={() => showPassword.onToggle()}
+                                        edge="end"
+                                    >
                                         <Icon
                                             icon={showPassword.value ? 'eye' : 'eye-slash'}
                                             color={theme.palette.grey[500]}
@@ -69,7 +74,10 @@ const ResetPasswordForm = ({
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
-                                    <IconButton onClick={() => confirmShowPassword.onToggle()} edge="end">
+                                    <IconButton
+                                        onClick={() => confirmShowPassword.onToggle()}
+                                        edge="end"
+                                    >
                                         <Icon
                                             icon={confirmShowPassword.value ? 'eye' : 'eye-slash'}
                                             color={theme.palette.grey[500]}
@@ -87,7 +95,7 @@ const ResetPasswordForm = ({
                         loading={isSubmitting}
                         onClick={() => handleSubmit()}
                     >
-            Reset Password
+                        Reset Password
                     </LoadingButton>
                 </Stack>
             )}

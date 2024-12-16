@@ -1,27 +1,28 @@
 
-import { useState, useCallback, useRef } from 'react';
+import { DataTableColumn } from '@admin/app/components';
+import { CrudTable, CrudTableActions } from '@admin/app/components/crud/crud-table';
+import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
+import Page from '@admin/app/components/page';
+import { PATH_DASHBOARD } from '@admin/app/routes/paths';
+import { usePermissionQuery } from '@libs/react-core';
+import { IPermission, IRole } from '@libs/types';
+import { toDisplayDate } from '@libs/utils';
 import {
     Container,
     Button,
     Card,
 } from '@mui/material';
-import { usePermissionQuery } from '@libs/react-core';
-import { IPermission, IRole } from '@libs/types';
-import { toDisplayDate } from '@libs/utils';
-import AddEditPermissionDialog from '../../sections/user/add-edit-permission-dialog';
 import { startCase } from 'lodash';
-import { DataTableColumn } from '@admin/app/components';
-import Page from '@admin/app/components/page';
-import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
-import { PATH_DASHBOARD } from '@admin/app/routes/paths';
-import { CrudTable, CrudTableActions } from '@admin/app/components/crud/crud-table';
+import { useState, useCallback, useRef } from 'react';
+
+import AddEditPermissionDialog from '../../sections/user/add-edit-permission-dialog';
+
 
 export default function PermissionList() {
     const datatableRef = useRef<CrudTableActions>(null);
     const [selectPermission, setSelectPermission] = useState<any>()
 
-    const {
-        useGetManyPermission,
+    const { useGetManyPermission,
         useDeletePermission,
         useRestorePermission,
         useDeleteForeverPermission,
@@ -77,12 +78,21 @@ export default function PermissionList() {
                 <CustomBreadcrumbs
                     heading="Permissions"
                     links={[
-                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: 'Permissions', href: PATH_DASHBOARD.users.permissions },
+                        {
+                            name: 'Dashboard',
+                            href: PATH_DASHBOARD.root
+                        },
+                        {
+                            name: 'Permissions',
+                            href: PATH_DASHBOARD.users.permissions
+                        },
                         { name: 'List' },
                     ]}
                     action={
-                        <Button variant='contained' onClick={() => handleOpenAddEditRoleDialog({})}>Add Permission</Button>
+                        <Button
+                            variant='contained'
+                            onClick={() => handleOpenAddEditRoleDialog({})}
+                        >Add Permission</Button>
                     }
                 />
                 <Card>

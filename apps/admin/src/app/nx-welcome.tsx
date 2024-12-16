@@ -436,7 +436,10 @@ export function NxWelcome({ title }: { title: string }) {
                         </h1>
                     </div>
 
-                    <div id="hero" className="rounded">
+                    <div
+                        id="hero"
+                        className="rounded"
+                    >
                         <div className="text-container">
                             <h2>
                                 <svg
@@ -470,7 +473,10 @@ export function NxWelcome({ title }: { title: string }) {
 
                     <div id="middle-content">
                         <div id="middle-content-container">
-                            <div id="learning-materials" className="rounded shadow">
+                            <div
+                                id="learning-materials"
+                                className="rounded shadow"
+                            >
                                 <h2>Learning materials</h2>
                                 <a
                                     href="https://nx.dev/getting-started/intro?utm_source=nx-project"
@@ -694,7 +700,10 @@ export function NxWelcome({ title }: { title: string }) {
                                     </span>
                                 </span>
                             </a>
-                            <div id="nx-cloud" className="rounded shadow">
+                            <div
+                                id="nx-cloud"
+                                className="rounded shadow"
+                            >
                                 <div>
                                     <svg
                                         id="nx-cloud-logo"
@@ -720,14 +729,21 @@ export function NxWelcome({ title }: { title: string }) {
                                 </div>
                                 <p>Your Nx Cloud remote cache setup is almost complete.</p>
 
-                                <a href="" target="_blank" rel="noreferrer">
+                                <a
+                                    href=""
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
                   Click here to finish
                                 </a>
                             </div>
                         </div>
                     </div>
 
-                    <div id="commands" className="rounded shadow">
+                    <div
+                        id="commands"
+                        className="rounded shadow"
+                    >
                         <h2>Next steps</h2>
                         <p>Here are some things you can do with Nx:</p>
                         <details>

@@ -1,8 +1,10 @@
+import { CrudService } from '@api/app/core/crud';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Page } from './page.entity';
 import { Repository } from 'typeorm';
-import { CrudService } from '@api/app/core/crud';
+
+import { Page } from './page.entity';
+
 
 @Injectable()
 export class PageService extends CrudService<Page> {

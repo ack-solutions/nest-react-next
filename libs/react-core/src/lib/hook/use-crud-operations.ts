@@ -1,5 +1,6 @@
-import { useQuery, useMutation, useQueryClient, DefinedInitialDataOptions, UseMutationOptions } from '@tanstack/react-query';
 import { IBaseEntity, IPaginationResult } from "@libs/types";
+import { useQuery, useMutation, useQueryClient, DefinedInitialDataOptions, UseMutationOptions } from '@tanstack/react-query';
+
 import { CRUDService } from '../services/crud-service';
 
 
@@ -39,7 +40,7 @@ export function useCrudOperations<T extends IBaseEntity>(service: CRUDService<T>
 
     const useCreate = (options?: CreateQueryOptions<Partial<T>, Error, T>) => useMutation({
         mutationFn: (input: Partial<T>) => service.create(input),
-        onSuccess: (data) => {
+        onSuccess: (_data) => {
             invalidListQueryCache(queryClient, service)
         },
         ...options,

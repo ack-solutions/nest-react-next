@@ -1,16 +1,18 @@
-import { useEffect } from 'react';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Drawer from '@mui/material/Drawer';
-import { useLocation } from 'react-router-dom';
-import { useNavData } from './nav-config';
-import { NAV } from '../../config';
-import { NavbarConfigProps, NavigationItem } from '../../../types/navigation';
-import NavbarToggleButton from './navbar-toggle-button';
-import NavbarGroup from './navbar-group';
-import { useResponsive } from '@libs/react-core';
-import Scrollbar from '@admin/app/components/scrollbar/scrollbar';
 import { Logo } from '@admin/app/components';
+import Scrollbar from '@admin/app/components/scrollbar/scrollbar';
+import { useResponsive } from '@libs/react-core';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import Stack from '@mui/material/Stack';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+
+import { useNavData } from './nav-config';
+import NavbarGroup from './navbar-group';
+import NavbarToggleButton from './navbar-toggle-button';
+import { NavbarConfigProps } from '../../../types/navigation';
+import { NAV } from '../../config';
+
 
 export const navVerticalConfig = (config?: NavbarConfigProps) => ({
     itemGap: config?.itemGap || 4,
@@ -24,9 +26,11 @@ export const navVerticalConfig = (config?: NavbarConfigProps) => ({
 });
 
 interface NavbarProps {
-  openNav: boolean;
-  onCloseNav: () => void;
-};
+    openNav: boolean;
+    onCloseNav: () => void;
+}
+
+;
 
 export default function Navbar({ openNav, onCloseNav }: NavbarProps) {
     const { pathname } = useLocation();
@@ -37,7 +41,7 @@ export default function Navbar({ openNav, onCloseNav }: NavbarProps) {
         if (openNav) {
             onCloseNav();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname]);
 
     const renderContent = (
@@ -52,7 +56,14 @@ export default function Navbar({ openNav, onCloseNav }: NavbarProps) {
             }}
         >
             <>
-                <Logo sx={{ width: 180, height: 48, my: 2, mx: 'auto' }} />
+                <Logo
+                    sx={{
+                        width: 180,
+                        height: 48,
+                        my: 2,
+                        mx: 'auto'
+                    }}
+                />
                 <Stack>
                     {navData.map((group, index) => (
                         <NavbarGroup

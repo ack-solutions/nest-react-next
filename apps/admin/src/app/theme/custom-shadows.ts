@@ -1,7 +1,10 @@
 // @mui
 import { alpha } from '@mui/material/styles';
+
+
 //
 import { colorSchemes } from './palette';
+
 
 // ----------------------------------------------------------------------
 
@@ -28,6 +31,7 @@ declare module '@mui/material/styles' {
 	interface Theme {
 		customShadows: CustomShadowOptions;
 	}
+
 	interface ThemeOptions {
 		customShadows?: CustomShadowOptions;
 	}

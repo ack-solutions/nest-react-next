@@ -1,11 +1,12 @@
-import { Link, Box, ListItemButtonProps } from '@mui/material';
-import Tooltip from '@mui/material/Tooltip';
-import ListItemText from '@mui/material/ListItemText';
-import { alpha, ListItemButton, ListItemIcon, styled } from '@mui/material';
-import { NavbarConfigProps, NavigationItem } from '../../../types/navigation';
-import { NavLink as RouterLink } from 'react-router-dom';
-import { forwardRef } from 'react';
 import { Icon } from '@libs/react-core';
+import { Link, Box, ListItemButtonProps } from '@mui/material';
+import { alpha, ListItemButton, ListItemIcon, styled } from '@mui/material';
+import ListItemText from '@mui/material/ListItemText';
+import Tooltip from '@mui/material/Tooltip';
+import { forwardRef } from 'react';
+import { NavLink as RouterLink } from 'react-router-dom';
+
+import { NavbarConfigProps, NavigationItem } from '../../../types/navigation';
 
 
 export interface NavbarItemProps extends ListItemButtonProps {
@@ -18,7 +19,9 @@ export interface NavbarItemProps extends ListItemButtonProps {
 	permissions?: string[];
 	roles?: string[];
 	config?: NavbarConfigProps;
-};
+}
+
+;
 
 export const StyledNavItem = styled(ListItemButton, {
     shouldForwardProp: (prop) => prop !== 'active'
@@ -146,7 +149,10 @@ const NavbarItem = forwardRef(({ item, open, depth, active, config, externalLink
                     primary={title}
                     secondary={
                         caption ? (
-                            <Tooltip title={caption} placement="top-start">
+                            <Tooltip
+                                title={caption}
+                                placement="top-start"
+                            >
                                 <span>{caption}</span>
                             </Tooltip>
                         ) : null
@@ -187,7 +193,13 @@ const NavbarItem = forwardRef(({ item, open, depth, active, config, externalLink
             )}
 
             {info && (
-                <Box component="span" sx={{ ml: 1, lineHeight: 0 }}>
+                <Box
+                    component="span"
+                    sx={{
+                        ml: 1,
+                        lineHeight: 0 
+                    }}
+                >
                     {info}
                 </Box>
             )}
@@ -196,7 +208,10 @@ const NavbarItem = forwardRef(({ item, open, depth, active, config, externalLink
                 <Icon
                     size={12}
                     icon={open ? 'arrow-up-2' : 'arrow-right-3'}
-                    sx={{ ml: 0, flexShrink: 0 }}
+                    sx={{
+                        ml: 0,
+                        flexShrink: 0 
+                    }}
                 />
             )}
             {(!!children && isMini) && (

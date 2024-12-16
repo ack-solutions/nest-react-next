@@ -1,5 +1,8 @@
 import { ILoginInput, ILoginSuccess } from "@libs/types";
+
 import { Service } from "./service";
+
+
 export class AuthService extends Service {
 
     getToken() {

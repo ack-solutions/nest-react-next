@@ -1,7 +1,9 @@
-import { memo, forwardRef } from 'react';
 import Box from '@mui/material/Box';
+import { memo, forwardRef } from 'react';
+
 import { StyledRootScrollbar, StyledScrollbar } from './styles';
 import { ScrollbarProps } from './types';
+
 
 const Scrollbar = forwardRef<HTMLDivElement, ScrollbarProps>(({ children, sx, ...other }, ref) => {
     const userAgent = typeof navigator === 'undefined' ? 'SSR' : navigator.userAgent;
@@ -10,7 +12,14 @@ const Scrollbar = forwardRef<HTMLDivElement, ScrollbarProps>(({ children, sx, ..
 
     if (isMobile) {
         return (
-            <Box ref={ref} sx={{ overflow: 'auto', ...sx }} {...other}>
+            <Box
+                ref={ref}
+                sx={{
+                    overflow: 'auto',
+                    ...sx 
+                }}
+                {...other}
+            >
                 {children}
             </Box>
         );

@@ -1,15 +1,18 @@
-import { styled } from '@mui/material/styles';
+import Page from '@admin/app/components/page';
+import { AuthService, errorMessage } from '@libs/react-core';
 import { Box, Container, Typography } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { styled } from '@mui/material/styles';
 import { FormikHelpers } from 'formik';
+import { useCallback, useState } from 'react';
+
 import ResetPasswordForm from './reset-password-form';
 import SuccessDialog from './success-dialog';
-import { AuthService, errorMessage } from '@libs/react-core';
-import Page from '@admin/app/components/page';
+
+
 export interface ResetPasswordProps {
-	onCloseModal?: () => void;
-	email?: string;
-	otp?: string;
+    onCloseModal?: () => void;
+    email?: string;
+    otp?: string;
 }
 
 const RootStyle = styled(Page)(({ theme }) => ({
@@ -18,7 +21,7 @@ const RootStyle = styled(Page)(({ theme }) => ({
     },
 }));
 
-const ContentStyle = styled('div')(({ theme }) => ({
+const ContentStyle = styled('div')(() => ({
     maxWidth: 530,
     margin: 'auto',
     display: 'flex',
@@ -30,21 +33,20 @@ const ContentStyle = styled('div')(({ theme }) => ({
 const authService = AuthService.getInstance<AuthService>();
 
 const ResetPassword = ({
-    onCloseModal,
     email,
     otp,
 }: ResetPasswordProps) => {
     const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 
     const handleResetPassword = useCallback(
-        async (values:any, actions: FormikHelpers<any>) => {
+        async (values: any, actions: FormikHelpers<any>) => {
             try {
                 const request = {
                     ...values,
                     email,
                     otp
                 }
-                await authService.resetPassword(request).then((data) => {
+                await authService.resetPassword(request).then(() => {
                     actions.resetForm();
                     setIsSuccessDialogOpen(true);
                 })
@@ -67,10 +69,15 @@ const ResetPassword = ({
                 <ContentStyle>
                     <Box >
                         <Typography variant="h2" >
-								Reset Password
+                            Reset Password
                         </Typography>
-                        <Typography sx={{ color: 'text.secondary', mb: 5 }}>
-								Enter your password to access the app next time.
+                        <Typography
+                            sx={{
+                                color: 'text.secondary',
+                                mb: 5
+                            }}
+                        >
+                            Enter your password to access the app next time.
                         </Typography>
                         <ResetPasswordForm onSubmit={handleResetPassword} />
                     </Box>
@@ -79,7 +86,7 @@ const ResetPassword = ({
             </Container>
             {isSuccessDialogOpen ? (
                 <SuccessDialog onClose={handleSuccessDialogClose} />
-            ):null}
+            ) : null}
         </RootStyle>
     );
 }

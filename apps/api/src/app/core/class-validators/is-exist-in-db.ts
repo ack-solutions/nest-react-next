@@ -8,6 +8,7 @@ import {
 } from 'class-validator';
 import { ObjectLiteral, SelectQueryBuilder } from 'typeorm';
 
+
 export interface IsExistInDBOptions {
     options?: ValidationOptions,
     entity?: any;
@@ -18,8 +19,8 @@ export interface IsExistInDBOptions {
 
 @ValidatorConstraint({ async: true })
 export class IsUniqueConstraint
-implements ValidatorConstraintInterface {
-    async validate(inputValue: string, args: ValidationArguments) {
+    implements ValidatorConstraintInterface {
+    async validate(_inputValue: string, args: ValidationArguments) {
 
         const { property, value, targetName, object: request } = args;
         const [options] = args.constraints;

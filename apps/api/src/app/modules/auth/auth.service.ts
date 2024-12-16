@@ -1,20 +1,17 @@
+import { ILoginInput, ILoginSendOtpInput, IRegisterInput, IUser, UserStatusEnum } from '@libs/types';
 import { Injectable, BadRequestException, ConflictException, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcryptjs';
-import { ILike, Not, Repository } from 'typeorm';
-import { JwtService } from '@nestjs/jwt';
 import moment from 'moment';
-import { ConfigService } from '@nestjs/config';
+import { ILike, Not, Repository } from 'typeorm';
+
 import { User, UserService } from '../user';
 import { Verification } from '../user/verification.entity';
-import { ILoginInput, ILoginSendOtpInput, IRegisterInput, IUser, UserStatusEnum } from '@libs/types';
-import { includes } from 'lodash';
 import { LoginSuccessDTO } from './dto/login-success.dto';
-import { RegisterInputDTO } from './dto/register-input.dto';
-import { generateRandomNumber, hashPassword } from '../../utils';
 import { RequestContext } from '../../core/request-context/request-context';
-
-
+import { generateRandomNumber, hashPassword } from '../../utils';
 
 
 @Injectable()
@@ -77,10 +74,6 @@ export class AuthService {
             otp: otp,
             email,
         });
-        const mailDetails = {
-            otp: otp,
-            userName: user?.name,
-        };
         console.log({ otp })
         // try {
         //     await this.notificationService.loginEmailVerificationOtp({ otp: otp, email: request?.email, phone: user?.phone, phoneCountryId: user?.phoneCountryId }, mailDetails);
@@ -146,7 +139,10 @@ export class AuthService {
         }
 
         try {
-            await this.veryFyOtp({ otp: request.otp, email: request.email });
+            await this.veryFyOtp({
+                otp: request.otp,
+                email: request.email
+            });
         } catch (error) {
             throw new ConflictException(error?.message);
         }
@@ -162,8 +158,11 @@ export class AuthService {
         if (count) {
             throw new ConflictException('There is an existing account with this email address.');
         }
-        
-        await this.veryFyOtp({ otp: req?.otp, email: req?.email })
+
+        await this.veryFyOtp({
+            otp: req?.otp,
+            email: req?.email
+        })
         req.emailVerifiedAt = new Date()
 
         let user = await this.userService.createUser(req);
@@ -201,7 +200,10 @@ export class AuthService {
             email: request.email
         }).select('"passwordHash", "id"').getRawOne();
 
-        await this.veryFyOtp({ email: request.email, otp: request.otp })
+        await this.veryFyOtp({
+            email: request.email,
+            otp: request.otp
+        })
 
         if (userPassword?.id) {
             if (!await bcrypt.compare(bcryptPassword, userPassword?.passwordHash)) {
@@ -286,7 +288,7 @@ export class AuthService {
                 email: request.email,
             }
         })
-        const env = this.configService.get('config.env')
+        // const env = this.configService.get('config.env')
 
         //   if (env === 'local' || 'dev') {
         if (Number(request.otp) === 1234) {
@@ -311,7 +313,10 @@ export class AuthService {
 
 
     jwtFromUser(user) {
-        const payload = { email: user.email, id: user.id };
+        const payload = {
+            email: user.email,
+            id: user.id
+        };
         return this.jwtService.sign(payload)
     }
 }

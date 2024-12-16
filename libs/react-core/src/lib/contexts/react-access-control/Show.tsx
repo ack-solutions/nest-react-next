@@ -1,5 +1,7 @@
 import React from "react"
+
 import useAccess from "./use-access"
+
 
 const Show = ({ when, resource, fallback, children, ...rest }:any) => {
     const { hasPermission } = useAccess()

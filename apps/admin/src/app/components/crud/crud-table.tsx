@@ -1,16 +1,17 @@
-import { useState, useCallback, useRef, forwardRef, useMemo, useImperativeHandle, useEffect } from 'react';
 import {
     DataTable,
     DataTableHandle,
     DataTableProps,
     TableActionMenu,
 } from '@admin/app/components';
-import { IBaseEntity, IFindOptions } from '@libs/types';
-import { errorMessage, useBoolean, useCrudOperations, useToasty } from '@libs/react-core';
 import { TableBulkActionMenu } from '@admin/app/components/data-table/table-bulk-action-menu';
 import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
-import { TableAction } from '../data-table/table-action-menu';
+import { errorMessage, useBoolean, useCrudOperations, useToasty } from '@libs/react-core';
+import { IBaseEntity, IFindOptions } from '@libs/types';
 import { FormControlLabel, Switch } from '@mui/material';
+import { useState, useCallback, useRef, forwardRef, useMemo, useImperativeHandle, useEffect } from 'react';
+
+import { TableAction } from '../data-table/table-action-menu';
 
 
 export interface CrudTableProps extends Partial<Omit<DataTableProps, 'ref'>> {

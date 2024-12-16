@@ -1,19 +1,22 @@
-import { alpha, ColorSystemOptions } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
+
 
 export type ColorSchema = 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error';
 
 declare module '@mui/material/styles/createPalette' {
-	interface TypeBackground {
-		neutral: string;
-	}
-	interface SimplePaletteColorOptions {
-		lighter: string;
-		darker: string;
-	}
-	interface PaletteColor {
-		lighter: string;
-		darker: string;
-	}
+    interface TypeBackground {
+        neutral: string;
+    }
+
+    interface SimplePaletteColorOptions {
+        lighter: string;
+        darker: string;
+    }
+
+    interface PaletteColor {
+        lighter: string;
+        darker: string;
+    }
 }
 
 const GREY = {
@@ -183,6 +186,7 @@ export const darkPalette = {
 export function palette(mode: 'light' | 'dark') {
     return mode === 'light' ? lightPalette : darkPalette;
 }
+
 export const colorSchemes = {
     light: { palette: lightPalette },
     dark: { palette: darkPalette },

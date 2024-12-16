@@ -1,6 +1,7 @@
 import { snakeCase } from "lodash";
 import { DefaultNamingStrategy, NamingStrategyInterface, Table } from "typeorm";
 
+
 export class CustomNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
 
     primaryKeyName(tableOrName: Table | string, columnNames: string[]): string {

@@ -1,6 +1,7 @@
 import { registerAs } from "@nestjs/config";
 import { DatabaseType } from "typeorm";
 
+
 export interface IDatabaseConfig {
     sslMode: boolean;
     sslCaPath: string;

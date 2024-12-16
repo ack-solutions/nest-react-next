@@ -2,6 +2,7 @@
 import { SxProps, Typography, TypographyProps } from '@mui/material';
 import { useMemo } from 'react';
 
+
 interface IconProps extends Omit<TypographyProps, 'className' | 'variant'> {
   sx?: SxProps;
   icon: string;
@@ -17,18 +18,18 @@ export function Icon({
 
     const sizeNumber = useMemo(() => {
         switch (size) {
-        case 'x-small':
-            return 12
-        case 'small':
-            return 15
-        case 'medium':
-            return 18
-        case 'large':
-            return 24
-        case 'x-large':
-            return 28
-        default:
-            return size
+            case 'x-small':
+                return 12
+            case 'small':
+                return 15
+            case 'medium':
+                return 18
+            case 'large':
+                return 24
+            case 'x-large':
+                return 28
+            default:
+                return size
         }
     }, [size])
 

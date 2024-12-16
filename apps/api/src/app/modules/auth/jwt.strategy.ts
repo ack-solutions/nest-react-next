@@ -1,9 +1,11 @@
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { PassportStrategy } from '@nestjs/passport';
+import { UserStatusEnum } from '@libs/types';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+
 import { UserService } from '../user';
-import { UserStatusEnum } from '@libs/types';
+
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

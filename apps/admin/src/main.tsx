@@ -1,9 +1,12 @@
 
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { HashRouter } from 'react-router-dom';
-import App from './app/app';
 import { HelmetProvider } from 'react-helmet-async';
+import { HashRouter } from 'react-router-dom';
+
+import App from './app/app';
+
+
 // editor
 
 import 'react-quill/dist/quill.snow.css';

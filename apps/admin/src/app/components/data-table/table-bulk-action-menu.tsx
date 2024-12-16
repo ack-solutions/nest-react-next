@@ -1,4 +1,9 @@
-import { useMemo } from 'react';
+import { Icon, MenuDropdown, useAccess } from '@libs/react-core';
+import {
+    DeleteOutlined as DeleteOutlinedIcon,
+    RestoreOutlined as RestoreOutlinedIcon,
+    DeleteForeverOutlined as DeleteForeverOutlinedIcon,
+} from '@mui/icons-material';
 import {
     IconButton,
     MenuItem,
@@ -7,12 +12,8 @@ import {
     Stack,
     Tooltip,
 } from '@mui/material';
-import { Icon, MenuDropdown, useAccess } from '@libs/react-core';
-import {
-    DeleteOutlined as DeleteOutlinedIcon,
-    RestoreOutlined as RestoreOutlinedIcon,
-    DeleteForeverOutlined as DeleteForeverOutlinedIcon,
-} from '@mui/icons-material';
+import { useMemo } from 'react';
+
 
 export interface TableAction {
   icon: any;
@@ -20,6 +21,7 @@ export interface TableAction {
   permission?: string | string[];
   onClick?: (event?: any) => void;
 }
+
 type TableBulkActionMenuProps = {
   onDelete?: (row?: any[]) => void;
   onDeleteForever?: (row?: any[]) => void;
@@ -80,9 +82,15 @@ export function TableBulkActionMenu({
 
     if (crudActions.length <= 2) {
         return (
-            <Stack spacing={0.5} direction="row">
+            <Stack
+                spacing={0.5}
+                direction="row"
+            >
                 {crudActions.map((action) => (
-                    <Tooltip key={`${action?.title}-${row?.id}`} title={action?.title}>
+                    <Tooltip
+                        key={`${action?.title}-${row?.id}`}
+                        title={action?.title}
+                    >
                         <IconButton
                             size="small"
                             onClick={(event) => {
@@ -102,7 +110,10 @@ export function TableBulkActionMenu({
         <MenuDropdown
             anchor={
                 <IconButton>
-                    <Icon icon="more-vertical-outline" size="medium" />
+                    <Icon
+                        icon="more-vertical-outline"
+                        size="medium"
+                    />
                 </IconButton>
             }
         >

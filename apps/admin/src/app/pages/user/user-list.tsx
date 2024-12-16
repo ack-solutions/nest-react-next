@@ -1,4 +1,14 @@
-import { useState, useCallback, useRef } from 'react';
+import { DataTableColumn } from '@admin/app/components';
+import { CrudTable, CrudTableActions } from '@admin/app/components/crud/crud-table';
+import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
+import Page from '@admin/app/components/page';
+import UserStatusLabel from '@admin/app/components/user/user-status-label';
+import UserWithAvatar from '@admin/app/components/user/user-with-avatar';
+import { PATH_DASHBOARD } from '@admin/app/routes/paths';
+import ChangePasswordDialog from '@admin/app/sections/user/change-password-dialog';
+import { Icon, useUserQuery } from '@libs/react-core';
+import { IUser, UserStatusEnum } from '@libs/types';
+import { toDisplayDate } from '@libs/utils';
 import {
     Container,
     Button,
@@ -7,19 +17,10 @@ import {
     Divider,
     Tab,
 } from '@mui/material';
-import { Icon, useToasty, useUserQuery } from '@libs/react-core';
-import { IUser, UserStatusEnum } from '@libs/types';
-import { toDisplayDate } from '@libs/utils';
-import { DataTableColumn } from '@admin/app/components';
-import Page from '@admin/app/components/page';
-import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
-import { PATH_DASHBOARD } from '@admin/app/routes/paths';
-import { useNavigate } from 'react-router-dom';
-import ChangePasswordDialog from '@admin/app/sections/user/change-password-dialog';
-import { CrudTable, CrudTableActions } from '@admin/app/components/crud/crud-table';
-import UserStatusLabel from '@admin/app/components/user/user-status-label';
-import UserWithAvatar from '@admin/app/components/user/user-with-avatar';
 import { startCase } from 'lodash';
+import { useState, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 const filterTabs = [
     {
@@ -59,7 +60,7 @@ export default function UsersList() {
         (row: IUser) => {
             navigate(`${PATH_DASHBOARD.users.edit}/${row?.id}`)
         },
-        [],
+        [navigate],
     )
 
     const handleChangePassword = useCallback(
@@ -80,7 +81,7 @@ export default function UsersList() {
         datatableRef.current.applyFilters((state) => ({
             ...state,
             where: {
-                ...value != 'all' ? { status: { $eq: value } } : {},
+                ...value !== 'all' ? { status: { $eq: value } } : {},
             }
         }));
     }, [datatableRef]);
@@ -128,8 +129,14 @@ export default function UsersList() {
                 <CustomBreadcrumbs
                     heading="Users"
                     links={[
-                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: 'Users', href: PATH_DASHBOARD.users.root },
+                        {
+                            name: 'Dashboard',
+                            href: PATH_DASHBOARD.root
+                        },
+                        {
+                            name: 'Users',
+                            href: PATH_DASHBOARD.users.root
+                        },
                         { name: 'List' },
                     ]}
                     action={
@@ -183,7 +190,10 @@ export default function UsersList() {
                     />
                 </Card>
             </Container>
-            {openPasswordDialog && <ChangePasswordDialog onClose={handleCloseDialog} values={openPasswordDialog} />}
+            {openPasswordDialog && <ChangePasswordDialog
+                onClose={handleCloseDialog}
+                values={openPasswordDialog}
+            />}
         </Page>
     );
 }

@@ -1,5 +1,7 @@
 import { Box } from '@mui/material'
 import React, { ReactNode } from 'react'
+
+
 interface BackgroundProps {
     children: ReactNode;
     isMainLayout?: boolean;

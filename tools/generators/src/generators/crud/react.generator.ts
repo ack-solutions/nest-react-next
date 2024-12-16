@@ -1,8 +1,9 @@
 import { generateFiles, getProjects, names, ProjectConfiguration, Tree } from "@nx/devkit";
-import { PluginGeneratorSchema } from "./schema";
 import { join } from "path";
-import { toTitleCase } from "../../utils/to-title-case";
+
+import { PluginGeneratorSchema } from "./schema";
 import { addExportStatement } from "../../utils/add-export-statement";
+import { toTitleCase } from "../../utils/to-title-case";
 
 
 export class ReactGenerator {
@@ -39,7 +40,11 @@ export class ReactGenerator {
             this.tree,
             join(__dirname, 'files', 'react'), // Path to your custom template files
             `apps/admin/src/app`, // Destination where the custom files should go
-            { tmpl: '', ...this.names, columns: this.options.columns } // Data to pass to the template (e.g., the library name)
+            {
+                tmpl: '',
+                ...this.names,
+                columns: this.options.columns 
+            } // Data to pass to the template (e.g., the library name)
         );
 
         // Generate files in react core lib
@@ -47,7 +52,11 @@ export class ReactGenerator {
             this.tree,
             join(__dirname, 'files', 'react-core'), // Path to your custom template files
             `libs/react-core/src/lib`, // Destination where the custom files should go
-            { tmpl: '', ...this.names, columns: this.options.columns } // Data to pass to the template (e.g., the library name)
+            {
+                tmpl: '',
+                ...this.names,
+                columns: this.options.columns 
+            } // Data to pass to the template (e.g., the library name)
         );
     }
 

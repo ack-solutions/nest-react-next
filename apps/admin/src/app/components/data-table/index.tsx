@@ -1,4 +1,10 @@
-import { useTheme } from '@mui/material/styles';
+import { useDebounce } from '@libs/react-core';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import FirstPageIcon from '@mui/icons-material/FirstPage';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import LastPageIcon from '@mui/icons-material/LastPage';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import {
     Typography,
     Box,
@@ -22,9 +28,11 @@ import {
     Stack,
     Divider,
     BoxProps,
-    Card,
     alpha,
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { visuallyHidden } from '@mui/utils';
+import { chain, debounce, get, map, upperCase } from 'lodash';
 import {
     forwardRef,
     ReactNode,
@@ -33,24 +41,16 @@ import {
     useImperativeHandle,
     useState,
 } from 'react';
-import { visuallyHidden } from '@mui/utils';
-import { chain, debounce, get, map, upperCase } from 'lodash';
-import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
-import FirstPageIcon from '@mui/icons-material/FirstPage';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import LastPageIcon from '@mui/icons-material/LastPage';
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import { useDebounce } from '@libs/react-core';
+
 
 interface TablePaginationActionsProps {
-  count: number;
-  page: number;
-  rowsPerPage: number;
-  onPageChange: (
-    event: React.MouseEvent<HTMLButtonElement>,
-    newPage: number
-  ) => void;
+    count: number;
+    page: number;
+    rowsPerPage: number;
+    onPageChange: (
+        event: React.MouseEvent<HTMLButtonElement>,
+        newPage: number
+    ) => void;
 }
 
 function TablePaginationActions(props: TablePaginationActionsProps) {
@@ -82,7 +82,12 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
     };
 
     return (
-        <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+        <Box
+            sx={{
+                flexShrink: 0,
+                ml: 2.5
+            }}
+        >
             <IconButton
                 onClick={handleFirstPageButtonClick}
                 disabled={page === 0}
@@ -124,64 +129,64 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
 }
 
 export interface DataTableColumn<T> {
-  name: string;
-  defaultValue?: any;
-  label?: string | ReactNode;
-  isSortable?: boolean;
-  isSearchable?: boolean;
-  isHidden?: boolean;
-  isAction?: boolean;
-  props?: TableCellProps;
-  render?: (row?: T) => ReactNode;
-  skeletonRender?: () => ReactNode;
+    name: string;
+    defaultValue?: any;
+    label?: string | ReactNode;
+    isSortable?: boolean;
+    isSearchable?: boolean;
+    isHidden?: boolean;
+    isAction?: boolean;
+    props?: TableCellProps;
+    render?: (row?: T) => ReactNode;
+    skeletonRender?: () => ReactNode;
 }
 
 export interface DataTableHandle {
-  search: (text?: string) => void;
-  refresh: (reset?: boolean) => void;
-  clearSelection: () => void;
+    search: (text?: string) => void;
+    refresh: (reset?: boolean) => void;
+    clearSelection: () => void;
 }
 
 export interface DataTableChangeEvent {
-  orderBy: string;
-  order: 'asc' | 'desc';
-  limit: number;
-  page: number;
-  filter: {
-    [x: string]: any;
-    searchIn: string[];
-    search: string;
-  };
+    orderBy: string;
+    order: 'asc' | 'desc';
+    limit: number;
+    page: number;
+    filter: {
+        [x: string]: any;
+        searchIn: string[];
+        search: string;
+    };
 }
 
 export interface DataTableProps extends Omit<BoxProps, 'onChange' | 'onSelect'> {
-  columns: DataTableColumn<any>[];
-  data: any[] | null;
-  defaultOrder?: 'asc' | 'desc';
-  defaultOrderBy?: string;
-  idKey?: string;
-  limit?: number;
-  totalRow?: number;
-  initialLoading?: boolean;
-  selectable?: boolean;
-  collapsible?: boolean;
-  hasFilter?: boolean;
-  renderBulkAction?: (selectedIds: string[]) => JSX.Element;
-  onSortChange?: (event: { order: string; orderBy: 'asc' | 'desc' }) => void;
-  onPageChange?: (pageNumber: number) => void;
-  onLimitChange?: (limit: number) => void;
-  onSelect?: (event: string[]) => void;
-  onChange?: (event: DataTableChangeEvent) => void;
-  onRowClick?: (event: any) => void;
-  onFilterBy?: (event: any) => void;
-  renderDetailRow?: (row: any) => ReactNode;
-  detailRowTitle?: string | ReactNode;
-  cardProps?: BoxProps;
-  size?: 'small' | 'medium';
-  topAction?: ReactNode;
-  showPagination?: boolean;
-  extraFilter?: ReactNode;
-  noOptionsText?: ReactNode;
+    columns: DataTableColumn<any>[];
+    data: any[] | null;
+    defaultOrder?: 'asc' | 'desc';
+    defaultOrderBy?: string;
+    idKey?: string;
+    limit?: number;
+    totalRow?: number;
+    initialLoading?: boolean;
+    selectable?: boolean;
+    collapsible?: boolean;
+    hasFilter?: boolean;
+    renderBulkAction?: (selectedIds: string[]) => JSX.Element;
+    onSortChange?: (event: { order: string; orderBy: 'asc' | 'desc' }) => void;
+    onPageChange?: (pageNumber: number) => void;
+    onLimitChange?: (limit: number) => void;
+    onSelect?: (event: string[]) => void;
+    onChange?: (event: DataTableChangeEvent) => void;
+    onRowClick?: (event: any) => void;
+    onFilterBy?: (event: any) => void;
+    renderDetailRow?: (row: any) => ReactNode;
+    detailRowTitle?: string | ReactNode;
+    cardProps?: BoxProps;
+    size?: 'small' | 'medium';
+    topAction?: ReactNode;
+    showPagination?: boolean;
+    extraFilter?: ReactNode;
+    noOptionsText?: ReactNode;
 }
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
@@ -337,10 +342,10 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                 setOrder(dir);
                 setOrderBy(columnName);
                 onSortChange &&
-          onSortChange({
-              order: dir,
-              orderBy: columnName,
-          });
+                    onSortChange({
+                        order: dir,
+                        orderBy: columnName,
+                    });
             },
             [orderBy, order, onSortChange]
         );
@@ -423,17 +428,24 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
         }, []);
 
         const colSpan =
-      columns.filter(({ isHidden }) => !isHidden).length +
-      (selectable ? 1 : 0) +
-      (collapsible ? 1 : 0);
+            columns.filter(({ isHidden }) => !isHidden).length +
+            (selectable ? 1 : 0) +
+            (collapsible ? 1 : 0);
 
         return (
-            <Box className="data-table" width="100%" {...props}>
+            <Box
+                className="data-table"
+                width="100%"
+                {...props}
+            >
                 {detailRowTitle && (
                     <>
                         <Stack
                             spacing={1}
-                            direction={{ xs: 'column', sm: 'row' }}
+                            direction={{
+                                xs: 'column',
+                                sm: 'row'
+                            }}
                             justifyContent="space-between"
                             alignItems="center"
                         >
@@ -457,7 +469,10 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                 {hasFilter && (
                     <StyledToolbar>
                         <Stack
-                            direction={{ xs: 'column', sm: "row" }}
+                            direction={{
+                                xs: 'column',
+                                sm: "row"
+                            }}
                             spacing={2}
                             justifyContent="space-between"
                             width="100%"
@@ -487,16 +502,21 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                 {selected?.length > 0 && (
                     <>
                         <Divider />
-                        <StyledToolbar sx={{
-                            backgroundColor: (theme) => alpha(theme.palette.success.main, 0.2),
-                            color: (theme) => theme.palette.success.main,
-                        }}>
-                            <Typography component="div" variant="subtitle1">
+                        <StyledToolbar
+                            sx={{
+                                backgroundColor: (theme) => alpha(theme.palette.success.main, 0.2),
+                                color: (theme) => theme.palette.success.main,
+                            }}
+                        >
+                            <Typography
+                                component="div"
+                                variant="subtitle1"
+                            >
                                 {selected.length} rows selected
                             </Typography>
                             {selected.length > 0 &&
-                renderBulkAction &&
-                renderBulkAction(selected)}
+                                renderBulkAction &&
+                                renderBulkAction(selected)}
                         </StyledToolbar>
                     </>
                 )}
@@ -523,7 +543,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                                     .filter(({ isHidden }) => !isHidden)
                                     .map((column: any, index) => {
                                         const sortDirection =
-                      orderBy === column.name ? order : false;
+                                            orderBy === column.name ? order : false;
                                         return (
                                             <TableCell
                                                 key={'column-' + index}
@@ -558,37 +578,40 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
 
                         <TableBody>
                             {!data &&
-                [1, 2, 3, 4, 5].map((index) => (
-                    <TableRow
-                        hover={selectable || !!onRowClick}
-                        key={'column-skl' + index}
-                        tabIndex={-1}
-                        role="checkbox"
-                    >
-                        {collapsible && (
-                            <TableCell padding="checkbox">
-                                <Skeleton />
-                            </TableCell>
-                        )}
-                        {selectable && (
-                            <TableCell padding="checkbox">
-                                <Skeleton />
-                            </TableCell>
-                        )}
+                                [1, 2, 3, 4, 5].map((index) => (
+                                    <TableRow
+                                        hover={selectable || !!onRowClick}
+                                        key={'column-skl' + index}
+                                        tabIndex={-1}
+                                        role="checkbox"
+                                    >
+                                        {collapsible && (
+                                            <TableCell padding="checkbox">
+                                                <Skeleton />
+                                            </TableCell>
+                                        )}
+                                        {selectable && (
+                                            <TableCell padding="checkbox">
+                                                <Skeleton />
+                                            </TableCell>
+                                        )}
 
-                        {columns
-                            .filter(({ isHidden }) => !isHidden)
-                            .map((column, index) => (
-                                <TableCell key={'cell-' + index} {...column.props}>
-                                    {column.skeletonRender ? (
-                                        column.skeletonRender()
-                                    ) : (
-                                        <Skeleton width="90%" />
-                                    )}
-                                </TableCell>
-                            ))}
-                    </TableRow>
-                ))}
+                                        {columns
+                                            .filter(({ isHidden }) => !isHidden)
+                                            .map((column, index) => (
+                                                <TableCell
+                                                    key={'cell-' + index}
+                                                    {...column.props}
+                                                >
+                                                    {column.skeletonRender ? (
+                                                        column.skeletonRender()
+                                                    ) : (
+                                                        <Skeleton width="90%" />
+                                                    )}
+                                                </TableCell>
+                                            ))}
+                                    </TableRow>
+                                ))}
                             {data?.map((row: any, index) => {
                                 const isItemSelected = selected.indexOf(row.id) !== -1;
                                 const open = openedRows[row.id];
@@ -631,7 +654,10 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                                         {columns
                                             .filter(({ isHidden }) => !isHidden)
                                             .map((column, index) => (
-                                                <TableCell key={'cell-two' + index} {...column.props}>
+                                                <TableCell
+                                                    key={'cell-two' + index}
+                                                    {...column.props}
+                                                >
                                                     {column.render
                                                         ? column.render(row)
                                                         : get(row, column.name) || column.defaultValue}
@@ -644,7 +670,10 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                         {data?.length === 0 && (
                             <TableBody>
                                 <TableRow>
-                                    <TableCell align="center" colSpan={colSpan}>
+                                    <TableCell
+                                        align="center"
+                                        colSpan={colSpan}
+                                    >
                                         {noOptionsText ? (
                                             <Typography
                                                 gutterBottom
@@ -661,13 +690,16 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                                                     align="center"
                                                     variant="subtitle1"
                                                 >
-                          No results found
+                                                    No results found
                                                 </Typography>
                                                 {search && (
-                                                    <Typography variant="body2" align="center">
-                            No results found for &nbsp;
+                                                    <Typography
+                                                        variant="body2"
+                                                        align="center"
+                                                    >
+                                                        No results found for &nbsp;
                                                         <strong>&quot;{search}&quot;</strong>. Try checking
-                            for typos or using complete words.
+                                                        for typos or using complete words.
                                                     </Typography>
                                                 )}
                                             </Box>

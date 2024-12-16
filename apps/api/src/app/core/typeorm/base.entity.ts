@@ -1,12 +1,13 @@
+import { IBaseEntity } from '@libs/types';
+import { ApiProperty } from '@nestjs/swagger';
 import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
     CreateDateColumn,
     DeleteDateColumn
 } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
 
-import { IBaseEntity } from '@libs/types';
+
 // import { Factory } from '../nest-seeder';
 
 export abstract class BaseEntity implements IBaseEntity {
@@ -22,20 +23,20 @@ export abstract class BaseEntity implements IBaseEntity {
         format: 'uuid'
     })
     @PrimaryGeneratedColumn('uuid')
-        id?: string;
+    id?: string;
 
     @ApiProperty({ readOnly: true })
     // @Factory((faker) => faker.date.past({ years: 1 }))
     @CreateDateColumn()
-        createdAt?: Date;
+    createdAt?: Date;
 
     @ApiProperty({ readOnly: true })
     // @Factory((faker, ctx) => faker.date.between({ from: ctx.createdAt, to: new Date() }))
     @UpdateDateColumn()
-        updatedAt?: Date;
+    updatedAt?: Date;
 
     @ApiProperty({ readOnly: true })
     @DeleteDateColumn()
-        deletedAt?: Date;
+    deletedAt?: Date;
 
 }

@@ -1,11 +1,13 @@
-import { lazy, useMemo } from 'react';
+import { lazy } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
+
 import { PATH_DASHBOARD } from './paths';
+import { Loadable } from '../components';
+import AuthGuard from '../guards/auth-guard';
+import GuestGuard from '../guards/guest-guard';
 import AuthLayout from '../layout/auth';
 import DashboardLayout from '../layout/dashboard';
-import GuestGuard from '../guards/guest-guard';
-import AuthGuard from '../guards/auth-guard';
-import { Loadable } from '../components';
+
 
 // Main
 const NotFound = Loadable(lazy(() => import('../pages/error/not-found')));
@@ -44,17 +46,32 @@ export default function Router() {
                 </GuestGuard>
             ),
             children: [
-                { path: 'login', element: <Login /> },
-                { path: 'register', element: <Register /> },
+                {
+                    path: 'login',
+                    element: <Login />
+                },
+                {
+                    path: 'register',
+                    element: <Register />
+                },
                 // { path: 'register', element: <Register /> },
-                { path: 'forgot-password', element: <ForgotPassword /> },
+                {
+                    path: 'forgot-password',
+                    element: <ForgotPassword />
+                },
                 // { path: 'verify', element: <VerifyCode /> },
                 // ...routes.auth,
             ],
         },
 
         // Dashboard Routes
-        { path: '', element: <Navigate to={PATH_DASHBOARD.root} replace /> },
+        {
+            path: '',
+            element: <Navigate
+                to={PATH_DASHBOARD.root}
+                replace
+            />
+        },
         {
             path: 'app',
             element: (
@@ -63,40 +80,97 @@ export default function Router() {
                 </AuthGuard>
             ),
             children: [
-                { path: 'app', element: <Dashboard /> },
-                { path: 'dashboard', element: <Dashboard /> },
+                {
+                    path: 'app',
+                    element: <Dashboard />
+                },
+                {
+                    path: 'dashboard',
+                    element: <Dashboard />
+                },
                 {
                     path: 'users',
                     children: [
-                        { path: 'list', element: <UserList /> },
-                        { path: 'edit/:id', element: <AddEditUser /> },
-                        { path: 'add', element: <AddEditUser /> },
-                        { path: 'roles', element: <RoleList /> },
-                        { path: 'roles/edit/:id', element: <AddEditRole /> },
-                        { path: 'roles/add', element: <AddEditRole /> },
-                        { path: 'permissions', element: <PermissionList /> },
+                        {
+                            path: 'list',
+                            element: <UserList />
+                        },
+                        {
+                            path: 'edit/:id',
+                            element: <AddEditUser />
+                        },
+                        {
+                            path: 'add',
+                            element: <AddEditUser />
+                        },
+                        {
+                            path: 'roles',
+                            element: <RoleList />
+                        },
+                        {
+                            path: 'roles/edit/:id',
+                            element: <AddEditRole />
+                        },
+                        {
+                            path: 'roles/add',
+                            element: <AddEditRole />
+                        },
+                        {
+                            path: 'permissions',
+                            element: <PermissionList />
+                        },
                     ],
                 },
                 {
                     path: 'pages',
                     children: [
-                        { path: '', element: <PageList /> },
+                        {
+                            path: '',
+                            element: <PageList />
+                        },
                         // { path: 'add', element: <AddEditPage /> },
                         // { path: 'edit/:pageId', element: <AddEditPage /> },
                     ]
                 },
-                { path: 'settings', element: <Settings /> },
-                { path: 'profile', element: <UserProfile /> },
-                { path: 'change-password', element: <UserChangePassword /> },
-                { path: 'profile', element: <UserProfile /> },
-                { path: 'page', element: <PageList /> },
-                { path: 'change-password', element: <UserChangePassword /> },
+                {
+                    path: 'settings',
+                    element: <Settings />
+                },
+                {
+                    path: 'profile',
+                    element: <UserProfile />
+                },
+                {
+                    path: 'change-password',
+                    element: <UserChangePassword />
+                },
+                {
+                    path: 'profile',
+                    element: <UserProfile />
+                },
+                {
+                    path: 'page',
+                    element: <PageList />
+                },
+                {
+                    path: 'change-password',
+                    element: <UserChangePassword />
+                },
             ],
         },
-        { path: '*', element: <Navigate to="/404" replace /> },
         {
             path: '*',
-            children: [{ path: '404', element: <NotFound /> }],
+            element: <Navigate
+                to="/404"
+                replace
+            />
+        },
+        {
+            path: '*',
+            children: [{
+                path: '404',
+                element: <NotFound />
+            }],
         },
     ]);
 }

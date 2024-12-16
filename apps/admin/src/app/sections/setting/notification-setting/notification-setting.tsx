@@ -1,12 +1,14 @@
 import { DataTableColumn } from '@admin/app/components'
+import { CrudTable, CrudTableActions } from '@admin/app/components/crud/crud-table';
 import { useNotificationTemplateQuery } from '@libs/react-core';
 import { INotificationTemplate } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
 import { Card } from '@mui/material';
-import { useCallback, useRef, useState } from 'react'
-import AddEditNotificationTemplateDialog from './add-edit-notification-template-dialog';
 import { startCase } from 'lodash';
-import { CrudTable, CrudTableActions } from '@admin/app/components/crud/crud-table';
+import { useCallback, useRef, useState } from 'react'
+
+import AddEditNotificationTemplateDialog from './add-edit-notification-template-dialog';
+
 
 const NotificationSetting = () => {
     const [notificationTemplate, setNotificationTemplate] = useState<INotificationTemplate>()
@@ -31,7 +33,7 @@ const NotificationSetting = () => {
         () => {
             setNotificationTemplate(null)
         },
-        [datatableRef],
+        [],
     )
 
     const columns: DataTableColumn<INotificationTemplate>[] = [

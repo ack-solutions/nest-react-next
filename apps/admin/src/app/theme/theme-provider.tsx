@@ -1,17 +1,18 @@
 import type { } from '@mui/x-date-pickers/themeAugmentation';
 import type { } from '@mui/material/themeCssVarsAugmentation';
+import { initialSetting, useSettingsContext } from '@libs/react-core';
+import { GlobalStyles } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, Experimental_CssVarsProvider as CssVarsProvider, getInitColorSchemeScript as _getInitColorSchemeScript, ThemeOptions } from '@mui/material/styles';
-import { typography } from './typography';
-import { colorSchemes } from './palette';
-import { presets } from './options/presets';
 import { useMemo } from 'react';
-import { customShadows } from './custom-shadows';
-import { shadows } from './shadows';
-import { GlobalStyles } from '@mui/material';
-import { initialSetting, useSettingsContext } from '@libs/react-core';
+
 import ComponentsOverrides from './components';
+import { customShadows } from './custom-shadows';
+import { presets } from './options/presets';
+import { colorSchemes } from './palette';
+import { shadows } from './shadows';
 import shape from './shape';
+import { typography } from './typography';
 
 
 type Props = {

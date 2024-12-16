@@ -1,5 +1,7 @@
 import type { CSSObject } from '@mui/material/styles';
+
 import { remToPx, mediaQueries } from './utils';
+
 
 export const hideScrollX: CSSObject = {
     msOverflowStyle: 'none',

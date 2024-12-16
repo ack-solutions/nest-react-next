@@ -1,6 +1,7 @@
-import { useState } from 'react';
 import { Box, InputLabel, useTheme } from '@mui/material';
 import { matchIsValidTel, MuiTelInput, MuiTelInputInfo, MuiTelInputProps } from 'mui-tel-input';
+import { useState } from 'react';
+
 
 export interface PhoneNumberInputProps extends Omit<MuiTelInputProps, 'onChange'> {
     label?: string
@@ -31,7 +32,12 @@ const PhoneNumberInput = ({
     };
 
     return (
-        <Box sx={{ width: '100%', ...sx }}>
+        <Box
+            sx={{
+                width: '100%',
+                ...sx 
+            }}
+        >
             {label && (
                 <InputLabel
                     disabled={!!props?.disabled}
@@ -41,7 +47,8 @@ const PhoneNumberInput = ({
                     margin='dense'
                     sx={{
                         ...theme.typography.body2,
-                        color: 'text.secondary', mb: 0.5
+                        color: 'text.secondary',
+                        mb: 0.5
                     }}
                 >
                     {label}

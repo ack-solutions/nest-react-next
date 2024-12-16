@@ -1,11 +1,13 @@
 
+import { CrudController } from '@api/app/core/crud';
 import { Body, Controller, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+
 import { SettingDTO } from './dto/setting.dto';
 import { Setting } from './setting.entity';
 import { SettingService } from './setting.service';
-import { CrudController } from '@api/app/core/crud';
+
 
 @ApiTags('Setting')
 @Controller("setting")

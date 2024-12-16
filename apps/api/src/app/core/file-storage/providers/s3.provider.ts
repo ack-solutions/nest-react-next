@@ -1,19 +1,21 @@
-import { FileStorageOption } from '../types';
-import multerS3 from 'multer-s3';
-import { basename, join } from 'path';
-import moment from 'moment';
-import { StorageEngine } from 'multer';
-import { Provider } from './provider';
 import { S3 as AWS_S3, GetObjectCommand, GetObjectCommandInput } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import moment from 'moment';
+import { StorageEngine } from 'multer';
+import multerS3 from 'multer-s3';
+import { basename, join } from 'path';
+
+import { FileStorageOption } from '../types';
+import { Provider } from './provider';
+
 
 export interface S3Config {
-	rootPath: string;
-	aws_access_key_id: string;
-	aws_secret_access_key: string;
-	aws_default_region: string;
-	aws_bucket: string;
-	aws_endpoint: string;
+    rootPath: string;
+    aws_access_key_id: string;
+    aws_secret_access_key: string;
+    aws_default_region: string;
+    aws_bucket: string;
+    aws_endpoint: string;
 }
 
 export class S3Provider extends Provider<S3Provider> {
@@ -35,8 +37,8 @@ export class S3Provider extends Provider<S3Provider> {
             aws_default_region: process.env.AWS_REGION || 'us-east-1',
             aws_bucket: process.env.AWS_S3_BUCKET || 'cleardoor-dev',
             aws_endpoint:
-				process.env.AWS_ENDPOINT ||
-				'https://strive.fra1.digitaloceanspaces.com',
+                process.env.AWS_ENDPOINT ||
+                'https://strive.fra1.digitaloceanspaces.com',
         };
         this.config = this.defaultConfig = {
             rootPath: '',
@@ -155,8 +157,11 @@ export class S3Provider extends Provider<S3Provider> {
                     reject(err);
                 } else {
                     const size = await s3
-                        .headObject({ Key: key, Bucket: this.getS3Bucket() })
-                    //.promise()
+                        .headObject({
+                            Key: key,
+                            Bucket: this.getS3Bucket()
+                        })
+                        //.promise()
                         .then((res) => res.ContentLength);
 
                     const file = {

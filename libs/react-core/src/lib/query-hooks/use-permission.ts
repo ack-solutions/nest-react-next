@@ -1,5 +1,6 @@
+import { useCrudOperations } from "../hook";
+import { PermissionService } from "../services";
 
-import { PermissionService, useCrudOperations } from '@libs/react-core';
 
 const service = PermissionService.getInstance<PermissionService>();
 

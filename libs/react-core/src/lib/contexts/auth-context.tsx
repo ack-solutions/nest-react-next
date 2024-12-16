@@ -1,28 +1,28 @@
-import React, { useState } from 'react';
+import { IUser } from '@libs/types';
+import axios from 'axios';
+import { chain, map } from 'lodash';
+import { useState } from 'react';
 import {
     createContext, useReducer, useEffect, useContext, useCallback,
 } from 'react';
-import axios from 'axios';
-import { chain, map } from 'lodash';
-import useAccess from './react-access-control/use-access';
-import { instanceApi } from '../utils';
-import { useUserQuery } from '../query-hooks';
-import { IUser } from '@libs/types';
 
+import { useUserQuery } from '../query-hooks';
+import { instanceApi } from '../utils';
+import useAccess from './react-access-control/use-access';
 
 
 export interface AuthState {
-  isAuthenticated: boolean,
-  isInitialized: boolean,
-  currentUser: IUser | null,
-  token?: string,
-  login: (token: string, user?: IUser) => Promise<any>,
-  logout: () => void,
-  reFetchCurrentUser: (user?: IUser) => void;
-  addLogoutListener?: (value?: any) => void;
-  addLoginListener?: (value?: any) => void;
-  removeLoginListener?: (value?: any) => void;
-  removeLogoutListener?: (value?: any) => void;
+    isAuthenticated: boolean,
+    isInitialized: boolean,
+    currentUser: IUser | null,
+    token?: string,
+    login: (token: string, user?: IUser) => Promise<any>,
+    logout: () => void,
+    reFetchCurrentUser: (user?: IUser) => void;
+    addLogoutListener?: (value?: any) => void;
+    addLoginListener?: (value?: any) => void;
+    removeLoginListener?: (value?: any) => void;
+    removeLogoutListener?: (value?: any) => void;
 }
 
 const initialState: Partial<AuthState> = Object.freeze({
@@ -34,7 +34,7 @@ const initialState: Partial<AuthState> = Object.freeze({
 const defaultValue: any = {
     login: () => Promise.resolve(),
     logout: () => {
-    //
+        //
     },
 }
 
@@ -42,35 +42,35 @@ export const AuthContext = createContext<AuthState>(defaultValue);
 
 const reducer = (state: any, action: any) => {
     switch (action.type) {
-    case 'INITIALIZE': {
-        return {
-            ...state,
-            ...action.payload,
-            isInitialized: true
-        };
-    }
-    case 'UPDATE': {
-        return {
-            ...state,
-            ...action.payload,
-        };
-    }
-    case 'SIGN_IN': {
-        return {
-            ...state,
-            isAuthenticated: true,
-            ...action.payload
-        };
-    }
-    case 'LOGOUT': {
-        return {
-            ...state,
-            isAuthenticated: false,
-            token: null,
-        };
-    }
-    default:
-        return initialState;
+        case 'INITIALIZE': {
+            return {
+                ...state,
+                ...action.payload,
+                isInitialized: true
+            };
+        }
+        case 'UPDATE': {
+            return {
+                ...state,
+                ...action.payload,
+            };
+        }
+        case 'SIGN_IN': {
+            return {
+                ...state,
+                isAuthenticated: true,
+                ...action.payload
+            };
+        }
+        case 'LOGOUT': {
+            return {
+                ...state,
+                isAuthenticated: false,
+                token: null,
+            };
+        }
+        default:
+            return initialState;
     }
 };
 
@@ -96,7 +96,7 @@ const AuthProvider = ({ children }: any) => {
     const { useGetMe } = useUserQuery();
     const { data: currentUser, refetch: refetchUserData } = useGetMe({
         enabled: Boolean(token),
-        throwOnError: (error, query) => {
+        throwOnError: (error, _query) => {
             logout()
             throw error
         },
@@ -184,21 +184,23 @@ const AuthProvider = ({ children }: any) => {
             dispatch({ type: 'INITIALIZE' });
         }
         initialize();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
-        <AuthContext.Provider value={{
-            login,
-            logout,
-            reFetchCurrentUser,
-            addLoginListener,
-            addLogoutListener,
-            removeLoginListener,
-            removeLogoutListener,
-            currentUser,
-            ...state,
-        }}>
+        <AuthContext.Provider
+            value={{
+                login,
+                logout,
+                reFetchCurrentUser,
+                addLoginListener,
+                addLogoutListener,
+                removeLoginListener,
+                removeLogoutListener,
+                currentUser,
+                ...state,
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );

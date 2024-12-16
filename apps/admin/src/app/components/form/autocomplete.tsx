@@ -1,9 +1,10 @@
-import TextField, { TextFieldProps } from '@mui/material/TextField';
-import MuiAutocomplete, { AutocompleteProps as MuiAutocompleteProps } from '@mui/material/Autocomplete';
-import { useCallback, useMemo } from 'react';
-import { Box, IconButton, InputAdornment, Tooltip } from '@mui/material';
-import { find, includes, map } from 'lodash';
 import { Replay } from '@mui/icons-material';
+import { Box, IconButton, InputAdornment, Tooltip } from '@mui/material';
+import MuiAutocomplete, { AutocompleteProps as MuiAutocompleteProps } from '@mui/material/Autocomplete';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
+import { find, includes, map } from 'lodash';
+import { useCallback, useMemo } from 'react';
+
 import { TextFieldRaw } from './text-field-raw';
 
 
@@ -98,7 +99,10 @@ const Autocomplete = ({
                                         {params.InputProps.endAdornment}
                                         {onRefreshOptions && (
                                             <Tooltip title='Refresh'>
-                                                <IconButton onClick={onRefreshOptions} size='small'>
+                                                <IconButton
+                                                    onClick={onRefreshOptions}
+                                                    size='small'
+                                                >
                                                     <Replay fontSize='small' />
                                                 </IconButton>
                                             </Tooltip>

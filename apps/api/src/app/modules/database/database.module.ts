@@ -1,7 +1,9 @@
 import { DynamicModule, Module, Global } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+
 import { BaseRepository } from './base.repository';
+
 
 interface EntityRepositoryPair {
   entity: any;

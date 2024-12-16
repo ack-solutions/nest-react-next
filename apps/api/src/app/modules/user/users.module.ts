@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { UserService } from './user.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersController } from './users.controller';
-import { User } from './user.entity';
-import { Role } from '../role/role.entity';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { User } from './user.entity';
+import { UserService } from './user.service';
+import { UsersController } from './users.controller';
+import { Role } from '../role/role.entity';
 
 
 @Module({
@@ -13,7 +14,7 @@ import { ConfigModule } from '@nestjs/config';
             User,
             Role,
         ]),
-    
+
     ],
     providers: [
         UserService,

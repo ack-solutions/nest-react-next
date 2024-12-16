@@ -1,7 +1,9 @@
-import { FileStorageOption, FileStorageProviderEnum } from './types';
+import moment from 'moment';
+
 import * as Providers from './providers';
 import { Provider } from './providers/provider';
-import moment from 'moment';
+import { FileStorageOption, FileStorageProviderEnum } from './types';
+
 
 export class FileStorage {
     providers: { [key: string]: Provider<any> } = {};
@@ -25,9 +27,7 @@ export class FileStorage {
     }
 
     generateFileName(ext) {
-        return `${
-            this.config.prefix ? this.config.prefix + '-' : ''
-        }${moment().unix()}-${parseInt('' + Math.random() * 10000, 10)}.${ext}`;
+        return `${this.config.prefix ? this.config.prefix + '-' : ''}${moment().unix()}-${parseInt('' + Math.random() * 10000, 10)}.${ext}`;
     }
 
     setConfig(config: Partial<FileStorageOption> = {}) {
@@ -35,7 +35,7 @@ export class FileStorage {
             ...this.config,
             ...config,
             provider: (process.env.FILE_PROVIDER ||
-				'local') as FileStorageProviderEnum,
+                'local') as FileStorageProviderEnum,
         };
         return this;
     }
@@ -81,7 +81,7 @@ export class FileStorage {
                     className.instance = provider;
                 } else {
                     this.providers[className.instance.name] =
-						className.instance;
+                        className.instance;
                 }
             }
         }

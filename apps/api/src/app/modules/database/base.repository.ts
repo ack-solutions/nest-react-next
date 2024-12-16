@@ -1,4 +1,5 @@
-import { DataSource, DeepPartial, EntityTarget, FindManyOptions, FindOneOptions, FindOptionsWhere, ObjectLiteral, QueryRunner, Repository, SaveOptions } from "typeorm";
+import { DataSource, DeepPartial, EntityTarget, FindManyOptions, FindOneOptions, ObjectLiteral, QueryRunner, Repository, SaveOptions } from "typeorm";
+
 
 export class BaseRepository<Entity extends ObjectLiteral> extends Repository<Entity> {
 
@@ -15,7 +16,7 @@ export class BaseRepository<Entity extends ObjectLiteral> extends Repository<Ent
 
 
     private checkOrganizationIdColumn(): boolean {
-    // Obtain the metadata for the entity
+        // Obtain the metadata for the entity
         const metadata = this.metadata;
         // Check if the `organizationId` column exists
         return metadata.columns.some(column => column.propertyName === 'organizationId');
@@ -23,7 +24,7 @@ export class BaseRepository<Entity extends ObjectLiteral> extends Repository<Ent
     }
 
     private checkBusinessIdColumn(): boolean {
-    // Obtain the metadata for the entity
+        // Obtain the metadata for the entity
         const metadata = this.metadata;
         // Check if the `businessId` column exists
 

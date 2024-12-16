@@ -1,7 +1,9 @@
 
 
 import { alpha, Shadows } from '@mui/material';
+
 import { palette as themePalette } from './palette';
+
 
 const palette = themePalette('light');
 const LIGHT_MODE = palette.grey[500];

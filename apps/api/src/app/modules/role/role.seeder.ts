@@ -1,18 +1,18 @@
-import { Repository } from 'typeorm';
+import { Seeder } from '@api/app/core/nest-seeder';
+import { RoleNameEnum } from '@libs/types';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Role } from './role.entity';
-import { RoleNameEnum } from '@libs/types';
-import { Seeder } from '@api/app/core/nest-seeder';
 import { keyBy } from 'lodash';
+import { Repository } from 'typeorm';
 
+import { Role } from './role.entity';
 
 
 @Injectable()
 export class RoleSeeder implements Seeder {
     constructor(
-    @InjectRepository(Role)
-    private repo: Repository<Role>,
+        @InjectRepository(Role)
+        private repo: Repository<Role>,
     ) { }
 
     async seed() {
@@ -21,7 +21,7 @@ export class RoleSeeder implements Seeder {
         const roleByName = keyBy(oldRoles, 'name')
 
         const systemRoles = Object.values(RoleNameEnum).map((name) => {
-            if (roleByName[name]){
+            if (roleByName[name]) {
                 return null;
             }
             return new Role({

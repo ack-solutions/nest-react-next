@@ -1,5 +1,7 @@
 
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { IFindOptions, IPaginationResult } from '@libs/types';
+import { BadRequestException } from '@nestjs/common';
+import { cloneDeep, has } from 'lodash';
 import {
     DeepPartial,
     DeleteResult,
@@ -9,12 +11,10 @@ import {
     FindOptionsWhere,
     SaveOptions,
 } from 'typeorm';
-import { ICrudService } from '../../types/crud.service';
+
 import { FindQueryBuilder } from './find-query-builder';
-// import { IFindOptions, IPaginationResult } from '@ackplus-inventory/core/types';
+import { ICrudService } from '../../types/crud.service';
 import { RequestContext } from '../request-context/request-context';
-import { cloneDeep, has } from 'lodash';
-import { IBaseEntity, IFindOptions, IPaginationResult } from '@libs/types';
 import { BaseEntity } from '../typeorm/base.entity';
 
 
@@ -56,7 +56,10 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
         this.doGetMany(builder, filter)
         const total = await builder.getCount();
         const items = await builder.getMany();
-        return { items, total: total?.count || 0 };
+        return {
+            items,
+            total: total?.count || 0
+        };
     }
 
 
@@ -187,7 +190,7 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
         return false;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     protected async checkOwnRowForUser(entity: DeepPartial<T>, throwError?: boolean, _hookType?: 'create' | 'update' | 'delete' | 'restore') {
         const user = RequestContext.currentUser();
         const hasUserIdColumn = this.repository.metadata.columns.filter((column) => column.propertyName === 'userId')?.length > 0;
@@ -201,7 +204,7 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
         return entity;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     protected mapUserIdInWhereForUser(where: FindOptionsWhere<T> | FindOptionsWhere<T>[], _hookType: 'getMany' | 'getOne' | 'getAll') {
         const user = RequestContext.currentUser()
         const hasUserIdColumn = this.repository.metadata.columns.filter((column) => column.propertyName === 'userId')?.length > 0;

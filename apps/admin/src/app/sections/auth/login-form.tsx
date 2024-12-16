@@ -1,6 +1,7 @@
-import { useCallback } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { Form, FormikHelpers, Formik, Field } from 'formik';
+import { TextField } from '@admin/app/components';
+import { Icon, useBoolean } from '@libs/react-core';
+import { ILoginSendOtpInput } from '@libs/types';
+import LoadingButton from '@mui/lab/LoadingButton';
 import {
     Stack,
     Alert,
@@ -9,21 +10,21 @@ import {
     useTheme,
     Link,
 } from '@mui/material';
-import { boolean, object, string } from 'yup';
+import { Form, FormikHelpers, Formik, Field } from 'formik';
 import { CheckboxWithLabel } from 'formik-mui';
-import LoadingButton from '@mui/lab/LoadingButton';
+import { useCallback } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import { boolean, object, string } from 'yup';
+
 import { PATH_AUTH } from '../../routes/paths';
-import { ILoginSendOtpInput } from '@libs/types';
-import { Icon, useBoolean } from '@libs/react-core';
-import {  TextField } from '@admin/app/components';
 
 
 export type LoginFormProps = {
-  onSubmit?: (
-    value: ILoginSendOtpInput,
-    action: FormikHelpers<ILoginSendOtpInput>
-  ) => void;
-  data?: ILoginSendOtpInput;
+    onSubmit?: (
+        value: ILoginSendOtpInput,
+        action: FormikHelpers<ILoginSendOtpInput>
+    ) => void;
+    data?: ILoginSendOtpInput;
 };
 
 const defaultValues = {
@@ -46,7 +47,7 @@ export default function LoginForm({ onSubmit, data }: LoginFormProps) {
     const theme = useTheme();
 
     const handleSubmit = useCallback(
-        (value:any, action:any) => {
+        (value: any, action: any) => {
             onSubmit && onSubmit(value, action);
         },
         [onSubmit]
@@ -59,7 +60,11 @@ export default function LoginForm({ onSubmit, data }: LoginFormProps) {
             onSubmit={handleSubmit}
         >
             {({ errors, isSubmitting, handleSubmit }) => (
-                <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+                <Form
+                    autoComplete="off"
+                    noValidate
+                    onSubmit={handleSubmit}
+                >
                     <Stack spacing={3}>
                         {(errors as any).afterSubmit && (
                             <Alert severity="error">{(errors as any).afterSubmit as any}</Alert>
@@ -83,7 +88,10 @@ export default function LoginForm({ onSubmit, data }: LoginFormProps) {
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                        <IconButton onClick={() => showPassword.onToggle()} edge="end">
+                                        <IconButton
+                                            onClick={() => showPassword.onToggle()}
+                                            edge="end"
+                                        >
                                             <Icon
                                                 icon={showPassword.value ? 'eye' : 'eye-slash'}
                                                 color={theme.palette.grey[500]}
@@ -99,7 +107,10 @@ export default function LoginForm({ onSubmit, data }: LoginFormProps) {
                         direction="row"
                         alignItems="center"
                         justifyContent="space-between"
-                        sx={{ my: 2, marginLeft: '4px' }}
+                        sx={{
+                            my: 2,
+                            marginLeft: '4px'
+                        }}
                     >
 
                         <Field
@@ -118,7 +129,7 @@ export default function LoginForm({ onSubmit, data }: LoginFormProps) {
                                 }
                             }}
                         >
-              Forgot password?
+                            Forgot password?
                         </Link>
                     </Stack>
 
@@ -128,7 +139,7 @@ export default function LoginForm({ onSubmit, data }: LoginFormProps) {
                         variant="contained"
                         loading={isSubmitting}
                     >
-            Login
+                        Login
                     </LoadingButton>
                 </Form>
             )}

@@ -1,4 +1,3 @@
-import { FieldProps } from 'formik';
 import {
     TextField as MUITextField,
     TextFieldProps as MUITextFieldProps,
@@ -6,15 +5,18 @@ import {
     SxProps,
     useTheme,
 } from '@mui/material';
-import { fieldToTextField } from 'formik-mui';
-import { memo, ReactNode } from 'react';
-import { omit } from 'lodash';
 import { InputLabel } from '@mui/material';
+import { FieldProps } from 'formik';
+import { fieldToTextField } from 'formik-mui';
+import { omit } from 'lodash';
+import { memo, ReactNode } from 'react';
+
 
 export interface TextFieldRawProps extends Omit<MUITextFieldProps, 'name'> {
   name?: string;
   inputSx?: SxProps;
 }
+
 export interface TextFieldProps extends FieldProps, Omit<TextFieldRawProps, 'name' | 'value' | 'error' | 'variant'> {
   helperText?: string | ReactNode;
   label?: string | ReactNode;
@@ -31,7 +33,12 @@ export const TextFieldRaw = memo(({
     const theme = useTheme()
 
     return (
-        <Box sx={{ width: '100%', ...sx }}>
+        <Box
+            sx={{
+                width: '100%',
+                ...sx 
+            }}
+        >
             {label && (
                 <InputLabel
                     disabled={!!props?.disabled}
@@ -41,7 +48,8 @@ export const TextFieldRaw = memo(({
                     margin='dense'
                     sx={{
                         ...theme.typography.body2,
-                        color: 'text.secondary',mb:0.5
+                        color: 'text.secondary',
+                        mb:0.5
                     }}
                 >
                     {label}
@@ -60,7 +68,10 @@ export const TextFieldRaw = memo(({
 
 
 const TextField = memo((props: TextFieldProps) => {
-    return <TextFieldRaw inputSx={props.inputSx} {...fieldToTextField(props)} />
+    return <TextFieldRaw
+        inputSx={props.inputSx}
+        {...fieldToTextField(props)}
+    />
 })
 
 export default TextField

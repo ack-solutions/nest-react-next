@@ -1,8 +1,9 @@
-import { Brackets, SelectQueryBuilder, Repository, DataSource, WhereExpressionBuilder, In, FindOptionsWhere, Not, IsNull } from "typeorm";
-import { get, uniq, omit, map, concat, chain } from "lodash";
-import { RequestContext } from "../request-context/request-context";
-import { getDataSource } from "../../utils";
 import { IFindOptions, IOrderBy, IWhereCondition, OrderDirectionEnum } from '@libs/types'
+import { get, uniq, omit, map, concat, chain } from "lodash";
+import { Brackets, SelectQueryBuilder, Repository, DataSource, WhereExpressionBuilder, In, Not, IsNull } from "typeorm";
+
+import { getDataSource } from "../../utils";
+
 
 export class FindQueryBuilder<T> {
 
@@ -245,61 +246,67 @@ export class FindQueryBuilder<T> {
 
         switch (operator) {
 
-        case "$iLike":
-        case "$like":
-            conditionString = `${columnName}::TEXT ${operator == '$like' ? 'LIKE' : 'ILIKE'}  :value_${this.whereIndex}::TEXT`
-            conditionValue = { [`value_${this.whereIndex}`]: `${value}` }
-            break;
+            case "$iLike":
+            case "$like":
+                conditionString = `${columnName}::TEXT ${operator == '$like' ? 'LIKE' : 'ILIKE'}  :value_${this.whereIndex}::TEXT`
+                conditionValue = { [`value_${this.whereIndex}`]: `${value}` }
+                break;
 
-        case "$lte":
-        case "$lt":
-            conditionString = `${columnName} ${operator == '$lte' ? '<=' : '<'}  :value_${this.whereIndex}`
-            conditionValue = { [`value_${this.whereIndex}`]: value }
-            break;
-
-        case "$gte":
-        case "$gt":
-            conditionString = `${columnName} ${operator == '$gte' ? '>=' : '>'}  :value_${this.whereIndex}`
-            conditionValue = { [`value_${this.whereIndex}`]: value }
-            break;
-
-        case "$eq":
-        case "$notEq":
-            if (value) {
-                conditionString = `${columnName} ${operator == '$notEq' ? '!=' : '='}  :value_${this.whereIndex}`
+            case "$lte":
+            case "$lt":
+                conditionString = `${columnName} ${operator == '$lte' ? '<=' : '<'}  :value_${this.whereIndex}`
                 conditionValue = { [`value_${this.whereIndex}`]: value }
-            }
-            break;
+                break;
 
-        case "$isNull":
-        case "$notNull":
-            conditionString = `${columnName} ${operator == '$isNull' ? 'IS NULL' : 'IS NOT NULL'}`
-            break;
-
-        case "$in":
-        case "$notIn":
-            if (value?.length > 0) {
-                conditionString = `${columnName} ${operator == '$notIn' ? 'NOT IN' : 'IN'} (:...value_${this.whereIndex})`
+            case "$gte":
+            case "$gt":
+                conditionString = `${columnName} ${operator == '$gte' ? '>=' : '>'}  :value_${this.whereIndex}`
                 conditionValue = { [`value_${this.whereIndex}`]: value }
-            } else {
-                throw Error(`${columnName} aspects array but received ${typeof value}`)
-            }
-            break;
+                break;
 
-        case "$between":
-            if (value?.length == 2) {
-                conditionString = `${columnName} BETWEEN  :startValue_${this.whereIndex} AND :endValue_${this.whereIndex}`
-                conditionValue = { [`startValue_${this.whereIndex}`]: value[0], [`endValue_${this.whereIndex}`]: value[1] }
-            } else {
-                throw Error(`${columnName} aspects array with two value`)
-            }
-            break;
+            case "$eq":
+            case "$notEq":
+                if (value) {
+                    conditionString = `${columnName} ${operator == '$notEq' ? '!=' : '='}  :value_${this.whereIndex}`
+                    conditionValue = { [`value_${this.whereIndex}`]: value }
+                }
+                break;
 
-        default:
-            throw Error(`${operator} operator not supported`)
+            case "$isNull":
+            case "$notNull":
+                conditionString = `${columnName} ${operator == '$isNull' ? 'IS NULL' : 'IS NOT NULL'}`
+                break;
+
+            case "$in":
+            case "$notIn":
+                if (value?.length > 0) {
+                    conditionString = `${columnName} ${operator == '$notIn' ? 'NOT IN' : 'IN'} (:...value_${this.whereIndex})`
+                    conditionValue = { [`value_${this.whereIndex}`]: value }
+                } else {
+                    throw Error(`${columnName} aspects array but received ${typeof value}`)
+                }
+                break;
+
+            case "$between":
+                if (value?.length == 2) {
+                    conditionString = `${columnName} BETWEEN  :startValue_${this.whereIndex} AND :endValue_${this.whereIndex}`
+                    conditionValue = {
+                        [`startValue_${this.whereIndex}`]: value[0],
+                        [`endValue_${this.whereIndex}`]: value[1]
+                    }
+                } else {
+                    throw Error(`${columnName} aspects array with two value`)
+                }
+                break;
+
+            default:
+                throw Error(`${operator} operator not supported`)
         }
 
-        return { conditionString, conditionValue }
+        return {
+            conditionString,
+            conditionValue
+        }
     }
 
     private getColumnName(query, name) {
@@ -391,7 +398,10 @@ export function propertyMap(entity) {
     if (typeof entity === 'string') {
         relationMap = relationPropertyMap(metadata)
     }
-    return { ...map, ...relationMap };
+    return {
+        ...map,
+        ...relationMap
+    };
 }
 
 function relationPropertyMap(metadata) {

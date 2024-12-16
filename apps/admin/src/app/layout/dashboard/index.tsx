@@ -1,11 +1,13 @@
+import { useResponsive, useSettingsContext } from '@libs/react-core';
+import { Box } from '@mui/material';
 import { useMemo, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Box } from '@mui/material';
+
 import { HEADER, NAV } from '../config';
 import Header from './header';
-import NavbarMini from './navbar/navbar-mini';
-import { useResponsive, useSettingsContext } from '@libs/react-core';
 import Navbar from './navbar/navbar';
+import NavbarMini from './navbar/navbar-mini';
+
 
 const SPACING = 8
 
@@ -33,7 +35,10 @@ export default function DashboardLayout() {
                     minHeight: { lg: 1 },
                 }}
             >
-                {isNavMini ? <NavbarMini /> : <Navbar openNav={open} onCloseNav={handleClose} />}
+                {isNavMini ? <NavbarMini /> : <Navbar
+                    openNav={open}
+                    onCloseNav={handleClose}
+                />}
                 <Box
                     component="main"
                     sx={{

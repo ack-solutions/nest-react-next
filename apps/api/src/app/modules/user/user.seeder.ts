@@ -1,22 +1,23 @@
 
-import { Repository } from 'typeorm';
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
-import { find, keyBy, uniqBy } from 'lodash';
-import { Role } from '../role/role.entity';
-import { IUser, RoleNameEnum, UserStatusEnum } from '@libs/types';
 import { DataFactory, Seeder } from '@api/app/core/nest-seeder';
 import { hashPassword } from '@api/app/utils';
+import { IUser, RoleNameEnum, UserStatusEnum } from '@libs/types';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from '@nestjs/typeorm';
+import { find, keyBy, uniqBy } from 'lodash';
+import { Repository } from 'typeorm';
+
+import { User } from './user.entity';
+import { Role } from '../role/role.entity';
 
 
 @Injectable()
 export class UserSeeder implements Seeder {
     constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
-    @InjectRepository(Role)
-    private roleRepository: Repository<Role>,
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
+        @InjectRepository(Role)
+        private roleRepository: Repository<Role>,
 
     ) { }
 
@@ -62,7 +63,10 @@ export class UserSeeder implements Seeder {
 
         users = defaultUsers?.map((user) => {
             const factoryUser = new User(DataFactory.createForClass(User).generate(1)[0]);
-            return { ...factoryUser, ...user }
+            return {
+                ...factoryUser,
+                ...user
+            }
         })
 
         const dummyUsers = []

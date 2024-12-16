@@ -1,13 +1,12 @@
 import { DefaultDialog } from '@admin/app/components'
+import { yupResolver } from '@hookform/resolvers/yup';
+import { FormContainer, RHFTextEditor, RHFTextField, useNotificationTemplateQuery, useToasty } from '@libs/react-core';
 import { INotificationTemplate } from '@libs/types';
 import { Button, Container } from '@mui/material';
-import { useCallback, useEffect } from 'react'
-import { object, string } from 'yup';
 import Grid from '@mui/material/Grid2';
-import { FormContainer, RHFTextEditor, RHFTextField, useNotificationTemplateQuery, useToasty } from '@libs/react-core';
+import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-
+import { object, string } from 'yup';
 
 
 export interface AddEditNotificationTemplateDialogProps {
@@ -67,7 +66,7 @@ const AddEditNotificationTemplateDialog = ({
                 createNotificationTemplate(value, options);
             }
         },
-        [onClose, showToasty],
+        [createNotificationTemplate, onClose, showToasty, updateNotificationTemplate],
     )
 
     useEffect(() => {
@@ -83,10 +82,17 @@ const AddEditNotificationTemplateDialog = ({
             fullScreen
             actions={
                 <>
-                    <Button variant="outlined" onClick={() => { onClose() }}>
+                    <Button
+                        variant="outlined"
+                        onClick={() => { onClose() }}
+                    >
                         Cancel
                     </Button>
-                    <Button variant="contained" color="primary" onClick={handleSubmit(handleSubmitForm)}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleSubmit(handleSubmitForm)}
+                    >
                         Save
                     </Button>
                 </>
@@ -101,8 +107,16 @@ const AddEditNotificationTemplateDialog = ({
                     validationSchema={validationSchema}
                     onSuccess={handleSubmitForm}
                 >
-                    <Grid spacing={3} container >
-                        <Grid size={{ xs: 12, sm: 6 }}>
+                    <Grid
+                        spacing={3}
+                        container
+                    >
+                        <Grid
+                            size={{
+                                xs: 12,
+                                sm: 6
+                            }}
+                        >
                             <RHFTextField
                                 fullWidth
                                 name="title"
@@ -110,7 +124,12 @@ const AddEditNotificationTemplateDialog = ({
                                 placeholder='Title'
                             />
                         </Grid>
-                        <Grid size={{ xs: 12, sm: 6 }}>
+                        <Grid
+                            size={{
+                                xs: 12,
+                                sm: 6
+                            }}
+                        >
                             <RHFTextField
                                 fullWidth
                                 required
@@ -119,7 +138,12 @@ const AddEditNotificationTemplateDialog = ({
                                 helperText='will be automatically generated from your title, if left empty.'
                             />
                         </Grid>
-                        <Grid size={{ xs: 12, sm: 6 }}>
+                        <Grid
+                            size={{
+                                xs: 12,
+                                sm: 6
+                            }}
+                        >
                             <RHFTextField
                                 fullWidth
                                 required
@@ -128,7 +152,12 @@ const AddEditNotificationTemplateDialog = ({
                                 placeholder='Email Subject'
                             />
                         </Grid>
-                        <Grid size={{ xs: 12, sm: 6 }}>
+                        <Grid
+                            size={{
+                                xs: 12,
+                                sm: 6
+                            }}
+                        >
                             <RHFTextField
                                 fullWidth
                                 required

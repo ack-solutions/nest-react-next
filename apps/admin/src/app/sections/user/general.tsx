@@ -1,12 +1,13 @@
-import { Button, Card, CardContent, MenuItem, Stack } from '@mui/material'
-import { useCallback, useEffect } from 'react'
-import { number, object, string } from 'yup';
-import Grid from '@mui/material/Grid2';
-import { FormContainer, RHFTextField, RHFUploadAvatar, useAuth, UserService, useToasty, useUserQuery } from '@libs/react-core';
-import { IUser, UserStatusEnum } from '@libs/types';
-import { pick, startCase } from 'lodash';
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { FormContainer, RHFTextField, RHFUploadAvatar, useAuth, useToasty, useUserQuery } from '@libs/react-core';
+import { IUser, UserStatusEnum } from '@libs/types';
+import { Button, Card, CardContent, MenuItem, Stack } from '@mui/material'
+import Grid from '@mui/material/Grid2';
+import { pick, startCase } from 'lodash';
+import { useCallback, useEffect } from 'react'
+import { useForm } from 'react-hook-form';
+import { number, object, string } from 'yup';
+
 
 const defaultValues: IUser = {
     firstName: '',
@@ -39,7 +40,7 @@ const General = () => {
         (values) => {
             const request = pick(values, 'status', 'firstName', 'lastName', 'email', 'phoneNumber', 'aboutMe', 'address', 'avatar')
             const options = {
-                onSuccess: (data) => {
+                onSuccess: () => {
                     showToasty('User profile successfully updated');
                     reFetchCurrentUser()
                 },
@@ -50,7 +51,7 @@ const General = () => {
             }
             updateProfile(request, options);
         },
-        [showToasty],
+        [reFetchCurrentUser, showToasty, updateProfile],
     )
 
     useEffect(() => {
@@ -66,8 +67,16 @@ const General = () => {
             validationSchema={validationSchema}
             onSuccess={handleSubmitForm}
         >
-            <Grid container spacing={2}>
-                <Grid size={{ xs: 12, sm: 3 }}>
+            <Grid
+                container
+                spacing={2}
+            >
+                <Grid
+                    size={{
+                        xs: 12,
+                        sm: 3
+                    }}
+                >
                     <Card>
                         <CardContent>
                             <RHFUploadAvatar
@@ -87,7 +96,10 @@ const General = () => {
                                 }}
                             >
                                 {Object.values(UserStatusEnum).map((status, index) => (
-                                    <MenuItem value={status} key={index}>
+                                    <MenuItem
+                                        value={status}
+                                        key={index}
+                                    >
                                         {startCase(status)}
                                     </MenuItem>
                                 ))}
@@ -95,11 +107,24 @@ const General = () => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid size={{ xs: 12, sm: 9 }}>
+                <Grid
+                    size={{
+                        xs: 12,
+                        sm: 9
+                    }}
+                >
                     <Card>
                         <CardContent>
-                            <Grid container spacing={2}>
-                                <Grid size={{ xs: 12, sm: 6 }}>
+                            <Grid
+                                container
+                                spacing={2}
+                            >
+                                <Grid
+                                    size={{
+                                        xs: 12,
+                                        sm: 6
+                                    }}
+                                >
                                     <RHFTextField
                                         fullWidth
                                         required
@@ -107,7 +132,12 @@ const General = () => {
                                         label='First Name'
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6 }}>
+                                <Grid
+                                    size={{
+                                        xs: 12,
+                                        sm: 6
+                                    }}
+                                >
                                     <RHFTextField
                                         fullWidth
                                         required
@@ -115,7 +145,12 @@ const General = () => {
                                         label='Last Name'
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6 }}>
+                                <Grid
+                                    size={{
+                                        xs: 12,
+                                        sm: 6
+                                    }}
+                                >
                                     <RHFTextField
                                         fullWidth
                                         required
@@ -123,7 +158,12 @@ const General = () => {
                                         label='Email'
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, sm: 6 }}>
+                                <Grid
+                                    size={{
+                                        xs: 12,
+                                        sm: 6
+                                    }}
+                                >
                                     <RHFTextField
                                         fullWidth
                                         required
@@ -131,7 +171,12 @@ const General = () => {
                                         label='Phone Number'
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, md: 6 }}>
+                                <Grid
+                                    size={{
+                                        xs: 12,
+                                        md: 6
+                                    }}
+                                >
                                     <RHFTextField
                                         fullWidth
                                         name='aboutMe'
@@ -140,7 +185,12 @@ const General = () => {
                                         rows={2}
                                     />
                                 </Grid>
-                                <Grid size={{ xs: 12, md: 6 }}>
+                                <Grid
+                                    size={{
+                                        xs: 12,
+                                        md: 6
+                                    }}
+                                >
                                     <RHFTextField
                                         fullWidth
                                         name='address'
@@ -156,7 +206,10 @@ const General = () => {
                                 justifyContent='flex-end'
                                 mt={2}
                             >
-                                <Button variant='contained' type='submit'>
+                                <Button
+                                    variant='contained'
+                                    type='submit'
+                                >
                                     Update
                                 </Button>
                             </Stack>

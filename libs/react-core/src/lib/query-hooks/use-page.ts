@@ -1,6 +1,7 @@
 import { useCrudOperations } from '../hook';
 import { PageService } from '../services/page.service';
 
+
 const Service = PageService.getInstance<PageService>();
 
 export const usePage = () => {
