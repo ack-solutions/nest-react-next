@@ -1,10 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormContainer, Icon, RHFTextField, useBoolean, useToasty, useUserQuery } from '@libs/react-core';
-import { Button, Card, CardContent, CardHeader, Container, IconButton, InputAdornment, Stack, useTheme } from '@mui/material'
-import { useCallback, useEffect } from 'react'
+import { FormContainer, RHFPassword, useToasty, useUserQuery } from '@libs/react-core';
+import { Button, Card, CardContent, CardHeader, Container, Stack } from '@mui/material'
+import { useCallback } from 'react'
 import { useForm } from 'react-hook-form';
 import { object, ref, string } from 'yup';
-
 
 const validationSchema = yupResolver(object().shape({
     oldPassword: string().label('Old Password').required(),
@@ -19,11 +18,7 @@ const defaultValues = {
 };
 
 const UserChangePassword = () => {
-    const showPassword = useBoolean()
-    const showOldPassword = useBoolean()
-    const confirmShowPassword = useBoolean()
     const { showToasty } = useToasty()
-    const theme = useTheme()
     const { useChangePassword } = useUserQuery()
     const { mutate: changePassword } = useChangePassword()
     const formContext = useForm({
@@ -62,68 +57,23 @@ const UserChangePassword = () => {
                         onSuccess={handleSubmitForm}
                     >
                         <Stack spacing={2}>
-                            <RHFTextField
+                            <RHFPassword
                                 fullWidth
-                                type={showOldPassword.value ? 'text' : 'password'}
-                                name="oldPassword"
+                                name='oldPassword'
                                 label="Old password"
                                 required
-                                slotProps={{
-                                    input: {
-                                        endAdornment: (
-                                            <InputAdornment position="end">
-                                                <IconButton onClick={() => showOldPassword.onToggle()} edge="end">
-                                                    <Icon
-                                                        icon={showOldPassword.value ? 'eye' : 'eye-slash'}
-                                                        color={theme.palette.grey[500]}
-                                                    />
-                                                </IconButton>
-                                            </InputAdornment>
-                                        ),
-                                    }
-                                }}
                             />
-                            <RHFTextField
+                            <RHFPassword
                                 fullWidth
-                                type={showPassword.value ? 'text' : 'password'}
                                 name="password"
                                 label="Password"
                                 required
-                                slotProps={{
-                                    input: {
-                                        endAdornment: (
-                                            <InputAdornment position="end">
-                                                <IconButton onClick={() => showPassword.onToggle()} edge="end">
-                                                    <Icon
-                                                        icon={showPassword.value ? 'eye' : 'eye-slash'}
-                                                        color={theme.palette.grey[500]}
-                                                    />
-                                                </IconButton>
-                                            </InputAdornment>
-                                        ),
-                                    }
-                                }}
                             />
-                            <RHFTextField
+                            <RHFPassword
                                 fullWidth
-                                type={confirmShowPassword.value ? 'text' : 'password'}
                                 name="confirmPassword"
                                 label="Confirm Password"
                                 required
-                                slotProps={{
-                                    input: {
-                                        endAdornment: (
-                                            <InputAdornment position="end">
-                                                <IconButton onClick={() => confirmShowPassword.onToggle()} edge="end">
-                                                    <Icon
-                                                        icon={confirmShowPassword.value ? 'eye' : 'eye-slash'}
-                                                        color={theme.palette.grey[500]}
-                                                    />
-                                                </IconButton>
-                                            </InputAdornment>
-                                        ),
-                                    }
-                                }}
                             />
                             <Stack
                                 direction='row'

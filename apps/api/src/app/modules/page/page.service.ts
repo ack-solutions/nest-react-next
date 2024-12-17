@@ -1,17 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CrudService } from '@api/app/core/crud';
-import { IPage } from '@libs/types';
 import { Page } from './page.entity';
-
+import { Repository } from 'typeorm';
+import { CrudService } from '@api/app/core/crud';
 
 @Injectable()
-export class PageService extends CrudService<IPage> {
+export class PageService extends CrudService<Page> {
     constructor(
-    @InjectRepository(Page)
-        repository: Repository<Page>
+        @InjectRepository(Page)
+        private pageRepo: Repository<Page>
     ) {
-        super(repository);
+        super(pageRepo);
+    }
+
+    find() {
+        return this.pageRepo.find();
     }
 }

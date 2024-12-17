@@ -5,6 +5,8 @@ import UserChangePassword from '../../sections/user/user-change-password';
 import Page from '@admin/app/components/page';
 import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
+import KeyTwoToneIcon from '@mui/icons-material/KeyTwoTone';
+import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 
 const UserProfile = () => {
     const [tabValue, setTabValue] = useState<string>('general');
@@ -17,7 +19,7 @@ const UserProfile = () => {
 
     return (
         <Page title='Profile'>
-            <Container>
+            <Container maxWidth={false}>
                 <CustomBreadcrumbs
                     heading="Profile"
                     links={[
@@ -29,10 +31,22 @@ const UserProfile = () => {
                     value={tabValue}
                     onChange={handleChangeTab}
                 >
-                    <Tab value="general" label="General" disableRipple />
-                    <Tab value="password" label="Password" disableRipple />
+                    <Tab
+                        value="general"
+                        label="General"
+                        disableRipple
+                        icon={<AccountBoxTwoToneIcon />}
+                        iconPosition="start"
+                    />
+                    <Tab
+                        value="password"
+                        label="Password"
+                        disableRipple
+                        icon={<KeyTwoToneIcon />}
+                        iconPosition="start"
+                    />
                 </Tabs>
-                
+
                 {tabValue === 'general' && (
                     <General />
                 )}

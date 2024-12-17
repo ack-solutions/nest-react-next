@@ -5,7 +5,7 @@ import {
     DataTableProps,
     TableActionMenu,
 } from '@admin/app/components';
-import { IBaseEntity, IFindOptions, ITest } from '@libs/types';
+import { IBaseEntity, IFindOptions } from '@libs/types';
 import { errorMessage, useBoolean, useCrudOperations, useToasty } from '@libs/react-core';
 import { TableBulkActionMenu } from '@admin/app/components/data-table/table-bulk-action-menu';
 import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
@@ -17,9 +17,9 @@ export interface CrudTableProps extends Partial<Omit<DataTableProps, 'ref'>> {
     crudOperationHooks: Partial<ReturnType<typeof useCrudOperations>>;
     crudName: string;
     hasSoftDelete?: boolean;
-    onEdit?: (updatedValue: Partial<ITest>) => void;
-    rowActions?: TableAction[];
-    bulkActions?: TableAction[];
+    onEdit?: (updatedValue: Partial<any>) => void;
+    rowActions?: (row) => TableAction[];
+    bulkActions?: (rows: any[]) => TableAction[];
 }
 
 export interface CrudTableActions {
@@ -35,8 +35,8 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
     crudOperationHooks,
     crudName,
     hasSoftDelete,
-    rowActions = [],
-    bulkActions = [],
+    rowActions,
+    bulkActions,
     onEdit,
     columns: initialColumn,
     ...props
@@ -62,7 +62,7 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
     const { mutateAsync: bulkDeleteForeverItems } = useBulkDeleteForever()
 
     const handleDelete = useCallback(
-        (row: ITest) => {
+        (row: any) => {
             confirmDialog({ message: `Are you sure you want to delete this ${crudName}?` })
                 .then(() => {
                     deleteItem(row.id)
@@ -87,7 +87,7 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
     );
 
     const handleRestore = useCallback(
-        (row: ITest) => {
+        (row: any) => {
             confirmDialog({ message: `Are you sure you want to restore this ${crudName}?` })
                 .then(() => {
                     restoreItem(row.id)
@@ -112,7 +112,7 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
     );
 
     const handleDeleteForever = useCallback(
-        (row: ITest) => {
+        (row: any) => {
             confirmDialog({ message: `Are you sure you want to permanently delete this ${crudName}? This action cannot be undone.` })
                 .then(() => {
                     deleteForeverItem(row.id)
@@ -256,8 +256,8 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                         } : {
                             onDelete: () => handleDelete(row)
                         })}
-                        onEdit={() => onEdit(row)}
-                        actions={rowActions}
+                        onEdit={() => onEdit && onEdit(row)}
+                        actions={rowActions ? rowActions(row) : []}
                     />
                 ),
             },
@@ -282,6 +282,7 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                     } : {
                         onDelete: () => handleBulkDelete(selectedRowIds)
                     })}
+                    actions={bulkActions ? bulkActions(selectedRowIds) : []}
                 />
             )}
             extraFilter={(

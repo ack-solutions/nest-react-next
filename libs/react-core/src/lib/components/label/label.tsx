@@ -4,10 +4,10 @@ import { Box, BoxProps } from '@mui/material';
 import { LabelColor, LabelVariant, StyledLabel } from './styles';
 
 export interface LabelProps extends BoxProps {
-	startIcon?: React.ReactElement | null;
-	endIcon?: React.ReactElement | null;
-	color?: LabelColor;
-	variant?: LabelVariant;
+    startIcon?: React.ReactElement | null;
+    endIcon?: React.ReactElement | null;
+    color?: LabelColor;
+    variant?: LabelVariant;
 }
 
 
@@ -49,4 +49,3 @@ export const Label = forwardRef<HTMLSpanElement, LabelProps>(({
         </StyledLabel>
     );
 });
-

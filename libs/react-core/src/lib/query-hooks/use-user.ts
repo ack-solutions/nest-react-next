@@ -6,7 +6,18 @@ import { DefinedInitialDataOptions, useMutation, useQuery, useQueryClient } from
 const service = UserService.getInstance<UserService>();
 
 export const useUserQuery = () => {
-    const { useGetMany, useGetOne, useCreate, useDelete, useUpdate } = useCrudOperations(service);
+    const {
+        useGetMany,
+        useGetOne,
+        useCreate,
+        useUpdate,
+        useDelete,
+        useDeleteForever,
+        useBulkDelete,
+        useBulkDeleteForever,
+        useRestore,
+        useBulkRestore
+    } = useCrudOperations(service);
     const queryClient = useQueryClient();
 
     const useGetMe = (options?: Partial<DefinedInitialDataOptions<any, Error, IUser>>) => useQuery({
@@ -16,12 +27,12 @@ export const useUserQuery = () => {
     });
 
     const useUpdateProfile = (options?: UpdateQueryOptions<Partial<IUser>, Error, IUser>) => useMutation({
-        mutationFn: (input: Partial<IUser>) => service.updateProfile(input), 
+        mutationFn: (input: Partial<IUser>) => service.updateProfile(input),
         onSuccess: (data) => {
             if (!options?.disableCacheUpdate) {
                 queryClient.invalidateQueries({
                     predicate: (query) =>
-                        query.queryKey[0] === service.getQueryKey('get') && query.queryKey[1] === data.id 
+                        query.queryKey[0] === service.getQueryKey('get') && query.queryKey[1] === data.id
                 });
                 queryClient.invalidateQueries({
                     predicate: (query) =>
@@ -33,12 +44,12 @@ export const useUserQuery = () => {
     });
 
     const useChangePassword = (options?: UpdateQueryOptions<Partial<IChangePasswordInput>, Error, IChangePasswordInput>) => useMutation({
-        mutationFn: (input: Partial<IChangePasswordInput>) => service.changePassword(input), 
+        mutationFn: (input: Partial<IChangePasswordInput>) => service.changePassword(input),
         onSuccess: (data) => {
             if (!options?.disableCacheUpdate) {
                 queryClient.invalidateQueries({
                     predicate: (query) =>
-                        query.queryKey[0] === service.getQueryKey('get') && query.queryKey[1] === data.id 
+                        query.queryKey[0] === service.getQueryKey('get') && query.queryKey[1] === data.id
                 });
                 queryClient.invalidateQueries({
                     predicate: (query) =>
@@ -58,5 +69,10 @@ export const useUserQuery = () => {
         useCreateUser: useCreate,
         useDeleteUser: useDelete,
         useUpdateUser: useUpdate,
+        useDeleteForeverUser: useDeleteForever,
+        useBulkDeleteUser: useBulkDelete,
+        useBulkDeleteForeverUser: useBulkDeleteForever,
+        useRestoreUser: useRestore,
+        useBulkRestoreUser: useBulkRestore
     };
 };

@@ -1,84 +1,38 @@
-import { DataTable, DataTableColumn, DataTableHandle, TableActionMenu } from '@admin/app/components'
-import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
-import { useNotificationTemplateQuery, useToasty } from '@libs/react-core';
+import { DataTableColumn } from '@admin/app/components'
+import { useNotificationTemplateQuery } from '@libs/react-core';
 import { INotificationTemplate } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
-import { Box, Button } from '@mui/material';
+import { Card } from '@mui/material';
 import { useCallback, useRef, useState } from 'react'
 import AddEditNotificationTemplateDialog from './add-edit-notification-template-dialog';
 import { startCase } from 'lodash';
+import { CrudTable, CrudTableActions } from '@admin/app/components/crud/crud-table';
 
 const NotificationSetting = () => {
     const [notificationTemplate, setNotificationTemplate] = useState<INotificationTemplate>()
-    const { showToasty } = useToasty();
-    const deleteConfirm = useConfirm();
-    const datatableRef = useRef<DataTableHandle>(null);
-    const [notificationTemplateRequest, setNotificationTemplateRequest] = useState()
-    const { useGetManyNotificationTemplate, useDeleteNotificationTemplate } = useNotificationTemplateQuery()
-    const { data: notificationData, refetch } = useGetManyNotificationTemplate(notificationTemplateRequest, {
-        enabled: !!notificationTemplateRequest
-    })
-    const { mutate: deleteNotificationTemplate } = useDeleteNotificationTemplate()
+    const datatableRef = useRef<CrudTableActions>(null);
+    const {
+        useGetManyNotificationTemplate,
+        useDeleteNotificationTemplate,
+        useRestoreNotificationTemplate,
+        useDeleteForeverNotificationTemplate,
+        useBulkDeleteNotificationTemplate,
+        useBulkRestoreNotificationTemplate,
+        useBulkDeleteForeverNotificationTemplate
+    } = useNotificationTemplateQuery()
 
     const handleOpenEditNotificationTemplateDialog = useCallback(
-        (value?: INotificationTemplate) => () => {
+        (value?: INotificationTemplate) => {
             setNotificationTemplate(value)
         },
         [],
     )
     const handleCloseEditNotificationTemplateDialog = useCallback(
-        (isRefresh) => {
+        () => {
             setNotificationTemplate(null)
-            if (isRefresh) {
-                refetch()
-                datatableRef.current.refresh()
-            }
         },
         [datatableRef],
     )
-
-    const handleDataTableChange = useCallback((filter: any) => {
-        filter = {
-            ...filter,
-            s: {
-                ...filter?.s,
-            },
-        };
-        setNotificationTemplateRequest(filter)
-    }, []);
-
-    const handleDeleteNotificationTemplate = useCallback(
-        (row: any) => {
-            if (row.id) {
-                deleteConfirm(
-                    {
-                        title: row.deletedAt ? "Permanent Delete" : "Delete",
-                        message: `Are you sure you want to ${row.deletedAt ? "permanent delete" : "delete"} this notification template?`
-                    })
-                    .then(async () => {
-
-                        try {
-                            deleteNotificationTemplate(row.id, {
-                                onError: (error) => {
-                                    showToasty(error.message, 'error');
-                                },
-                                onSuccess: () => {
-                                    showToasty('Notification Template successfully deleted');
-                                }
-                            })
-                            datatableRef?.current?.refresh();
-                        } catch (error: any) {
-                            showToasty(error, 'error');
-                        }
-                    })
-                    .catch(() => {
-                        //
-                    });
-            }
-
-        },
-        [deleteConfirm, showToasty]
-    );
 
     const columns: DataTableColumn<INotificationTemplate>[] = [
         {
@@ -112,38 +66,24 @@ const NotificationSetting = () => {
             isSortable: true,
             render: (row) => toDisplayDate(row?.createdAt),
         },
-        {
-            name: 'action',
-            label: 'Action',
-            isAction: true,
-            render: (row: any) => (
-                <TableActionMenu
-                    row={row}
-                    onDelete={() => handleDeleteNotificationTemplate(row)}
-                    {...!row?.deletedAt ? { onEdit: handleOpenEditNotificationTemplateDialog(row) } : {}}
-                />
-            ),
-            props: { sx: { width: 150 } }
-        },
     ];
     return (
-        <Box>
-            <DataTable
-                data={notificationData?.items}
-                columns={columns}
+        <Card>
+            <CrudTable
+                hasSoftDelete
+                crudName="NotificationTemplate"
+                crudOperationHooks={{
+                    useGetMany: useGetManyNotificationTemplate,
+                    useDelete: useDeleteNotificationTemplate,
+                    useRestore: useRestoreNotificationTemplate,
+                    useDeleteForever: useDeleteForeverNotificationTemplate,
+                    useBulkDelete: useBulkDeleteNotificationTemplate,
+                    useBulkRestore: useBulkRestoreNotificationTemplate,
+                    useBulkDeleteForever: useBulkDeleteForeverNotificationTemplate,
+                }}
+                onEdit={handleOpenEditNotificationTemplateDialog}
                 ref={datatableRef}
-                totalRow={notificationData?.total}
-                defaultOrder='desc'
-                defaultOrderBy='createdAt'
-                onChange={handleDataTableChange}
-                hasFilter
-                detailRowTitle='Notification Templates'
-                topAction={<Button
-                    variant='contained'
-                    onClick={handleOpenEditNotificationTemplateDialog({})}
-                >
-                    Add Template
-                </Button>}
+                columns={columns}
             />
             {notificationTemplate && (
                 <AddEditNotificationTemplateDialog
@@ -151,7 +91,7 @@ const NotificationSetting = () => {
                     onClose={handleCloseEditNotificationTemplateDialog}
                 />
             )}
-        </Box>
+        </Card>
     )
 }
 

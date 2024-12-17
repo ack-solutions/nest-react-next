@@ -12,10 +12,10 @@ import {
 import { Icon } from '@libs/react-core';
 
 export interface DefaultDialogProps extends Omit<DialogProps, 'open'> {
-  open?: boolean;
-  title?: string;
-  actions?: ReactNode;
-  onClose?: () => void;
+    open?: boolean;
+    title?: string;
+    actions?: ReactNode;
+    onClose?: () => void;
 }
 
 const DefaultDialog = ({
@@ -31,10 +31,10 @@ const DefaultDialog = ({
 
     return (
         <Dialog
-            open={open ?? true} 
+            open={open ?? true}
             fullWidth
             maxWidth={dialogProps.maxWidth || 'md'}
-            fullScreen={fullScreen} 
+            fullScreen={fullScreen}
             onClose={onClose}
             {...dialogProps}
         >

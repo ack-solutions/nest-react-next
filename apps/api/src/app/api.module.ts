@@ -9,6 +9,7 @@ import { PageModule } from './modules/page/page.module';
 import { NotificationTemplateModule } from './modules/notification-template/notification-template.module';
 import { SettingModule } from './modules/setting/setting.module';
 
+
 const Modules = [
     UsersModule,
     AuthModule,

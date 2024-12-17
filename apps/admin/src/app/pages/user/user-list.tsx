@@ -1,80 +1,59 @@
 import { useState, useCallback, useRef } from 'react';
 import {
     Container,
-    Stack,
-    Typography,
     Button,
+    Card,
+    Tabs,
+    Divider,
+    Tab,
 } from '@mui/material';
-import { has, split, startCase } from 'lodash';
 import { Icon, useToasty, useUserQuery } from '@libs/react-core';
 import { IUser, UserStatusEnum } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
-import { DataTableHandle, DataTableColumn, TableActionMenu, DataTable, Label } from '@admin/app/components';
-import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
+import { DataTableColumn } from '@admin/app/components';
 import Page from '@admin/app/components/page';
 import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
 import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 import { useNavigate } from 'react-router-dom';
 import ChangePasswordDialog from '@admin/app/sections/user/change-password-dialog';
+import { CrudTable, CrudTableActions } from '@admin/app/components/crud/crud-table';
+import UserStatusLabel from '@admin/app/components/user/user-status-label';
+import UserWithAvatar from '@admin/app/components/user/user-with-avatar';
+import { startCase } from 'lodash';
+
+const filterTabs = [
+    {
+        label: 'All',
+        value: 'all',
+    },
+    {
+        label: startCase(UserStatusEnum.ACTIVE),
+        value: UserStatusEnum.ACTIVE,
+    },
+    {
+        label: startCase(UserStatusEnum.INACTIVE),
+        value: UserStatusEnum.INACTIVE,
+    },
+    {
+        label: startCase(UserStatusEnum.PENDING),
+        value: UserStatusEnum.PENDING,
+    },
+];
 
 export default function UsersList() {
-    const { showToasty } = useToasty();
     const navigate = useNavigate();
-    const deleteConfirm = useConfirm();
-    const datatableRef = useRef<DataTableHandle>(null);
+    const datatableRef = useRef<CrudTableActions>(null);
     const [openPasswordDialog, setOpenPasswordDialog] = useState<any>()
-    const [userRequest, setUserRequest] = useState();
-    const { useGetManyUser, useDeleteUser } = useUserQuery();
-    const { mutate: onDeleteUser } = useDeleteUser()
-    const { data: usersData } = useGetManyUser(userRequest, {
-        enabled: !!userRequest
-    })
-
-    const handleViewUser = useCallback(
-        (row: IUser) => {
-            // 
-        },
-        [navigate]
-    );
-
-    const handleDeleteUser = useCallback(
-        (row: IUser) => {
-            if (row.id) {
-                deleteConfirm(
-                    {
-                        title: row.deletedAt ? "Permanent Delete" : "Delete",
-                        message: `Are you sure you want to ${row.deletedAt ? "permanent delete" : "delete"} this user?`
-                    })
-                    .then(async () => {
-                        try {
-                            onDeleteUser(row.id, {
-                                onError: (error) => {
-                                    showToasty(error.message, 'error');
-                                },
-                                onSuccess: () => {
-                                    showToasty('User successfully deleted');
-                                }
-                            })
-                            datatableRef?.current?.refresh();
-                        } catch (error: any) {
-                            showToasty(error, 'error');
-                        }
-                    })
-                    .catch(() => {
-                        //
-                    });
-            }
-
-        },
-        [deleteConfirm, showToasty]
-    );
-
-    const handleRowClick = useCallback(
-        (row: IUser) => {
-            handleViewUser(row)
-        },
-        [handleViewUser]
-    );
+    const [tabValue, setTabValue] = useState('all');
+    const {
+        useGetManyUser,
+        useDeleteUser,
+        useDeleteForeverUser,
+        useBulkDeleteUser,
+        useBulkDeleteForeverUser,
+        useRestoreUser,
+        useBulkRestoreUser
+    } = useUserQuery();
 
     const handleOpenAddEditUser = useCallback(
         (row: IUser) => {
@@ -96,28 +75,15 @@ export default function UsersList() {
         [],
     )
 
-    const handleDataTableChange = useCallback((filter: any) => {
-        if (has(filter?.s, '$or') && filter?.s['$or']?.length > 0) {
-            const searches = split(filter?.s['$or'][0]['firstName']['$contL'], ' ')
-            if (searches?.length > 1) {
-                filter?.s['$or'].push({
-                    firstName: { $contL: searches[0]?.trim() }, lastName: { $contL: searches[1]?.trim() }
-                })
-
-                filter?.s['$or'].push({
-                    firstName: { $contL: searches[1]?.trim() }, lastName: { $contL: searches[0]?.trim() }
-                })
+    const handleTabChange = useCallback((_event, value) => {
+        setTabValue(value)
+        datatableRef.current.applyFilters((state) => ({
+            ...state,
+            where: {
+                ...value != 'all' ? { status: { $eq: value } } : {},
             }
-        }
-        filter = {
-            ...filter,
-            s: {
-                ...filter?.s,
-            },
-            relations: ['roles'],
-        };
-        setUserRequest(filter)
-    }, []);
+        }));
+    }, [datatableRef]);
 
     const columns: DataTableColumn<IUser>[] = [
         {
@@ -125,19 +91,9 @@ export default function UsersList() {
             label: 'User Name',
             isSearchable: true,
             isSortable: true,
-            render: (row) => (
-                <Stack direction="row" alignItems="center" spacing={2}>
-                    <Typography variant="body2" noWrap>
-                        {startCase(row?.name)}
-                    </Typography>
-                </Stack>
-            ),
+            render: (row) => (<UserWithAvatar user={row} />),
         },
-        {
-            name: 'lastName',
-            label: 'Last Name',
-            isSearchable: true,
-        },
+
         {
             name: 'email',
             label: 'Email',
@@ -155,14 +111,7 @@ export default function UsersList() {
         {
             name: 'status',
             label: 'Status',
-            render: (row) => (
-                <Label
-                    variant='soft'
-                    color={row?.status === UserStatusEnum.ACTIVE ? 'success' : 'warning'}
-                >
-                    {startCase(row?.status)}
-                </Label>
-            ),
+            render: (row) => (<UserStatusLabel label={row?.status} />),
         },
         {
             name: 'createdAt',
@@ -171,28 +120,11 @@ export default function UsersList() {
             isSortable: true,
             render: (row) => toDisplayDate(row?.createdAt),
         },
-        {
-            name: 'action',
-            label: 'Action',
-            isAction: true,
-            render: (row: any) => (
-                <TableActionMenu
-                    row={row}
-                    {...!row?.deletedAt ? { onView: () => handleViewUser(row), onEdit: () => handleOpenAddEditUser(row) } : {}}
-                    actions={[{
-                        onClick: () => handleChangePassword(row),
-                        icon: <Icon icon="lock-circle" />,
-                        title: 'Change Password'
-                    }]}
-                    {...!row?.isSuperAdmin ? { onDelete: () => handleDeleteUser(row) } : {}}
-                />
-            ),
-        },
     ];
 
     return (
         <Page title='Users'>
-            <Container>
+            <Container maxWidth={false}>
                 <CustomBreadcrumbs
                     heading="Users"
                     links={[
@@ -205,26 +137,53 @@ export default function UsersList() {
                             variant='contained'
                             onClick={() => navigate(`${PATH_DASHBOARD.users.add}`)}
                         >
-              Add User
+                            Add User
                         </Button>
                     }
                 />
-                <DataTable
-                    data={usersData?.items}
-                    columns={columns}
-                    ref={datatableRef}
-                    totalRow={usersData?.total}
-                    defaultOrder='desc'
-                    defaultOrderBy='createdAt'
-                    onChange={handleDataTableChange}
-                    onRowClick={handleRowClick}
-                    hasFilter
-                    selectable
-                />
+                <Card>
+                    <Tabs
+                        value={tabValue}
+                        onChange={handleTabChange}
+                        sx={{ px: 3 }}
+                    >
+                        {filterTabs.map((tab) => (
+                            <Tab
+                                key={tab.value}
+                                iconPosition="end"
+                                value={tab.value}
+                                label={tab.label}
+                                disableRipple
+                            />
+                        ))}
+                    </Tabs>
+                    <Divider />
+                    <CrudTable
+                        hasSoftDelete
+                        crudName="Role"
+                        crudOperationHooks={{
+                            useGetMany: useGetManyUser,
+                            useDelete: useDeleteUser,
+                            useRestore: useRestoreUser,
+                            useDeleteForever: useDeleteForeverUser,
+                            useBulkDelete: useBulkDeleteUser,
+                            useBulkRestore: useBulkRestoreUser,
+                            useBulkDeleteForever: useBulkDeleteForeverUser,
+                        }}
+                        rowActions={(row) => ([
+                            {
+                                onClick: () => handleChangePassword(row),
+                                icon: <Icon icon="lock-circle" />,
+                                title: 'Change Password'
+                            }
+                        ])}
+                        onEdit={handleOpenAddEditUser}
+                        ref={datatableRef}
+                        columns={columns}
+                    />
+                </Card>
             </Container>
             {openPasswordDialog && <ChangePasswordDialog onClose={handleCloseDialog} values={openPasswordDialog} />}
         </Page>
     );
 }
-
-

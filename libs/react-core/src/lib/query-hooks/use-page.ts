@@ -1,10 +1,21 @@
-import { useCrudOperations } from '@libs/react-core';
+import { useCrudOperations } from '../hook';
 import { PageService } from '../services/page.service';
 
 const Service = PageService.getInstance<PageService>();
 
 export const usePage = () => {
-    const { useGetMany, useGetOne, useCreate, useDelete, useUpdate } = useCrudOperations(Service);
+    const {
+        useGetMany,
+        useGetOne,
+        useCreate,
+        useUpdate,
+        useDelete,
+        useRestore,
+        useDeleteForever,
+        useBulkDelete,
+        useBulkDeleteForever,
+        useBulkRestore,
+    } = useCrudOperations(Service);
 
     return {
         useGetManyPage: useGetMany,
@@ -12,5 +23,10 @@ export const usePage = () => {
         useCreatePage: useCreate,
         useDeletePage: useDelete,
         useUpdatePage: useUpdate,
+        useRestorePage: useRestore,
+        useDeleteForeverPage: useDeleteForever,
+        useBulkDeletePage: useBulkDelete,
+        useBulkDeleteForeverPage: useBulkDeleteForever,
+        useBulkRestorePage: useBulkRestore,
     };
 };
