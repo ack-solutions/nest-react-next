@@ -24,7 +24,6 @@ const AddEditUser = () => {
             const rolesIds = data?.roles?.map((role: IRole) => role?.id)
             return {
                 ...data,
-                phoneNumber: Number(data?.phoneNumber),
                 roles: rolesIds,
             };
         },

@@ -10,6 +10,7 @@ import {
     Param,
     Post,
     Put,
+    Query,
     UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
@@ -18,7 +19,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import moment from 'moment';
 import { join } from 'path';
-import { DeepPartial } from 'typeorm';
+import { DeepPartial, FindManyOptions } from 'typeorm';
 
 import { UserDTO } from './dto/user.dto';
 import { User } from './user.entity';
@@ -47,6 +48,12 @@ export class UsersController extends CrudController(UserDTO)<IUser> {
                 'roles.permissions',
             ],
         });
+    }
+
+    @Get('status-counts')
+    @UseGuards(AuthGuard('jwt'))
+    async getStatusCounts(@Query() filters: FindManyOptions<User>) {
+        return this.userService.getStatusCounts(filters);
     }
 
     @UseInterceptors(

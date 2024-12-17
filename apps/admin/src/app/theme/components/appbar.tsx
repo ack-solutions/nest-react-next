@@ -1,4 +1,4 @@
-export default function appBar() {
+export default function appBar(_theme) {
     return {
         MuiAppBar: {
             defaultProps: {

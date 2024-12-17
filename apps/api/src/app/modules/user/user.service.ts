@@ -5,11 +5,12 @@ import { IChangePasswordInput, IRegisterInput, IUpdateProfileInput, IUser, RoleN
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcryptjs';
-import { has, omit } from 'lodash';
+import { chain, has, omit, sumBy } from 'lodash';
 import {
     Repository,
     DeepPartial,
     Not,
+    FindManyOptions,
 } from 'typeorm';
 
 import { User } from './user.entity';
@@ -41,6 +42,30 @@ export class UserService extends CrudService<User> {
         }
 
         return entity as User;
+    }
+
+    async getStatusCounts(request: FindManyOptions<User>) {
+
+        const query = this.userRepository.createQueryBuilder();
+
+        query.select(`COUNT("${query.alias}"."id")`, 'count')
+            .addSelect(`"${query.alias}"."status"`, 'status')
+            .groupBy(`"${query.alias}"."status"`);
+
+        query.setFindOptions(request);
+
+        const results = await query.getRawMany();
+        const countData = chain(results)
+            .keyBy('status')
+            .mapValues((item) => item.count)
+            .value();
+
+        const total = {
+            ...countData,
+            all: sumBy(results, (item: any) => Number(item?.count || 0)),
+        };
+
+        return total;
     }
 
     async createUser(request: IRegisterInput) {

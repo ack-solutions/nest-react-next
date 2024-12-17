@@ -16,7 +16,7 @@ export interface PermissionSelectFieldProps {
     isLoading?: boolean
 }
 
-export const PermissionSelectField = ({
+export const RHFPermissionSelectField = ({
     name,
     control,
     label,

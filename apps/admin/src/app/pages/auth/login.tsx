@@ -14,34 +14,36 @@ const Login = () => {
     const { login } = useAuth()
 
     const handleSendOtp = useCallback(
-        (value?: ILoginSendOtpInput, action?: any) => {
+        (value?: ILoginSendOtpInput, setError?: any) => {
             value = value ? value : verifyData
             authService.sendLoginOtp(value).then(() => {
                 setVerifyData(value)
             }).catch((error) => {
-                action?.setErrors({ afterSubmit: errorMessage(error) });
+                setError('afterSubmit', {
+                    type: 'manual',
+                    message: errorMessage(error),
+                });
                 setVerifyData(null)
-            }).finally(() => {
-                action?.setSubmitting(false)
             })
         },
         [verifyData],
     )
 
     const handleLogin = useCallback(
-        async (values: any, action: any) => {
+        async (values: any, form: any) => {
             const request = {
                 otp: Number(values?.otp),
                 ...verifyData,
             }
             authService.login(request).then((data) => {
                 login(data?.accessToken, data?.user)
-                action.resetForm();
+                form.reset();
                 setVerifyData(null)
             }).catch((error) => {
-                action.setErrors({ afterSubmit: errorMessage(error) });
-            }).finally(() => {
-                action?.setSubmitting(false)
+                form.setError('afterSubmit', {
+                    type: 'manual',
+                    message: errorMessage(error),
+                });
             })
         },
         [login, verifyData],

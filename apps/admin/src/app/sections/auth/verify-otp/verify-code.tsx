@@ -1,12 +1,14 @@
 
 import { OtpInputField } from '@admin/app/components';
 import Page from '@admin/app/components/page';
-import { Icon } from '@libs/react-core';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { FormContainer, Icon, RHFOtpInput } from '@libs/react-core';
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Link, Container, Typography, Stack, Alert } from '@mui/material';
 import { IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
+import { useForm } from 'react-hook-form';
 import { string, object } from 'yup';
 
 
@@ -25,7 +27,7 @@ const RootStyle = styled(Page)(({ theme }) => ({
 }));
 
 
-const VeryFySchema = object().shape({
+const veryFySchema = object().shape({
     otp: string().label('OTP').required(),
 });
 
@@ -36,7 +38,17 @@ export default function VerifyCode({
     onResendOtp,
     onBackRegister
 }: VerifyOtpProps) {
+    const formContext = useForm({
+        resolver: yupResolver(veryFySchema),
+    })
+    const { formState: { errors, }, setError, reset } = formContext;
 
+    const handleSubmit = useCallback(
+        (value: any) => {
+            onSubmit && onSubmit(value, setError);
+        },
+        [onSubmit, setError]
+    );
     return (
 
         <RootStyle title="Verify | Minimal UI">
@@ -87,7 +99,7 @@ export default function VerifyCode({
                             mb: 3
                         }}
                     >
-                        <Formik
+                        {/* <Formik
                             initialValues={Object.assign({}, { otp: '' })}
                             validationSchema={VeryFySchema}
                             onSubmit={onSubmit}
@@ -97,48 +109,53 @@ export default function VerifyCode({
                                     autoComplete="off"
                                     noValidate
                                     onSubmit={handleSubmit}
+                                > */}
+                        <FormContainer
+                            FormProps={{
+                                id: "forgot-otp-form"
+                            }}
+                            formContext={formContext}
+                            validationSchema={veryFySchema}
+                            onSuccess={onSubmit}
+                        >
+                            <Stack spacing={3}>
+                                {errors?.afterSubmit && (
+                                    <Alert severity="error">{(errors as any)?.afterSubmit}</Alert>
+                                )}
+                                <Box>
+                                    <RHFOtpInput
+                                        name="otp"
+                                    />
+                                </Box>
+
+                                <LoadingButton
+                                    fullWidth
+                                    size="large"
+                                    type="submit"
+                                    variant="contained"
+                                    loading={isSubmitting}
+                                    onClick={() => handleSubmit()}
                                 >
-                                    <Stack spacing={3}>
-                                        {errors?.afterSubmit && (
-                                            <Alert severity="error">{(errors as any)?.afterSubmit}</Alert>
-                                        )}
-                                        <Box>
-                                            <Field
-                                                name="otp"
-                                                component={OtpInputField}
-                                            />
-                                        </Box>
+                                    Submit
+                                </LoadingButton>
+                            </Stack>
 
-                                        <LoadingButton
-                                            fullWidth
-                                            size="large"
-                                            type="submit"
-                                            variant="contained"
-                                            loading={isSubmitting}
-                                            onClick={() => handleSubmit()}
-                                        >
-                                            Submit
-                                        </LoadingButton>
-                                    </Stack>
-
-                                    <Typography
-                                        pt={2}
-                                        variant="body2"
-                                        align="center"
-                                    >
-                                        Don't have a code? &nbsp;
-                                        <Link
-                                            sx={{ cursor: 'pointer' }}
-                                            variant="subtitle2"
-                                            underline="none"
-                                            onClick={onResendOtp}
-                                        >
-                                            Resend code
-                                        </Link>
-                                    </Typography>
-                                </Form>
-                            )}
-                        </Formik>
+                            <Typography
+                                pt={2}
+                                variant="body2"
+                                align="center"
+                            >
+                                Don't have a code? &nbsp;
+                                <Link
+                                    sx={{ cursor: 'pointer' }}
+                                    variant="subtitle2"
+                                    underline="none"
+                                    onClick={onResendOtp}
+                                >
+                                    Resend code
+                                </Link>
+                            </Typography>
+                        </FormContainer>
                     </Box>
 
                 </Box>

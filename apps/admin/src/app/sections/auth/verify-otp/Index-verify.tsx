@@ -1,9 +1,9 @@
-import { OtpInputField } from '@admin/app/components';
-import { AuthService } from '@libs/react-core';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { AuthService, FormContainer, RHFOtpInput } from '@libs/react-core';
 import { errorMessage } from '@libs/react-core';
 import { Alert, Box, Button, Container, Stack, Typography, styled } from '@mui/material';
-import { Field, Form, Formik, FormikHelpers } from 'formik'
 import { useCallback, useState } from 'react'
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { object, string } from 'yup';
 
@@ -34,31 +34,39 @@ const IndexVerify = ({
 }: IndexVerifyProps) => {
     const navigate = useNavigate();
     const [isValidOtp, setIsValidOtp] = useState(null)
+    const [resendOtpSuccess, setResendOtpSuccess] = useState<string | null>(null);
+    const formContext = useForm({
+        resolver: yupResolver(VeryFySchema),
+    })
+    const { formState: { errors, }, setError, reset } = formContext;
 
     const handleSubmitOtp = useCallback(
-        async (values: any, actions: FormikHelpers<any>) => {
+        async (values: any) => {
             try {
                 const request = {
                     ...values,
                     email
                 }
                 await authService.verifyOtp(request).then((data) => {
-                    actions.resetForm();
+                    reset()
                     setIsValidOtp(values?.otp)
                 })
             } catch (error) {
-                actions.setErrors({ afterSubmit: errorMessage(error) });
+                setError('otp', {
+                    type: 'manual',
+                    message: errorMessage(error),
+                });
             }
-            actions.setSubmitting(false);
         },
-        [email],
+        [email, reset, setError],
     )
 
     const handleResendOtp = useCallback(
         async () => {
             try {
                 await authService.sendOtp({ email }).then(() => {
-                    //
+                    setResendOtpSuccess('OTP resend successfully!'); // Set success message when OTP is resent
+                    setTimeout(() => setResendOtpSuccess(null), 3000);
                 })
             } catch (error) {
                 console.log(error)
@@ -83,7 +91,7 @@ const IndexVerify = ({
                             Enter OTP Code
                         </Typography>
                         <Typography sx={{ color: 'text.secondary' }}>
-                            Enter 4 - digits code we send you on
+                            Enter 6 - digits code we send you on
                         </Typography>
 
                         <Box
@@ -104,68 +112,68 @@ const IndexVerify = ({
                                 mb: 3
                             }}
                         >
-                            <Formik
-                                initialValues={Object.assign({}, { otp: '' })}
+                            <FormContainer
+                                FormProps={{
+                                    id: "forgot-otp-form"
+                                }}
+                                formContext={formContext}
                                 validationSchema={VeryFySchema}
-                                onSubmit={handleSubmitOtp}
+                                onSuccess={handleSubmitOtp}
                             >
-                                {({ errors, isSubmitting, handleSubmit, values }) => (
-                                    <Form
-                                        autoComplete="off"
-                                        noValidate
-                                        onSubmit={handleSubmit}
+
+                                {(errors as any).otp && (
+                                    <Alert
+                                        severity="error"
+                                        sx={{ mb: 2 }}
                                     >
-                                        <Box
-                                            pb={2}
-                                            pt={0}
-                                        >
-                                            {(errors as any).afterSubmit && (
-                                                <Alert severity="error">{(errors as any)?.afterSubmit}</Alert>
-                                            )}
-                                        </Box>
-
-                                        <Box
-                                            display='grid'
-                                            justifyContent='center'
-                                        >
-                                            <Field
-                                                name="otp"
-                                                component={OtpInputField}
-                                            />
-                                        </Box>
-                                        <Button
-                                            sx={{ mt: 3 }}
-                                            fullWidth
-                                            type="submit"
-                                            variant="contained"
-                                        // onClick={() => handleSubmitOtp()}
-                                        >
-                                            Submit
-                                        </Button>
-
-                                        <Stack
-                                            direction="row"
-                                            spacing={2}
-                                            justifyContent="space-between"
-                                        >
-                                            <Button
-                                                size="large"
-                                                onClick={() => navigate(-1)}
-                                                sx={{ mt: 1 }}
-                                            >
-                                                Back
-                                            </Button>
-                                            <Button
-                                                // type="submit"
-                                                onClick={() => handleResendOtp()}
-                                            >
-                                                Resend Code
-                                            </Button>
-                                        </Stack>
-
-                                    </Form>
+                                        {(errors as any)?.otp?.message}
+                                    </Alert>
                                 )}
-                            </Formik>
+                                {!!resendOtpSuccess && (
+                                    <Alert
+                                        severity="success"
+                                        sx={{ mb: 2 }}
+                                    >
+                                        {resendOtpSuccess}
+                                    </Alert>
+                                )}
+
+                                <Box
+                                    display='grid'
+                                    justifyContent='center'
+                                >
+                                    <RHFOtpInput
+                                        name="otp"
+                                    />
+                                </Box>
+                                <Button
+                                    sx={{ mt: 3 }}
+                                    fullWidth
+                                    type="submit"
+                                    variant="contained"
+                                >
+                                    Submit
+                                </Button>
+
+                                <Stack
+                                    direction="row"
+                                    spacing={2}
+                                    justifyContent="space-between"
+                                >
+                                    <Button
+                                        size="large"
+                                        onClick={() => navigate(-1)}
+                                        sx={{ mt: 1 }}
+                                    >
+                                        Back
+                                    </Button>
+                                    <Button
+                                        onClick={() => handleResendOtp()}
+                                    >
+                                        Resend Code
+                                    </Button>
+                                </Stack>
+                            </FormContainer>
                         </Box>
                     </ContentStyle>
                 </Container>

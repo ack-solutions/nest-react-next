@@ -16,6 +16,4 @@ export { default as DefaultDialog } from './default-dialog';
 
 export { default as Logo } from './logo';
 
-export * from './form';
-
 export * from './page';

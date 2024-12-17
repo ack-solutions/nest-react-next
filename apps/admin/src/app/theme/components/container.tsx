@@ -1,5 +1,5 @@
 
-export default function Container() {
+export default function Container(_theme) {
     return {
         MuiContainer: {
 

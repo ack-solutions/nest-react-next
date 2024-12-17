@@ -62,7 +62,7 @@ const GeneralSetting = () => {
             setSettings({ settings: { ...values } });
         }
 
-    }, [data]);
+    }, [data, isSuccess]);
 
     useEffect(() => {
         reset({
@@ -88,7 +88,7 @@ const GeneralSetting = () => {
                         <Grid
                             size={{
                                 xs: 12,
-                                sm: 6 
+                                sm: 6
                             }}
                         >
                             <Card>

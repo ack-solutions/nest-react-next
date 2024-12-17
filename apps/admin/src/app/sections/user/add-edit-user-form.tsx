@@ -1,14 +1,14 @@
 import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormContainer, Icon, RHFSelect, RHFTextField, RHFUploadAvatar, useBoolean, useRoleQuery } from '@libs/react-core';
+import { FormContainer, RHFPassword, RHFPhoneNumber, RHFSelect, RHFTextField, RHFUploadAvatar, useBoolean, useRoleQuery } from '@libs/react-core';
 import { IUser, UserStatusEnum } from '@libs/types';
-import { Button, Card, CardContent, IconButton, InputAdornment, MenuItem, Stack, useTheme } from '@mui/material';
+import { Button, Card, CardContent, MenuItem, Stack, useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { startCase } from 'lodash';
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import { number, object, ref, string } from 'yup';
+import { object, ref, string } from 'yup';
 
 
 export interface AddEditUserFormProps {
@@ -20,7 +20,7 @@ const defaultValues: IUser = {
     firstName: '',
     lastName: '',
     email: '',
-    phoneNumber: null,
+    phoneNumber: '',
     status: UserStatusEnum.INACTIVE,
     roles: []
 };
@@ -29,7 +29,7 @@ const validationSchema = yupResolver(object().shape({
     firstName: string().trim().required().label('First Name'),
     lastName: string().trim().required().label('Last Name'),
     email: string().trim().required().label('Email'),
-    phoneNumber: number().required().label('Phone Number'),
+    phoneNumber: string().required().label('Phone Number'),
     password: string().label('Password').when('id', {
         is: (id: any) => !id,
         then: (schema) =>
@@ -48,9 +48,6 @@ const validationSchema = yupResolver(object().shape({
 }));
 
 const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
-    const showPassword = useBoolean()
-    const confirmShowPassword = useBoolean()
-    const theme = useTheme();
     const navigate = useNavigate()
     const { id: userId } = useParams();
     const { useGetManyRole } = useRoleQuery();
@@ -85,7 +82,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                 <Grid
                     size={{
                         xs: 12,
-                        sm: 3 
+                        sm: 3
                     }}
                 >
                     <Card>
@@ -121,7 +118,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                 <Grid
                     size={{
                         xs: 12,
-                        sm: 9 
+                        sm: 9
                     }}
                 >
                     <Card>
@@ -133,7 +130,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        sm: 6 
+                                        sm: 6
                                     }}
                                 >
                                     <RHFTextField
@@ -146,7 +143,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        sm: 6 
+                                        sm: 6
                                     }}
                                 >
                                     <RHFTextField
@@ -161,61 +158,25 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                         <Grid
                                             size={{
                                                 xs: 12,
-                                                sm: 6 
+                                                sm: 6
                                             }}
                                         >
-                                            <RHFTextField
+                                            <RHFPassword
                                                 fullWidth
-                                                type={showPassword.value ? 'text' : 'password'}
                                                 name="password"
                                                 label="Password"
-                                                slotProps={{
-                                                    input: {
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <IconButton
-                                                                    onClick={() => showPassword.onToggle()}
-                                                                    edge="end"
-                                                                >
-                                                                    <Icon
-                                                                        icon={showPassword.value ? 'eye' : 'eye-slash'}
-                                                                        color={theme.palette.grey[500]}
-                                                                    />
-                                                                </IconButton>
-                                                            </InputAdornment>
-                                                        ),
-                                                    }
-                                                }}
                                             />
                                         </Grid>
                                         <Grid
                                             size={{
                                                 xs: 12,
-                                                sm: 6 
+                                                sm: 6
                                             }}
                                         >
-                                            <RHFTextField
+                                            <RHFPassword
                                                 fullWidth
-                                                type={confirmShowPassword.value ? 'text' : 'password'}
                                                 name="confirmPassword"
                                                 label="Confirm Password"
-                                                slotProps={{
-                                                    input: {
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <IconButton
-                                                                    onClick={() => confirmShowPassword.onToggle()}
-                                                                    edge="end"
-                                                                >
-                                                                    <Icon
-                                                                        icon={confirmShowPassword.value ? 'eye' : 'eye-slash'}
-                                                                        color={theme.palette.grey[500]}
-                                                                    />
-                                                                </IconButton>
-                                                            </InputAdornment>
-                                                        ),
-                                                    }
-                                                }}
                                             />
                                         </Grid>
                                     </>
@@ -223,7 +184,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        sm: 6 
+                                        sm: 6
                                     }}
                                 >
                                     <RHFTextField
@@ -236,7 +197,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        sm: 6 
+                                        sm: 6
                                     }}
                                 >
                                     <RHFTextField
@@ -244,13 +205,12 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                         required
                                         name='phoneNumber'
                                         label='Phone Number'
-                                        type='number'
                                     />
                                 </Grid>
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        sm: 6 
+                                        sm: 6
                                     }}
                                 >
                                     <RHFTextField
@@ -272,7 +232,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        sm: 6 
+                                        sm: 6
                                     }}
                                 >
                                     <RHFSelect
