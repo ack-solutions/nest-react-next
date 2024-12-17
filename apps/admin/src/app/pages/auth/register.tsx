@@ -13,34 +13,36 @@ const Register = () => {
     const [verifyData, setVerifyData] = useState<any>(null)
 
     const handleSendOtp = useCallback(
-        (value?: any, action?: any) => {
+        (value?: any, setError?: any) => {
             value = value ? value : verifyData
             authService.sendRegisterOtp(value).then(({ data }) => {
                 setVerifyData(value)
             }).catch((error) => {
-                action?.setErrors({ afterSubmit: errorMessage(error) });
+                setError('afterSubmit', {
+                    type: 'manual',
+                    message: errorMessage(error),
+                });
                 setVerifyData(null)
-            }).finally(() => {
-                action?.setSubmitting(false)
             })
         },
         [verifyData],
     )
 
     const handleRegisterUser = useCallback(
-        (values: any, action: any) => {
+        (values: any, form: any) => {
             const request = {
                 otp: Number(values?.otp),
                 ...verifyData,
             }
 
             authService.register(request).then((data) => {
-                action.resetForm();
+                form.reset();
                 setVerifyData(null)
             }).catch((error) => {
-                action.setErrors({ afterSubmit: errorMessage(error) });
-            }).finally(() => {
-                action?.setSubmitting(false)
+                form.setError('afterSubmit', {
+                    type: 'manual',
+                    message: errorMessage(error),
+                });
             })
         },
         [verifyData],

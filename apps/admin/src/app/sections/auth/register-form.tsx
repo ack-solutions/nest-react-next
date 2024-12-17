@@ -1,10 +1,9 @@
-import { TextField } from '@admin/app/components/form/formik';
-import { Icon, useBoolean } from '@libs/react-core';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { FormContainer, RHFCheckbox, RHFPassword, RHFTextField } from '@libs/react-core';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Alert, IconButton, InputAdornment, Link, Stack, useTheme } from '@mui/material';
-import { Field, Form, Formik, FormikHelpers } from 'formik';
-import { CheckboxWithLabel } from 'formik-mui';
+import { Alert, Link, Stack } from '@mui/material';
 import { useCallback } from 'react'
+import { useForm, UseFormSetError } from 'react-hook-form';
 import { Link as RouterLink } from 'react-router-dom';
 import { boolean, object, string } from 'yup';
 
@@ -12,10 +11,7 @@ import { PATH_AUTH } from '../../routes/paths';
 
 
 export interface RegisterFromProps {
-    onSubmit?: (
-        value: any,
-        action: FormikHelpers<any>
-    ) => void;
+    onSubmit?: (value: any, setError: UseFormSetError<any>) => void;
 }
 
 const defaultValues = {
@@ -37,119 +33,98 @@ const validationSchema = object().shape({
 });
 
 const RegisterFrom = ({ onSubmit }: RegisterFromProps) => {
-    const showPassword = useBoolean()
-    const theme = useTheme();
+    const formContext = useForm({
+        defaultValues,
+        resolver: yupResolver(validationSchema),
+    })
+    const { formState: { errors, isSubmitting }, setError } = formContext;
 
     const handleSubmit = useCallback(
-        (value: any, action: any) => {
-            onSubmit && onSubmit(value, action);
+        (value: any) => {
+            onSubmit && onSubmit(value, setError);
         },
-        [onSubmit]
+        [onSubmit, setError]
     );
 
+
     return (
-        <Formik
-            initialValues={Object.assign({}, defaultValues)}
+        <FormContainer
+            FormProps={{
+                id: "register-from"
+            }}
+            formContext={formContext}
             validationSchema={validationSchema}
-            onSubmit={handleSubmit}
+            onSuccess={handleSubmit}
         >
-            {({ errors, isSubmitting, handleSubmit }) => (
-                <Form
-                    autoComplete="off"
-                    noValidate
-                    onSubmit={handleSubmit}
+            <Stack spacing={2}>
+                {(errors as any).afterSubmit && (
+                    <Alert severity="error">{(errors as any).afterSubmit.message as any}</Alert>
+                )}
+                <RHFTextField
+                    fullWidth
+                    name="firstName"
+                    label="First Name"
+                    required
+                />
+
+                <RHFTextField
+                    fullWidth
+                    name="lastName"
+                    label="Lase Name"
+                    required
+                />
+                <RHFTextField
+                    fullWidth
+                    type="email"
+                    name="email"
+                    label="Email address"
+                    autoComplete="email"
+                    required
+                />
+                <RHFPassword
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    required
+                />
+            </Stack>
+
+            <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+                sx={{
+                    my: 2,
+                    marginLeft: '4px'
+                }}
+            >
+                <RHFCheckbox
+                    name="remember"
+                    label='Remember me'
+                />
+
+                <Link
+                    component={RouterLink}
+                    to={PATH_AUTH.login}
+                    sx={{
+                        ':hover': {
+                            textDecoration: 'none'
+                        }
+                    }}
                 >
-                    <Stack spacing={2}>
-                        {(errors as any).afterSubmit && (
-                            <Alert severity="error">{(errors as any).afterSubmit as any}</Alert>
-                        )}
-                        <Field
-                            fullWidth
-                            name="firstName"
-                            label="First Name"
-                            component={TextField}
-                        />
+                    Have an Account  Login Here?
+                </Link>
+            </Stack>
 
-                        <Field
-                            fullWidth
-                            name="lastName"
-                            label="Lase Name"
-                            component={TextField}
-                        />
-                        <Field
-                            fullWidth
-                            type="email"
-                            name="email"
-                            label="Email address"
-                            autoComplete="email"
-                            component={TextField}
-                        />
-                        <Field
-                            fullWidth
-                            type={showPassword.value ? 'text' : 'password'}
-                            name="password"
-                            label="Password"
-                            autoComplete="password"
-                            component={TextField}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            onClick={() => showPassword.onToggle()}
-                                            edge="end"
-                                        >
-                                            <Icon
-                                                icon={showPassword.value ? 'eye' : 'eye-slash'}
-                                                color={theme.palette.grey[500]}
-                                            />
-                                        </IconButton>
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                    </Stack>
-
-                    <Stack
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="space-between"
-                        sx={{
-                            my: 2,
-                            marginLeft: '4px'
-                        }}
-                    >
-
-                        <Field
-                            component={CheckboxWithLabel}
-                            type="checkbox"
-                            name="remember"
-                            Label={{ label: 'Remember me' }}
-                        />
-
-                        <Link
-                            component={RouterLink}
-                            to={PATH_AUTH.login}
-                            sx={{
-                                ':hover': {
-                                    textDecoration: 'none'
-                                }
-                            }}
-                        >
-                            Have an Account  Login Here?
-                        </Link>
-                    </Stack>
-
-                    <LoadingButton
-                        fullWidth
-                        type="submit"
-                        variant="contained"
-                        loading={isSubmitting}
-                    >
-                        Register
-                    </LoadingButton>
-                </Form>
-            )}
-        </Formik>
+            <LoadingButton
+                fullWidth
+                type="submit"
+                variant="contained"
+                loading={isSubmitting}
+            >
+                Register
+            </LoadingButton>
+        </FormContainer>
     )
 }
 

@@ -1,4 +1,4 @@
-import { ILoginInput, ILoginSendOtpInput, IRegisterInput, IUser, UserStatusEnum } from '@libs/types';
+import { ILoginInput, ILoginSendOtpInput, IRegisterInput, IRegisterSendOtpInput, IUser, UserStatusEnum } from '@libs/types';
 import { Injectable, BadRequestException, ConflictException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -75,16 +75,10 @@ export class AuthService {
             email,
         });
         console.log({ otp })
-        // try {
-        //     await this.notificationService.loginEmailVerificationOtp({ otp: otp, email: request?.email, phone: user?.phone, phoneCountryId: user?.phoneCountryId }, mailDetails);
-        // } catch (error) {
-        //     console.log(error)
-        //     return { message: 'OTP send failed' };
-        // }
         return { message: 'OTP send successfully' };
     }
 
-    async sendRegistrationOtp(request?: any) {
+    async sendRegistrationOtp(request?: IRegisterSendOtpInput) {
         if (request.email) {
             const exists = await this.checkIfExistsEmail(request.email);
             if (exists) {
@@ -93,11 +87,7 @@ export class AuthService {
                 );
             }
         }
-        // const user = await this.userRepository.findOne({
-        //     where: {
-        //         email: request.email
-        //     }
-        // })
+
         if (request?.email) {
             const otp = await generateRandomNumber();
             console.log(otp);
@@ -108,10 +98,6 @@ export class AuthService {
                 otp: otp,
                 email: request.email,
             })
-            // const mailDetails = {
-            //     otp: otp
-            // };
-            // await this.notificationService.OTPNotification(request, mailDetails)
             return { message: 'OTP has been sent to your email, please verify' };
         }
         else {
@@ -248,7 +234,7 @@ export class AuthService {
             return { message: 'OTP has been sent to your email, please verify' };
         }
         else {
-            throw new BadRequestException("There is no account linked with the provided email!")
+            throw new BadRequestException("Sorry, we couldn't find an account with that email.")
         }
     }
 
@@ -269,15 +255,10 @@ export class AuthService {
                 otp: otp,
                 email: request.email,
             });
-            //   try {
-            //     await this.notificationService.sendOtpMail(user, { otp });
-            //   } catch (error) {
-            //     throw new BadGatewayException('OTP send failed');
-            //   }
             return { message: 'OTP send successfully' };
         } else {
             throw new BadRequestException(
-                'There is no account linked with the provided email!'
+                "Sorry, we couldn't find an account with that email."
             );
         }
     }
@@ -291,7 +272,7 @@ export class AuthService {
         // const env = this.configService.get('config.env')
 
         //   if (env === 'local' || 'dev') {
-        if (Number(request.otp) === 1234) {
+        if (Number(request.otp) === 123456) {
             return { message: 'Your OTP verified successfully' };
         }
         //   }

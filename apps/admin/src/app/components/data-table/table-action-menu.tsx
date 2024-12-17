@@ -18,22 +18,22 @@ import { useMemo } from 'react';
 
 
 export interface TableAction {
-  icon: any;
-  title: string;
-  permission?: string | string[];
-  onClick?: (event?: any) => void;
+    icon: any;
+    title: string;
+    permission?: string | string[];
+    onClick?: (event?: any) => void;
 }
 
 type TableActionMenuProps = {
-  onDelete?: (row?: any) => void;
-  onEdit?: (row?: any) => void;
-  onView?: (row?: any) => void;
-  onRestore?: (row?: any) => void;
-  onDeleteForever?: (row?: any) => void;
-  row?: any;
-  actions?: TableAction[];
-  crudPermissionKey?: string;
-  children?: any;
+    onDelete?: (row?: any) => void;
+    onEdit?: (row?: any) => void;
+    onView?: (row?: any) => void;
+    onRestore?: (row?: any) => void;
+    onDeleteForever?: (row?: any) => void;
+    row?: any;
+    actions?: TableAction[];
+    crudPermissionKey?: string;
+    children?: any;
 };
 
 export function TableActionMenu({
@@ -97,7 +97,7 @@ export function TableActionMenu({
                 }]
                 : [],
         ].filter((item) => item);
-    }, [actions, onView, crudPermissionKey, onEdit, hasAnyPermission, onDelete]);
+    }, [actions, onView, crudPermissionKey, onEdit, onDelete, onRestore, onDeleteForever, hasAnyPermission]);
 
     if (crudActions.length <= 2) {
         return (

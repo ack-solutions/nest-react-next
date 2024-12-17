@@ -2,7 +2,6 @@ import Page from '@admin/app/components/page';
 import { AuthService, errorMessage } from '@libs/react-core';
 import { Box, Container, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { FormikHelpers } from 'formik';
 import { useCallback, useState } from 'react';
 
 import ResetPasswordForm from './reset-password-form';
@@ -39,7 +38,7 @@ const ResetPassword = ({
     const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 
     const handleResetPassword = useCallback(
-        async (values: any, actions: FormikHelpers<any>) => {
+        async (values: any, form: any) => {
             try {
                 const request = {
                     ...values,
@@ -47,14 +46,16 @@ const ResetPassword = ({
                     otp
                 }
                 await authService.resetPassword(request).then(() => {
-                    actions.resetForm();
+                    form.reset();
                     setIsSuccessDialogOpen(true);
                 })
             } catch (error) {
-                actions.setErrors({ afterSubmit: errorMessage(error) });
+                form.setError('afterSubmit', {
+                    type: 'manual',
+                    message: errorMessage(error),
+                });
+                form.reset();
             }
-
-            actions.setSubmitting(false);
         },
         [email, otp],
     )
@@ -81,7 +82,6 @@ const ResetPassword = ({
                         </Typography>
                         <ResetPasswordForm onSubmit={handleResetPassword} />
                     </Box>
-
                 </ContentStyle>
             </Container>
             {isSuccessDialogOpen ? (

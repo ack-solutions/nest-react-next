@@ -2,7 +2,7 @@ import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-b
 import Page from '@admin/app/components/page'
 import { PATH_DASHBOARD } from '@admin/app/routes/paths'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { errorMessage, FormContainer, PermissionSelectField, RHFTextField, usePermissionQuery, useRoleQuery, useToasty } from '@libs/react-core'
+import { errorMessage, FormContainer, RHFPermissionSelectField, RHFTextField, usePermissionQuery, useRoleQuery, useToasty } from '@libs/react-core'
 import { IRole } from '@libs/types'
 import { Button, Card, CardContent, Container, Stack } from '@mui/material'
 import { map, omit } from 'lodash'
@@ -32,7 +32,7 @@ const AddEditRole = () => {
     const { mutateAsync: createRole } = useCreateRole();
     const { data: permissionData, isLoading } = useGetManyPermission({
         limit: 999,
-        page: 1 
+        page: 1
     });
     const { data: roleValues } = useGetRoleById(roleId, {
         relations: ['permissions'],
@@ -69,7 +69,7 @@ const AddEditRole = () => {
                 throw error;
             }
         },
-        [],
+        [createRole, navigate, showToasty, updateRole],
     )
 
     useEffect(() => {
@@ -87,11 +87,11 @@ const AddEditRole = () => {
                     links={[
                         {
                             name: 'Dashboard',
-                            href: PATH_DASHBOARD.root 
+                            href: PATH_DASHBOARD.root
                         },
                         {
                             name: 'Roles',
-                            href: PATH_DASHBOARD.users.roles 
+                            href: PATH_DASHBOARD.users.roles
                         },
                         { name: `${roleId ? 'Edit Role' : 'Add Role'}` },
                     ]}
@@ -112,7 +112,7 @@ const AddEditRole = () => {
                                     name="name"
                                     fullWidth
                                 />
-                                <PermissionSelectField
+                                <RHFPermissionSelectField
                                     name="permissions"
                                     label="Select Permissions"
                                     options={permissionData?.items || []}

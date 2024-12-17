@@ -3,7 +3,6 @@ import IndexVerify from '@admin/app/sections/auth/verify-otp/Index-verify';
 import { AuthService, errorMessage } from '@libs/react-core';
 import { Box, Button, Container, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { FormikHelpers } from 'formik';
 import { useCallback, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -27,18 +26,21 @@ export default function ForgetPassword() {
     const [resetForm, setResetForm] = useState(false);
     const [email, setEmail] = useState<any>(null);
 
+
     const handleSendOtp = useCallback(
-        async (values: any, actions: FormikHelpers<any>) => {
+        async (values: any, form: any) => {
             try {
                 setEmail(values.email)
                 await authService.sendOtp(values).then(() => {
                     setResetForm(true);
-                    actions.resetForm();
+                    form.reset();
                 })
             } catch (error) {
-                actions.setErrors({ afterSubmit: errorMessage(error) });
+                form.setError('afterSubmit', {
+                    type: 'manual',
+                    message: errorMessage(error),
+                });
             }
-            actions.setSubmitting(false);
         },
         [],
     )

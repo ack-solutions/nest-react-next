@@ -13,7 +13,7 @@ const defaultValues: IUser = {
     firstName: '',
     lastName: '',
     email: '',
-    phoneNumber: null,
+    phoneNumber: '',
     avatar: '',
     status: UserStatusEnum.INACTIVE,
 };
@@ -22,7 +22,7 @@ const validationSchema = yupResolver(object().shape({
     firstName: string().trim().required().label('First Name'),
     lastName: string().trim().required().label('Last Name'),
     email: string().trim().required().label('Email'),
-    phoneNumber: number().required().label('Phone Number'),
+    phoneNumber: string().required().label('Phone Number'),
 }));
 
 const General = () => {

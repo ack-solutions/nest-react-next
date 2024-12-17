@@ -11,6 +11,10 @@ export interface ILoginSendOtpInput {
   password: string;
 }
 
+export interface IRegisterSendOtpInput {
+  email: string;
+}
+
 export interface ILoginSuccess {
   accessToken: string;
   otpSecurity?: boolean;

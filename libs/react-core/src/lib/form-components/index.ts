@@ -4,7 +4,7 @@ export * from './use-transform';
 
 
 // Form Fields
-export * from './fields/autocomplete';
+export * from './fields';
 
 // Hook Form Fields
 export * from './hook-form-fields/rhf-autocomplete';
@@ -20,3 +20,9 @@ export * from './hook-form-fields/rhf-upload-avatar';
 export * from './hook-form-fields/rhf-text-editor';
 
 export * from './hook-form-fields/rhf-password';
+
+export * from './hook-form-fields/rhf-checkbox';
+
+export * from './hook-form-fields/rhf-otp-input';
+
+export * from './hook-form-fields/rhf-phone-number';

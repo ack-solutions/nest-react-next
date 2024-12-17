@@ -63,10 +63,17 @@ export const useUserQuery = () => {
         ...options,
     });
 
+    const useGetUserCountByStatus = (request?) => {
+        return useQuery({
+            queryKey: ['user-tab-count', request],
+            queryFn: () => service.getCountByStatus(request),
+        });
+    };
     return {
         useGetMe,
         useUpdateProfile,
         useChangePassword,
+        useGetUserCountByStatus,
         useGetManyUser: useGetMany,
         useGetUserById: useGetOne,
         useCreateUser: useCreate,
