@@ -1,7 +1,7 @@
 const nx = require('@nx/eslint-plugin');
 const stylisticPlugin = require('@stylistic/eslint-plugin');
 const importPlugin = require('eslint-plugin-import');
-const react = require('eslint-plugin-react');
+const eslintReactPlugin = require('eslint-plugin-react');
 const unusedImports = require('eslint-plugin-unused-imports');
 
 
@@ -31,14 +31,7 @@ module.exports = [
         ],
     },
     {
-        plugins: {
-            react,
-            "unused-imports": unusedImports,
-            import: importPlugin,
-            '@stylistic': stylisticPlugin,
-        }
-    },
-    {
+
         files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
         rules: {
             '@nx/enforce-module-boundaries': [
@@ -62,6 +55,14 @@ module.exports = [
         },
     },
     {
+        plugins: {
+            'eslint-plugin-react': eslintReactPlugin, // Ensure this is an object, not undefined
+            "unused-imports": unusedImports,
+            'eslint-plugin-import': importPlugin,
+            '@stylistic': stylisticPlugin,
+        },
+    },
+    {
         files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
         // Override or add rules here
         rules: {
@@ -71,11 +72,11 @@ module.exports = [
                 "ignoredNodes": ["PropertyDefinition"]
             }],
             // Ensure props start on a new line when there is more than one prop
-            'react/jsx-first-prop-new-line': ['error', 'multiline'],
+            'eslint-plugin-react/jsx-first-prop-new-line': ['error', 'multiline'],
             // Ensure one prop per line for readability
-            'react/jsx-max-props-per-line': ['error', { when: 'always' }],
+            'eslint-plugin-react/jsx-max-props-per-line': ['error', { when: 'always' }],
             // Ensure closing bracket on a new line
-            'react/jsx-closing-bracket-location': [
+            'eslint-plugin-react/jsx-closing-bracket-location': [
                 'error',
                 {
                     nonEmpty: 'tag-aligned',
@@ -83,15 +84,15 @@ module.exports = [
                 },
             ],
             // Ensure imports are at the top
-            "import/first": ["error"],
+            "eslint-plugin-import/first": ["error"],
             // Enforce newline after imports
-            "import/newline-after-import": ["error", {
+            "eslint-plugin-import/newline-after-import": ["error", {
                 count: 2,
                 exactCount: true,
                 considerComments: true,
             }],
             // Enforce import sorting
-            'import/order': [
+            'eslint-plugin-import/order': [
                 'error',
                 {
                     groups: [
