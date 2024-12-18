@@ -138,7 +138,7 @@ export function useCrudOperations<T extends IBaseEntity>(service: CRUDService<T>
 }
 
 
-function invalidListQueryCache(queryClient, service) {
+export function invalidListQueryCache(queryClient, service) {
     queryClient.invalidateQueries({
         predicate: (query) => {
             return query.queryKey[0] === service.getQueryKey('get-all') ||
@@ -147,7 +147,7 @@ function invalidListQueryCache(queryClient, service) {
     })
 }
 
-function invalidUpdateOrCreateQueryCache(queryClient, service, id) {
+export function invalidUpdateOrCreateQueryCache(queryClient, service, id) {
     queryClient.invalidateQueries({
         predicate: (query) =>
             query.queryKey[0] === service.getQueryKey('get') && query.queryKey[1] === id

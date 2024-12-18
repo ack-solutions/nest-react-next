@@ -5,19 +5,13 @@ import General from '@admin/app/sections/user/general';
 import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 import KeyTwoToneIcon from '@mui/icons-material/KeyTwoTone';
 import { Container, Tab, Tabs } from '@mui/material'
-import { SyntheticEvent, useCallback, useState } from 'react'
 
 import UserChangePassword from '../../sections/user/user-change-password';
+import { useTabs } from '@libs/react-core';
 
 
 const UserProfile = () => {
-    const [tabValue, setTabValue] = useState<string>('general');
-    const handleChangeTab = useCallback(
-        (_event: SyntheticEvent, newValue: string) => {
-            setTabValue(newValue);
-        },
-        [],
-    )
+    const { currentTab, onChangeTab } = useTabs('general');
 
     return (
         <Page title='Profile'>
@@ -33,8 +27,8 @@ const UserProfile = () => {
                     ]}
                 />
                 <Tabs
-                    value={tabValue}
-                    onChange={handleChangeTab}
+                    value={currentTab}
+                    onChange={onChangeTab}
                 >
                     <Tab
                         value="general"
@@ -52,10 +46,10 @@ const UserProfile = () => {
                     />
                 </Tabs>
 
-                {tabValue === 'general' && (
+                {currentTab === 'general' && (
                     <General />
                 )}
-                {tabValue === 'password' && (
+                {currentTab === 'password' && (
                     <UserChangePassword />
                 )}
             </Container>

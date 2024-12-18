@@ -52,7 +52,6 @@ const AuthLayout = ({
                     {children}
                 </ContentStyle>
             </Container>
-
         </RootStyle>
 
     );

@@ -15,3 +15,5 @@ export * from './lib/search';
 export * from './lib/date';
 
 export * from './lib/to-title-case';
+
+export * from './lib/json-to-string';

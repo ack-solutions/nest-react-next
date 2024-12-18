@@ -7,9 +7,9 @@ import {
 
 
 export type RHFTextFieldProps = Omit<TextFieldProps, 'name'> & {
-	name: string;
-	control?: Control;
-	component?: typeof TextField
+    name: string;
+    control?: Control;
+    component?: typeof TextField
 }
 
 export const RHFTextField = forwardRef((

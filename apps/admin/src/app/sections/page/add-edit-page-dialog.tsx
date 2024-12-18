@@ -6,6 +6,7 @@ import {
     RHFTextEditor,
     RHFTextField,
     usePage,
+    useTabs,
     useToasty,
 } from '@libs/react-core';
 import { IPage, PageStatusEnum } from '@libs/types';
@@ -43,10 +44,7 @@ const defaultValues: IPage = {
     title: '',
     slug: '',
     content: '',
-    metaData: [{
-        key: '',
-        value: ''
-    }],
+    metaData: [],
     name: '',
     status: PageStatusEnum.DRAFT
 };
@@ -61,22 +59,18 @@ export default function AddEditPageDialog({
     const { mutateAsync: updatePage } = useUpdatePage();
     const { mutateAsync: createPage } = useCreatePage();
     const { showToasty } = useToasty();
-    const [tabValue, setTabValue] = useState('basic')
+    const { currentTab, onChangeTab } = useTabs('basic');
 
     const formContext = useForm<IPage>({
         defaultValues,
         resolver: yupResolver(validationSchema),
     });
-    const { reset, handleSubmit, control } = formContext;
+    const { reset, handleSubmit, control, formState: { errors } } = formContext;
 
     const { fields, append, remove } = useFieldArray({
         control: control,
         name: 'metaData',
     });
-
-    const handleTabChange = useCallback((event, value) => {
-        setTabValue(value)
-    }, []);
 
     const handleSubmitForm = useCallback(
         async (values: IPage) => {
@@ -121,6 +115,7 @@ export default function AddEditPageDialog({
 
     useEffect(() => {
         reset({
+            ...defaultValues,
             ...initialValue,
         });
     }, [reset, initialValue]);
@@ -158,8 +153,8 @@ export default function AddEditPageDialog({
                     onSuccess={handleSubmitForm}
                 >
                     <Tabs
-                        value={tabValue}
-                        onChange={handleTabChange}
+                        value={currentTab}
+                        onChange={onChangeTab}
                         sx={{
                             px: 3,
                             mb: 2
@@ -176,7 +171,7 @@ export default function AddEditPageDialog({
                             disableRipple
                         />
                     </Tabs>
-                    {tabValue === 'basic' && (
+                    {currentTab === 'basic' && (
                         <Stack spacing={2} >
                             <Stack
                                 spacing={2}
@@ -224,7 +219,7 @@ export default function AddEditPageDialog({
                             />
                         </Stack>
                     )}
-                    {tabValue === 'meta' && (
+                    {currentTab === 'meta' && (
                         <Card>
                             <CardContent>
                                 <Stack spacing={2}>

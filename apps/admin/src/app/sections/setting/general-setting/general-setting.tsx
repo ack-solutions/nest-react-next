@@ -1,18 +1,22 @@
 import Page from '@admin/app/components/page';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormContainer, RHFTextField, SettingService, useSettingQuery, useToasty } from '@libs/react-core';
+import { FormContainer, RHFPassword, RHFSelect, RHFTextField, SettingService, useSettingQuery, useToasty } from '@libs/react-core';
+import { SmtpEncryptionTypeEnum } from '@libs/types';
+import { isJsonString } from '@libs/utils';
 import {
     Button,
     Card,
     CardActions,
     CardContent,
     CardHeader,
-    Container,
+    MenuItem,
+    Stack,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
+import { upperCase } from 'lodash';
 import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
-import { object, string } from 'yup';
+import { number, object, string } from 'yup';
 
 
 const settingService = SettingService.getInstance<SettingService>();
@@ -20,12 +24,25 @@ const settingService = SettingService.getInstance<SettingService>();
 const defaultValues = {
     settings: {
         contactUsEmail: '',
+        smtpSetting: {
+            hostName: '',
+            port: 0,
+            username: '',
+            password: '',
+            encryption: SmtpEncryptionTypeEnum.AUTO,
+            fromEmail: '',
+            fromName: ''
+        }
     },
 };
 
 const validationSchema = object().shape({
     settings: object().shape({
         contactUsEmail: string().label('Contact Us Admin Email').required(),
+        smtpSetting: object().shape({
+            hostName: string().label('Host name').required(),
+            port: number().label('Port').nullable().required()
+        })
     }),
 });
 
@@ -34,7 +51,7 @@ const GeneralSetting = () => {
     const { showToasty } = useToasty();
     const formContext = useForm({
         defaultValues,
-        resolver: yupResolver(validationSchema),
+        resolver: yupResolver(validationSchema) as any,
     })
     const { useGetManySetting } = useSettingQuery();
     const { data, isSuccess } = useGetManySetting();
@@ -57,7 +74,9 @@ const GeneralSetting = () => {
         if (isSuccess) {
             const values: any = {};
             data.items.forEach((settingData) => {
-                values[settingData.key] = settingData.value;
+                values[settingData.key] = isJsonString(settingData.value)
+                    ? JSON.parse(settingData.value)
+                    : settingData.value;
             });
             setSettings({ settings: { ...values } });
         }
@@ -72,46 +91,119 @@ const GeneralSetting = () => {
 
     return (
         <Page title="GeneralSetting">
-            <Container maxWidth={false}>
-                <FormContainer
-                    FormProps={{
-                        id: "add-edit-form-setting"
-                    }}
-                    formContext={formContext}
-                    validationSchema={validationSchema}
-                    onSuccess={handleSubmitForm}
+            <FormContainer
+                FormProps={{
+                    id: "add-edit-form-setting"
+                }}
+                formContext={formContext}
+                validationSchema={validationSchema}
+                onSuccess={handleSubmitForm}
+            >
+                <Grid
+                    container
+                    spacing={2}
                 >
                     <Grid
-                        container
-                        spacing={4}
+                        size={{
+                            xs: 12,
+                            sm: 6
+                        }}
                     >
-                        <Grid
-                            size={{
-                                xs: 12,
-                                sm: 6
-                            }}
-                        >
-                            <Card>
-                                <CardHeader title='Contact Us Email' />
-                                <CardContent>
-                                    <RHFTextField
-                                        fullWidth
-                                        type="email"
-                                        name="settings[contactUsEmail]"
-                                        label="Contact Us Admin Email"
-                                    />
-                                </CardContent>
-                                <CardActions>
-                                    <Button
-                                        variant='contained'
-                                        type='submit'
-                                    >Save</Button>
-                                </CardActions>
-                            </Card>
-                        </Grid>
+                        <Card>
+                            <CardHeader title='Contact Us Email' />
+                            <CardContent>
+                                <RHFTextField
+                                    fullWidth
+                                    type="email"
+                                    name="settings[contactUsEmail]"
+                                    label="Contact Us Admin Email"
+                                />
+                            </CardContent>
+                            <CardActions>
+                                <Button
+                                    variant='contained'
+                                    type='submit'
+                                >
+                                    Save
+                                </Button>
+                            </CardActions>
+                        </Card>
                     </Grid>
-                </FormContainer>
-            </Container>
+                    <Grid
+                        size={{
+                            xs: 12,
+                            sm: 6
+                        }}
+                    >
+                        <Card>
+                            <CardHeader title='SMTP Setting' />
+                            <CardContent>
+                                <Stack spacing={2}>
+                                    <Stack spacing={2} direction='row'>
+                                        <RHFTextField
+                                            fullWidth
+                                            name="settings[smtpSetting][hostName]"
+                                            label="Host Name"
+                                            placeholder='smtp.gmail.com'
+                                        />
+                                        <RHFTextField
+                                            fullWidth
+                                            name="settings[smtpSetting][port]"
+                                            label="Port"
+                                            placeholder='25'
+                                            type='number'
+                                            helperText='1234'
+                                        />
+                                    </Stack>
+                                    <Stack spacing={2} direction='row'>
+                                        <RHFTextField
+                                            fullWidth
+                                            name="settings[smtpSetting][username]"
+                                            label="User Name"
+                                        />
+                                        <RHFPassword
+                                            fullWidth
+                                            name="settings[smtpSetting][password]"
+                                            label="Password"
+                                        />
+                                    </Stack>
+                                    <Stack spacing={2} direction='row'>
+                                        <RHFSelect
+                                            fullWidth
+                                            name="settings[smtpSetting][encryption]"
+                                            label="Encryption"
+                                        >
+                                            {Object.values(SmtpEncryptionTypeEnum).map((type, index) => (
+                                                <MenuItem value={type} key={index}>
+                                                    {upperCase(type)}
+                                                </MenuItem>
+                                            ))}
+                                        </RHFSelect>
+                                        <RHFTextField
+                                            fullWidth
+                                            name="settings[smtpSetting][fromEmail]"
+                                            label="From Email"
+                                        />
+                                        <RHFTextField
+                                            fullWidth
+                                            name="settings[smtpSetting][fromName]"
+                                            label="From Name"
+                                        />
+                                    </Stack>
+                                </Stack>
+                            </CardContent>
+                            <CardActions>
+                                <Button
+                                    variant='contained'
+                                    type='submit'
+                                >
+                                    Save
+                                </Button>
+                            </CardActions>
+                        </Card>
+                    </Grid>
+                </Grid>
+            </FormContainer>
         </Page>
     );
 };

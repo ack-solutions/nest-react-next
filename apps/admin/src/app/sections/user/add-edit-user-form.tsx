@@ -28,18 +28,14 @@ const defaultValues: IUser = {
 const validationSchema = yupResolver(object().shape({
     firstName: string().trim().required().label('First Name'),
     lastName: string().trim().required().label('Last Name'),
-    email: string().trim().required().label('Email'),
+    email: string().label('Email').required().matches(/^[a-zA-Z0-9._%+-]+@gmail\.com$/, 'Please enter a valid email address'),
     phoneNumber: string().required().label('Phone Number'),
     password: string().label('Password').when('id', {
         is: (id: any) => !id,
         then: (schema) =>
-            schema.nullable().required().matches(/^(?=.*[a-z])(?=.*[0-9])(?=.{8,})/,
-                "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
-            ),
+            schema.nullable().required(),
         otherwise: (schema) =>
-            schema.nullable().matches(/^(?=.*[a-z])(?=.*[0-9])(?=.{8,})/,
-                "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
-            ),
+            schema.nullable(),
     }),
     confirmPassword: string().label('Confirm Password').when(['id', 'password'], {
         is: (id: any, password: any) => !id || !!password,

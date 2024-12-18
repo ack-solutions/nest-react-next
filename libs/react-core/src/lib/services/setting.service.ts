@@ -15,4 +15,10 @@ export class SettingService extends CRUDService<ISetting> {
             return this.mapResponse(resp.data);
         })
     }
+
+    getPublicSettings() {
+        return this.instanceApi.get(`${this.apiPath}/public`).then((resp) => {
+            return resp.data;
+        })
+    }
 }

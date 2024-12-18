@@ -11,7 +11,7 @@ import { Role } from '../role';
 @Injectable()
 export class PermissionService extends CrudService<IPermission> {
     constructor(
-    @InjectRepository(Permission)
+        @InjectRepository(Permission)
         repository: Repository<Permission>
     ) {
         super(repository);
@@ -23,7 +23,7 @@ export class PermissionService extends CrudService<IPermission> {
             entity.roles = req.roles.map((id) => {
                 return new Role({ id })
             });
-        }    
+        }
         return entity as Permission;
     }
 }

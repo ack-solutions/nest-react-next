@@ -84,10 +84,6 @@ export default function PageListTable({ onEdit }: PageListTableProps) {
             label: 'status',
             render: (row) => <PageStatusLabel label={row?.status} />
         },
-        // {
-        //     name: 'metaData',
-        //     label: 'metaData',
-        // },
         {
             name: 'name',
             label: 'name',

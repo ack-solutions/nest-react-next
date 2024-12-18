@@ -11,3 +11,5 @@ export * from './use-debounce';
 export * from './use-toasty';
 
 export * from './use-crud-operations';
+
+export * from './use-tabs';

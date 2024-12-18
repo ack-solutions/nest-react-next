@@ -3,19 +3,12 @@ import Page from '@admin/app/components/page'
 import { PATH_DASHBOARD } from '@admin/app/routes/paths'
 import GeneralSetting from '@admin/app/sections/setting/general-setting/general-setting'
 import NotificationSetting from '@admin/app/sections/setting/notification-setting/notification-setting'
+import { useTabs } from '@libs/react-core'
 import { Box, Container, Tab, Tabs } from '@mui/material'
-import { SyntheticEvent, useCallback, useState } from 'react'
 
 
 const Settings = () => {
-    const [settingTab, setSettingTab] = useState('general-setting')
-
-    const handleChange = useCallback(
-        (_event: SyntheticEvent, newValue: string) => {
-            setSettingTab(newValue)
-        },
-        [],
-    )
+    const { currentTab, onChangeTab } = useTabs('email-setting');
 
     return (
         <Page title='Settings'>
@@ -31,12 +24,12 @@ const Settings = () => {
                     ]}
                 />
                 <Tabs
-                    value={settingTab}
-                    onChange={handleChange}
+                    value={currentTab}
+                    onChange={onChangeTab}
                 >
                     <Tab
-                        label="General Setting"
-                        value='general-setting'
+                        label="Email Setting"
+                        value='email-setting'
                     />
                     <Tab
                         label="Notification Setting"
@@ -44,10 +37,10 @@ const Settings = () => {
                     />
                 </Tabs>
                 <Box mt={2}>
-                    {settingTab === 'general-setting' && (
+                    {currentTab === 'email-setting' && (
                         <GeneralSetting />
                     )}
-                    {settingTab === 'notification-setting' && (
+                    {currentTab === 'notification-setting' && (
                         <NotificationSetting />
                     )}
                 </Box>

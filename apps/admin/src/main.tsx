@@ -13,7 +13,7 @@ import 'react-quill/dist/quill.snow.css';
 
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+    document.getElementById('root') as HTMLElement
 );
 root.render(
     <StrictMode>

@@ -12,3 +12,10 @@ export enum SettingTypeEnum {
     PRIVATE = 'private',
     PUBLIC = 'public',
 }
+
+export enum SmtpEncryptionTypeEnum {
+    NONE = 'none',
+    SSL = 'ssl',
+    TLS = 'tls',
+    AUTO = 'auto'
+}
