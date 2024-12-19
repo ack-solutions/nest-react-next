@@ -24,15 +24,13 @@ const settingService = SettingService.getInstance<SettingService>();
 const defaultValues = {
     settings: {
         contactUsEmail: '',
-        smtpSetting: {
-            hostName: '',
-            port: 0,
-            username: '',
-            password: '',
-            encryption: SmtpEncryptionTypeEnum.AUTO,
-            fromEmail: '',
-            fromName: ''
-        }
+        smtpHost: '',
+        smtpPort: '',
+        smtpUsername: '',
+        smtpPassword: '',
+        smtpEncryption: SmtpEncryptionTypeEnum.AUTO,
+        smtpFromEmail: '',
+        smtpFromName: '',
     },
 };
 
@@ -139,55 +137,67 @@ const GeneralSetting = () => {
                             <CardHeader title='SMTP Setting' />
                             <CardContent>
                                 <Stack spacing={2}>
-                                    <Stack spacing={2} direction='row'>
+                                    <Stack
+                                        spacing={2}
+                                        direction='row'
+                                    >
                                         <RHFTextField
                                             fullWidth
-                                            name="settings[smtpSetting][hostName]"
-                                            label="Host Name"
+                                            name="settings[smtpHost]"
+                                            label=" Host Name"
                                             placeholder='smtp.gmail.com'
                                         />
                                         <RHFTextField
                                             fullWidth
-                                            name="settings[smtpSetting][port]"
-                                            label="Port"
+                                            name="settings[smtpPort]"
+                                            label=" Port"
                                             placeholder='25'
                                             type='number'
                                             helperText='1234'
                                         />
                                     </Stack>
-                                    <Stack spacing={2} direction='row'>
+                                    <Stack
+                                        spacing={2}
+                                        direction='row'
+                                    >
                                         <RHFTextField
                                             fullWidth
-                                            name="settings[smtpSetting][username]"
-                                            label="User Name"
+                                            name="settings[smtpUsername]"
+                                            label=" User Name"
                                         />
                                         <RHFPassword
                                             fullWidth
-                                            name="settings[smtpSetting][password]"
-                                            label="Password"
+                                            name="settings[smtpPassword]"
+                                            label=" Password"
                                         />
                                     </Stack>
-                                    <Stack spacing={2} direction='row'>
+                                    <Stack
+                                        spacing={2}
+                                        direction='row'
+                                    >
                                         <RHFSelect
                                             fullWidth
-                                            name="settings[smtpSetting][encryption]"
+                                            name="settings[smtpEncryption]"
                                             label="Encryption"
                                         >
                                             {Object.values(SmtpEncryptionTypeEnum).map((type, index) => (
-                                                <MenuItem value={type} key={index}>
+                                                <MenuItem
+                                                    value={type}
+                                                    key={index}
+                                                >
                                                     {upperCase(type)}
                                                 </MenuItem>
                                             ))}
                                         </RHFSelect>
                                         <RHFTextField
                                             fullWidth
-                                            name="settings[smtpSetting][fromEmail]"
+                                            name="settings[smtpFromEmail]"
                                             label="From Email"
                                         />
                                         <RHFTextField
                                             fullWidth
-                                            name="settings[smtpSetting][fromName]"
-                                            label="From Name"
+                                            name="settings[smtpFromName]"
+                                            label=" From Name"
                                         />
                                     </Stack>
                                 </Stack>
@@ -204,7 +214,7 @@ const GeneralSetting = () => {
                     </Grid>
                 </Grid>
             </FormContainer>
-        </Page>
+        </Page >
     );
 };
 

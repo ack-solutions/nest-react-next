@@ -1,4 +1,5 @@
 import { CrudService } from '@api/app/core/crud';
+import { RequestContext } from '@api/app/core/request-context/request-context';
 import { SettingTypeEnum } from '@libs/types';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -40,16 +41,24 @@ export class SettingService extends CrudService<Setting> {
         return { message: 'Successfully Updated' };
     }
 
-
     async getPublicSettings() {
-        return await this.settingRepository.find({
-            where: [
-                { type: Not(SettingTypeEnum.PRIVATE) },
+        const currentUser = RequestContext.currentUser();
+        let whereCondition;
+
+        if (currentUser) {
+            whereCondition = {};
+        } else {
+            whereCondition = [
+                {
+                    type: Not(SettingTypeEnum.PRIVATE)
+                },
                 { type: IsNull() }
-            ]
+            ];
+        }
+        const settings = await this.settingRepository.find({
+            where: whereCondition
         });
+        return settings;
     }
-
-
 
 }

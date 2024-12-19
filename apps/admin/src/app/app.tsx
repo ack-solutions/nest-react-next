@@ -1,4 +1,4 @@
- 
+
 import { AccessProvider, AuthProvider, NotistackProvider, SettingsProvider } from '@libs/react-core';
 import { Box, Typography } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

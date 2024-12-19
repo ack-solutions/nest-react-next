@@ -1,8 +1,11 @@
 import isEqual from 'lodash/isEqual';
-import { useMemo, useCallback, useState, useContext, createContext } from 'react';
+import { useMemo, useCallback, useState, useContext, createContext, useEffect } from 'react';
 
 import { useLocalStorage } from '../hook/use-local-storage';
+import { SettingService } from '../services';
 
+
+const settingService = SettingService.getInstance<SettingService>();
 
 const STORAGE_KEY = 'settings';
 
@@ -11,7 +14,6 @@ interface SettingsProviderProps {
     defaultSettings?: SettingsValueProps;
 }
 
-;
 
 export interface SettingsValueProps {
     compactLayout: boolean;
@@ -70,6 +72,13 @@ export function SettingsProvider({ children, defaultSettings }: SettingsProvider
         }),
         [reset, update, state, canReset, openDrawer, onCloseDrawer, onToggleDrawer]
     );
+    useEffect(() => {
+        settingService.getPublicSettings().then((data) => {
+            console.log(data);
+        }).catch((error) => {
+            //
+        })
+    }, [])
 
     return <SettingsContext.Provider value={memoizedValue}>{children}</SettingsContext.Provider>;
 }
