@@ -34,10 +34,4 @@ export class SettingController extends CrudController(SettingDTO)<Setting> {
         return this.settingService.updateSetting(request);
     }
 
-    @ApiOperation({ summary: 'get Public Settings' })
-    @Get('public')
-    async getPublicSettings() {
-        return await this.settingService.getPublicSettings();
-    }
-
 }

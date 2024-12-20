@@ -37,10 +37,10 @@ const defaultValues = {
 const validationSchema = object().shape({
     settings: object().shape({
         contactUsEmail: string().label('Contact Us Admin Email').required(),
-        smtpSetting: object().shape({
-            hostName: string().label('Host name').required(),
-            port: number().label('Port').nullable().required()
-        })
+        // smtpSetting: object().shape({
+        //     hostName: string().label('Host name').required(),
+        //     port: number().label('Port').nullable().required()
+        // })
     }),
 });
 
@@ -54,7 +54,7 @@ const GeneralSetting = () => {
     const { useGetManySetting } = useSettingQuery();
     const { data, isSuccess } = useGetManySetting();
 
-    const { reset } = formContext;
+    const { reset, formState: { errors } } = formContext;
 
     const handleSubmitForm = useCallback((values?: any) => {
         settingService
@@ -66,7 +66,7 @@ const GeneralSetting = () => {
                 console.log(error);
                 showToasty(error.message, 'error');
             });
-    }, []);
+    }, [showToasty]);
 
     useEffect(() => {
         if (isSuccess) {
@@ -86,6 +86,7 @@ const GeneralSetting = () => {
             ...settings,
         })
     }, [reset, settings]);
+
 
     return (
         <Page title="GeneralSetting">
