@@ -27,12 +27,10 @@ const AddEditUser = Loadable(lazy(() => import('../pages/user/add-edit-user')));
 const RoleList = Loadable(lazy(() => import('../pages/roles/role-list')));
 const AddEditRole = Loadable(lazy(() => import('../pages/roles/add-edit-role')));
 const PermissionList = Loadable(lazy(() => import('../pages/user/permission-list')));
+const SettingPage = Loadable(lazy(() => import('../pages/setting/setting-page')));
 const Settings = Loadable(lazy(() => import('../pages/setting/settings')));
+const NotificationSetting = Loadable(lazy(() => import('../pages/setting/notification-setting')));
 const PageList = Loadable(lazy(() => import('../pages/page/page-list-page')));
-
-// Page
-// const PageList = Loadable(lazy(() => import('../pages/page/page-list')));
-
 
 export default function Router() {
     // const routes = useMemo(() => getPluginRoutes(), []);
@@ -134,7 +132,24 @@ export default function Router() {
                 },
                 {
                     path: 'settings',
-                    element: <Settings />
+                    element: <SettingPage />,
+                    children: [
+                        {
+                            path: '',
+                            element: <Navigate
+                                to="email-setting"
+                                replace
+                            />
+                        },
+                        {
+                            path: 'email-setting',
+                            element: <Settings />
+                        },
+                        {
+                            path: 'notification-setting',
+                            element: <NotificationSetting />
+                        },
+                    ]
                 },
                 {
                     path: 'profile',
