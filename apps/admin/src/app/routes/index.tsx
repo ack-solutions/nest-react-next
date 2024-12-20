@@ -30,6 +30,7 @@ const PermissionList = Loadable(lazy(() => import('../pages/user/permission-list
 const SettingPage = Loadable(lazy(() => import('../pages/setting/setting-page')));
 const Settings = Loadable(lazy(() => import('../pages/setting/settings')));
 const NotificationSetting = Loadable(lazy(() => import('../pages/setting/notification-setting')));
+const EmailLayoutTemplate = Loadable(lazy(() => import('../pages/setting/email-layout-template')));
 const PageList = Loadable(lazy(() => import('../pages/page/page-list-page')));
 
 export default function Router() {
@@ -148,6 +149,10 @@ export default function Router() {
                         {
                             path: 'notification-setting',
                             element: <NotificationSetting />
+                        },
+                        {
+                            path: 'email-layout',
+                            element: <EmailLayoutTemplate />
                         },
                     ]
                 },

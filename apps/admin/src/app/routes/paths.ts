@@ -59,7 +59,8 @@ export const PATH_DASHBOARD = {
         root: path(ROOTS_DASHBOARD, '/settings'),
         emailSetting: path(ROOTS_DASHBOARD, '/settings/email-setting'),
         notificationSetting: path(ROOTS_DASHBOARD, '/settings/notification-setting'),
-        business: path(ROOTS_DASHBOARD, '/settings/business'),
+        emailLayout: path(ROOTS_DASHBOARD, '/settings/email-layout'),
+
     },
     // page: {
     //   root: path(ROOTS_DASHBOARD, '/page'),

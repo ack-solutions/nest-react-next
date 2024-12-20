@@ -2803,6 +2803,20 @@
     got "^11.8.5"
     os-filter-obj "^2.0.0"
 
+"@monaco-editor/loader@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@monaco-editor/loader/-/loader-1.4.0.tgz#f08227057331ec890fa1e903912a5b711a2ad558"
+  integrity sha512-00ioBig0x642hytVspPl7DbQyaSWRaolYie/UFNjoTdvoKPzo6xrXLhTk9ixgIKcLH5b5vDOjVNiGyY+uDCUlg==
+  dependencies:
+    state-local "^1.0.6"
+
+"@monaco-editor/react@^4.6.0":
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/@monaco-editor/react/-/react-4.6.0.tgz#bcc68671e358a21c3814566b865a54b191e24119"
+  integrity sha512-RFkU9/i7cN2bsq/iTkurMWOEErmYcY6JiQI3Jn+WeR/FGISH8JbHERjpS9oRuSOPvDMJI0Z8nJeKkbOs9sBYQw==
+  dependencies:
+    "@monaco-editor/loader" "^1.4.0"
+
 "@mui/base@5.0.0-beta.60":
   version "5.0.0-beta.60"
   resolved "https://registry.yarnpkg.com/@mui/base/-/base-5.0.0-beta.60.tgz#0b4642089106fa76553024d96ed44476c9f52969"
@@ -13466,6 +13480,13 @@ react-dropzone@^14.3.5:
     file-selector "^2.1.0"
     prop-types "^15.8.1"
 
+react-email-editor@^1.7.11:
+  version "1.7.11"
+  resolved "https://registry.yarnpkg.com/react-email-editor/-/react-email-editor-1.7.11.tgz#dc6c908130dd97985d23f5a640b02bc4cb687094"
+  integrity sha512-AyoKKtMEPhKdqUxFX1hyJMvEO+E5fzk88uNVGHhK1ymhLpcghYLkz1+pXKLcByjR6LHkfEbrCmoYFG8zyripug==
+  dependencies:
+    unlayer-types latest
+
 react-fast-compare@^2.0.1:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
@@ -14490,6 +14511,11 @@ stackframe@^1.3.4:
   resolved "https://registry.yarnpkg.com/stackframe/-/stackframe-1.3.4.tgz#b881a004c8c149a5e8efef37d51b16e412943310"
   integrity sha512-oeVtt7eWQS+Na6F//S4kJ2K2VbRlS9D43mAlMyVpVWovy9o+jfgH8O9agzANzaiLjclA0oYzUXEM4PurhSUChw==
 
+state-local@^1.0.6:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/state-local/-/state-local-1.0.7.tgz#da50211d07f05748d53009bee46307a37db386d5"
+  integrity sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==
+
 statuses@2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-2.0.1.tgz#55cb000ccf1d48728bd23c685a063998cf1a1b63"
@@ -15486,6 +15512,11 @@ universalify@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-2.0.1.tgz#168efc2180964e6386d061e094df61afe239b18d"
   integrity sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==
+
+unlayer-types@latest:
+  version "1.188.0"
+  resolved "https://registry.yarnpkg.com/unlayer-types/-/unlayer-types-1.188.0.tgz#a5442e5b97270fe1b0687c6a9e6ff1f1034fec4a"
+  integrity sha512-tnn+FjUZv1qUOoRUYRFxSDz9kHfhy7dLxzMZgnU5+k6GDSBlpa8mA+r4+r0D83M+mUUd/XwuM+gvfRLGzrqZ+g==
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"

@@ -3,6 +3,7 @@ import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 import {
     EmailTwoTone as EmailTwoToneIcon,
     NotificationsNoneTwoTone as NotificationsNoneTwoToneIcon,
+    InboxTwoTone as InboxTwoToneIcon,
 } from '@mui/icons-material';
 import { alpha, Box, List, ListItemButton, ListItemText, ListSubheader, Stack, useTheme } from '@mui/material'
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -26,6 +27,11 @@ const menuSections = [
                 icon: <NotificationsNoneTwoToneIcon />,
                 text: "Notification",
                 path: PATH_DASHBOARD.settings.notificationSetting
+            },
+            {
+                icon: <InboxTwoToneIcon />,
+                text: "Email Layout",
+                path: PATH_DASHBOARD.settings.emailLayout
             },
         ],
     },
