@@ -15,7 +15,7 @@ const Register = () => {
     const handleSendOtp = useCallback(
         (value?: any, setError?: any) => {
             value = value ? value : verifyData
-            authService.sendRegisterOtp(value).then(({ data }) => {
+            authService.sendRegisterOtp(value).then(() => {
                 setVerifyData(value)
             }).catch((error) => {
                 setError('afterSubmit', {
@@ -34,8 +34,7 @@ const Register = () => {
                 otp: Number(values?.otp),
                 ...verifyData,
             }
-
-            authService.register(request).then((data) => {
+            authService.register(request).then(() => {
                 form.reset();
                 setVerifyData(null)
             }).catch((error) => {

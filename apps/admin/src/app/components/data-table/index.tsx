@@ -376,7 +376,9 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
 
         const handleChangeRowsPerPage = useCallback(
             (event: any) => {
-                onLimitChange && onLimitChange(event.target.value);
+                if (onLimitChange) {
+                    onLimitChange(event.target.value);
+                }
                 setRowsPerPage(event.target.value);
                 if (onPageChange) {
                     onPageChange(0);
