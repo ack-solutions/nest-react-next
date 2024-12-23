@@ -231,7 +231,7 @@ export class GetManyInputDTO<T> implements IFindOptions {
         //     }
         // ]
     })
-    order?: OrderByDTO<T> | OrderByDTO<T>[];
+    order?: OrderByDTO | OrderByDTO[];
 
 }
 
