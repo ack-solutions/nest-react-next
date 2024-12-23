@@ -2,12 +2,12 @@ import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-b
 import Page from '@admin/app/components/page';
 import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 import General from '@admin/app/sections/user/general';
+import { useTabs } from '@libs/react-core';
 import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 import KeyTwoToneIcon from '@mui/icons-material/KeyTwoTone';
 import { Container, Tab, Tabs } from '@mui/material'
 
 import UserChangePassword from '../../sections/user/user-change-password';
-import { useTabs } from '@libs/react-core';
 
 
 const UserProfile = () => {

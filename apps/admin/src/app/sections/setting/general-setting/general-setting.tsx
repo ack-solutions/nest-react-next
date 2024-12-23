@@ -37,10 +37,6 @@ const defaultValues = {
 const validationSchema = object().shape({
     settings: object().shape({
         contactUsEmail: string().label('Contact Us Admin Email').required(),
-        // smtpSetting: object().shape({
-        //     hostName: string().label('Host name').required(),
-        //     port: number().label('Port').nullable().required()
-        // })
     }),
 });
 
