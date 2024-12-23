@@ -6,7 +6,7 @@ import Grid from '@mui/material/Grid2';
 import { pick, startCase } from 'lodash';
 import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form';
-import { number, object, string } from 'yup';
+import { object, string } from 'yup';
 
 
 const defaultValues: IUser = {

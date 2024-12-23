@@ -5,7 +5,6 @@ import {
     Stack
 } from '@mui/material';
 import {
-    FC,
     useCallback,
     useContext,
     useState,
@@ -28,7 +27,6 @@ export interface ConfirmDialogProps extends DefaultDialogProps {
     onClose: () => void;
 }
 
-// ConfirmDialog component
 const ConfirmDialog = ({
     noButtonProps,
     title = 'Confirm',
@@ -42,16 +40,22 @@ const ConfirmDialog = ({
 }: ConfirmDialogProps) => {
     const [resolve, reject] = resolveReject || [];
 
-    // Handle cancel button action
     const handleCancel = useCallback(() => {
-        reject && reject();
-        onClose && onClose();
+        if (reject) {
+            reject();
+        }
+        if (onClose) {
+            onClose();
+        }
     }, [reject, onClose]);
 
-    // Handle confirm button action
     const handleConfirm = useCallback(() => {
-        resolve && resolve();
-        onClose && onClose();
+        if (resolve) {
+            resolve();
+        }
+        if (onClose) {
+            onClose();
+        }
     }, [resolve, onClose]);
 
     return (
@@ -99,7 +103,7 @@ interface ConfirmProviderProps {
     children: ReactNode;
 }
 
-export const ConfirmProvider: FC<ConfirmProviderProps> = ({ children }) => {
+export const ConfirmProvider = ({ children }: ConfirmProviderProps) => {
     const [dialogProps, setDialogProps] = useState<Partial<ConfirmDialogProps> | null>(null);
     const [resolveReject, setResolveReject] = useState<[() => void, () => void] | null>(null);
 

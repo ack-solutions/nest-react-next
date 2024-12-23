@@ -128,7 +128,6 @@ const AuthProvider = ({ children }: any) => {
     const reFetchCurrentUser = useCallback(
         async (user?: IUser | null) => {
             refetchUserData()
-
             initPermissions(user);
             dispatch({
                 type: 'UPDATE',
@@ -137,7 +136,7 @@ const AuthProvider = ({ children }: any) => {
                 }
             });
         },
-        [initPermissions, logout],
+        [initPermissions, refetchUserData],
     );
 
 
@@ -165,11 +164,11 @@ const AuthProvider = ({ children }: any) => {
     };
 
     const removeLoginListener = (listener: any) => {
-        setLoginListeners((prevListeners: any) => prevListeners.filter((l: any) => l != listener));
+        setLoginListeners((prevListeners: any) => prevListeners.filter((l: any) => l !== listener));
     };
 
     const removeLogoutListener = (listener: any) => {
-        setLogoutListeners((prevListeners: any) => prevListeners.filter((l: any) => l != listener));
+        setLogoutListeners((prevListeners: any) => prevListeners.filter((l: any) => l !== listener));
     };
 
     useEffect(() => {

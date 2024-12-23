@@ -170,7 +170,7 @@ class WhereConditionDTO implements IWhereCondition {
 }
 
 
-export class OrderByDTO<T> implements IOrderBy {
+export class OrderByDTO implements IOrderBy {
     [x: string]: OrderDirectionEnum;
 
     @ApiPropertyOptional({ type: [String] })

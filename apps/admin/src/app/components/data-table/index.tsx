@@ -275,7 +275,9 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
         const handleRowClick = useCallback(
             (row: any) => () => {
                 const { id } = row;
-                onRowClick && onRowClick(row);
+                if (onRowClick) {
+                    onRowClick(row)
+                }
                 if (selectable && !onRowClick) {
                     const selectedIndex = selected.indexOf(id);
                     const newSelected = [...selected];
@@ -285,7 +287,9 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                         newSelected.push(id);
                     }
                     setSelected(newSelected);
-                    onSelect && onSelect(newSelected);
+                    if (onSelect) {
+                        onSelect(newSelected)
+                    }
                 }
             },
             [onRowClick, onSelect, selectable, selected]
@@ -304,7 +308,9 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                     newSelected.push(id);
                 }
                 setSelected(newSelected);
-                onSelect && onSelect(newSelected);
+                if (onSelect) {
+                    onSelect(newSelected)
+                }
             },
             [onSelect, selected]
         );
@@ -341,11 +347,14 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                 const dir = orderBy === columnName && order === 'asc' ? 'desc' : 'asc';
                 setOrder(dir);
                 setOrderBy(columnName);
-                onSortChange &&
-                    onSortChange({
-                        order: dir,
-                        orderBy: columnName,
-                    });
+                if (onSortChange) {
+                    onSortChange(
+                        {
+                            order: dir,
+                            orderBy: columnName,
+                        }
+                    );
+                }
             },
             [orderBy, order, onSortChange]
         );
@@ -356,8 +365,10 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
         }, []);
 
         const handlePageChange = useCallback(
-            (event: any, value: any) => {
-                onPageChange && onPageChange(value);
+            (_event: any, value: any) => {
+                if (onPageChange) {
+                    onPageChange(value)
+                }
                 setPage(value);
             },
             [onPageChange]
@@ -367,7 +378,9 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
             (event: any) => {
                 onLimitChange && onLimitChange(event.target.value);
                 setRowsPerPage(event.target.value);
-                onPageChange && onPageChange(0);
+                if (onPageChange) {
+                    onPageChange(0);
+                }
                 setPage(0);
             },
             [onLimitChange, onPageChange]
@@ -410,7 +423,9 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                     ...orderInput,
                     ...(filter ? filter : {}),
                 };
-                onChange && onChange(request);
+                if (onChange) {
+                    onChange(request)
+                }
             }, [searchText, columns, page, rowsPerPage, orderBy, order, onChange]),
             500
         );

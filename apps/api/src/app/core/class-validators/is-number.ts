@@ -7,8 +7,7 @@ import {
 
 
 @ValidatorConstraint({ async: true })
-export class IsNumberConstraint
-    implements ValidatorConstraintInterface {
+export class IsNumberConstraint implements ValidatorConstraintInterface {
     async validate(_inputValue: number | string, args: ValidationArguments) {
 
         const { value } = args;

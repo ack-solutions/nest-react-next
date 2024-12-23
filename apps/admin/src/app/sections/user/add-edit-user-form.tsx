@@ -1,8 +1,8 @@
 import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormContainer, RHFPassword, RHFPhoneNumber, RHFSelect, RHFTextField, RHFUploadAvatar, useBoolean, useRoleQuery } from '@libs/react-core';
+import { FormContainer, RHFPassword, RHFSelect, RHFTextField, RHFUploadAvatar, useRoleQuery } from '@libs/react-core';
 import { IUser, UserStatusEnum } from '@libs/types';
-import { Button, Card, CardContent, MenuItem, Stack, useTheme } from '@mui/material';
+import { Button, Card, CardContent, MenuItem, Stack } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { startCase } from 'lodash';
 import { useEffect } from 'react'

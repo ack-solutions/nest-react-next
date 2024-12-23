@@ -48,13 +48,15 @@ const AddEditNotificationTemplateDialog = ({
     const handleSubmitForm = useCallback(
         (value: INotificationTemplate) => {
             const options = {
-                onSuccess: (data) => {
+                onSuccess: () => {
                     showToasty(
                         value?.id
                             ? 'Notification template updated successfully'
                             : 'Notification template added successfully'
                     );
-                    onClose && onClose({ isRefresh: true });
+                    if (onClose) {
+                        onClose({ isRefresh: true });
+                    }
                 },
                 onError: (error) => {
                     showToasty(error, 'error');

@@ -30,10 +30,13 @@ const ForgetPasswordForm = ({
 
     const handleSubmit = useCallback(
         (value: any) => {
-            onSubmit && onSubmit(value, {
-                reset,
-                setError
-            });
+            if (onSubmit) {
+                onSubmit(value, {
+                    reset,
+                    setError
+                });
+            }
+
         },
         [onSubmit, reset, setError]
     );

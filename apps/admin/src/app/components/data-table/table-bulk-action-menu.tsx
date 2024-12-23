@@ -16,20 +16,20 @@ import { useMemo } from 'react';
 
 
 export interface TableAction {
-  icon: any;
-  title: string;
-  permission?: string | string[];
-  onClick?: (event?: any) => void;
+    icon: any;
+    title: string;
+    permission?: string | string[];
+    onClick?: (event?: any) => void;
 }
 
 type TableBulkActionMenuProps = {
-  onDelete?: (row?: any[]) => void;
-  onDeleteForever?: (row?: any[]) => void;
-  onRestore?: (row?: any[]) => void;
-  row?: any;
-  actions?: TableAction[];
-  crudPermissionKey?: string;
-  children?: any;
+    onDelete?: (row?: any[]) => void;
+    onDeleteForever?: (row?: any[]) => void;
+    onRestore?: (row?: any[]) => void;
+    row?: any;
+    actions?: TableAction[];
+    crudPermissionKey?: string;
+    children?: any;
 };
 
 export function TableBulkActionMenu({
@@ -95,7 +95,9 @@ export function TableBulkActionMenu({
                             size="small"
                             onClick={(event) => {
                                 event.stopPropagation();
-                                action.onClick && action.onClick(event);
+                                if (action.onClick) {
+                                    action.onClick(event);
+                                }
                             }}
                         >
                             {action?.icon}
@@ -117,13 +119,15 @@ export function TableBulkActionMenu({
                 </IconButton>
             }
         >
-            {({ }) => (
+            {() => (
                 <>
-                    {crudActions.map((action, index) => (
+                    {crudActions.map((action) => (
                         <MenuItem
                             onClick={(event) => {
                                 event.stopPropagation();
-                                action.onClick && action.onClick(event);
+                                if (action.onClick) {
+                                    action.onClick(event);
+                                }
                             }}
                             key={`${action?.title}-${row?.id}`}
                         >

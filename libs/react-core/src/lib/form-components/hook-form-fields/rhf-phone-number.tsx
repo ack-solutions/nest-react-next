@@ -1,5 +1,5 @@
 import { FormHelperText } from '@mui/material';
-import { matchIsValidTel, MuiTelInputInfo } from 'mui-tel-input';
+import { MuiTelInputInfo } from 'mui-tel-input';
 import { useState, useCallback } from 'react';
 import { Control, useController } from 'react-hook-form';
 
@@ -18,8 +18,6 @@ export const RHFPhoneNumber = ({
     defaultValue = '',
     ...props
 }: RHFPhoneNumberProps) => {
-    const [isValid, setIsValid] = useState(true);
-
     const {
         field,
         fieldState: { error },
@@ -30,7 +28,7 @@ export const RHFPhoneNumber = ({
     });
 
     const handlePhoneChange = useCallback(
-        (newValue: string, _countryData: MuiTelInputInfo) => {
+        (_newValue: string, _countryData: MuiTelInputInfo) => {
             console.log(_countryData);
 
             field.onChange(_countryData.numberValue);
@@ -43,8 +41,6 @@ export const RHFPhoneNumber = ({
             <PhoneNumberInput
                 value={field?.value}
                 onChange={handlePhoneChange}
-                error={!isValid || !!error}
-                helperText={!isValid ? 'Please enter a valid phone number.' : ''}
                 {...props}
             />
             {error && (
