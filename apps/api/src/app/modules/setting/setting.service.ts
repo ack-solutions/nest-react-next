@@ -22,7 +22,6 @@ export class SettingService extends CrudService<Setting> {
         for (let index = 0; index < keys.length; index++) {
             const key = keys[index];
             const settingKey = await this.repository.findOne({ where: { key } });
-            console.log(settingKey, 444);
 
             if (settingKey) {
                 updatedSettings.push({
