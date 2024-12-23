@@ -17,6 +17,7 @@ const EmailLayoutSetting = () => {
     const { data, isSuccess } = useGetManySetting();
     const unlayer = emailEditorRef.current?.editor;
     const theme = useTheme()
+
     const handleSaveSettings = useCallback(() => {
         unlayer?.exportHtml(({ design, html }) => {
             const request: any = {

@@ -44,17 +44,19 @@ export default function PermissionList() {
         [],
     )
 
-
-    // const handleDataTableChange = useCallback((filter: any) => {
-    //     filter = {
-    //         ...filter,
-    //         s: {
-    //             ...filter?.s,
-    //         },
-    //         relations: ['roles'],
-    //     };
-    //     setsPermissionRequest(filter)
-    // }, []);
+    const handleDataTableApiRequestMap = useCallback(
+        (filter) => {
+            filter = {
+                ...filter,
+                s: {
+                    ...filter?.s,
+                },
+                relations: ['roles'],
+            };
+            return filter;
+        },
+        [],
+    )
 
     const columns: DataTableColumn<IPermission>[] = [
         {
@@ -99,6 +101,7 @@ export default function PermissionList() {
                     <CrudTable
                         hasSoftDelete
                         crudName="Permission"
+                        dataTableApiRequestMap={handleDataTableApiRequestMap}
                         crudOperationHooks={{
                             useGetMany: useGetManyPermission,
                             useDelete: useDeletePermission,
