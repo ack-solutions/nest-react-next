@@ -1,12 +1,13 @@
- 
-import { AccessProvider, AuthProvider, NotistackProvider, SettingsProvider } from '@libs/react-core';
 
-import AppRoutes from './app-routes';
-import { ThemeProvider } from './theme/theme-provider';
+import { AccessProvider, AuthProvider, NotistackProvider, SettingsProvider } from '@libs/react-core';
 import { Box, Typography } from '@mui/material';
-import { ConfirmProvider } from './contexts/confirm-dialog-context';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useCallback } from 'react';
+
+import AppRoutes from './app-routes';
+import { ConfirmProvider } from './contexts/confirm-dialog-context';
+import { ThemeProvider } from './theme/theme-provider';
+
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -27,7 +28,10 @@ export function App() {
                     justifyContent="center"
                     p={4}
                 >
-                    <Typography variant="h2" align="center">
+                    <Typography
+                        variant="h2"
+                        align="center"
+                    >
                         You are authorized to access the page.
                     </Typography>
                 </Box>

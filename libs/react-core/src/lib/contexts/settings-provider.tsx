@@ -1,21 +1,26 @@
 import isEqual from 'lodash/isEqual';
 import { useMemo, useCallback, useState, useContext, createContext } from 'react';
+
 import { useLocalStorage } from '../hook/use-local-storage';
+
 
 const STORAGE_KEY = 'settings';
 
 interface SettingsProviderProps {
-	children: React.ReactNode;
-	defaultSettings?: SettingsValueProps;
-};
+    children: React.ReactNode;
+    defaultSettings?: SettingsValueProps;
+}
+
 
 export interface SettingsValueProps {
-	compactLayout: boolean;
-	colorScheme: 'light' | 'dark';
-	contrast: 'default' | 'bold';
-	navLayout: 'vertical' | 'mini';
-	primaryColor: 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red';
-};
+    compactLayout: boolean;
+    colorScheme: 'light' | 'dark';
+    contrast: 'default' | 'bold';
+    navLayout: 'vertical' | 'mini';
+    primaryColor: 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red';
+}
+
+;
 export const initialSetting = {
     colorScheme: 'light',
     contrast: 'default',
@@ -26,13 +31,13 @@ export const initialSetting = {
 } as const;
 
 export type SettingsContextProps = SettingsValueProps & {
-	onUpdate: (name: string, value: string | boolean) => void;
-	onChangeDirectionByLang: (lang: string) => void;
-	canReset: boolean;
-	onReset: VoidFunction;
-	open: boolean;
-	onToggle: VoidFunction;
-	onClose: VoidFunction;
+    onUpdate: (name: string, value: string | boolean) => void;
+    onChangeDirectionByLang: (lang: string) => void;
+    canReset: boolean;
+    onReset: VoidFunction;
+    open: boolean;
+    onToggle: VoidFunction;
+    onClose: VoidFunction;
 };
 
 export const SettingsContext = createContext({} as SettingsContextProps);

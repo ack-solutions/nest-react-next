@@ -1,7 +1,8 @@
+import { DefaultDialog } from '@admin/app/components';
 import { PATH_AUTH } from '@admin/app/routes/paths';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { DefaultDialog } from '@admin/app/components';
+
 
 export interface SuccessDialogProps {
     onClose?: () => void;
@@ -23,7 +24,10 @@ const SuccessDialog = ({
                     size="large"
                     component={RouterLink}
                     to={PATH_AUTH.login}
-                    sx={{ mt: 1, marginX: '40px' }}
+                    sx={{
+                        mt: 1,
+                        marginX: '40px'
+                    }}
                 >
                     Continue
                 </Button>

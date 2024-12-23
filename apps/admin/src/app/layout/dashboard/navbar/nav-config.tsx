@@ -1,38 +1,38 @@
-import { PATH_DASHBOARD } from '../../../routes/paths';
-import ApartmentTwoToneIcon from '@mui/icons-material/ApartmentTwoTone';
-import MasksTwoToneIcon from '@mui/icons-material/MasksTwoTone';
-import PsychologyIcon from '@mui/icons-material/Psychology';
-import QuizTwoToneIcon from '@mui/icons-material/QuizTwoTone';
-import StarHalfTwoToneIcon from '@mui/icons-material/StarHalfTwoTone';
-import PaymentsTwoToneIcon from '@mui/icons-material/PaymentsTwoTone';
-import SickTwoToneIcon from '@mui/icons-material/SickTwoTone';
-import FamilyRestroomTwoToneIcon from '@mui/icons-material/FamilyRestroomTwoTone';
-import LocalHospitalTwoToneIcon from '@mui/icons-material/LocalHospitalTwoTone';
-import AdminPanelSettingsTwoToneIcon from '@mui/icons-material/AdminPanelSettingsTwoTone';
-import LockTwoToneIco from '@mui/icons-material/LockTwoTone';
-import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
-import PersonOutlineTwoToneIcon from '@mui/icons-material/PersonOutlineTwoTone';
-import EmailTwoToneIcon from '@mui/icons-material/EmailTwoTone';
-import ArticleTwoToneIcon from '@mui/icons-material/ArticleTwoTone';
-import DescriptionTwoToneIcon from '@mui/icons-material/DescriptionTwoTone';
-import CalendarMonthTwoToneIcon from '@mui/icons-material/CalendarMonthTwoTone';
-import DashboardTwoToneIcon from '@mui/icons-material/DashboardTwoTone';
-import EventAvailableTwoToneIcon from '@mui/icons-material/EventAvailableTwoTone';
-import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
-import NoteIcon from '@mui/icons-material/Note';
-import PercentIcon from '@mui/icons-material/Percent';
-import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
-import NotificationsPausedIcon from '@mui/icons-material/NotificationsPaused';
+import { RoleNameEnum } from '@libs/types';
 import {
     AnalyticsTwoTone,
     CategoryTwoTone,
     ReceiptLong,
 } from '@mui/icons-material';
+import AdminPanelSettingsTwoToneIcon from '@mui/icons-material/AdminPanelSettingsTwoTone';
+import ApartmentTwoToneIcon from '@mui/icons-material/ApartmentTwoTone';
+import ArticleTwoToneIcon from '@mui/icons-material/ArticleTwoTone';
 import BadgeTwoToneIcon from '@mui/icons-material/BadgeTwoTone';
-
+import CalendarMonthTwoToneIcon from '@mui/icons-material/CalendarMonthTwoTone';
+import DashboardTwoToneIcon from '@mui/icons-material/DashboardTwoTone';
+import DescriptionTwoToneIcon from '@mui/icons-material/DescriptionTwoTone';
+import EmailTwoToneIcon from '@mui/icons-material/EmailTwoTone';
+import EventAvailableTwoToneIcon from '@mui/icons-material/EventAvailableTwoTone';
+import FamilyRestroomTwoToneIcon from '@mui/icons-material/FamilyRestroomTwoTone';
+import LocalHospitalTwoToneIcon from '@mui/icons-material/LocalHospitalTwoTone';
+import LockTwoToneIco from '@mui/icons-material/LockTwoTone';
+import MasksTwoToneIcon from '@mui/icons-material/MasksTwoTone';
+import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
+import NoteIcon from '@mui/icons-material/Note';
+import NotificationsPausedIcon from '@mui/icons-material/NotificationsPaused';
+import PaymentsTwoToneIcon from '@mui/icons-material/PaymentsTwoTone';
+import PercentIcon from '@mui/icons-material/Percent';
+import PersonOutlineTwoToneIcon from '@mui/icons-material/PersonOutlineTwoTone';
+import PsychologyIcon from '@mui/icons-material/Psychology';
+import QuizTwoToneIcon from '@mui/icons-material/QuizTwoTone';
+import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
+import SickTwoToneIcon from '@mui/icons-material/SickTwoTone';
+import StarHalfTwoToneIcon from '@mui/icons-material/StarHalfTwoTone';
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import { useMemo } from 'react';
+
+import { PATH_DASHBOARD } from '../../../routes/paths';
 import { NavigationItem } from '../../../types/navigation';
-import { RoleNameEnum } from '@libs/types';
 
 
 const ICONS = {
@@ -173,10 +173,10 @@ export function buildTree(items: NavigationItem[]): NavigationItem[] {
 
         if (parentId && itemMap.has(parentId)) {
             const parentItem = itemMap.get(parentId);
-            parentItem!.children = parentItem!.children || [];
-            parentItem!.children.push(navItem!);
+            parentItem.children = parentItem?.children || [];
+            parentItem.children.push(navItem);
         } else {
-            roots.push(navItem!);
+            roots.push(navItem);
         }
     });
 

@@ -1,7 +1,9 @@
-import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
-import { Box, Button, Card, CardContent, CardHeader, Checkbox, FormControlLabel, FormHelperText, Grid, InputLabel, Skeleton, Stack, TextField, useTheme } from '@mui/material';
-import { useController, Control } from 'react-hook-form';
+import { Box, Button, Card, CardContent, CardHeader, Checkbox, FormControlLabel, FormHelperText, InputLabel, Skeleton, Stack, TextField, useTheme } from '@mui/material';
+import Grid from '@mui/material/Grid2'
 import { cloneDeep, isEqual } from 'lodash';
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { useController, Control } from 'react-hook-form';
+
 
 export interface PermissionSelectFieldProps {
     name: string;
@@ -14,7 +16,7 @@ export interface PermissionSelectFieldProps {
     isLoading?: boolean
 }
 
-export const PermissionSelectField = ({
+export const RHFPermissionSelectField = ({
     name,
     control,
     label,
@@ -121,7 +123,13 @@ export const PermissionSelectField = ({
             >
                 <CardHeader
                     action={
-                        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                        <Stack
+                            direction={{
+                                xs: 'column',
+                                sm: 'row'
+                            }}
+                            spacing={2}
+                        >
                             <TextField
                                 placeholder="Search in Permissions"
                                 size="small"
@@ -133,21 +141,53 @@ export const PermissionSelectField = ({
                         </Stack>
                     }
                 />
-                <CardContent sx={{ flex: 1, overflow: 'auto' }}>
-                    <Grid container spacing={2} flex={1} overflow="auto">
+                <CardContent
+                    sx={{
+                        flex: 1,
+                        overflow: 'auto'
+                    }}
+                >
+                    <Grid
+                        container
+                        spacing={2}
+                        flex={1}
+                        overflow="auto"
+                    >
                         {isLoading ? (
                             [...Array(10)].map((index) => (
-                                <Grid item sm={12 / column} key={index}>
-                                    <Box display='flex' alignItems='center'>
-                                        <Skeleton variant="rectangular" height={20} width={20} sx={{ borderRadius: 1, marginBottom: 1, mr: 2 }} />
-                                        <Skeleton variant="text" width="80%" sx={{ marginBottom: 1 }} />
+                                <Grid
+                                    size={{ sm: 12 / column }}
+                                    key={index}
+                                >
+                                    <Box
+                                        display='flex'
+                                        alignItems='center'
+                                    >
+                                        <Skeleton
+                                            variant="rectangular"
+                                            height={20}
+                                            width={20}
+                                            sx={{
+                                                borderRadius: 1,
+                                                marginBottom: 1,
+                                                mr: 2
+                                            }}
+                                        />
+                                        <Skeleton
+                                            variant="text"
+                                            width="80%"
+                                            sx={{ marginBottom: 1 }}
+                                        />
                                     </Box>
 
                                 </Grid>
                             ))
                         ) : (
-                            options.map((option: any, index) => (
-                                <Grid item sm={12 / column} key={option[renderValue]}>
+                            options.map((option: any) => (
+                                <Grid
+                                    size={{ sm: 12 / column }}
+                                    key={option[renderValue]}
+                                >
                                     <FormControlLabel
                                         control={
                                             <Checkbox

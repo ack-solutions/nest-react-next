@@ -1,8 +1,10 @@
 import { Collapse, Popover } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { NavbarConfigProps, NavigationItem } from "../../../types/navigation";
+
 import NavbarItem from "./navbar-item";
+import { NavbarConfigProps, NavigationItem } from "../../../types/navigation";
+
 
 export function useActiveLinkByStaticPaths(staticPaths?: string[], isMatchFull?: boolean): boolean {
     const { pathname } = useLocation();
@@ -32,12 +34,14 @@ export function useActiveLink(path: string, deep = true): boolean {
 }
 
 interface NavbarListRootProps {
-  data: NavigationItem;
-  depth: number;
-  hasChild: boolean;
-  config?: NavbarConfigProps;
-  isMini?: boolean
-};
+    data: NavigationItem;
+    depth: number;
+    hasChild: boolean;
+    config?: NavbarConfigProps;
+    isMini?: boolean
+}
+
+;
 
 
 export default function NavbarList({ data, depth, hasChild, config, isMini }: NavbarListRootProps) {
@@ -63,7 +67,7 @@ export default function NavbarList({ data, depth, hasChild, config, isMini }: Na
         if (!active) {
             handleClose();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname]);
 
     return (
@@ -85,16 +89,29 @@ export default function NavbarList({ data, depth, hasChild, config, isMini }: Na
             />
 
             {(hasChild && !isMini) && (
-                <Collapse in={open} unmountOnExit>
-                    <NavbarSubList data={data.children} depth={depth} config={config} />
+                <Collapse
+                    in={open}
+                    unmountOnExit
+                >
+                    <NavbarSubList
+                        data={data.children}
+                        depth={depth}
+                        config={config}
+                    />
                 </Collapse>
             )}
             {(hasChild && isMini) && (
                 <Popover
                     open={open}
                     anchorEl={navRef?.current}
-                    anchorOrigin={{ vertical: 'center', horizontal: 'right' }}
-                    transformOrigin={{ vertical: 'center', horizontal: 'left' }}
+                    anchorOrigin={{
+                        vertical: 'center',
+                        horizontal: 'right'
+                    }}
+                    transformOrigin={{
+                        vertical: 'center',
+                        horizontal: 'left'
+                    }}
                     slotProps={{
                         paper: {
                             onMouseEnter: handleOpen,
@@ -112,7 +129,11 @@ export default function NavbarList({ data, depth, hasChild, config, isMini }: Na
                         pointerEvents: 'none'
                     }}
                 >
-                    <NavbarSubList data={data.children} depth={depth} config={config} />
+                    <NavbarSubList
+                        data={data.children}
+                        depth={depth}
+                        config={config}
+                    />
                 </Popover>
             )}
         </>
@@ -120,23 +141,25 @@ export default function NavbarList({ data, depth, hasChild, config, isMini }: Na
 }
 
 type NavbarListSubProps = {
-  data?: NavigationItem[];
-  depth: number;
-  config?: NavbarConfigProps;
+    data?: NavigationItem[];
+    depth: number;
+    config?: NavbarConfigProps;
 };
 
 function NavbarSubList({ data, depth, config }: NavbarListSubProps) {
     return (
-        <>
-            {data?.map((list) => (
-                <NavbarList
-                    key={list.title + list.path}
-                    data={list}
-                    depth={depth + 1}
-                    hasChild={!!list.children}
-                    config={{ ...config, ...(list.config || {}) }}
-                />
-            ))}
-        </>
+
+        data?.map((list) => (
+            <NavbarList
+                key={list.title + list.path}
+                data={list}
+                depth={depth + 1}
+                hasChild={!!list.children}
+                config={{
+                    ...config,
+                    ...(list.config || {})
+                }}
+            />
+        ))
     );
 }

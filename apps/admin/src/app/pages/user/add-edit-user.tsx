@@ -1,12 +1,14 @@
-import { Container } from '@mui/material'
-import { useCallback, useEffect } from 'react'
-import AddEditUserForm from '../../sections/user/add-edit-user-form'
-import { IRole, IUser } from '@libs/types'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useToasty, useUserQuery } from '@libs/react-core'
-import Page from '@admin/app/components/page'
 import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs'
+import Page from '@admin/app/components/page'
 import { PATH_DASHBOARD } from '@admin/app/routes/paths'
+import { useToasty, useUserQuery } from '@libs/react-core'
+import { IRole, IUser } from '@libs/types'
+import { Container } from '@mui/material'
+import { useCallback } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+
+import AddEditUserForm from '../../sections/user/add-edit-user-form'
+
 
 const AddEditUser = () => {
     const { id: userId } = useParams();
@@ -22,7 +24,6 @@ const AddEditUser = () => {
             const rolesIds = data?.roles?.map((role: IRole) => role?.id)
             return {
                 ...data,
-                phoneNumber: Number(data?.phoneNumber),
                 roles: rolesIds,
             };
         },
@@ -31,7 +32,7 @@ const AddEditUser = () => {
     const handleSubmit = useCallback(
         (values: IUser) => {
             const options = {
-                onSuccess: (data) => {
+                onSuccess: () => {
                     showToasty(
                         values?.id
                             ? 'User updated successfully'
@@ -60,12 +61,21 @@ const AddEditUser = () => {
                 <CustomBreadcrumbs
                     heading={`${userId ? 'Edit User' : 'Add User'}`}
                     links={[
-                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: 'Users', href: PATH_DASHBOARD.users.root },
+                        {
+                            name: 'Dashboard',
+                            href: PATH_DASHBOARD.root
+                        },
+                        {
+                            name: 'Users',
+                            href: PATH_DASHBOARD.users.root
+                        },
                         { name: `${userId ? 'Edit User' : 'Add User'}` },
                     ]}
                 />
-                <AddEditUserForm onSubmit={handleSubmit} values={!!userData && userData} />
+                <AddEditUserForm
+                    onSubmit={handleSubmit}
+                    values={!!userData && userData}
+                />
             </Container>
         </Page>
     )

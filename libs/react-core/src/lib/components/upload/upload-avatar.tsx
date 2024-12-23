@@ -1,10 +1,10 @@
-import { useDropzone } from 'react-dropzone';
-import { Box, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
+import { Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { useDropzone } from 'react-dropzone';
+
 import { UploadProps } from './type';
 import Image from '../image';
-
 
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -28,7 +28,10 @@ const DropZoneStyle = styled('div')(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: theme.palette.background.default,
-    '& > *': { width: '100%', height: '100%' },
+    '& > *': {
+        width: '100%',
+        height: '100%'
+    },
     '&:hover': {
         cursor: 'pointer',
         '& .placeholder': {
@@ -55,7 +58,7 @@ const PlaceholderStyle = styled('div')(({ theme }) => ({
 
 
 export default function UploadAvatar({ error, file, label = "Photo", helperText, sx, ...other }: UploadProps) {
-    const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
+    const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
         multiple: false,
         ...other,
     });
@@ -105,8 +108,17 @@ export default function UploadAvatar({ error, file, label = "Photo", helperText,
                             }),
                         }}
                     >
-                        <AddAPhotoOutlinedIcon sx={{ width: 24, height: 24, mb: 1 }} />
-                        <Typography textAlign="center" variant="caption">{file ? `Update ${label}` : `Upload ${label}`}</Typography>
+                        <AddAPhotoOutlinedIcon
+                            sx={{
+                                width: 24,
+                                height: 24,
+                                mb: 1
+                            }}
+                        />
+                        <Typography
+                            textAlign="center"
+                            variant="caption"
+                        >{file ? `Update ${label}` : `Upload ${label}`}</Typography>
                     </PlaceholderStyle>
                 </DropZoneStyle>
             </RootStyle>

@@ -1,13 +1,10 @@
-import { Theme } from "@mui/material";
 
-export default function Container(theme: Theme) {
+export default function Container(_theme) {
     return {
         MuiContainer: {
 
             styleOverrides: {
-                root: ({ theme }) => ({
 
-                })
             }
         },
     };

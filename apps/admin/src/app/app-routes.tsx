@@ -1,12 +1,12 @@
-import {  useAuth } from '@libs/react-core';
 import Routes from './routes';
+
 
 const AppRoutes = () => {
 
-    const { isInitialized } = useAuth();
+
 
     // return !isInitialized ? <Routes /> : <LoadingScreen />;
-    return <Routes /> ;
+    return <Routes />;
 };
 
 export default AppRoutes;

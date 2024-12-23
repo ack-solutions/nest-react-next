@@ -1,5 +1,6 @@
+import { useCrudOperations } from "../hook";
+import { NotificationTemplateService } from "../services";
 
-import { NotificationTemplateService, useCrudOperations } from '@libs/react-core';
 
 const service = NotificationTemplateService.getInstance<NotificationTemplateService>();
 

@@ -1,5 +1,6 @@
 import * as moment from "moment"
 
+
 export function toDisplayDate(date?: string | Date, format = 'DD MMM, YYYY') {
     return date ? moment(date).format(format) : ''
 }

@@ -1,11 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, Checkbox, Chip, IconButton } from '@mui/material';
 import MuiAutocomplete, { AutocompleteProps as MuiAutocompleteProps, createFilterOptions } from '@mui/material/Autocomplete';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { Stack } from '@mui/system';
-import { Box, Checkbox, Chip, IconButton } from '@mui/material';
 import { get, has, isEqual, keyBy, map } from 'lodash';
-import DeleteIcon from '@mui/icons-material/Delete';
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+
 import Avatar from '../../components/avatar';
+
 
 const filter = createFilterOptions<any>();
 
@@ -79,7 +81,7 @@ export function Autocomplete({
 
 
     const handleOnChange = useCallback(
-        async (event, newValue) => {
+        async (_event, newValue) => {
             // Create a new value from the user input
             let newCreatedValue;
             if (typeof newValue === 'string' || newValue?.inputValue) {
@@ -189,7 +191,13 @@ export function Autocomplete({
                     alignItems='center'
                     {...props}
                 >
-                    <Box sx={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                    <Box
+                        sx={{
+                            flexShrink: 0,
+                            display: 'flex',
+                            alignItems: 'center'
+                        }}
+                    >
                         {multiple && (
                             <Checkbox
                                 checked={selected}
@@ -206,7 +214,12 @@ export function Autocomplete({
                             />
                         )}
                     </Box>
-                    <Box sx={{ width: 1, flexShrink: 1 }}>
+                    <Box
+                        sx={{
+                            width: 1,
+                            flexShrink: 1
+                        }}
+                    >
                         {getOptionLabel(option)}
                     </Box>
 
@@ -225,7 +238,10 @@ export function Autocomplete({
                     const numTags = value.length;
                     if (avatarOnly && hasAvatar) {
                         return (
-                            <Stack direction='row' spacing={0.5}>
+                            <Stack
+                                direction='row'
+                                spacing={0.5}
+                            >
                                 {value.slice(0, limitTags).map((option: any, index) => (
                                     <Avatar
                                         size='small'
@@ -245,7 +261,10 @@ export function Autocomplete({
                                 <Chip
                                     key={index}
                                     size='small'
-                                    avatar={hasAvatar ? (<Avatar alt={getOptionLabel(option)} src={option[avatarKey]} />) : null}
+                                    avatar={hasAvatar ? (<Avatar
+                                        alt={getOptionLabel(option)}
+                                        src={option[avatarKey]}
+                                    />) : null}
                                     label={getOptionLabel(option)}
                                     {...getTagProps({ index })}
                                 />
@@ -258,7 +277,11 @@ export function Autocomplete({
                 if (value) {
                     return (hasAvatar ? (
                         <Stack>
-                            <Avatar size='small' alt={getOptionLabel(value)} src={value[avatarKey]} />
+                            <Avatar
+                                size='small'
+                                alt={getOptionLabel(value)}
+                                src={value[avatarKey]}
+                            />
                             {getOptionLabel(value)}
                         </Stack>
                     ) : getOptionLabel(value))

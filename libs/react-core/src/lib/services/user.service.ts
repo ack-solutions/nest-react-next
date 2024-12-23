@@ -1,5 +1,6 @@
 
 import { IUser } from "@libs/types";
+
 import { toFormData } from "../utils";
 import { CRUDService } from "./crud-service";
 
@@ -29,7 +30,12 @@ export class UserService extends CRUDService<any> {
             return resp.data;
         })
     }
-
+    getCountByStatus(request) {
+        return this.instanceApi.get<any>(`${this.apiPath}/status-counts`, { params: request })
+            .then(({ data }) => {
+                return data
+            })
+    }
     monthPresentDays() {
         return this.instanceApi.get(`${this.apiPath}/month-present-days`).then((resp) => {
             return resp.data;

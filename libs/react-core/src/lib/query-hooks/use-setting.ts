@@ -1,4 +1,6 @@
-import { SettingService, useCrudOperations } from '@libs/react-core';
+import { useCrudOperations } from "../hook";
+import { SettingService } from "../services";
+
 
 const Service = SettingService.getInstance<SettingService>();
 

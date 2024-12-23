@@ -1,7 +1,10 @@
 
-import { UpdateQueryOptions, useCrudOperations, UserService } from '@libs/react-core';
 import { IChangePasswordInput, IUser } from '@libs/types';
 import { DefinedInitialDataOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { invalidListQueryCache, invalidUpdateOrCreateQueryCache, UpdateQueryOptions, useCrudOperations } from '../hook';
+import { UserService } from '../services';
+
 
 const service = UserService.getInstance<UserService>();
 
@@ -29,16 +32,8 @@ export const useUserQuery = () => {
     const useUpdateProfile = (options?: UpdateQueryOptions<Partial<IUser>, Error, IUser>) => useMutation({
         mutationFn: (input: Partial<IUser>) => service.updateProfile(input),
         onSuccess: (data) => {
-            if (!options?.disableCacheUpdate) {
-                queryClient.invalidateQueries({
-                    predicate: (query) =>
-                        query.queryKey[0] === service.getQueryKey('get') && query.queryKey[1] === data.id
-                });
-                queryClient.invalidateQueries({
-                    predicate: (query) =>
-                        query.queryKey[0] === service.getQueryKey('get-all') || query.queryKey[0] === service.getQueryKey('data-grid')
-                });
-            }
+            invalidListQueryCache(queryClient, service)
+            invalidUpdateOrCreateQueryCache(queryClient, service, data?.id)
         },
         ...options,
     });
@@ -46,24 +41,22 @@ export const useUserQuery = () => {
     const useChangePassword = (options?: UpdateQueryOptions<Partial<IChangePasswordInput>, Error, IChangePasswordInput>) => useMutation({
         mutationFn: (input: Partial<IChangePasswordInput>) => service.changePassword(input),
         onSuccess: (data) => {
-            if (!options?.disableCacheUpdate) {
-                queryClient.invalidateQueries({
-                    predicate: (query) =>
-                        query.queryKey[0] === service.getQueryKey('get') && query.queryKey[1] === data.id
-                });
-                queryClient.invalidateQueries({
-                    predicate: (query) =>
-                        query.queryKey[0] === service.getQueryKey('get-all') || query.queryKey[0] === service.getQueryKey('data-grid')
-                });
-            }
+            console.log(data);
         },
         ...options,
     });
 
+    const useGetUserCountByStatus = (request?) => {
+        return useQuery({
+            queryKey: ['user-tab-count', request],
+            queryFn: () => service.getCountByStatus(request),
+        });
+    };
     return {
         useGetMe,
         useUpdateProfile,
         useChangePassword,
+        useGetUserCountByStatus,
         useGetManyUser: useGetMany,
         useGetUserById: useGetOne,
         useCreateUser: useCreate,

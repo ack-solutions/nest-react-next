@@ -1,8 +1,10 @@
 import { generateFiles, getProjects, joinPathFragments, names, ProjectConfiguration, Tree } from "@nx/devkit";
-import { PluginGeneratorSchema } from "./schema";
 import { join } from "path";
+
+import { PluginGeneratorSchema } from "./schema";
 import { addImportStatement } from "../../utils/add-import-statement";
 import { appendArrayItem } from "../../utils/append-array-item";
+
 
 export class ApiGenerator {
 
@@ -31,7 +33,14 @@ export class ApiGenerator {
             this.tree,
             join(__dirname, 'files', 'api'), // Path to your custom template files
             `apps/api/src/app/modules`, // Destination where the custom files should go
-            { tmpl: '', name, className, fileName, propertyName, columns: this.options.columns } // Data to pass to the template (e.g., the library name)
+            {
+                tmpl: '',
+                name,
+                className,
+                fileName,
+                propertyName,
+                columns: this.options.columns 
+            } // Data to pass to the template (e.g., the library name)
         );
     }
 

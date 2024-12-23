@@ -6,8 +6,10 @@ import {
 } from '@nestjs/common';
 import { get, set } from 'lodash';
 import { Observable } from 'rxjs';
+
 import { FileStorage } from '../file-storage';
 import { FileStorageOption } from '../file-storage/types';
+
 
 export function fileUploadInterceptor(
     fields: string[],

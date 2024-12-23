@@ -1,5 +1,6 @@
-import { useTheme } from '@mui/material/styles';
 import GlobalStyles from '@mui/material/GlobalStyles';
+import { useTheme } from '@mui/material/styles';
+
 
 export default function StyledProgressBar() {
     const theme = useTheme();

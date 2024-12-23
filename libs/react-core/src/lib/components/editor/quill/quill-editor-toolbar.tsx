@@ -1,7 +1,9 @@
-import { Quill } from 'react-quill';
-import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
+import UndoIcon from '@mui/icons-material/Undo';
+import { Quill } from 'react-quill';
+
 import QuillEditorToolbarStyle from './quill-editor-toolbar-style';
+
 
 const FONT_FAMILY = ['Arial', 'Tahoma', 'Georgia', 'Impact', 'Verdana'];
 
@@ -27,6 +29,7 @@ export function undoChange() {
     // @ts-ignore
     this.quill.history.undo();
 }
+
 export function redoChange() {
     // @ts-ignore
     this.quill.history.redo();
@@ -79,10 +82,16 @@ export default function QuillEditorToolbar({ id, isSimple, ...other }: EditorToo
             <div id={id}>
                 <div className="ql-formats">
                     {!isSimple && (
-                        <select className="ql-font" defaultValue="">
+                        <select
+                            className="ql-font"
+                            defaultValue=""
+                        >
                             <option value="">Font</option>
                             {FONT_FAMILY.map((font) => (
-                                <option key={font} value={font}>
+                                <option
+                                    key={font}
+                                    value={font}
+                                >
                                     {font}
                                 </option>
                             ))}
@@ -90,18 +99,30 @@ export default function QuillEditorToolbar({ id, isSimple, ...other }: EditorToo
                     )}
 
                     {!isSimple && (
-                        <select className="ql-size" defaultValue="16px">
+                        <select
+                            className="ql-size"
+                            defaultValue="16px"
+                        >
                             {FONT_SIZE.map((size) => (
-                                <option key={size} value={size}>
+                                <option
+                                    key={size}
+                                    value={size}
+                                >
                                     {size}
                                 </option>
                             ))}
                         </select>
                     )}
 
-                    <select className="ql-header" defaultValue="">
+                    <select
+                        className="ql-header"
+                        defaultValue=""
+                    >
                         {HEADINGS.map((heading, index) => (
-                            <option key={heading} value={index + 1}>
+                            <option
+                                key={heading}
+                                value={index + 1}
+                            >
                                 {heading}
                             </option>
                         ))}
@@ -110,10 +131,22 @@ export default function QuillEditorToolbar({ id, isSimple, ...other }: EditorToo
                 </div>
 
                 <div className="ql-formats">
-                    <button type="button" className="ql-bold" />
-                    <button type="button" className="ql-italic" />
-                    <button type="button" className="ql-underline" />
-                    <button type="button" className="ql-strike" />
+                    <button
+                        type="button"
+                        className="ql-bold"
+                    />
+                    <button
+                        type="button"
+                        className="ql-italic"
+                    />
+                    <button
+                        type="button"
+                        className="ql-underline"
+                    />
+                    <button
+                        type="button"
+                        className="ql-strike"
+                    />
                 </div>
 
                 {!isSimple && (
@@ -124,49 +157,110 @@ export default function QuillEditorToolbar({ id, isSimple, ...other }: EditorToo
                 )}
 
                 <div className="ql-formats">
-                    <button type="button" className="ql-list" value="ordered" />
-                    <button type="button" className="ql-list" value="bullet" />
-                    {!isSimple && <button type="button" className="ql-indent" value="-1" />}
-                    {!isSimple && <button type="button" className="ql-indent" value="+1" />}
+                    <button
+                        type="button"
+                        className="ql-list"
+                        value="ordered"
+                    />
+                    <button
+                        type="button"
+                        className="ql-list"
+                        value="bullet"
+                    />
+                    {!isSimple && <button
+                        type="button"
+                        className="ql-indent"
+                        value="-1"
+                    />}
+                    {!isSimple && <button
+                        type="button"
+                        className="ql-indent"
+                        value="+1"
+                    />}
                 </div>
 
                 {!isSimple && (
                     <div className="ql-formats">
-                        <button type="button" className="ql-script" value="super" />
-                        <button type="button" className="ql-script" value="sub" />
+                        <button
+                            type="button"
+                            className="ql-script"
+                            value="super"
+                        />
+                        <button
+                            type="button"
+                            className="ql-script"
+                            value="sub"
+                        />
                     </div>
                 )}
 
                 {!isSimple && (
                     <div className="ql-formats">
-                        <button type="button" className="ql-code-block" />
-                        <button type="button" className="ql-blockquote" />
+                        <button
+                            type="button"
+                            className="ql-code-block"
+                        />
+                        <button
+                            type="button"
+                            className="ql-blockquote"
+                        />
                     </div>
                 )}
 
                 <div className="ql-formats">
-                    <button type="button" className="ql-direction" value="rtl" />
+                    <button
+                        type="button"
+                        className="ql-direction"
+                        value="rtl"
+                    />
                     <select className="ql-align" />
                 </div>
 
                 <div className="ql-formats">
-                    <button type="button" className="ql-link" />
-                    <button type="button" className="ql-image" />
-                    <button type="button" className="ql-video" />
+                    <button
+                        type="button"
+                        className="ql-link"
+                    />
+                    <button
+                        type="button"
+                        className="ql-image"
+                    />
+                    <button
+                        type="button"
+                        className="ql-video"
+                    />
                 </div>
 
                 <div className="ql-formats">
-                    {!isSimple && <button type="button" className="ql-formula" />}
-                    <button type="button" className="ql-clean" />
+                    {!isSimple && <button
+                        type="button"
+                        className="ql-formula"
+                    />}
+                    <button
+                        type="button"
+                        className="ql-clean"
+                    />
                 </div>
 
                 {!isSimple && (
                     <div className="ql-formats">
-                        <button type="button" className="ql-undo">
-                            <UndoIcon width={18} height={18} />
+                        <button
+                            type="button"
+                            className="ql-undo"
+                        >
+                            <UndoIcon
+                                width={18}
+                                height={18}
+                            />
                         </button>
-                        <button type="button" className="ql-redo">
-                            <RedoIcon width={18} height={18} />
+                        <button
+                            type="button"
+                            className="ql-redo"
+                        >
+                            <RedoIcon
+                                width={18}
+                                height={18}
+                            />
                         </button>
                     </div>
                 )}

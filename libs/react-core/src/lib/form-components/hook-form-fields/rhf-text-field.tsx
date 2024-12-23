@@ -1,14 +1,15 @@
 import { TextField, TextFieldProps, useForkRef } from '@mui/material'
+import { forwardRef, Ref } from 'react'
 import {
     Control,
     useController,
 } from 'react-hook-form'
-import { forwardRef, Ref } from 'react'
+
 
 export type RHFTextFieldProps = Omit<TextFieldProps, 'name'> & {
-	name: string;
-	control?: Control;
-	component?: typeof TextField
+    name: string;
+    control?: Control;
+    component?: typeof TextField
 }
 
 export const RHFTextField = forwardRef((

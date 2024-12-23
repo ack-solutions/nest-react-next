@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService, registerAs } from "@nestjs/config";
 
+
 export default registerAs('core', () => ({
     env: process.env.APP_ENV || 'dev',
     apiUrl: process.env.API_URL || '',

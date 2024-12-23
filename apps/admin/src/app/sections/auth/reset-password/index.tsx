@@ -1,15 +1,17 @@
-import { styled } from '@mui/material/styles';
+import Page from '@admin/app/components/page';
+import { AuthService, errorMessage } from '@libs/react-core';
 import { Box, Container, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useCallback, useState } from 'react';
-import { FormikHelpers } from 'formik';
+
 import ResetPasswordForm from './reset-password-form';
 import SuccessDialog from './success-dialog';
-import { AuthService, errorMessage } from '@libs/react-core';
-import Page from '@admin/app/components/page';
+
+
 export interface ResetPasswordProps {
-	onCloseModal?: () => void;
-	email?: string;
-	otp?: string;
+    onCloseModal?: () => void;
+    email?: string;
+    otp?: string;
 }
 
 const RootStyle = styled(Page)(({ theme }) => ({
@@ -18,7 +20,7 @@ const RootStyle = styled(Page)(({ theme }) => ({
     },
 }));
 
-const ContentStyle = styled('div')(({ theme }) => ({
+const ContentStyle = styled('div')(() => ({
     maxWidth: 530,
     margin: 'auto',
     display: 'flex',
@@ -30,29 +32,30 @@ const ContentStyle = styled('div')(({ theme }) => ({
 const authService = AuthService.getInstance<AuthService>();
 
 const ResetPassword = ({
-    onCloseModal,
     email,
     otp,
 }: ResetPasswordProps) => {
     const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 
     const handleResetPassword = useCallback(
-        async (values:any, actions: FormikHelpers<any>) => {
+        async (values: any, form: any) => {
             try {
                 const request = {
                     ...values,
                     email,
                     otp
                 }
-                await authService.resetPassword(request).then((data) => {
-                    actions.resetForm();
+                await authService.resetPassword(request).then(() => {
+                    form.reset();
                     setIsSuccessDialogOpen(true);
                 })
             } catch (error) {
-                actions.setErrors({ afterSubmit: errorMessage(error) });
+                form.setError('afterSubmit', {
+                    type: 'manual',
+                    message: errorMessage(error),
+                });
+                form.reset();
             }
-
-            actions.setSubmitting(false);
         },
         [email, otp],
     )
@@ -67,19 +70,23 @@ const ResetPassword = ({
                 <ContentStyle>
                     <Box >
                         <Typography variant="h2" >
-								Reset Password
+                            Reset Password
                         </Typography>
-                        <Typography sx={{ color: 'text.secondary', mb: 5 }}>
-								Enter your password to access the app next time.
+                        <Typography
+                            sx={{
+                                color: 'text.secondary',
+                                mb: 5
+                            }}
+                        >
+                            Enter your password to access the app next time.
                         </Typography>
                         <ResetPasswordForm onSubmit={handleResetPassword} />
                     </Box>
-
                 </ContentStyle>
             </Container>
             {isSuccessDialogOpen ? (
                 <SuccessDialog onClose={handleSuccessDialogClose} />
-            ):null}
+            ) : null}
         </RootStyle>
     );
 }

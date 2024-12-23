@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { Box, InputLabel, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
 import { matchIsValidTel, MuiTelInput, MuiTelInputInfo, MuiTelInputProps } from 'mui-tel-input';
+import { useMemo, useState } from 'react';
+
 
 export interface PhoneNumberInputProps extends Omit<MuiTelInputProps, 'onChange'> {
     label?: string
@@ -14,12 +15,16 @@ const PhoneNumberInput = ({
     sx,
     ...props
 }: PhoneNumberInputProps) => {
-    const [phone, setPhone] = useState<any>(value || '');
+    // const [phone, setPhone] = useState<any>(value || '');
     const [isValid, setIsValid] = useState(true);
-    const theme = useTheme()
+    const phone = useMemo(() => {
+        return (
+            value
+        )
+    }, [value])
 
     const handlePhoneChange = (value: string, countryData: MuiTelInputInfo) => {
-        setPhone(value);
+        // setPhone(value);
         onChange && onChange(value, countryData)
 
         const valid = matchIsValidTel(value, {
@@ -31,23 +36,14 @@ const PhoneNumberInput = ({
     };
 
     return (
-        <Box sx={{ width: '100%', ...sx }}>
-            {label && (
-                <InputLabel
-                    disabled={!!props?.disabled}
-                    required={!!props?.required}
-                    error={!!props?.error}
-                    htmlFor={props?.name}
-                    margin='dense'
-                    sx={{
-                        ...theme.typography.body2,
-                        color: 'text.secondary', mb: 0.5
-                    }}
-                >
-                    {label}
-                </InputLabel>
-            )}
+        <Box
+            sx={{
+                width: '100%',
+                ...sx
+            }}
+        >
             <MuiTelInput
+                label={label}
                 value={phone}
                 onChange={handlePhoneChange}
                 defaultCountry="IN"

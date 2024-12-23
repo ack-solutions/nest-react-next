@@ -1,5 +1,7 @@
 import { alpha, Box, Palette, PaletteColor, styled } from '@mui/material';
+
 import { LabelColor, LabelVariant } from './label';
+
 
 export const StyledLabel = styled(Box)<{ ownerState: { color: LabelColor; variant: LabelVariant } }>(
     ({ theme, ownerState }) => {

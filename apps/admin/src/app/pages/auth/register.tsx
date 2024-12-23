@@ -1,9 +1,11 @@
-import React, { useCallback, useState } from 'react'
-import AuthLayout from '../../sections/auth/auth-layout'
-import { Box, Stack, Typography } from '@mui/material'
-import RegisterForm from '../../sections/auth/register-form'
-import LoginOtpVerification from '../../sections/auth/login-otp-verification'
 import { AuthService, errorMessage } from '@libs/react-core'
+import { Box, Stack, Typography } from '@mui/material'
+import { useCallback, useState } from 'react'
+
+import AuthLayout from '../../sections/auth/auth-layout'
+import LoginOtpVerification from '../../sections/auth/login-otp-verification'
+import RegisterForm from '../../sections/auth/register-form'
+
 
 const authService = AuthService.getInstance<AuthService>()
 
@@ -11,41 +13,43 @@ const Register = () => {
     const [verifyData, setVerifyData] = useState<any>(null)
 
     const handleSendOtp = useCallback(
-        (value?: any, action?: any) => {
+        (value?: any, setError?: any) => {
             value = value ? value : verifyData
             authService.sendRegisterOtp(value).then(({ data }) => {
                 setVerifyData(value)
             }).catch((error) => {
-                action?.setErrors({ afterSubmit: errorMessage(error) });
+                setError('afterSubmit', {
+                    type: 'manual',
+                    message: errorMessage(error),
+                });
                 setVerifyData(null)
-            }).finally(() => {
-                action?.setSubmitting(false)
             })
         },
         [verifyData],
     )
 
     const handleRegisterUser = useCallback(
-        (values: any, action: any) => {
+        (values: any, form: any) => {
             const request = {
                 otp: Number(values?.otp),
                 ...verifyData,
             }
 
             authService.register(request).then((data) => {
-                action.resetForm();
+                form.reset();
                 setVerifyData(null)
             }).catch((error) => {
-                action.setErrors({ afterSubmit: errorMessage(error) });
-            }).finally(() => {
-                action?.setSubmitting(false)
+                form.setError('afterSubmit', {
+                    type: 'manual',
+                    message: errorMessage(error),
+                });
             })
         },
         [verifyData],
     )
 
     return (
-        <AuthLayout rootTitle={"Register | Next React"} src={''} >
+        <AuthLayout rootTitle={"Register | Next React"} >
             <Box
                 sx={{
                     maxWidth: 480,
@@ -53,9 +57,16 @@ const Register = () => {
                     p: 2,
                 }}
             >
-                <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
+                <Stack
+                    direction="row"
+                    alignItems="center"
+                    sx={{ mb: 5 }}
+                >
                     <Box sx={{ flexGrow: 1 }}>
-                        <Typography variant="h1" gutterBottom>
+                        <Typography
+                            variant="h1"
+                            gutterBottom
+                        >
                             Register
                         </Typography>
                     </Box>

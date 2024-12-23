@@ -1,10 +1,12 @@
-import { FileStorageOption, UploadedFile } from '../types';
-import * as multer from 'multer';
 import * as fs from 'fs';
 import moment from 'moment';
-import { Provider } from './provider';
+import * as multer from 'multer';
 import { basename, join, resolve } from 'path';
+
+import { Provider } from './provider';
 import { getEnv } from '../../../utils';
+import { FileStorageOption, UploadedFile } from '../types';
+
 
 export class LocalProvider extends Provider<LocalProvider> {
     static instance: LocalProvider;

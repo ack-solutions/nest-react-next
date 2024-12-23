@@ -1,5 +1,6 @@
 import { IBaseEntity } from "./base-entity";
 
+
 export interface ISetting extends IBaseEntity {
     name?: string;
     key?: string;
@@ -10,4 +11,11 @@ export interface ISetting extends IBaseEntity {
 export enum SettingTypeEnum {
     PRIVATE = 'private',
     PUBLIC = 'public',
+}
+
+export enum SmtpEncryptionTypeEnum {
+    NONE = 'none',
+    SSL = 'ssl',
+    TLS = 'tls',
+    AUTO = 'auto'
 }

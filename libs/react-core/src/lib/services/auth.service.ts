@@ -1,5 +1,8 @@
-import { ILoginInput, ILoginSuccess } from "@libs/types";
+import { ILoginInput, ILoginSendOtpInput, ILoginSuccess, IRegisterSendOtpInput } from "@libs/types";
+
 import { Service } from "./service";
+
+
 export class AuthService extends Service {
 
     getToken() {
@@ -7,13 +10,13 @@ export class AuthService extends Service {
     }
 
 
-    sendLoginOtp(request?: any) {
+    sendLoginOtp(request?: ILoginSendOtpInput) {
         return this.instanceApi.post(`auth/send-login-otp`, request).then((resp) => {
             return resp.data;
         });
     }
 
-    sendRegisterOtp(request?: any) {
+    sendRegisterOtp(request?: IRegisterSendOtpInput) {
         return this.instanceApi.post(`auth/send-register-otp`, request).then((resp) => {
             return resp.data;
         });

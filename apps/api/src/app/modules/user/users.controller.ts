@@ -1,5 +1,7 @@
+import { FileStorage, UploadedFileStorage } from '@api/app/core/file-storage';
+import { RequestDataTypeInterceptor } from '@api/app/core/request-data-type.interceptor';
+import { IChangePasswordInput, IUpdateProfileInput, IUser } from '@libs/types';
 import {
-    BadRequestException,
     Body,
     Controller,
     Get,
@@ -8,26 +10,23 @@ import {
     Param,
     Post,
     Put,
+    Query,
     UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { ApiTags } from '@nestjs/swagger';
-import { UserDTO } from './dto/user.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from '../auth/decorator/current-user';
-import { IChangePasswordInput, IUpdateProfileInput, IUser } from '@libs/types';
-import { CrudController } from '../../core/crud';
-import { User } from './user.entity';
-import { RequestContext } from '@api/app/core/request-context/request-context';
-import * as bcrypt from 'bcryptjs';
-import { hashPassword } from '@api/app/utils';
-import { join } from 'path';
-import moment from 'moment';
-import { FileStorage, UploadedFileStorage } from '@api/app/core/file-storage';
-import { RequestDataTypeInterceptor } from '@api/app/core/request-data-type.interceptor';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { DeepPartial } from 'typeorm';
+import { ApiTags } from '@nestjs/swagger';
+import moment from 'moment';
+import { join } from 'path';
+import { DeepPartial, FindManyOptions } from 'typeorm';
+
+import { UserDTO } from './dto/user.dto';
+import { User } from './user.entity';
+import { UserService } from './user.service';
+import { CrudController } from '../../core/crud';
+import { CurrentUser } from '../auth/decorator/current-user';
+
 
 @ApiTags('User')
 @Controller('user')
@@ -49,6 +48,12 @@ export class UsersController extends CrudController(UserDTO)<IUser> {
                 'roles.permissions',
             ],
         });
+    }
+
+    @Get('status-counts')
+    @UseGuards(AuthGuard('jwt'))
+    async getStatusCounts(@Query() filters: FindManyOptions<User>) {
+        return this.userService.getStatusCounts(filters);
     }
 
     @UseInterceptors(

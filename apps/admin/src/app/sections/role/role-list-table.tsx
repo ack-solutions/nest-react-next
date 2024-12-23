@@ -4,7 +4,8 @@ import { useRoleQuery } from '@libs/react-core';
 import { IRole } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
 import { Card } from '@mui/material'
-import React, { useRef } from 'react'
+import { useRef } from 'react'
+
 
 export interface RoleListTableProps {
     onEdit?: (row: IRole) => void;
@@ -18,8 +19,7 @@ const RoleListTable = ({ onEdit }: RoleListTableProps) => {
         useRestoreRole,
         useBulkDeleteRoleForever,
         useBulkRestoreRole,
-        useDeleteRoleForever
-    } = useRoleQuery();
+        useDeleteRoleForever } = useRoleQuery();
 
     const columns: DataTableColumn<IRole>[] = [
         {

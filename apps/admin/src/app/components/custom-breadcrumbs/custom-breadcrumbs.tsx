@@ -11,6 +11,7 @@ import {
 
 import LinkItem from './breadcrumbs-ink';
 
+
 export type BreadcrumbsLinkProps = {
   name?: string;
   href?: string;
@@ -41,7 +42,12 @@ export default function CustomBreadcrumbs({
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
-        <Box sx={{ mb: 3, ...sx }}>
+        <Box
+            sx={{
+                mb: 3,
+                ...sx 
+            }}
+        >
             <Stack
                 direction={isMobile ? 'column' : 'row'}
                 alignItems={isMobile ? 'flex-start' : 'center'}
@@ -50,14 +56,20 @@ export default function CustomBreadcrumbs({
                 <Box sx={{ flexGrow: 1 }}>
                     {/* HEADING */}
                     {heading && (
-                        <Typography variant="h4" gutterBottom={isTablet ? false : true}>
+                        <Typography
+                            variant="h4"
+                            gutterBottom={isTablet ? false : true}
+                        >
                             {heading}
                         </Typography>
                     )}
 
                     {/* BREADCRUMBS */}
                     {links?.length && (
-                        <Breadcrumbs separator={<Separator />}  {...other}>
+                        <Breadcrumbs
+                            separator={<Separator />}
+                            {...other}
+                        >
                             {links?.map((link) => (
                                 <LinkItem
                                     key={link.name || ''}
@@ -70,7 +82,10 @@ export default function CustomBreadcrumbs({
                     )}
                 </Box>
                 {action && (
-                    <Stack spacing={2} direction={'row'}>
+                    <Stack
+                        spacing={2}
+                        direction={'row'}
+                    >
                         {action}
                     </Stack>
                 )}

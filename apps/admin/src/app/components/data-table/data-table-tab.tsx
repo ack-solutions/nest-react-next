@@ -1,42 +1,47 @@
+import { Label } from '@libs/react-core';
 import { Stack, Tab, Tabs, TabsProps } from '@mui/material';
-import Label from '../label/label';
 import { SyntheticEvent } from 'react';
 
-interface ITab {
-  value: string;
-  label: string;
-  count?: string;
-  color?: string;
+
+export interface DataTableTabItem {
+    value: string;
+    label: string;
+    count?: string;
+    color?: string;
 }
 
 export interface DataTableTabProps extends Omit<TabsProps, 'onChange'> {
-  tabs: ITab[];
-  currentTab: string;
-  onChange: (event: SyntheticEvent, tab: string) => void;
+    tabs: DataTableTabItem[];
+    onChange: (tab: string, event: SyntheticEvent) => void;
 }
 
-const DataTableTab= ({
+const DataTableTab = ({
     tabs,
-    currentTab,
     onChange,
     ...props
 }: DataTableTabProps) => {
     return (
         <Tabs
-            {...props}
             variant="scrollable"
             scrollButtons="auto"
-            value={currentTab}
-            onChange={(event, tab) => onChange(event, tab)}
-            sx={{ px: 2, bgcolor: 'background.neutral' }}
+            onChange={(event, tab) => onChange && onChange(tab, event)}
+            sx={{
+                px: 2,
+                bgcolor: 'background.neutral'
+            }}
+            {...props}
         >
-            {tabs?.map((tab:any) => (
+            {tabs?.map((tab: any) => (
                 <Tab
                     disableRipple
                     key={tab.value}
                     value={tab.value}
                     label={
-                        <Stack spacing={1} direction="row" alignItems="center">
+                        <Stack
+                            spacing={1}
+                            direction="row"
+                            alignItems="center"
+                        >
                             <Label color={tab.color}> {tab.count} </Label>
                             <div>{tab.label}</div>
                         </Stack>
@@ -46,5 +51,4 @@ const DataTableTab= ({
         </Tabs>
     );
 };
-
-export default DataTableTab;
+export default DataTableTab

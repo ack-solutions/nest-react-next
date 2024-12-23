@@ -2,11 +2,12 @@
 import { IBaseEntity } from "./base-entity";
 import { IRole } from "./role";
 
+
 export interface IUser extends IBaseEntity {
   firstName?: string;
   lastName?: string;
   email?: string;
-  phoneNumber?: number;
+  phoneNumber?: string;
   avatar?: string;
   passwordHash?: string;
   isSuperAdmin?: boolean;

@@ -1,6 +1,7 @@
 import { Avatar as MuiAvatar, AvatarProps as MuiAvatarProps } from '@mui/material';
 import { useMemo } from 'react';
 
+
 function stringAvatar(name?: string) {
     const namePars = name?.split(' ') || [];
     return {
@@ -20,38 +21,38 @@ export default function Avatar({ sx, size = 'medium', ...props }: AvatarProps) {
         let height = 40;
         let fontSize = 18;
         switch (size) {
-        case 'x-small':
-            width = 20;
-            height = 20;
-            fontSize = 8;
-            break;
+            case 'x-small':
+                width = 20;
+                height = 20;
+                fontSize = 8;
+                break;
 
-        case 'small':
-            width = 24;
-            height = 24;
-            fontSize = 10;
-            break;
+            case 'small':
+                width = 24;
+                height = 24;
+                fontSize = 10;
+                break;
 
-        case 'medium':
-            width = 32;
-            height = 32;
-            fontSize = 16;
-            break;
+            case 'medium':
+                width = 32;
+                height = 32;
+                fontSize = 16;
+                break;
 
-        case 'large':
-            width = 40;
-            height = 40;
-            fontSize = 20;
-            break;
+            case 'large':
+                width = 40;
+                height = 40;
+                fontSize = 20;
+                break;
 
-        case 'x-large':
-            width = 48;
-            height = 48;
-            fontSize = 24;
-            break;
+            case 'x-large':
+                width = 48;
+                height = 48;
+                fontSize = 24;
+                break;
 
-        default:
-            break;
+            default:
+                break;
         }
 
         return {

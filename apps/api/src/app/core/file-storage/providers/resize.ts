@@ -1,9 +1,13 @@
 import { copyFile } from 'fs';
+
+
 // import sharp from 'sharp';
 import { FileStorage } from '../file-storage';
+
+
 // sharp.cache(false);
 
-export async function createThumb(filePath, size) {
+export async function createThumb(filePath, _size) {
     const fileParts = filePath.split('.');
     fileParts[0] = `${fileParts[0]}-thumb`;
     const newPath = fileParts.join('.');
@@ -21,7 +25,7 @@ export async function createThumb(filePath, size) {
     return newPath;
 }
 
-export async function resizeImage(filePath, size) {
+export async function resizeImage(filePath, _size) {
     try {
         const fileParts = filePath.split('.');
         fileParts[0] = `${fileParts[0]}-orig`;

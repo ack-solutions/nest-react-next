@@ -1,7 +1,9 @@
 import { Collapse, List, ListSubheader, styled } from '@mui/material';
 import { useCallback, useState } from 'react'
-import { NavbarConfigProps, NavigationItem } from '../../../types/navigation';
+
 import NavbarList from './navbar-list';
+import { NavbarConfigProps, NavigationItem } from '../../../types/navigation';
+
 
 const StyledSubheader = styled(ListSubheader)<{ config?: NavbarConfigProps; }>(({ config, theme }) => ({
     ...theme.typography.overline,
@@ -27,7 +29,9 @@ interface NavGroupProps {
   config?: NavbarConfigProps;
   initialStatus?: boolean;
   isMini?: boolean;
-};
+}
+
+;
 
 export function NavbarGroup({ subheader, items, config, initialStatus, isMini }: NavGroupProps) {
     const [open, setOpen] = useState(!initialStatus);
@@ -52,7 +56,10 @@ export function NavbarGroup({ subheader, items, config, initialStatus, isMini }:
     }
 
     return (
-        <List disablePadding sx={{ px: 2 }}>
+        <List
+            disablePadding
+            sx={{ px: 2 }}
+        >
             {subheader ? (
                 <>
                     <StyledSubheader

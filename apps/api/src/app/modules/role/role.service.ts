@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Role } from './role.entity';
-import { IRole } from '@libs/types';
 import { CrudService } from '@api/app/core/crud';
+import { IRole } from '@libs/types';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { Role } from './role.entity';
+
 
 @Injectable()
 export class RoleService extends CrudService<IRole> {

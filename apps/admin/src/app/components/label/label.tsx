@@ -1,8 +1,11 @@
-import React, { forwardRef } from 'react';
 import Box, { BoxProps } from '@mui/material/Box';
+import React, { forwardRef } from 'react';
+
 import { StyledLabel } from './styles';
 
+
 export type LabelColor = 'default' | 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error' | 'tertiary';
+
 export type LabelVariant = 'filled' | 'outlined' | 'soft';
 
 export interface LabelProps extends BoxProps {
@@ -17,13 +20,20 @@ const Label = forwardRef<HTMLSpanElement, LabelProps>(
         const iconStyle = {
             width: 16,
             height: 16,
-            '& svg, img': { width: '100%', height: '100%', objectFit: 'cover' }
+            '& svg, img': {
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover' 
+            }
         };
 
         return (
             <StyledLabel
                 ref={ref}
-                ownerState={{ color, variant }}
+                ownerState={{
+                    color,
+                    variant 
+                }}
                 sx={{
                     ...(startIcon && { pl: 0.75 }),
                     ...(endIcon && { pr: 0.75 }),
@@ -31,9 +41,19 @@ const Label = forwardRef<HTMLSpanElement, LabelProps>(
                 }}
                 {...other}
             >
-                {startIcon && <Box sx={{ mr: 0.75, ...iconStyle }}>{startIcon}</Box>}
+                {startIcon && <Box
+                    sx={{
+                        mr: 0.75,
+                        ...iconStyle 
+                    }}
+                              >{startIcon}</Box>}
                 {children}
-                {endIcon && <Box sx={{ ml: 0.75, ...iconStyle }}>{endIcon}</Box>}
+                {endIcon && <Box
+                    sx={{
+                        ml: 0.75,
+                        ...iconStyle 
+                    }}
+                            >{endIcon}</Box>}
             </StyledLabel>
         );
     }

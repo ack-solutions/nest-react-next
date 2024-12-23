@@ -1,12 +1,14 @@
 
-import { Repository } from 'typeorm';
+import { RoleNameEnum } from '@libs/types';
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
-import { Permission } from './permission.entity';
 import { find } from 'lodash';
-import { Role } from '../role/role.entity';
-import { RoleNameEnum } from '@libs/types';
+import { Repository } from 'typeorm';
+
+import { Permission } from './permission.entity';
 import { Seeder } from '../../core/nest-seeder';
+import { Role } from '../role/role.entity';
+
 
 type Action = 'list' | 'create' | 'show' | 'update' | 'delete' | 'reorder' | 'trash delete' | 'trash restore';
 
@@ -70,7 +72,10 @@ export class PermissionSeeder implements Seeder {
     private generatePermissionsForEntity(entity: string, actions: string[], roles: Role[]): Permission[] {
         return actions.map((action) => {
             const permissionName = `${entity} ${action}`;
-            return new Permission({ name: permissionName, roles });
+            return new Permission({
+                name: permissionName,
+                roles 
+            });
         });
     }
 }

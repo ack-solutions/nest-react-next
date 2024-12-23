@@ -4,8 +4,11 @@ import { useMemo, useState, useCallback } from 'react';
 export interface UseCopyToClipboardReturn {
   copy: CopyFn;
   copiedText?: CopiedValue;
-};
+}
+
+;
 type CopiedValue = string | null;
+
 type CopyFn = (text: string) => Promise<boolean>;
 
 export function useCopyToClipboard(): UseCopyToClipboardReturn {
@@ -31,7 +34,10 @@ export function useCopyToClipboard(): UseCopyToClipboardReturn {
         [setCopiedText]
     );
 
-    const memoizedValue = useMemo(() => ({ copy, copiedText }), [copy, copiedText]);
+    const memoizedValue = useMemo(() => ({
+        copy,
+        copiedText 
+    }), [copy, copiedText]);
 
     return memoizedValue;
 }

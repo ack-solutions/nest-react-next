@@ -2,15 +2,22 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional, Min, ValidateNested } from 'class-validator';
 
+
 export class PaginationOptionsDTO {
-  @ApiPropertyOptional({ description: 'Number of items to skip', example: 0 })
+  @ApiPropertyOptional({
+      description: 'Number of items to skip',
+      example: 0 
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(0)
       skip?: number;
 
-  @ApiPropertyOptional({ description: 'Maximum number of items to return', example: 10 })
+  @ApiPropertyOptional({
+      description: 'Maximum number of items to return',
+      example: 10 
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -19,23 +26,36 @@ export class PaginationOptionsDTO {
 }
 
 export class OrderOptionsDTO {
-  @ApiPropertyOptional({ description: 'Order by field', example: 'name' })
+  @ApiPropertyOptional({
+      description: 'Order by field',
+      example: 'name' 
+  })
   @IsOptional()
       orderBy?: string;
 
-  @ApiPropertyOptional({ description: 'Order direction', example: 'ASC', enum: ['ASC', 'DESC'] })
+  @ApiPropertyOptional({
+      description: 'Order direction',
+      example: 'ASC',
+      enum: ['ASC', 'DESC'] 
+  })
   @IsOptional()
       orderDirection?: 'ASC' | 'DESC';
 }
 
 export class FindManyOptionsDTO {
-  @ApiPropertyOptional({ description: 'Pagination options', type: PaginationOptionsDTO })
+  @ApiPropertyOptional({
+      description: 'Pagination options',
+      type: PaginationOptionsDTO 
+  })
   @IsOptional()
   @ValidateNested()
   @Type(() => PaginationOptionsDTO)
       pagination?: PaginationOptionsDTO;
 
-  @ApiPropertyOptional({ description: 'Ordering options', type: OrderOptionsDTO })
+  @ApiPropertyOptional({
+      description: 'Ordering options',
+      type: OrderOptionsDTO 
+  })
   @IsOptional()
   @ValidateNested()
   @Type(() => OrderOptionsDTO)

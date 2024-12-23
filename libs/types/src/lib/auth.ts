@@ -5,9 +5,14 @@ export interface ILoginInput {
   password: string;
   otp: number;
 }
+
 export interface ILoginSendOtpInput {
   email: string;
   password: string;
+}
+
+export interface IRegisterSendOtpInput {
+  email: string;
 }
 
 export interface ILoginSuccess {
@@ -15,12 +20,14 @@ export interface ILoginSuccess {
   otpSecurity?: boolean;
   user: any;
 }
+
 ;
 
 export enum SocialAuthProviderEnum {
   GOOGLE = 'google',
   FACEBOOK = 'facebook'
 }
+
 export interface IForgotPasswordInput {
   username?: string;
 }

@@ -54,9 +54,11 @@ export const PATH_DASHBOARD = {
         add: path(ROOTS_DASHBOARD, '/pages/add'),
         edit: path(ROOTS_DASHBOARD, '/pages/edit/:pageId'),
     },
- 
+
     settings: {
         root: path(ROOTS_DASHBOARD, '/settings'),
+        emailSetting: path(ROOTS_DASHBOARD, '/settings/email-setting'),
+        notificationSetting: path(ROOTS_DASHBOARD, '/settings/notification-setting'),
         business: path(ROOTS_DASHBOARD, '/settings/business'),
     },
     // page: {

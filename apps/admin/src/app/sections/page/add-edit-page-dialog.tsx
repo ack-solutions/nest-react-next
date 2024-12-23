@@ -1,9 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Button, Card, CardContent, Container, IconButton, MenuItem, Stack, Tab, Tabs } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
-import { useFieldArray, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { DefaultDialog } from '../../components';
 import {
     errorMessage,
     FormContainer,
@@ -11,11 +6,19 @@ import {
     RHFTextEditor,
     RHFTextField,
     usePage,
+    useTabs,
     useToasty,
 } from '@libs/react-core';
-import { array, mixed, object, string } from 'yup';
 import { IPage, PageStatusEnum } from '@libs/types';
+import { LoadingButton } from '@mui/lab';
+import { Button, Card, CardContent, Container, IconButton, MenuItem, Stack, Tab, Tabs } from '@mui/material';
 import { startCase } from 'lodash';
+import { useCallback, useEffect, useState } from 'react';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { array, mixed, object, string } from 'yup';
+
+import { DefaultDialog } from '../../components';
+
 
 export interface AddEditPageDialogProps {
     onSubmit?: (values: IPage) => void;
@@ -34,7 +37,6 @@ const validationSchema = object({
         })
     ).label('Meta Data'),
     name: string().label('name').required(),
-    // status: string().label('Status').required(),
     status: mixed<PageStatusEnum>().oneOf(Object.values(PageStatusEnum)).label('Status').required(),
 });
 
@@ -42,7 +44,7 @@ const defaultValues: IPage = {
     title: '',
     slug: '',
     content: '',
-    metaData: [{ key: '', value: '' }],
+    metaData: [],
     name: '',
     status: PageStatusEnum.DRAFT
 };
@@ -57,22 +59,18 @@ export default function AddEditPageDialog({
     const { mutateAsync: updatePage } = useUpdatePage();
     const { mutateAsync: createPage } = useCreatePage();
     const { showToasty } = useToasty();
-    const [tabValue, setTabValue] = useState('basic')
+    const { currentTab, onChangeTab } = useTabs('basic');
 
     const formContext = useForm<IPage>({
         defaultValues,
         resolver: yupResolver(validationSchema),
     });
-    const { reset, handleSubmit, control } = formContext;
+    const { reset, handleSubmit, control, formState: { errors } } = formContext;
 
     const { fields, append, remove } = useFieldArray({
         control: control,
         name: 'metaData',
     });
-
-    const handleTabChange = useCallback((event, value) => {
-        setTabValue(value)
-    }, []);
 
     const handleSubmitForm = useCallback(
         async (values: IPage) => {
@@ -117,6 +115,7 @@ export default function AddEditPageDialog({
 
     useEffect(() => {
         reset({
+            ...defaultValues,
             ...initialValue,
         });
     }, [reset, initialValue]);
@@ -154,9 +153,12 @@ export default function AddEditPageDialog({
                     onSuccess={handleSubmitForm}
                 >
                     <Tabs
-                        value={tabValue}
-                        onChange={handleTabChange}
-                        sx={{ px: 3, mb: 2 }}
+                        value={currentTab}
+                        onChange={onChangeTab}
+                        sx={{
+                            px: 3,
+                            mb: 2
+                        }}
                     >
                         <Tab
                             value='basic'
@@ -169,13 +171,27 @@ export default function AddEditPageDialog({
                             disableRipple
                         />
                     </Tabs>
-                    {tabValue === 'basic' && (
+                    {currentTab === 'basic' && (
                         <Stack spacing={2} >
-                            <Stack spacing={2} direction='row' >
-                                <RHFTextField label="Title" name="title" fullWidth />
-                                <RHFTextField label="Name" name="name" fullWidth />
+                            <Stack
+                                spacing={2}
+                                direction='row'
+                            >
+                                <RHFTextField
+                                    label="Title"
+                                    name="title"
+                                    fullWidth
+                                />
+                                <RHFTextField
+                                    label="Name"
+                                    name="name"
+                                    fullWidth
+                                />
                             </Stack>
-                            <Stack spacing={2} direction='row' >
+                            <Stack
+                                spacing={2}
+                                direction='row'
+                            >
                                 <RHFTextField
                                     label="Status"
                                     name="status"
@@ -183,12 +199,19 @@ export default function AddEditPageDialog({
                                     select
                                 >
                                     {Object.values(PageStatusEnum).map((status, index) => (
-                                        <MenuItem key={index} value={status}>
+                                        <MenuItem
+                                            key={index}
+                                            value={status}
+                                        >
                                             {startCase(status)}
                                         </MenuItem>
                                     ))}
                                 </RHFTextField>
-                                <RHFTextField label="Slug" name="slug" fullWidth />
+                                <RHFTextField
+                                    label="Slug"
+                                    name="slug"
+                                    fullWidth
+                                />
                             </Stack>
                             <RHFTextEditor
                                 name='content'
@@ -196,7 +219,7 @@ export default function AddEditPageDialog({
                             />
                         </Stack>
                     )}
-                    {tabValue === 'meta' && (
+                    {currentTab === 'meta' && (
                         <Card>
                             <CardContent>
                                 <Stack spacing={2}>
@@ -207,9 +230,20 @@ export default function AddEditPageDialog({
                                             alignItems='center'
                                             key={field?.id}
                                         >
-                                            <RHFTextField label="Key" name={`metaData.${index}.key`} fullWidth />
-                                            <RHFTextField label="Value" name={`metaData.${index}.value`} fullWidth />
-                                            <IconButton type="button" onClick={() => remove(index)}>
+                                            <RHFTextField
+                                                label="Key"
+                                                name={`metaData.${index}.key`}
+                                                fullWidth
+                                            />
+                                            <RHFTextField
+                                                label="Value"
+                                                name={`metaData.${index}.value`}
+                                                fullWidth
+                                            />
+                                            <IconButton
+                                                type="button"
+                                                onClick={() => remove(index)}
+                                            >
                                                 <Icon icon='trash' />
                                             </IconButton>
                                         </Stack>
@@ -218,7 +252,10 @@ export default function AddEditPageDialog({
                                 <Button
                                     variant='contained'
                                     type="button"
-                                    onClick={() => append({ key: '', value: '' })}
+                                    onClick={() => append({
+                                        key: '',
+                                        value: ''
+                                    })}
                                     sx={{
                                         mt: 2
                                     }}

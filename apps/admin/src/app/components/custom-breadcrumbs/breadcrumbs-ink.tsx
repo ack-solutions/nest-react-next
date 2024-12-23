@@ -1,5 +1,6 @@
-import { Link as RouterLink } from 'react-router-dom';
 import { Box, Link } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+
 import { BreadcrumbsLinkProps } from './custom-breadcrumbs';
 
 
@@ -37,7 +38,10 @@ export default function BreadcrumbsLink({ link, activeLast, disabled }: Props) {
                     sx={{
                         mr: 1,
                         display: 'inherit',
-                        '& svg': { width: 20, height: 20 },
+                        '& svg': {
+                            width: 20,
+                            height: 20 
+                        },
                     }}
                 >
                     {icon}
@@ -50,7 +54,11 @@ export default function BreadcrumbsLink({ link, activeLast, disabled }: Props) {
 
     if (href) {
         return (
-            <Link to={href} component={RouterLink} sx={styles}>
+            <Link
+                to={href}
+                component={RouterLink}
+                sx={styles}
+            >
                 {renderContent}
             </Link>
         );

@@ -1,7 +1,8 @@
-import { styled } from '@mui/material/styles';
 import { Box, BoxProps } from '@mui/material';
-import EditorToolbar, { formats, redoChange, undoChange } from './quill-editor-toolbar';
+import { styled } from '@mui/material/styles';
 import ReactQuill, { ReactQuillProps } from 'react-quill';
+
+import EditorToolbar, { formats, redoChange, undoChange } from './quill-editor-toolbar';
 
 
 const RootStyle = styled(Box)(({ theme }) => ({
@@ -28,10 +29,10 @@ const RootStyle = styled(Box)(({ theme }) => ({
 }));
 
 export interface QuillEditorProps extends ReactQuillProps {
-  id?: string;
-  error?: boolean;
-  simple?: boolean;
-  sx?: BoxProps;
+    id?: string;
+    error?: boolean;
+    simple?: boolean;
+    sx?: BoxProps;
 }
 
 export default function QuillEditor({
@@ -71,7 +72,10 @@ export default function QuillEditor({
                 ...sx
             }}
         >
-            <EditorToolbar id={id} isSimple={simple} />
+            <EditorToolbar
+                id={id}
+                isSimple={simple}
+            />
             <ReactQuill
                 value={value}
                 onChange={onChange}

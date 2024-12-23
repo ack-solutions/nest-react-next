@@ -1,8 +1,10 @@
-import { Type } from '@nestjs/common';
-import { Factory, PropertyMetadata } from '../interfaces';
-import { FactoryValue } from '../decorators/factory.decorator';
-import { FactoryMetadataStorage, PropertyMetadataType } from '../storages/factory.metadata.storage';
 import { faker } from '@faker-js/faker';
+import { Type } from '@nestjs/common';
+
+import { FactoryValue } from '../decorators/factory.decorator';
+import { Factory } from '../interfaces';
+import { FactoryMetadataStorage, PropertyMetadataType } from '../storages/factory.metadata.storage';
+
 
 export class DataFactory {
     static createForClass(target: Type<unknown>): Factory {
@@ -39,7 +41,10 @@ export class DataFactory {
 
             // Skip if the value is already generated in the context (ctx)
             if (ctx[propertyKey] !== undefined) {
-                return { [propertyKey]: ctx[propertyKey], ...result };
+                return {
+                    [propertyKey]: ctx[propertyKey],
+                    ...result
+                };
             }
 
             // If the property has dependencies, ensure they are generated first
@@ -68,12 +73,12 @@ export class DataFactory {
             };
         }, {});
 
-    // return properties.reduce(
-    //   (r, p) => ({
-    //     [p.propertyKey]: ctx[p.propertyKey] = typeof p.arg === 'function' ? p.arg(faker, ctx) : p.arg,
-    //     ...r,
-    //   }),
-    //   {},
-    // );
+        // return properties.reduce(
+        //   (r, p) => ({
+        //     [p.propertyKey]: ctx[p.propertyKey] = typeof p.arg === 'function' ? p.arg(faker, ctx) : p.arg,
+        //     ...r,
+        //   }),
+        //   {},
+        // );
     }
 }

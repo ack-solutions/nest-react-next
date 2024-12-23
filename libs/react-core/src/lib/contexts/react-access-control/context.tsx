@@ -1,15 +1,17 @@
 import React, { createContext, ReactNode, useCallback, useState } from "react"
 
+
 interface IDefineInput {
-	roles: string[];
-	permissions: string[];
+    roles: string[];
+    permissions: string[];
 }
+
 const initialState = {
     isLoaded: false,
     permissions: [],
     roles: [],
     resources: {},
-    define: (options: IDefineInput) => { 
+    define: (_options: IDefineInput) => {
         //
     },
     onDeny: () => { return null }
@@ -22,14 +24,14 @@ export default AccessContext
 export const AccessConsumer = AccessContext.Consumer
 
 export interface AccessProviderProps {
-	children: ReactNode,
-	onDeny?: () => void,
-	value?: string[];
-	isLoaded?: boolean;
-	roles?: string[];
-	permissions?: string[];
-	resources?: any;
-	define?: (options: IDefineInput) => void;
+    children: ReactNode,
+    onDeny?: () => void,
+    value?: string[];
+    isLoaded?: boolean;
+    roles?: string[];
+    permissions?: string[];
+    resources?: any;
+    define?: (options: IDefineInput) => void;
 }
 
 export const AccessProvider = ({ children, onDeny }: AccessProviderProps) => {
@@ -44,7 +46,11 @@ export const AccessProvider = ({ children, onDeny }: AccessProviderProps) => {
         [],
     )
 
-    const providerValue:any = { ...state, onDeny, define }
+    const providerValue: any = {
+        ...state,
+        onDeny,
+        define
+    }
 
     return <AccessContext.Provider value={providerValue}>{children}</AccessContext.Provider>
 }

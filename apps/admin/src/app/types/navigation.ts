@@ -1,6 +1,7 @@
 import { StackProps } from "@mui/material";
 import { ReactElement } from "react";
 
+
 export interface Navigation {
     subheader?: string;
     items: NavigationItem[];
@@ -34,9 +35,13 @@ export interface NavbarConfigProps {
     itemSubHeight?: number;
     itemRootHeight?: number;
     fullPatchMatch?: boolean;
-};
+}
+
+;
 
 export interface NavbarSectionProps extends StackProps {
     data: Navigation[];
     config?: NavbarConfigProps;
-};
+}
+
+;

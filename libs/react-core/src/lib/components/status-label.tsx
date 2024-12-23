@@ -1,7 +1,8 @@
-import { useMemo } from 'react';
 import { startCase } from 'lodash';
-import { useTheme } from '@mui/material';
+import { useMemo } from 'react';
+
 import { Label, LabelColor, LabelProps } from './label';
+
 
 export interface StatusLabelProps extends LabelProps {
     label?: string;
@@ -9,9 +10,7 @@ export interface StatusLabelProps extends LabelProps {
 
 const StatusLabel = ({
     label,
-    ...props
 }: StatusLabelProps) => {
-    const theme = useTheme()
 
     const color: LabelColor = useMemo(() => {
         switch (label) {
@@ -48,10 +47,13 @@ const StatusLabel = ({
             default:
                 return 'default'
         }
-    }, [theme, label])
+    }, [label])
 
     return (
-        <Label className='status-label' color={color} >
+        <Label
+            className='status-label'
+            color={color}
+        >
             {startCase(label)}
         </Label>
     );

@@ -4,7 +4,7 @@ import {
     DialogContentText,
     Stack
 } from '@mui/material';
-import React, {
+import {
     FC,
     useCallback,
     useContext,
@@ -12,7 +12,9 @@ import React, {
     createContext,
     ReactNode
 } from 'react';
+
 import DefaultDialog, { DefaultDialogProps } from '../components/default-dialog';
+
 
 export const ConfirmContext = createContext<any>(null);
 
@@ -92,6 +94,7 @@ const ConfirmDialog = ({
 };
 
 export default ConfirmDialog;
+
 interface ConfirmProviderProps {
     children: ReactNode;
 }

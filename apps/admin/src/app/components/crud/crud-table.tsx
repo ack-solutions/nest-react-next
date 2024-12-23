@@ -1,25 +1,29 @@
-import { useState, useCallback, useRef, forwardRef, useMemo, useImperativeHandle, useEffect } from 'react';
 import {
     DataTable,
     DataTableHandle,
     DataTableProps,
     TableActionMenu,
 } from '@admin/app/components';
-import { IBaseEntity, IFindOptions } from '@libs/types';
-import { errorMessage, useBoolean, useCrudOperations, useToasty } from '@libs/react-core';
 import { TableBulkActionMenu } from '@admin/app/components/data-table/table-bulk-action-menu';
 import { useConfirm } from '@admin/app/contexts/confirm-dialog-context';
-import { TableAction } from '../data-table/table-action-menu';
+import { errorMessage, useBoolean, useCrudOperations, useToasty } from '@libs/react-core';
+import { IBaseEntity, IFindOptions } from '@libs/types';
 import { FormControlLabel, Switch } from '@mui/material';
+import { useState, useCallback, useRef, forwardRef, useMemo, useImperativeHandle, useEffect } from 'react';
+
+import { TableAction } from '../data-table/table-action-menu';
 
 
-export interface CrudTableProps extends Partial<Omit<DataTableProps, 'ref'>> {
-    crudOperationHooks: Partial<ReturnType<typeof useCrudOperations>>;
+export interface CrudTableProps<T> extends Partial<Omit<DataTableProps, 'data' | 'ref'>> {
+    crudOperationHooks: Pick<ReturnType<typeof useCrudOperations>, 'useBulkDelete' | 'useBulkDeleteForever' | 'useDelete' | 'useDeleteForever' | 'useGetMany' | 'useBulkRestore' | 'useBulkRestore' | 'useRestore'>;
     crudName: string;
     hasSoftDelete?: boolean;
-    onEdit?: (updatedValue: Partial<any>) => void;
-    rowActions?: (row) => TableAction[];
-    bulkActions?: (rows: any[]) => TableAction[];
+    onView?: (row: Partial<T>) => void;
+    onEdit?: (row: Partial<T>) => void;
+    rowActions?: (row: T) => TableAction[];
+    bulkActions?: (rowIds: string[]) => TableAction[];
+    getManyOptions?: IFindOptions;
+    dataTableApiRequestMap?: (filter: IFindOptions) => IFindOptions;
 }
 
 export interface CrudTableActions {
@@ -31,20 +35,24 @@ export interface CrudTableActions {
 }
 
 
-export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
+export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
     crudOperationHooks,
     crudName,
     hasSoftDelete,
-    rowActions,
-    bulkActions,
+    rowActions = () => [],
+    bulkActions = () => [],
+    getManyOptions,
     onEdit,
-    columns: initialColumn,
+    onView,
+    extraFilter,
+    columns: initialColumn = [],
+    dataTableApiRequestMap,
     ...props
 }, ref) => {
 
     const { showToasty } = useToasty();
     const confirmDialog = useConfirm();
-    const [dataTableFilters, setDataTableFilters] = useState(null);
+    const [dataTableFilters, setDataTableFilters] = useState(getManyOptions);
     const datatableRef = useRef<DataTableHandle>(null);
     const isTrash = useBoolean();
 
@@ -83,7 +91,7 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                     // Nothing
                 });
         },
-        [confirmDialog, deleteItem, showToasty]
+        [confirmDialog, crudName, deleteItem, showToasty]
     );
 
     const handleRestore = useCallback(
@@ -108,7 +116,7 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                     // Nothing
                 });
         },
-        [confirmDialog, restoreItem, showToasty]
+        [confirmDialog, crudName, restoreItem, showToasty]
     );
 
     const handleDeleteForever = useCallback(
@@ -133,7 +141,7 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                     // Nothing
                 });
         },
-        [confirmDialog, deleteForeverItem, showToasty]
+        [confirmDialog, crudName, deleteForeverItem, showToasty]
     );
 
     const handleBulkDelete = useCallback(
@@ -142,7 +150,9 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                 .then(() => {
                     bulkDeleteItems(rowIds)
                         .then(() => {
-                            datatableRef.current.clearSelection();
+                            if (datatableRef.current) {
+                                datatableRef.current.clearSelection();
+                            }
                             showToasty(`The ${crudName} has been successfully deleted`);
                         })
                         .catch((error) => {
@@ -159,7 +169,7 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                     // Nothing
                 });
         },
-        [confirmDialog, bulkDeleteItems, showToasty]
+        [confirmDialog, crudName, bulkDeleteItems, showToasty]
     );
 
     const handleBulkRestore = useCallback(
@@ -168,7 +178,9 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                 .then(() => {
                     bulkRestoreItems(rowIds)
                         .then(() => {
-                            datatableRef.current.clearSelection();
+                            if (datatableRef.current) {
+                                datatableRef.current.clearSelection();
+                            }
                             showToasty(`The ${crudName} has been successfully restored`);
                         })
                         .catch((error) => {
@@ -185,7 +197,7 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                     // Nothing
                 });
         },
-        [confirmDialog, bulkRestoreItems, showToasty]
+        [confirmDialog, crudName, bulkRestoreItems, showToasty]
     );
 
     const handleBulkDeleteForever = useCallback(
@@ -194,7 +206,9 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                 .then(() => {
                     bulkDeleteForeverItems(rowIds)
                         .then(() => {
-                            datatableRef.current.clearSelection();
+                            if (datatableRef.current) {
+                                datatableRef.current.clearSelection();
+                            }
                             showToasty(`The ${crudName} has been successfully deleted permanently`);
                         })
                         .catch((error) => {
@@ -211,29 +225,28 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                     // Nothing
                 });
         },
-        [confirmDialog, bulkDeleteForeverItems, showToasty]
+        [confirmDialog, crudName, bulkDeleteForeverItems, showToasty]
     );
-
 
     const handleDataTableChange = useCallback((filters) => {
         if (isTrash.value) {
             filters.onlyDeleted = true
         }
+        if (dataTableApiRequestMap) {
+            filters = dataTableApiRequestMap(filters)
+        }
         // Manage filters mapping here.
         setDataTableFilters(filters);
-    }, [isTrash.value]);
-
+    }, [dataTableApiRequestMap, isTrash.value]);
 
     useEffect(() => {
         datatableRef?.current?.refresh()
     }, [isTrash.value])
 
-
-
     useImperativeHandle(ref, () => ({
         filters: dataTableFilters,
         applyFilters: setDataTableFilters,
-        datatable: datatableRef.current
+        datatable: datatableRef.current as any
     }));
 
     const columns = useMemo(() => {
@@ -256,20 +269,22 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                         } : {
                             onDelete: () => handleDelete(row)
                         })}
-                        onEdit={() => onEdit && onEdit(row)}
-                        actions={rowActions ? rowActions(row) : []}
+                        {...(onEdit && { onEdit: () => onEdit(row) })}
+                        {...(onView && { onView: () => onView(row) })}
+                        actions={rowActions(row)}
                     />
                 ),
             },
         ]
-    }, [initialColumn])
+    }, [handleDelete, handleDeleteForever, handleRestore, hasSoftDelete, initialColumn, onEdit, onView, rowActions])
 
     return (
         <DataTable
             initialLoading
             ref={datatableRef}
-            data={data?.items}
+            data={data?.items || null}
             totalRow={data?.total}
+            defaultOrder='desc'
             defaultOrderBy="createdAt"
             onChange={handleDataTableChange}
             hasFilter
@@ -282,17 +297,22 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps>(({
                     } : {
                         onDelete: () => handleBulkDelete(selectedRowIds)
                     })}
-                    actions={bulkActions ? bulkActions(selectedRowIds) : []}
+                    actions={bulkActions(selectedRowIds)}
                 />
             )}
             extraFilter={(
-                <FormControlLabel
-                    control={<Switch
-                        checked={isTrash.value}
-                        onChange={(e, isChecked) => isTrash.setValue(isChecked)}
-                    />}
-                    label="Show Deleted"
-                />
+                <>
+                    {extraFilter}
+                    {hasSoftDelete && (
+                        <FormControlLabel
+                            control={<Switch
+                                checked={isTrash.value}
+                                onChange={(e, isChecked) => isTrash.setValue(isChecked)}
+                            />}
+                            label="Show Deleted"
+                        />
+                    )}
+                </>
             )}
             columns={columns}
             {...props}

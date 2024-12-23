@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Control, useController } from 'react-hook-form';
+
 import { UploadAvatar } from '../../components/upload';
 import { UploadProps } from '../../components/upload/type';
+
 
 export interface RHFUploadAvatarProps extends UploadProps {
     label?: string;

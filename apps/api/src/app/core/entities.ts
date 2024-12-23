@@ -6,6 +6,7 @@ import { Setting } from '../modules/setting/setting.entity';
 import { User } from '../modules/user';
 import { Verification } from '../modules/user/verification.entity';
 
+
 export const AllEntities = [
     Role,
     Permission,

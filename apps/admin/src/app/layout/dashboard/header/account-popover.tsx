@@ -1,12 +1,12 @@
-import { useNavigate } from 'react-router-dom';
+import { MenuDropdown, useAuth } from '@libs/react-core';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, Button } from '@mui/material';
-import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
-import { MenuDropdown, useAccess, useAuth } from '@libs/react-core';
 import { startCase } from 'lodash';
+import { useNavigate } from 'react-router-dom';
+
+import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
 
 
 export default function AccountPopover() {
-    const { hasAnyRole, hasAnyPermission } = useAccess();
 
     const OPTIONS = [
         {
@@ -44,8 +44,14 @@ export default function AccountPopover() {
                         alt={currentUser?.name}
                         src={currentUser?.avatarUrl}
                         sx={{
-                            width: { xs: 48, sm: 48 },
-                            height: { xs: 48, sm: 48 },
+                            width: {
+                                xs: 48,
+                                sm: 48
+                            },
+                            height: {
+                                xs: 48,
+                                sm: 48
+                            },
                         }}
                     />
                     <Typography
@@ -53,21 +59,36 @@ export default function AccountPopover() {
                         variant="subtitle1"
                         noWrap
                         fontWeight={500}
-                        display={{ xs: 'none', sm: 'block' }}
+                        display={{
+                            xs: 'none',
+                            sm: 'block'
+                        }}
                     >
                         {startCase(currentUser?.name)}
                     </Typography>
                 </Button>
             )}
         >
-            {({ }) => (
+            {() => (
                 <Box sx={{ minWidth: 200 }}>
-                    <Box sx={{ my: 1.5, px: 2.5 }}>
-                        <Typography variant="subtitle2" noWrap>
+                    <Box
+                        sx={{
+                            my: 1.5,
+                            px: 2.5
+                        }}
+                    >
+                        <Typography
+                            variant="subtitle2"
+                            noWrap
+                        >
                             {startCase(currentUser?.name)}
                         </Typography>
 
-                        <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+                        <Typography
+                            variant="body2"
+                            sx={{ color: 'text.secondary' }}
+                            noWrap
+                        >
                             {/* {user?.email} */}
                         </Typography>
                     </Box>
@@ -87,7 +108,10 @@ export default function AccountPopover() {
 
                     <Divider sx={{ borderStyle: 'dashed' }} />
 
-                    <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
+                    <MenuItem
+                        onClick={handleLogout}
+                        sx={{ m: 1 }}
+                    >
                         Logout
                     </MenuItem>
                 </Box>

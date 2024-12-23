@@ -1,6 +1,7 @@
-import { Not } from "typeorm";
 import * as dotenv from 'dotenv';
 import { join } from "path";
+import { Not } from "typeorm";
+
 import { getDataSource } from "./database";
 
 

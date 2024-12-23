@@ -1,5 +1,6 @@
+import { useCrudOperations } from "../hook";
+import { RoleService } from "../services";
 
-import { RoleService, useCrudOperations } from '@libs/react-core';
 
 const service = RoleService.getInstance<RoleService>();
 

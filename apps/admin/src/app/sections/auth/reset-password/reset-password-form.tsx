@@ -1,21 +1,18 @@
-import { TextField } from '@admin/app/components';
-import { Icon, useBoolean } from '@libs/react-core';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { FormContainer, RHFPassword } from '@libs/react-core';
 import { LoadingButton } from '@mui/lab';
-import { IconButton, InputAdornment, Stack, useTheme } from '@mui/material';
-import { Field, Formik, FormikHelpers } from 'formik';
+import { Stack } from '@mui/material';
+import { useCallback } from 'react';
+import { useForm } from 'react-hook-form';
 import { object, ref, string } from 'yup';
 
+
 export interface ResetPasswordFormProps {
-  onSubmit: (values: any, action: FormikHelpers<any>) => void;
-  values?: any;
+    onSubmit: (values: any, form?: any) => void;
 }
 
-const defaultValues = {
-    password: '',
-    confirmPassword: '',
-}
 
-const RegisterSchema = object().shape({
+const passwordSchema = object().shape({
     password: string().label('New Password').matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
         "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
@@ -26,72 +23,54 @@ const RegisterSchema = object().shape({
 
 const ResetPasswordForm = ({
     onSubmit,
-    values: initialValues,
 }: ResetPasswordFormProps) => {
-    const showPassword = useBoolean()
-    const confirmShowPassword = useBoolean()
-    const theme = useTheme()
 
+    const formContext = useForm({
+        resolver: yupResolver(passwordSchema),
+    })
+    const { formState: { isSubmitting }, setError, reset } = formContext;
+
+    const handleSubmit = useCallback(
+        (value) => {
+            onSubmit && onSubmit(value, {
+                setError,
+                reset
+            });
+        },
+        [onSubmit, reset, setError]
+    );
     return (
-        <Formik
-            initialValues={Object.assign({}, defaultValues, initialValues)}
-            onSubmit={onSubmit}
-            validationSchema={RegisterSchema}
+        <FormContainer
+            FormProps={{
+                id: "reset-from"
+            }}
+            formContext={formContext}
+            validationSchema={passwordSchema}
+            onSuccess={handleSubmit}
         >
-            {({ handleSubmit, isSubmitting, errors }) => (
-                <Stack spacing={3}>
-                    <Field
-                        fullWidth
-                        type={showPassword ? 'text' : 'password'}
-                        label="New Password"
-                        name='password'
-                        component={TextField}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton onClick={() => showPassword.onToggle()} edge="end">
-                                        <Icon
-                                            icon={showPassword.value ? 'eye' : 'eye-slash'}
-                                            color={theme.palette.grey[500]}
-                                        />
-                                    </IconButton>
-                                </InputAdornment>
-                            )
-                        }}
-                    />
+            <Stack spacing={3}>
+                <RHFPassword
+                    fullWidth
+                    label="New Password"
+                    name='password'
+                />
 
-                    <Field
-                        fullWidth
-                        type={confirmShowPassword ? 'text' : 'password'}
-                        label="Confirm New Password"
-                        name='confirmPassword'
-                        component={TextField}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton onClick={() => confirmShowPassword.onToggle()} edge="end">
-                                        <Icon
-                                            icon={confirmShowPassword.value ? 'eye' : 'eye-slash'}
-                                            color={theme.palette.grey[500]}
-                                        />
-                                    </IconButton>
-                                </InputAdornment>
-                            )
-                        }}
-                    />
-                    <LoadingButton
-                        fullWidth
-                        size="large"
-                        type="submit"
-                        variant="contained"
-                        loading={isSubmitting}
-                        onClick={() => handleSubmit()}
-                    >
-            Reset Password
-                    </LoadingButton>
-                </Stack>
-            )}
-        </Formik>
+                <RHFPassword
+                    fullWidth
+                    label="Confirm New Password"
+                    name='confirmPassword'
+                />
+                <LoadingButton
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                    loading={isSubmitting}
+                >
+                    Reset Password
+                </LoadingButton>
+            </Stack>
+        </FormContainer>
     );
 }
 export default ResetPasswordForm

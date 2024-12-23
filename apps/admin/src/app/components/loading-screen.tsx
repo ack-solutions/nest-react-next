@@ -1,10 +1,12 @@
-import { styled, SxProps } from '@mui/material/styles';
-import ProgressBar from './progress-bar/progress-bar';
-import { motion } from 'framer-motion';
-import Logo from './logo';
 import { Box } from '@mui/material';
+import { styled, SxProps } from '@mui/material/styles';
+import { motion } from 'framer-motion';
 
-const RootStyle = styled('div')(({ theme }) => ({
+import Logo from './logo';
+import ProgressBar from './progress-bar/progress-bar';
+
+
+const RootStyle = styled('div')(() => ({
     right: 0,
     bottom: 0,
     zIndex: 99999,
@@ -57,8 +59,8 @@ const RootStyle = styled('div')(({ theme }) => ({
 }));
 
 type Props = {
-  isDashboard?: boolean;
-  sx?: SxProps;
+    isDashboard?: boolean;
+    sx?: SxProps;
 };
 
 export function LoadingScreen({ isDashboard = true, ...other }: Props) {
@@ -81,42 +83,64 @@ export function LoadingScreen({ isDashboard = true, ...other }: Props) {
                             height="225"
                             viewBox="0 0 50 50"
                             animate={{ rotate: 360 }}
-                            transition={{ repeat: Infinity, duration: 3, ease: 'linear' }}
-                            sx={{ position: 'absolute', top: 0, left: 0 }}
+                            transition={{
+                                repeat: Infinity,
+                                duration: 3,
+                                ease: 'linear'
+                            }}
+                            sx={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0
+                            }}
                             borderColor={['#0b1436', '#363392', '#d21e3f']}
                         >
                             <defs>
-                                <linearGradient id="gradientArc" gradientTransform="rotate(90)">
-                                    <stop offset="0%" stopColor="#0b1436" />
-                                    <stop offset="50%" stopColor="#363392" />
-                                    <stop offset="100%" stopColor="#d21e3f" />
+                                <linearGradient
+                                    id="gradientArc"
+                                    gradientTransform="rotate(90)"
+                                >
+                                    <stop
+                                        offset="0%"
+                                        stopColor="#0b1436"
+                                    />
+                                    <stop
+                                        offset="50%"
+                                        stopColor="#363392"
+                                    />
+                                    <stop
+                                        offset="100%"
+                                        stopColor="#d21e3f"
+                                    />
                                 </linearGradient>
                             </defs>
                             <motion.circle
                                 cx="25"
                                 cy="25"
                                 r="20"
-                                stroke="url(#gradientArc)" 
+                                stroke="url(#gradientArc)"
                                 strokeWidth="1.5"
                                 fill="none"
                                 strokeDasharray="125"
                                 strokeDashoffset="100"
                                 animate={{
-                                    strokeDashoffset: [100, 0], 
+                                    strokeDashoffset: [100, 0],
                                 }}
                                 transition={{
                                     repeat: Infinity,
-                                    duration: 3, 
+                                    duration: 3,
                                     ease: 'easeInOut',
                                 }}
-        
+
                             />
                         </Box>
-                        <Logo sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }} />
+                        <Logo
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        />
                     </Box>
                 </RootStyle>
             )}
