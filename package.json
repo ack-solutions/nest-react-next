@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "lint": "eslint .",
     "start": "nx serve",
     "start:all": "nx run-many -t=serve,dev --projects=api,admin,web",
     "build": "nx build",
