@@ -24,6 +24,7 @@ module.exports = [
             '.github',
             '.nx',
             '.vscode',
+            '**/.next/**',
 
             // Project Specific
             'apps/portal/src/assets',
