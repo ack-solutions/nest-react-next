@@ -1,5 +1,5 @@
-import { Container, styled, Box } from "@mui/material";
-import { ReactNode } from "react";
+import { Container, styled, Box } from '@mui/material';
+import { ReactNode } from 'react';
 
 
 interface AuthLayoutProps {
@@ -11,7 +11,7 @@ interface AuthLayoutProps {
 const RootStyle = styled(Box)(({ theme }) => ({
     [theme.breakpoints.up('md')]: {
         display: 'flex',
-        height: '100%'
+        height: '100%',
     },
 }));
 
@@ -37,8 +37,8 @@ const AuthLayout = ({
                     height: '100vh',
                     maxWidth: {
                         xs: '100%',
-                        md: 'calc(100% / 2)'
-                    }
+                        md: 'calc(100% / 2)',
+                    },
 
                 }}
             >
@@ -46,7 +46,7 @@ const AuthLayout = ({
                     sx={{
                         width: '100%',
                         overflow: 'auto',
-                        px: 2
+                        px: 2,
                     }}
                 >
                     {children}

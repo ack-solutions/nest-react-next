@@ -20,7 +20,7 @@ const ContentStyle = styled('div')(() => ({
 }));
 
 
-const authService = AuthService.getInstance<AuthService>()
+const authService = AuthService.getInstance<AuthService>();
 
 export default function ForgetPassword() {
     const [resetForm, setResetForm] = useState(false);
@@ -30,11 +30,11 @@ export default function ForgetPassword() {
     const handleSendOtp = useCallback(
         async (values: any, form: any) => {
             try {
-                setEmail(values.email)
+                setEmail(values.email);
                 await authService.sendOtp(values).then(() => {
                     setResetForm(true);
                     form.reset();
-                })
+                });
             } catch (error) {
                 form.setError('afterSubmit', {
                     type: 'manual',
@@ -43,7 +43,7 @@ export default function ForgetPassword() {
             }
         },
         [],
-    )
+    );
 
     return (
         <Page title='Forgot Password'>
@@ -63,7 +63,7 @@ export default function ForgetPassword() {
                             <Typography
                                 sx={{
                                     color: 'text.secondary',
-                                    mb: 2
+                                    mb: 2,
                                 }}
                             >
                                 Enter you email to forget your password, we will send you the OTP

@@ -15,7 +15,7 @@ export interface ResetPasswordFormProps {
 const passwordSchema = object().shape({
     password: string().label('New Password').matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+        'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character',
     ).required(),
     confirmPassword: string().label('Confirm New Password')
         .oneOf([ref('password'), ''], 'Passwords must match').required(),
@@ -24,25 +24,28 @@ const passwordSchema = object().shape({
 const ResetPasswordForm = ({
     onSubmit,
 }: ResetPasswordFormProps) => {
-
     const formContext = useForm({
         resolver: yupResolver(passwordSchema),
-    })
+    });
     const { formState: { isSubmitting }, setError, reset } = formContext;
 
     const handleSubmit = useCallback(
         (value) => {
             onSubmit && onSubmit(value, {
                 setError,
-                reset
+                reset,
             });
         },
-        [onSubmit, reset, setError]
+        [
+            onSubmit,
+            reset,
+            setError,
+        ],
     );
     return (
         <FormContainer
             FormProps={{
-                id: "reset-from"
+                id: 'reset-from',
             }}
             formContext={formContext}
             validationSchema={passwordSchema}
@@ -72,5 +75,5 @@ const ResetPasswordForm = ({
             </Stack>
         </FormContainer>
     );
-}
-export default ResetPasswordForm
+};
+export default ResetPasswordForm;

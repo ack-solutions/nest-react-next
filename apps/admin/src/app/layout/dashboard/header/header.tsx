@@ -40,8 +40,8 @@ export default function Header({ onOpenNav }: Props) {
     const lgUp = useResponsive('up', 'lg');
     const offset = useOffSetTop(HEADER.H_DESKTOP);
     const offsetTop = offset;
-    const isNavHorizontal = !lgUp
-    const isNavMini = !lgUp
+    const isNavHorizontal = !lgUp;
+    const isNavMini = !lgUp;
 
     const renderContent = (
         <>
@@ -58,7 +58,7 @@ export default function Header({ onOpenNav }: Props) {
                 justifyContent="flex-end"
                 spacing={{
                     xs: 0.5,
-                    sm: 1
+                    sm: 1,
                 }}
             >
                 <AccountPopover />
@@ -75,38 +75,37 @@ export default function Header({ onOpenNav }: Props) {
                 height: HEADER.H_MOBILE,
                 zIndex: theme.zIndex.appBar + 1,
                 ...bgBlur({
-                    color: theme.palette.background.default
+                    color: theme.palette.background.default,
                 }),
                 transition: theme.transitions.create(['height'], {
-                    duration: theme.transitions.duration.shorter
+                    duration: theme.transitions.duration.shorter,
                 }),
                 ...(lgUp && {
                     width: `calc(100% - ${NAV.W_VERTICAL + 1}px)`,
                     height: HEADER.H_DESKTOP,
                     ...(offsetTop && {
-                        height: HEADER.H_DESKTOP_OFFSET
+                        height: HEADER.H_DESKTOP_OFFSET,
                     }),
                     ...(isNavHorizontal && {
                         width: 1,
                         bgcolor: 'background.default',
                         height: HEADER.H_DESKTOP_OFFSET,
-                        borderBottom: `dashed 1px ${theme.palette.divider}`
+                        borderBottom: `dashed 1px ${theme.palette.divider}`,
                     }),
                     ...(isNavMini && {
-                        width: `calc(100% - ${NAV.W_MINI + 1}px)`
-                    })
-                })
+                        width: `calc(100% - ${NAV.W_MINI + 1}px)`,
+                    }),
+                }),
             }}
         >
             <Toolbar
                 sx={{
                     height: 1,
-                    px: { lg: 5 }
+                    px: { lg: 5 },
                 }}
             >
                 {renderContent}
             </Toolbar>
         </AppBar>
     );
-
 }

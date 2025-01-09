@@ -6,6 +6,7 @@ import { FileStorageOption, FileStorageProviderEnum } from './types';
 
 
 export class FileStorage {
+
     providers: { [key: string]: Provider<any> } = {};
     config: FileStorageOption = {
         dest: '',
@@ -60,7 +61,7 @@ export class FileStorage {
         } else {
             const provides = Object.values(FileStorageProviderEnum).join(', ');
             throw new Error(
-                `Provider "${this.config.provider}" is not valid. Provider must be ${provides}`
+                `Provider "${this.config.provider}" is not valid. Provider must be ${provides}`,
             );
         }
         return resp;
@@ -86,4 +87,5 @@ export class FileStorage {
             }
         }
     }
+
 }

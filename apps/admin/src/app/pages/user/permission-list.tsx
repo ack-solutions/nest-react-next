@@ -1,4 +1,3 @@
-
 import { DataTableColumn } from '@admin/app/components';
 import { CrudTable, CrudTableActions } from '@admin/app/components/crud/crud-table';
 import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
@@ -20,7 +19,7 @@ import AddEditPermissionDialog from '../../sections/user/add-edit-permission-dia
 
 export default function PermissionList() {
     const datatableRef = useRef<CrudTableActions>(null);
-    const [selectPermission, setSelectPermission] = useState<any>()
+    const [selectPermission, setSelectPermission] = useState<any>();
 
     const { useGetManyPermission,
         useDeletePermission,
@@ -28,21 +27,21 @@ export default function PermissionList() {
         useDeleteForeverPermission,
         useBulkDeletePermission,
         useBulkRestorePermission,
-        useBulkDeleteForeverPermission, } = usePermissionQuery();
+        useBulkDeleteForeverPermission } = usePermissionQuery();
 
     const handleOpenAddEditRoleDialog = useCallback(
         (row: IRole) => {
-            setSelectPermission(row)
+            setSelectPermission(row);
         },
         [],
-    )
+    );
 
     const handleCloseAddEditRoleDialog = useCallback(
         () => {
-            setSelectPermission(null)
+            setSelectPermission(null);
         },
         [],
-    )
+    );
 
 
     // const handleDataTableChange = useCallback((filter: any) => {
@@ -80,11 +79,11 @@ export default function PermissionList() {
                     links={[
                         {
                             name: 'Dashboard',
-                            href: PATH_DASHBOARD.root
+                            href: PATH_DASHBOARD.root,
                         },
                         {
                             name: 'Permissions',
-                            href: PATH_DASHBOARD.users.permissions
+                            href: PATH_DASHBOARD.users.permissions,
                         },
                         { name: 'List' },
                     ]}

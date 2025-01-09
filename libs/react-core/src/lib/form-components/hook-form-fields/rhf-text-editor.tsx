@@ -1,5 +1,5 @@
-import { FormHelperText, FormLabel } from "@mui/material";
-import { Box } from "@mui/system";
+import { FormHelperText, FormLabel } from '@mui/material';
+import { Box } from '@mui/system';
 import { ReactNode, forwardRef, Ref } from 'react';
 import { useController, Control } from 'react-hook-form';
 
@@ -24,7 +24,7 @@ export const RHFTextEditor = forwardRef(({
 }: RHFTextEditorProps, ref: Ref<HTMLDivElement>) => {
     const {
         field: { onChange, onBlur, value },
-        fieldState: { error }
+        fieldState: { error },
     } = useController({
         name,
         control,

@@ -1,8 +1,8 @@
-import { ILoginSuccess } from "@libs/types";
-import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { ILoginSuccess } from '@libs/types';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
-import { UserDTO } from "../../user/dto/user.dto";
+import { UserDTO } from '../../user/dto/user.dto';
 
 
 export class LoginSuccessDTO implements ILoginSuccess {
@@ -11,7 +11,7 @@ export class LoginSuccessDTO implements ILoginSuccess {
   @IsString()
       accessToken: string;
 
-  @ApiProperty({ type: () =>  UserDTO })
+  @ApiProperty({ type: () => UserDTO })
   @IsString()
       user: UserDTO;
 

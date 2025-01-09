@@ -1,9 +1,9 @@
-export * from './role.entity'
+export * from './role.entity';
 
-export * from './role.service'
+export * from './role.service';
 
-export * from './role.module'
+export * from './role.module';
 
-export * from './role.controller'
+export * from './role.controller';
 
-export * from './role.seeder'
+export * from './role.seeder';

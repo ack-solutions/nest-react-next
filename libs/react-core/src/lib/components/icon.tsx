@@ -1,4 +1,3 @@
-
 import { SxProps, Typography, TypographyProps } from '@mui/material';
 import { useMemo } from 'react';
 
@@ -15,23 +14,22 @@ export function Icon({
     size='medium',
     ...other
 }: IconProps) {
-
     const sizeNumber = useMemo(() => {
         switch (size) {
             case 'x-small':
-                return 12
+                return 12;
             case 'small':
-                return 15
+                return 15;
             case 'medium':
-                return 18
+                return 18;
             case 'large':
-                return 24
+                return 24;
             case 'x-large':
-                return 28
+                return 28;
             default:
-                return size
+                return size;
         }
-    }, [size])
+    }, [size]);
 
 
     return <Typography

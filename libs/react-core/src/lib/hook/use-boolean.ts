@@ -1,4 +1,3 @@
-
 import { useMemo, useState, useCallback, Dispatch, SetStateAction } from 'react';
 
 
@@ -12,7 +11,6 @@ export interface UseBooleanReturn {
   setValue: Dispatch<SetStateAction<boolean>>;
 }
 
-;
 
 export function useBoolean(defaultValue = false): UseBooleanReturn {
     const [value, setValue] = useState(defaultValue);
@@ -33,14 +31,14 @@ export function useBoolean(defaultValue = false): UseBooleanReturn {
     const onSetData = useCallback(
         (value = null) => {
             if (value) {
-                setValue(true)
+                setValue(true);
             } else {
-                setValue(false)
+                setValue(false);
             }
-            setData(value)
+            setData(value);
         },
         [],
-    )
+    );
 
 
     const memoizedValue = useMemo(
@@ -53,7 +51,15 @@ export function useBoolean(defaultValue = false): UseBooleanReturn {
             onSetData,
             setValue,
         }),
-        [data, value, onTrue, onFalse, onToggle, setValue, onSetData]
+        [
+            data,
+            value,
+            onTrue,
+            onFalse,
+            onToggle,
+            setValue,
+            onSetData,
+        ],
     );
 
     return memoizedValue;

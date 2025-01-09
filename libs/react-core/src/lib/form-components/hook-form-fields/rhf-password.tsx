@@ -1,5 +1,5 @@
-import { IconButton, InputAdornment } from '@mui/material'
-import { forwardRef, Ref } from 'react'
+import { IconButton, InputAdornment } from '@mui/material';
+import { forwardRef, Ref } from 'react';
 
 import { RHFTextField, RHFTextFieldProps } from './rhf-text-field';
 import { Icon } from '../../components';
@@ -10,9 +10,9 @@ export type RHFPasswordProps = RHFTextFieldProps
 
 export const RHFPassword = forwardRef((
     props: RHFPasswordProps,
-    ref: Ref<HTMLDivElement>
+    ref: Ref<HTMLDivElement>,
 ) => {
-    const showPassword = useBoolean()
+    const showPassword = useBoolean();
 
     return (
         <RHFTextField
@@ -30,9 +30,9 @@ export const RHFPassword = forwardRef((
                             </IconButton>
                         </InputAdornment>
                     ),
-                }
+                },
             }}
             {...props}
         />
-    )
-})
+    );
+});

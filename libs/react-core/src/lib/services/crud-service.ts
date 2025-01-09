@@ -1,4 +1,3 @@
-
 import { IPaginationRequest } from '@libs/types';
 import { pick } from 'lodash';
 
@@ -18,7 +17,7 @@ export abstract class CRUDService<T> extends Service {
                 params: request,
             })
             .then(({ data }) => {
-                return data?.map((file: T) => this.mapResponse(file))
+                return data?.map((file: T) => this.mapResponse(file));
             });
     }
 
@@ -56,7 +55,7 @@ export abstract class CRUDService<T> extends Service {
         return this.instanceApi
             .post<T>(
                 `${this.apiPath}`,
-                this.hasFileUpload ? toFormData(request) : request
+                this.hasFileUpload ? toFormData(request) : request,
             )
             .then((resp) => {
                 return this.mapResponse(resp.data);
@@ -73,7 +72,7 @@ export abstract class CRUDService<T> extends Service {
         return this.instanceApi
             .put<T>(
                 `${this.apiPath}/${id}`,
-                this.hasFileUpload ? toFormData(request) : request
+                this.hasFileUpload ? toFormData(request) : request,
             )
             .then((resp) => {
                 return this.mapResponse(resp.data);
@@ -93,11 +92,11 @@ export abstract class CRUDService<T> extends Service {
     }
 
     permanentDelete(id: string) {
-        return this.instanceApi.delete<T>(`${this.apiPath}/${id}/trash`)
+        return this.instanceApi.delete<T>(`${this.apiPath}/${id}/trash`);
     }
 
     restore(id: string | number) {
-        return this.instanceApi.put<T>(`${this.apiPath}/${id}/restore`)
+        return this.instanceApi.put<T>(`${this.apiPath}/${id}/restore`);
     }
 
     bulkDelete(ids: string[] | number[]) {
@@ -108,8 +107,8 @@ export abstract class CRUDService<T> extends Service {
 
     bulkRestore(ids: string[] | number[]) {
         return this.instanceApi.put<T>(`${this.apiPath}/restore/bulk`, {
-            ids: ids
-        })
+            ids: ids,
+        });
     }
 
     bulkPermanentDelete(ids: string[] | number[]) {
@@ -128,6 +127,7 @@ export abstract class CRUDService<T> extends Service {
 
 
     getQueryKey(method?: 'get-all' | 'get-one' | 'get-all' | string) {
-        return [this.apiPath, method].filter(Boolean).join('/')
+        return [this.apiPath, method].filter(Boolean).join('/');
     }
+
 }

@@ -1,4 +1,3 @@
-
 import { CrudController } from '@api/app/core/crud';
 import { Body, Controller, Get, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -10,9 +9,10 @@ import { SettingService } from './setting.service';
 
 
 @ApiTags('Setting')
-@Controller("setting")
+@Controller('setting')
 // @UseGuards(AuthGuard('jwt'))
 export class SettingController extends CrudController(SettingDTO)<Setting> {
+
     constructor(private settingService: SettingService) {
         super(settingService);
     }

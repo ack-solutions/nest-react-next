@@ -11,21 +11,21 @@ const RootStyle = styled(Box)(({ theme }) => ({
     '& .ql-container.ql-snow': {
         borderColor: 'transparent',
         ...theme.typography.body1,
-        fontFamily: theme.typography.fontFamily
+        fontFamily: theme.typography.fontFamily,
     },
     '& .ql-editor': {
         minHeight: 200,
         '&.ql-blank::before': {
             fontStyle: 'normal',
-            color: theme.palette.text.disabled
+            color: theme.palette.text.disabled,
         },
         '& pre.ql-syntax': {
             ...theme.typography.body2,
             padding: theme.spacing(2),
             borderRadius: theme.shape.borderRadius,
-            backgroundColor: theme.palette.grey[900]
-        }
-    }
+            backgroundColor: theme.palette.grey[900],
+        },
+    },
 }));
 
 export interface QuillEditorProps extends ReactQuillProps {
@@ -49,27 +49,27 @@ export default function QuillEditor({
             container: `#${id}`,
             handlers: {
                 undo: undoChange,
-                redo: redoChange
-            }
+                redo: redoChange,
+            },
         },
         history: {
             delay: 500,
             maxStack: 100,
-            userOnly: true
+            userOnly: true,
         },
         syntax: true,
         clipboard: {
-            matchVisual: false
-        }
+            matchVisual: false,
+        },
     };
 
     return (
         <RootStyle
             sx={{
                 ...(error && {
-                    border: (theme) => `solid 1px ${theme.palette.error.main}`
+                    border: (theme) => `solid 1px ${theme.palette.error.main}`,
                 }),
-                ...sx
+                ...sx,
             }}
         >
             <EditorToolbar

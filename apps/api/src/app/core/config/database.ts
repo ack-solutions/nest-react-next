@@ -1,5 +1,5 @@
-import { registerAs } from "@nestjs/config";
-import { DatabaseType } from "typeorm";
+import { registerAs } from '@nestjs/config';
+import { DatabaseType } from 'typeorm';
 
 
 export interface IDatabaseConfig {

@@ -1,5 +1,5 @@
-import { StackProps } from "@mui/material";
-import { ReactElement } from "react";
+import { StackProps } from '@mui/material';
+import { ReactElement } from 'react';
 
 
 export interface Navigation {
@@ -37,11 +37,9 @@ export interface NavbarConfigProps {
     fullPatchMatch?: boolean;
 }
 
-;
 
 export interface NavbarSectionProps extends StackProps {
     data: Navigation[];
     config?: NavbarConfigProps;
 }
 
-;

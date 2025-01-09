@@ -1,10 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormContainer, RHFTextField, RHFUploadAvatar, useAuth, useToasty, useUserQuery } from '@libs/react-core';
 import { IUser, UserStatusEnum } from '@libs/types';
-import { Button, Card, CardContent, MenuItem, Stack } from '@mui/material'
+import { Button, Card, CardContent, MenuItem, Stack } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { pick, startCase } from 'lodash';
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { number, object, string } from 'yup';
 
@@ -28,40 +28,44 @@ const validationSchema = yupResolver(object().shape({
 const General = () => {
     const { reFetchCurrentUser, currentUser } = useAuth();
     const { showToasty } = useToasty();
-    const { useUpdateProfile } = useUserQuery()
-    const { mutate: updateProfile } = useUpdateProfile()
+    const { useUpdateProfile } = useUserQuery();
+    const { mutate: updateProfile } = useUpdateProfile();
     const formContext = useForm({
         defaultValues,
         resolver: validationSchema,
-    })
+    });
     const { reset } = formContext;
 
     const handleSubmitForm = useCallback(
         (values) => {
-            const request = pick(values, 'status', 'firstName', 'lastName', 'email', 'phoneNumber', 'aboutMe', 'address', 'avatar')
+            const request = pick(values, 'status', 'firstName', 'lastName', 'email', 'phoneNumber', 'aboutMe', 'address', 'avatar');
             const options = {
                 onSuccess: () => {
                     showToasty('User profile successfully updated');
-                    reFetchCurrentUser()
+                    reFetchCurrentUser();
                 },
                 onError: (error) => {
-                    console.log(error)
+                    console.log(error);
                     showToasty(error, 'error');
-                }
-            }
+                },
+            };
             updateProfile(request, options);
         },
-        [reFetchCurrentUser, showToasty, updateProfile],
-    )
+        [
+            reFetchCurrentUser,
+            showToasty,
+            updateProfile,
+        ],
+    );
 
     useEffect(() => {
-        reset({ ...currentUser })
+        reset({ ...currentUser });
     }, [reset, currentUser]);
 
     return (
         <FormContainer
             FormProps={{
-                id: "update-user-profile"
+                id: 'update-user-profile',
             }}
             formContext={formContext}
             validationSchema={validationSchema}
@@ -74,7 +78,7 @@ const General = () => {
                 <Grid
                     size={{
                         xs: 12,
-                        sm: 3
+                        sm: 3,
                     }}
                 >
                     <Card>
@@ -92,7 +96,7 @@ const General = () => {
                                 label='Status'
                                 select
                                 sx={{
-                                    mt: 2
+                                    mt: 2,
                                 }}
                             >
                                 {Object.values(UserStatusEnum).map((status, index) => (
@@ -110,7 +114,7 @@ const General = () => {
                 <Grid
                     size={{
                         xs: 12,
-                        sm: 9
+                        sm: 9,
                     }}
                 >
                     <Card>
@@ -122,7 +126,7 @@ const General = () => {
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        sm: 6
+                                        sm: 6,
                                     }}
                                 >
                                     <RHFTextField
@@ -135,7 +139,7 @@ const General = () => {
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        sm: 6
+                                        sm: 6,
                                     }}
                                 >
                                     <RHFTextField
@@ -148,7 +152,7 @@ const General = () => {
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        sm: 6
+                                        sm: 6,
                                     }}
                                 >
                                     <RHFTextField
@@ -161,7 +165,7 @@ const General = () => {
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        sm: 6
+                                        sm: 6,
                                     }}
                                 >
                                     <RHFTextField
@@ -174,7 +178,7 @@ const General = () => {
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        md: 6
+                                        md: 6,
                                     }}
                                 >
                                     <RHFTextField
@@ -188,7 +192,7 @@ const General = () => {
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        md: 6
+                                        md: 6,
                                     }}
                                 >
                                     <RHFTextField
@@ -218,7 +222,7 @@ const General = () => {
                 </Grid>
             </Grid>
         </FormContainer>
-    )
-}
+    );
+};
 
-export default General
+export default General;

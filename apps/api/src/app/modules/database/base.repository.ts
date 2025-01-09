@@ -1,4 +1,4 @@
-import { DataSource, DeepPartial, EntityTarget, FindManyOptions, FindOneOptions, ObjectLiteral, QueryRunner, Repository, SaveOptions } from "typeorm";
+import { DataSource, DeepPartial, EntityTarget, FindManyOptions, FindOneOptions, ObjectLiteral, QueryRunner, Repository, SaveOptions } from 'typeorm';
 
 
 export class BaseRepository<Entity extends ObjectLiteral> extends Repository<Entity> {
@@ -20,7 +20,6 @@ export class BaseRepository<Entity extends ObjectLiteral> extends Repository<Ent
         const metadata = this.metadata;
         // Check if the `organizationId` column exists
         return metadata.columns.some(column => column.propertyName === 'organizationId');
-
     }
 
     private checkBusinessIdColumn(): boolean {
@@ -67,10 +66,9 @@ export class BaseRepository<Entity extends ObjectLiteral> extends Repository<Ent
 
 
     async count(options?: FindManyOptions<Entity>) {
-
         options = {
             // where: this.addConditionInWhere(options?.where),
-        }
+        };
         return this.baseRepository.count(options);
     }
 
@@ -79,7 +77,7 @@ export class BaseRepository<Entity extends ObjectLiteral> extends Repository<Ent
         options = {
             ...options,
             // where: this.addConditionInWhere(options?.where)
-        }
+        };
         return this.baseRepository.findOne(options);
     }
 
@@ -88,14 +86,14 @@ export class BaseRepository<Entity extends ObjectLiteral> extends Repository<Ent
         options = {
             ...options,
             // where: this.addConditionInWhere(options?.where)
-        }
+        };
         return this.baseRepository.find(options);
     }
 
     async findAndCount(options?: FindManyOptions<Entity>) {
         options = {
             // where: this.addConditionInWhere(options?.where)
-        }
+        };
         return this.baseRepository.findAndCount(options);
     }
 
@@ -117,18 +115,18 @@ export class BaseRepository<Entity extends ObjectLiteral> extends Repository<Ent
             // entity = this.addOrganizationOrBusinessIdInObject(entity);
         }
 
-        return this.baseRepository.save(entity, saveOptions)
+        return this.baseRepository.save(entity, saveOptions);
     }
 
 
     createQueryBuilder(alias?: string, queryRunner?: QueryRunner) {
-
-        const query = this.baseRepository.createQueryBuilder(alias, queryRunner)
+        const query = this.baseRepository.createQueryBuilder(alias, queryRunner);
 
         query.setFindOptions({
             // where: this.addConditionInWhere({})
-        })
+        });
 
         return query;
     }
+
 }

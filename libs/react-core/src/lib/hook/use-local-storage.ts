@@ -12,7 +12,7 @@ export function useLocalStorage(key: string, initialState: any) {
         if (restored) {
             setState((prevValue: any) => ({
                 ...prevValue,
-                ...restored
+                ...restored,
             }));
         }
     }, [key]);
@@ -22,25 +22,25 @@ export function useLocalStorage(key: string, initialState: any) {
             setState((prevValue: any) => {
                 setStorage(key, {
                     ...prevValue,
-                    ...updateValue
+                    ...updateValue,
                 });
 
                 return {
                     ...prevValue,
-                    ...updateValue
+                    ...updateValue,
                 };
             });
         },
-        [key]
+        [key],
     );
 
     const update = useCallback(
         (name: string, updateValue: any) => {
             updateState({
-                [name]: updateValue
+                [name]: updateValue,
             });
         },
-        [updateState]
+        [updateState],
     );
 
     const reset = useCallback(() => {
@@ -51,7 +51,7 @@ export function useLocalStorage(key: string, initialState: any) {
     return {
         state,
         update,
-        reset
+        reset,
     };
 }
 

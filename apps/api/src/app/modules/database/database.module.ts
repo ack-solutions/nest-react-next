@@ -15,8 +15,8 @@ export type DatabaseForFeatureOptions = EntityRepositoryPair[] | any[];
 @Global()
 @Module({})
 export class DatabaseModule {
-    static forFeature(entities: any[]): DynamicModule {
 
+    static forFeature(entities: any[]): DynamicModule {
         const providers = entities
             .map((entity) => {
                 return {
@@ -26,7 +26,7 @@ export class DatabaseModule {
                         return repo;
                     },
                     inject: [DataSource],
-                }
+                };
             }).filter((value) => Boolean(value));
 
         return {
@@ -36,4 +36,5 @@ export class DatabaseModule {
             exports: [...providers, TypeOrmModule],
         };
     }
+
 }

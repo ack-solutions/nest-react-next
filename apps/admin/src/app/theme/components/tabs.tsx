@@ -7,13 +7,13 @@ export default function tabs(theme: Theme) {
         MuiTabs: {
             styleOverrides: {
                 indicator: {
-                    backgroundColor: theme.palette.text.primary
+                    backgroundColor: theme.palette.text.primary,
                 },
                 scrollButtons: {
                     width: 48,
-                    borderRadius: '50%'
-                }
-            }
+                    borderRadius: '50%',
+                },
+            },
         },
         MuiTab: {
             styleOverrides: {
@@ -26,14 +26,14 @@ export default function tabs(theme: Theme) {
                     '&:not(:last-of-type)': {
                         marginRight: theme.spacing(3),
                         [theme.breakpoints.up('sm')]: {
-                            marginRight: theme.spacing(3)
-                        }
+                            marginRight: theme.spacing(3),
+                        },
                     },
                     [`&:not(.${tabClasses.selected})`]: {
-                        color: theme.palette.text.secondary
-                    }
-                }
-            }
-        }
+                        color: theme.palette.text.secondary,
+                    },
+                },
+            },
+        },
     };
 }

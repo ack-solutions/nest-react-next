@@ -1,9 +1,8 @@
 {
     "recommendations": [
         "dbaeumer.vscode-eslint",
-        "jondot.vscode-hygen",
+        "nrwl.angular-console",
         "esbenp.prettier-vscode",
-        "firsttris.vscode-jest-runner",
-        "vscode-icons-team.vscode-icons"
+        "firsttris.vscode-jest-runner"
     ]
 }

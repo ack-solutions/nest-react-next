@@ -7,7 +7,7 @@ import {
     DialogTitle,
     IconButton,
     useMediaQuery,
-    useTheme
+    useTheme,
 } from '@mui/material';
 import React, { FC, ReactNode } from 'react';
 
@@ -47,7 +47,7 @@ const DefaultDialog = ({
                         p: 2,
                         display: 'flex',
                         justifyContent: 'space-between',
-                        alignItems: 'center' 
+                        alignItems: 'center',
                     }}
                 >
                     {title}
@@ -57,7 +57,7 @@ const DefaultDialog = ({
                         sx={{
                             position: 'absolute',
                             right: 8,
-                            top: 8 
+                            top: 8,
                         }}
                     >
                         <Icon
@@ -72,7 +72,7 @@ const DefaultDialog = ({
                 <DialogActions
                     sx={{
                         p: 2,
-                        justifyContent: 'flex-end' 
+                        justifyContent: 'flex-end',
                     }}
                 >
                     {actions}

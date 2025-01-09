@@ -1,8 +1,7 @@
-
 import { DataFactory, Seeder } from '@api/app/core/nest-seeder';
 import { hashPassword } from '@api/app/utils';
 import { IUser, RoleNameEnum, UserStatusEnum } from '@libs/types';
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { find, keyBy, uniqBy } from 'lodash';
 import { Repository } from 'typeorm';
@@ -13,6 +12,7 @@ import { Role } from '../role/role.entity';
 
 @Injectable()
 export class UserSeeder implements Seeder {
+
     constructor(
         @InjectRepository(User)
         private userRepository: Repository<User>,
@@ -25,7 +25,7 @@ export class UserSeeder implements Seeder {
         let users = [];
 
         const oldUsers = await this.userRepository.find();
-        const userByEmail = keyBy(oldUsers, 'email')
+        const userByEmail = keyBy(oldUsers, 'email');
 
 
         const roles = await this.roleRepository.find();
@@ -59,19 +59,19 @@ export class UserSeeder implements Seeder {
                 passwordHash: hashPassword('Test@123'),
                 status: UserStatusEnum.ACTIVE,
             },
-        ]
+        ];
 
         users = defaultUsers?.map((user) => {
             const factoryUser = new User(DataFactory.createForClass(User).generate(1)[0]);
             return {
                 ...factoryUser,
-                ...user
-            }
-        })
+                ...user,
+            };
+        });
 
-        const dummyUsers = []
+        const dummyUsers = [];
         if (dummyData) {
-            const Users = await DataFactory.createForClass(User).generate(10)
+            const Users = await DataFactory.createForClass(User).generate(10);
             for (let index = 0; index < Users.length; index++) {
                 const dummyUser: any = Users[index];
                 dummyUser.passwordHash = hashPassword('Test@123');
@@ -84,11 +84,12 @@ export class UserSeeder implements Seeder {
         // Filter old user
         users = users.filter(({ email }) => {
             return !userByEmail[email];
-        })
+        });
         return this.userRepository.save(users);
     }
 
     async drop() {
         return this.userRepository.query(`TRUNCATE TABLE "${this.userRepository.metadata.tableName}" CASCADE`);
     }
+
 }

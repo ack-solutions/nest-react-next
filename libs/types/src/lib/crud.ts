@@ -1,4 +1,3 @@
-
 export interface ICrudControllerOptions {
   createDto: any;
   updateDto: any;

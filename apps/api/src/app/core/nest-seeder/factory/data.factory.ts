@@ -7,6 +7,7 @@ import { FactoryMetadataStorage, PropertyMetadataType } from '../storages/factor
 
 
 export class DataFactory {
+
     static createForClass(target: Type<unknown>): Factory {
         if (!target) {
             throw new Error(
@@ -43,7 +44,7 @@ export class DataFactory {
             if (ctx[propertyKey] !== undefined) {
                 return {
                     [propertyKey]: ctx[propertyKey],
-                    ...result
+                    ...result,
                 };
             }
 
@@ -81,4 +82,5 @@ export class DataFactory {
         //   {},
         // );
     }
+
 }

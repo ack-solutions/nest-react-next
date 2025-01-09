@@ -1,8 +1,8 @@
-import { generateFiles, getProjects, names, ProjectConfiguration, Tree } from "@nx/devkit";
+import { generateFiles, getProjects, names, ProjectConfiguration, Tree } from '@nx/devkit';
 import { prompt } from 'enquirer';
-import { join } from "path";
+import { join } from 'path';
 
-import { Column, PluginGeneratorSchema } from "./schema";
+import { Column, PluginGeneratorSchema } from './schema';
 
 
 export class TypesGenerator {
@@ -22,15 +22,14 @@ export class TypesGenerator {
     async run() {
         const { generateApi } = this.options;
         if (generateApi) {
-
-            this.options.columns = []
+            this.options.columns = [];
             if (this.options.addColumns) {
                 const columns = await this.takeEntityColumns();
                 this.options.columns = columns.map((value) => this.mapColumnData(value));
             }
 
             await this.generateFiles();
-            this.addExportStatementInIndex()
+            this.addExportStatementInIndex();
         }
     }
 
@@ -41,15 +40,15 @@ export class TypesGenerator {
         generateFiles(
             this.tree,
             join(__dirname, 'files', 'types'), // Path to your custom template files
-            `libs/types/src/lib`, // Destination where the custom files should go
+            'libs/types/src/lib', // Destination where the custom files should go
             {
                 tmpl: '',
                 name,
                 className,
                 fileName,
                 propertyName,
-                columns: this.options.columns 
-            } // Data to pass to the template (e.g., the library name)
+                columns: this.options.columns,
+            }, // Data to pass to the template (e.g., the library name)
         );
     }
 
@@ -68,13 +67,24 @@ export class TypesGenerator {
                 {
                     type: 'input',
                     name: 'columnName',
-                    message: 'Enter column name:'
+                    message: 'Enter column name:',
                 },
                 {
                     type: 'select',
                     name: 'columnType',
                     message: 'Select column type:',
-                    choices: ['string', 'number', 'boolean', 'date', 'time', 'date-time', 'enum', 'text', 'json', 'uuid']
+                    choices: [
+                        'string',
+                        'number',
+                        'boolean',
+                        'date',
+                        'time',
+                        'date-time',
+                        'enum',
+                        'text',
+                        'json',
+                        'uuid',
+                    ],
                 },
                 // {
                 //     type: 'select',
@@ -86,7 +96,6 @@ export class TypesGenerator {
 
             if (columnPrompt.columnType === 'enum') {
                 columnPrompt.enumValues = await this.askForEnumValues();
-
             }
 
             if (columnPrompt.columnName && columnPrompt.columnName != '') {
@@ -97,7 +106,6 @@ export class TypesGenerator {
                     nullable: columnPrompt.nullable === 'yes',
                     enumValues: columnPrompt.enumValues,
                 });
-
             }
 
             // If the user selects 'no', stop asking for more columns
@@ -114,15 +122,14 @@ export class TypesGenerator {
     }
 
     async askForEnumValues() {
-
         const { enumValues } = await prompt<{ enumValues: string }>({
             type: 'input',
             name: 'enumValues',
             message: 'Enter enum values (comma-separated):',
-            validate: (input) => input ? true : 'Enum values cannot be empty.'
+            validate: (input) => input ? true : 'Enum values cannot be empty.',
         });
 
-        return `${enumValues}`.split(',').map((val) => val.trim())
+        return `${enumValues}`.split(',').map((val) => val.trim());
     }
 
     private mapColumnData(column: Column) {
@@ -137,7 +144,7 @@ export class TypesGenerator {
 
         const columnOptions = {
             nullable: true, // column.nullable ,
-            type: null
+            type: null,
         };
 
         switch (column.type) {
@@ -181,7 +188,7 @@ export class TypesGenerator {
                 break;
             case 'enum':
                 columnOptions.type = 'text';
-                mappedColumn.enumValues = column.enumValues
+                mappedColumn.enumValues = column.enumValues;
                 mappedColumn.tsType = `${names(this.options.name).className}${names(column.name).className}Enum`;
                 mappedColumn.validationDecorators.push(`@IsEnum(${mappedColumn.tsType})`);
                 mappedColumn.swaggerType = 'String';
@@ -224,7 +231,6 @@ export class TypesGenerator {
     }
 
 
-
     private addExportStatementInIndex() {
         const indexPath = `${this.projects.get('types').root}/src/index.ts`;
 
@@ -243,4 +249,5 @@ export class TypesGenerator {
             this.tree.write(indexPath, updatedContent);
         }
     }
+
 }

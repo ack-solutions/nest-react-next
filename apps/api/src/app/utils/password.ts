@@ -7,7 +7,7 @@ export function generatePassword() {
 
     for (let index = 0; index < 8; index++) {
         const char = Math.floor(Math.random() * str?.length + 1);
-        pass += str.charAt(char)
+        pass += str.charAt(char);
     }
     return pass;
 }

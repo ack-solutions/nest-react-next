@@ -6,7 +6,7 @@ export interface UseCopyToClipboardReturn {
   copiedText?: CopiedValue;
 }
 
-;
+
 type CopiedValue = string | null;
 
 type CopyFn = (text: string) => Promise<boolean>;
@@ -31,12 +31,12 @@ export function useCopyToClipboard(): UseCopyToClipboardReturn {
                 return false;
             }
         },
-        [setCopiedText]
+        [setCopiedText],
     );
 
     const memoizedValue = useMemo(() => ({
         copy,
-        copiedText 
+        copiedText,
     }), [copy, copiedText]);
 
     return memoizedValue;
