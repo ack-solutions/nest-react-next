@@ -10,7 +10,7 @@ import { object, string } from 'yup';
 import ResetPassword from '../reset-password';
 
 
-const ContentStyle = styled('div')(({ theme }) => ({
+const ContentStyle = styled('div')(() => ({
     maxWidth: 530,
     margin: 'auto',
     display: 'flex',
@@ -47,7 +47,7 @@ const IndexVerify = ({
                     ...values,
                     email
                 }
-                await authService.verifyOtp(request).then((data) => {
+                await authService.verifyOtp(request).then(() => {
                     reset()
                     setIsValidOtp(values?.otp)
                 })

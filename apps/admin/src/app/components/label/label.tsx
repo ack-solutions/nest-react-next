@@ -9,10 +9,10 @@ export type LabelColor = 'default' | 'primary' | 'secondary' | 'info' | 'success
 export type LabelVariant = 'filled' | 'outlined' | 'soft';
 
 export interface LabelProps extends BoxProps {
-	startIcon?: React.ReactElement | null;
-	endIcon?: React.ReactElement | null;
-	color?: LabelColor;
-	variant?: LabelVariant;
+    startIcon?: React.ReactElement | null;
+    endIcon?: React.ReactElement | null;
+    color?: LabelColor;
+    variant?: LabelVariant;
 }
 
 const Label = forwardRef<HTMLSpanElement, LabelProps>(
@@ -23,7 +23,7 @@ const Label = forwardRef<HTMLSpanElement, LabelProps>(
             '& svg, img': {
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover' 
+                objectFit: 'cover'
             }
         };
 
@@ -32,7 +32,7 @@ const Label = forwardRef<HTMLSpanElement, LabelProps>(
                 ref={ref}
                 ownerState={{
                     color,
-                    variant 
+                    variant
                 }}
                 sx={{
                     ...(startIcon && { pl: 0.75 }),
@@ -41,19 +41,26 @@ const Label = forwardRef<HTMLSpanElement, LabelProps>(
                 }}
                 {...other}
             >
-                {startIcon && <Box
-                    sx={{
-                        mr: 0.75,
-                        ...iconStyle 
-                    }}
-                              >{startIcon}</Box>}
+                {startIcon &&
+                    <Box
+                        sx={{
+                            mr: 0.75,
+                            ...iconStyle
+                        }}
+                    >
+                        {startIcon}
+                    </Box>
+                }
                 {children}
-                {endIcon && <Box
-                    sx={{
-                        ml: 0.75,
-                        ...iconStyle 
-                    }}
-                            >{endIcon}</Box>}
+                {endIcon &&
+                    <Box
+                        sx={{
+                            ml: 0.75,
+                            ...iconStyle
+                        }}
+                    >
+                        {endIcon}
+                    </Box>}
             </StyledLabel>
         );
     }

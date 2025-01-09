@@ -307,7 +307,7 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
                         <FormControlLabel
                             control={<Switch
                                 checked={isTrash.value}
-                                onChange={(e, isChecked) => isTrash.setValue(isChecked)}
+                                onChange={(_e, isChecked) => isTrash.setValue(isChecked)}
                             />}
                             label="Show Deleted"
                         />

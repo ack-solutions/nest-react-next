@@ -3,9 +3,11 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 
 @Injectable()
 export class FileStorageMiddleware implements NestMiddleware {
-    constructor() { }
+    constructor() {
+        //
+    }
 
-    async use(req, res, next) {
+    async use(req, _res, next) {
         const authHeader = req.headers.authorization;
 
         if (authHeader) {

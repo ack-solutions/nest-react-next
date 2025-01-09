@@ -4,7 +4,7 @@ import AddEditNotificationTemplateDialog from '@admin/app/sections/setting/notif
 import { useNotificationTemplateQuery } from '@libs/react-core';
 import { INotificationTemplate } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
-import { Card, Container } from '@mui/material';
+import { Card } from '@mui/material';
 import { startCase } from 'lodash';
 import { useCallback, useRef, useState } from 'react'
 

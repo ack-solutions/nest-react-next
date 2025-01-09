@@ -18,8 +18,7 @@ export interface IsExistInDBOptions {
 }
 
 @ValidatorConstraint({ async: true })
-export class IsUniqueConstraint
-    implements ValidatorConstraintInterface {
+export class IsUniqueConstraint implements ValidatorConstraintInterface {
     async validate(_inputValue: string, args: ValidationArguments) {
 
         const { property, value, targetName, object: request } = args;

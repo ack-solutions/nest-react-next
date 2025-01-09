@@ -142,9 +142,9 @@ export class S3Provider extends Provider<S3Provider> {
     }
 
     async putFile(fileContent: string, key = ''): Promise<any> {
-        return new Promise(async (putFileResolve, reject) => {
+        return new Promise((putFileResolve, reject) => {
             const fileName = basename(key);
-            const s3 = await this.getS3Instance();
+            const s3 = this.getS3Instance();
             const params = {
                 Bucket: this.getS3Bucket(),
                 Body: fileContent,

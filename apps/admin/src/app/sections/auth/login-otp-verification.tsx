@@ -31,11 +31,12 @@ const LoginOtpVerification = ({
     const { formState: { errors, }, setError, reset } = formContext;
     const handleSubmit = useCallback(
         (value) => {
-            onSubmit && onSubmit(value, {
-                setError,
-                reset
-            });
-            reset()
+            if (onSubmit) {
+                onSubmit(value, {
+                    setError,
+                    reset
+                });
+            }
         },
         [onSubmit, reset, setError]
     );

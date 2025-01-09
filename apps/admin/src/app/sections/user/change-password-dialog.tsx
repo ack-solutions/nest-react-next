@@ -19,10 +19,7 @@ const defaultValues = {
     confirmPassword: '',
 };
 const validationSchema = yupResolver(object().shape({
-    password: string().label('New Password').required().matches(
-        /^(?=.*[a-z])(?=.*[0-9])(?=.{8,})/,
-        "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
-    ),
+    password: string().label('New Password').required(),
     confirmPassword: string().label('Confirm Password').oneOf([ref('password'), ''], 'Passwords must match').required(),
 }));
 
@@ -49,12 +46,16 @@ const ChangePasswordDialog = ({ onClose, values: initialValue }: ChangePasswordD
                 onSuccess: () => {
                     showToasty('Password Successfully updated')
                     reset()
-                    onClose && onClose()
+                    if (onClose) {
+                        onClose()
+                    }
                 },
                 onError: (error) => {
                     showToasty(error, 'error');
                     reset()
-                    onClose && onClose()
+                    if (onClose) {
+                        onClose()
+                    }
                 }
             }
             updateUser(request, options);

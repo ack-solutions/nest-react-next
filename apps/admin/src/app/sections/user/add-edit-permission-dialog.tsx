@@ -45,7 +45,9 @@ const AddEditPermissionDialog = ({ onClose, values }: AddEditPermissionDialogPro
                             ? 'Permission updated successfully'
                             : 'Permission added successfully'
                     );
-                    onClose && onClose()
+                    if (onClose) {
+                        onClose()
+                    }
                 },
                 onError: (error) => {
                     console.log(error)

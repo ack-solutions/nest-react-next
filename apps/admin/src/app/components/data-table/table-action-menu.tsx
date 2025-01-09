@@ -114,7 +114,9 @@ export function TableActionMenu({
                             size="small"
                             onClick={(event) => {
                                 event.stopPropagation();
-                                action.onClick && action.onClick(event);
+                                if (action.onClick) {
+                                    action.onClick(event)
+                                }
                             }}
                         >
                             {action?.icon}
@@ -136,13 +138,15 @@ export function TableActionMenu({
                 </IconButton>
             }
         >
-            {({ }) => (
+            {() => (
                 <>
-                    {crudActions.map((action, index) => (
+                    {crudActions.map((action) => (
                         <MenuItem
                             onClick={(event) => {
                                 event.stopPropagation();
-                                action.onClick && action.onClick(event);
+                                if (action.onClick) {
+                                    action.onClick(event);
+                                }
                             }}
                             key={`${action?.title}-${row?.id}`}
                         >

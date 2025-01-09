@@ -11,12 +11,8 @@ export interface ResetPasswordFormProps {
     onSubmit: (values: any, form?: any) => void;
 }
 
-
 const passwordSchema = object().shape({
-    password: string().label('New Password').matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
-    ).required(),
+    password: string().label('New Password').required(),
     confirmPassword: string().label('Confirm New Password')
         .oneOf([ref('password'), ''], 'Passwords must match').required(),
 });
@@ -32,10 +28,12 @@ const ResetPasswordForm = ({
 
     const handleSubmit = useCallback(
         (value) => {
-            onSubmit && onSubmit(value, {
-                setError,
-                reset
-            });
+            if (onSubmit) {
+                onSubmit(value, {
+                    setError,
+                    reset
+                });
+            }
         },
         [onSubmit, reset, setError]
     );
