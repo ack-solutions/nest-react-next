@@ -55,7 +55,7 @@ export default function PermissionList() {
             return filter;
         },
         [],
-    )
+    );
 
     const columns: DataTableColumn<IPermission>[] = [
         {

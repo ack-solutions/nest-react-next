@@ -134,7 +134,7 @@ export function TableActionMenu({
                             onClick={(event) => {
                                 event.stopPropagation();
                                 if (action.onClick) {
-                                    action.onClick(event)
+                                    action.onClick(event);
                                 }
                             }}
                         >

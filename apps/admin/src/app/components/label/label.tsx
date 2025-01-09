@@ -23,8 +23,8 @@ const Label = forwardRef<HTMLSpanElement, LabelProps>(
             '& svg, img': {
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover'
-            }
+                objectFit: 'cover',
+            },
         };
 
         return (
@@ -32,12 +32,12 @@ const Label = forwardRef<HTMLSpanElement, LabelProps>(
                 ref={ref}
                 ownerState={{
                     color,
-                    variant
+                    variant,
                 }}
                 sx={{
                     ...(startIcon && { pl: 0.75 }),
                     ...(endIcon && { pr: 0.75 }),
-                    ...sx
+                    ...sx,
                 }}
                 {...other}
             >
@@ -45,7 +45,7 @@ const Label = forwardRef<HTMLSpanElement, LabelProps>(
                     <Box
                         sx={{
                             mr: 0.75,
-                            ...iconStyle
+                            ...iconStyle,
                         }}
                     >
                         {startIcon}
@@ -56,14 +56,14 @@ const Label = forwardRef<HTMLSpanElement, LabelProps>(
                     <Box
                         sx={{
                             ml: 0.75,
-                            ...iconStyle
+                            ...iconStyle,
                         }}
                     >
                         {endIcon}
                     </Box>}
             </StyledLabel>
         );
-    }
+    },
 );
 
 export default Label;

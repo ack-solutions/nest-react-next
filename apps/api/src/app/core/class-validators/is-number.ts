@@ -8,17 +8,17 @@ import {
 
 @ValidatorConstraint({ async: true })
 export class IsNumberConstraint implements ValidatorConstraintInterface {
-    async validate(_inputValue: number | string, args: ValidationArguments) {
 
+    async validate(_inputValue: number | string, args: ValidationArguments) {
         const { value } = args;
         // const [options] = args.constraints;
         if (!isNaN(value) && value != null) {
             return true;
         }
-        else {
-            return false;
-        }
+
+        return false;
     }
+
 }
 
 export function IsNumber() {
@@ -26,7 +26,7 @@ export function IsNumber() {
         registerDecorator({
             target: object?.constructor,
             propertyName: propertyName,
-            options: { message: '$value not a valid number.', },
+            options: { message: '$value not a valid number.' },
             constraints: [],
             validator: IsNumberConstraint,
         });

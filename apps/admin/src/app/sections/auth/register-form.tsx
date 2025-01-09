@@ -42,7 +42,7 @@ const RegisterFrom = ({ onSubmit }: RegisterFromProps) => {
     const handleSubmit = useCallback(
         (value: any) => {
             if (onSubmit) {
-                onSubmit(value, setError)
+                onSubmit(value, setError);
             }
         },
         [onSubmit, setError],

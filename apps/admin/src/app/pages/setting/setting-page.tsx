@@ -30,8 +30,8 @@ const menuSections = [
             },
             {
                 icon: <InboxTwoToneIcon />,
-                text: "Email Layout",
-                path: PATH_DASHBOARD.settings.emailLayout
+                text: 'Email Layout',
+                path: PATH_DASHBOARD.settings.emailLayout,
             },
         ],
     },
