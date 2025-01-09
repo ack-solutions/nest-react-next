@@ -1,3 +1,5 @@
+
+
 export interface ILoginInput {
   email: string;
   password: string;
@@ -19,6 +21,7 @@ export interface ILoginSuccess {
   user: any;
 }
 
+;
 
 export enum SocialAuthProviderEnum {
   GOOGLE = 'google',

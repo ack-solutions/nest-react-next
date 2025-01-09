@@ -1,3 +1,4 @@
+
 import { CrudController } from '@api/app/core/crud';
 import { INotificationTemplate } from '@libs/types';
 import { Controller, UseGuards } from '@nestjs/common';
@@ -9,12 +10,10 @@ import { NotificationTemplateService } from './notification-template..service';
 
 
 @ApiTags('Notification Template')
-@Controller('notification-template')
+@Controller("notification-template")
 @UseGuards(AuthGuard('jwt'))
 export class NotificationTemplateController extends CrudController(NotificationTemplateDTO)<INotificationTemplate> {
-
     constructor(private notificationTemplateService: NotificationTemplateService) {
         super(notificationTemplateService);
     }
-
 }

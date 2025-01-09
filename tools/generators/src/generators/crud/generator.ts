@@ -12,25 +12,27 @@ import { TypesGenerator } from './types.generator';
 
 export async function pluginGenerator(tree: Tree, options: PluginGeneratorSchema) {
     const typesGenerator = new TypesGenerator(tree, options);
-    await typesGenerator.run();
+    await typesGenerator.run()
     options.columns = typesGenerator.getColumns();
 
     const apiGenerator = new ApiGenerator(tree, options);
-    await apiGenerator.run();
+    await apiGenerator.run()
 
 
     const reactGenerator = new ReactGenerator(tree, options);
-    await reactGenerator.run();
+    await reactGenerator.run()
 
     await formatFiles(tree);
 
     return async () => {
         await runEslintOnFiles(tree);
     };
+
 }
 
 function runEslintOnFiles(tree) {
-    const generatedFiles: string[] = [];
+
+    const generatedFiles: string[] = []
 
     const changes = tree.listChanges();
 

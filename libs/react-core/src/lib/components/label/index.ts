@@ -1,5 +1,5 @@
-export * from './label';
+export * from './label'
 
-export * from './label-dropdown';
+export * from './label-dropdown'
 
-export * from './styles';
+export * from './styles'

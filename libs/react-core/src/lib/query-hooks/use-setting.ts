@@ -1,5 +1,5 @@
-import { useCrudOperations } from '../hook';
-import { SettingService } from '../services';
+import { useCrudOperations } from "../hook";
+import { SettingService } from "../services";
 
 
 const Service = SettingService.getInstance<SettingService>();

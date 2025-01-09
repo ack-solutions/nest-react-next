@@ -25,7 +25,7 @@ export interface SeederRunner {
 
 async function bootstrap(options: SeederModuleOptions) {
     const app = await NestFactory.createApplicationContext(
-        SeederModule.register(options),
+        SeederModule.register(options)
     );
 
     const seedersService = app.get(SeederService);
@@ -36,7 +36,7 @@ async function bootstrap(options: SeederModuleOptions) {
 
 function parseOptionsFromCLI() {
     const options: SeederServiceOptions = {};
-    const argv = yargs(process.argv).argv;
+    const argv = yargs(process.argv).argv
     if (argv['r'] || argv['refresh']) {
         options.refresh = true;
     }
@@ -55,12 +55,13 @@ function parseOptionsFromCLI() {
 export const seeder = (options: SeederOptions): SeederRunner => {
     return {
         run(extraOptions: SeederModuleExtraOptions): Promise<void> {
+
             const cliOptions = parseOptionsFromCLI();
             extraOptions = Object.assign(extraOptions, cliOptions);
 
             return bootstrap({
                 ...options,
-                ...extraOptions,
+                ...extraOptions
             });
         },
     };

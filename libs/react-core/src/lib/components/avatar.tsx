@@ -15,6 +15,7 @@ export interface AvatarProps extends MuiAvatarProps {
 }
 
 export default function Avatar({ sx, size = 'medium', ...props }: AvatarProps) {
+
     const sizeSx = useMemo(() => {
         let width = 40;
         let height = 40;
@@ -58,14 +59,14 @@ export default function Avatar({ sx, size = 'medium', ...props }: AvatarProps) {
             width,
             height,
             fontSize,
-        };
+        }
     }, [size]);
 
     return (
         <MuiAvatar
             sx={{
                 ...sizeSx,
-                ...sx,
+                ...sx
             }}
             {...stringAvatar(props.alt)}
             {...props}

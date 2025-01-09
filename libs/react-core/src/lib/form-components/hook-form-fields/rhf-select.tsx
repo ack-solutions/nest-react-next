@@ -50,7 +50,7 @@ export function RHFSelect({
                         select: {
                             ...slotProps?.select,
                             native,
-                        },
+                        }
                     }}
                     {...other}
                 >

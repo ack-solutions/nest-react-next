@@ -2,20 +2,20 @@ export function responsiveFontSizes({ sm, md, lg }: { sm?: number; md?: number; 
     return {
         ...(sm ? {
             '@media (min-width:600px)': {
-                fontSize: sm,
-            },
+                fontSize: sm
+            }
         } : {}),
         ...(md ? {
             '@media (min-width:900px)': {
-                fontSize: md,
-            },
+                fontSize: md
+            }
         } : {}),
         ...(lg ? {
             '@media (min-width:1200px)': {
-                fontSize: lg,
-            },
+                fontSize: lg
+            }
         } : {}),
-    };
+    }
 }
 
 declare module '@mui/material/styles' {
@@ -38,7 +38,7 @@ declare module '@mui/material/styles' {
 // });
 
 export const typography = {
-    // fontFamily: primaryFont.style.fontFamily,
+    //fontFamily: primaryFont.style.fontFamily,
     fontWeightRegular: 400,
     fontWeightMedium: 500,
     fontWeightSemiBold: 600,
@@ -50,8 +50,8 @@ export const typography = {
         ...responsiveFontSizes({
             sm: 52,
             md: 58,
-            lg: 64,
-        }),
+            lg: 64 
+        })
     },
     h2: {
         fontWeight: 800,
@@ -59,8 +59,8 @@ export const typography = {
         fontSize: 24,
         ...responsiveFontSizes({
             sm: 22,
-            md: 24,
-        }),
+            md: 24 
+        })
     },
     h3: {
         fontWeight: 700,
@@ -68,8 +68,8 @@ export const typography = {
         fontSize: 20,
         ...responsiveFontSizes({
             sm: 18,
-            md: 20,
-        }),
+            md: 20 
+        })
     },
     h4: {
         fontWeight: 700,
@@ -77,8 +77,8 @@ export const typography = {
         fontSize: 18,
         ...responsiveFontSizes({
             sm: 16,
-            md: 18,
-        }),
+            md: 18 
+        })
     },
     h5: {
         fontWeight: 700,
@@ -86,8 +86,8 @@ export const typography = {
         fontSize: 16,
         ...responsiveFontSizes({
             sm: 14,
-            md: 16,
-        }),
+            md: 16 
+        })
     },
     h6: {
         fontWeight: 700,
@@ -95,8 +95,8 @@ export const typography = {
         fontSize: 14,
         ...responsiveFontSizes({
             sm: 12,
-            md: 14,
-        }),
+            md: 14 
+        })
     },
     subtitle1: {
         fontWeight: 600,
@@ -104,7 +104,7 @@ export const typography = {
         fontSize: 16,
         ...responsiveFontSizes({
             sm: 14,
-            md: 16,
+            md: 16 
         }),
     },
     subtitle2: {
@@ -113,7 +113,7 @@ export const typography = {
         fontSize: 14,
         ...responsiveFontSizes({
             sm: 12,
-            md: 14,
+            md: 14 
         }),
     },
     body1: {
@@ -121,27 +121,27 @@ export const typography = {
         fontSize: 16,
         ...responsiveFontSizes({
             sm: 14,
-            md: 14,
+            md: 14 
         }),
     },
     body2: {
         lineHeight: 22 / 14,
-        fontSize: 14,
+        fontSize: 14
     },
     caption: {
         lineHeight: 1.5,
-        fontSize: 12,
+        fontSize: 12
     },
     overline: {
         fontWeight: 700,
         lineHeight: 1.5,
         fontSize: 12,
-        textTransform: 'uppercase',
+        textTransform: 'uppercase'
     },
     button: {
         fontWeight: 700,
         lineHeight: 24 / 14,
         fontSize: 14,
-        textTransform: 'unset',
-    },
+        textTransform: 'unset'
+    }
 } as const;

@@ -1,56 +1,56 @@
-import { AuthService, errorMessage, useAuth } from '@libs/react-core';
-import { ILoginSendOtpInput } from '@libs/types';
-import { Box, Stack, Typography } from '@mui/material';
-import React, { useCallback, useState } from 'react';
+import { AuthService, errorMessage, useAuth } from '@libs/react-core'
+import { ILoginSendOtpInput } from '@libs/types'
+import { Box, Stack, Typography } from '@mui/material'
+import React, { useCallback, useState } from 'react'
 
-import AuthLayout from '../../sections/auth/auth-layout';
-import LoginForm from '../../sections/auth/login-form';
-import LoginOtpVerification from '../../sections/auth/login-otp-verification';
+import AuthLayout from '../../sections/auth/auth-layout'
+import LoginForm from '../../sections/auth/login-form'
+import LoginOtpVerification from '../../sections/auth/login-otp-verification'
 
 
-const authService = AuthService.getInstance<AuthService>();
+const authService = AuthService.getInstance<AuthService>()
 const Login = () => {
-    const [verifyData, setVerifyData] = useState<any>(null);
-    const { login } = useAuth();
+    const [verifyData, setVerifyData] = useState<any>(null)
+    const { login } = useAuth()
 
     const handleSendOtp = useCallback(
         (value?: ILoginSendOtpInput, setError?: any) => {
-            value = value || verifyData;
+            value = value ? value : verifyData
             authService.sendLoginOtp(value).then(() => {
-                setVerifyData(value);
+                setVerifyData(value)
             }).catch((error) => {
                 setError('afterSubmit', {
                     type: 'manual',
                     message: errorMessage(error),
                 });
-                setVerifyData(null);
-            });
+                setVerifyData(null)
+            })
         },
         [verifyData],
-    );
+    )
 
     const handleLogin = useCallback(
         async (values: any, form: any) => {
             const request = {
                 otp: Number(values?.otp),
                 ...verifyData,
-            };
+            }
             authService.login(request).then((data) => {
-                login(data?.accessToken, data?.user);
+                login(data?.accessToken, data?.user)
                 form.reset();
-                setVerifyData(null);
+                setVerifyData(null)
             }).catch((error) => {
                 form.setError('afterSubmit', {
                     type: 'manual',
                     message: errorMessage(error),
                 });
-            });
+            })
         },
         [login, verifyData],
-    );
+    )
 
     return (
-        <AuthLayout rootTitle={'Login | React Next'} >
+        <AuthLayout rootTitle={"Login | React Next"} >
             {!verifyData ? (
                 <Box
                     sx={{
@@ -86,7 +86,7 @@ const Login = () => {
                 />
             )}
         </AuthLayout>
-    );
-};
+    )
+}
 
-export default Login;
+export default Login

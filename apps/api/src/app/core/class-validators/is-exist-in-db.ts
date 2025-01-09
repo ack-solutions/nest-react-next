@@ -19,26 +19,25 @@ export interface IsExistInDBOptions {
 
 @ValidatorConstraint({ async: true })
 export class IsUniqueConstraint
-implements ValidatorConstraintInterface {
-
+    implements ValidatorConstraintInterface {
     async validate(_inputValue: string, args: ValidationArguments) {
+
         const { property, value, targetName, object: request } = args;
         const [options] = args.constraints;
 
-        const dataSource = getDataSource();
-        const repository = dataSource.getRepository<ObjectLiteral>(options.entity || targetName);
-        let query = repository.createQueryBuilder().select(property);
+        const dataSource = getDataSource()
+        const repository = dataSource.getRepository<ObjectLiteral>(options.entity || targetName)
+        let query = repository.createQueryBuilder().select(property)
 
         query.where({ [property]: value });
 
         if (typeof options.ignore === 'function') {
-            const resp = await options.ignore(query);
+            const resp = await options.ignore(query)
             if (resp) {
                 query = resp;
             }
         } else if (options.ignore || options.ignoreField) {
-            let ignoreField = options.ignoreField,
-                ignore = options.ignore;
+            let ignoreField = options.ignoreField, ignore = options.ignore;
 
             if (!options.ignoreField) {
                 ignoreField = repository.metadata.primaryColumns.map(
@@ -62,7 +61,6 @@ implements ValidatorConstraintInterface {
         }
         return true;
     }
-
 }
 
 export function IsExistInDB(

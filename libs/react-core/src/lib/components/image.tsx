@@ -24,18 +24,19 @@ export default function Image({
     sx,
     ...other
 }: Props) {
+
     const handleError = useCallback(
         (e: any) => {
-            e.target.style.display = 'none';
+            e.target.style.display = 'none'
         },
         [],
-    );
+    )
     const handleLoad = useCallback(
         (e: any) => {
-            e.target.style.display = 'block';
+            e.target.style.display = 'block'
         },
         [],
-    );
+    )
 
     if (ratio) {
         return (
@@ -68,7 +69,7 @@ export default function Image({
                     style={{
                         width: 1,
                         height: 1,
-                        objectFit: 'cover',
+                        objectFit: 'cover'
                     }}
                     {...other}
                 />
@@ -86,7 +87,7 @@ export default function Image({
                 '& .wrapper': {
                     width: 1,
                     height: 1,
-                    backgroundSize: 'cover !important',
+                    backgroundSize: 'cover !important'
                 },
                 ...sx,
             }}

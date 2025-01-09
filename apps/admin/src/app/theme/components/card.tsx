@@ -9,17 +9,17 @@ export default function Card(theme: Theme) {
                     boxShadow: theme.customShadows.card,
                     borderRadius: theme.shape.borderRadiusMd,
                     position: 'relative',
-                    zIndex: 0,
-                },
-            },
+                    zIndex: 0 
+                }
+            }
         },
         MuiCardHeader: {
             defaultProps: {
                 titleTypographyProps: { variant: 'h6' },
                 subheaderTypographyProps: {
                     variant: 'body2',
-                    marginTop: theme.spacing(0.5),
-                },
+                    marginTop: theme.spacing(0.5) 
+                }
             },
             styleOverrides: {
                 root: {
@@ -29,9 +29,9 @@ export default function Card(theme: Theme) {
                     },
                     [theme.breakpoints.down('sm')]: {
                         padding: theme.spacing(2, 2, 0),
-                    },
-                },
-            },
+                    }
+                }
+            }
         },
         MuiCardContent: {
             styleOverrides: {
@@ -42,9 +42,9 @@ export default function Card(theme: Theme) {
                     },
                     [theme.breakpoints.down('sm')]: {
                         padding: theme.spacing(2),
-                    },
-                },
-            },
+                    }
+                }
+            }
         },
         MuiCardActions: {
             styleOverrides: {
@@ -55,9 +55,9 @@ export default function Card(theme: Theme) {
                     },
                     [theme.breakpoints.down('sm')]: {
                         padding: theme.spacing(2),
-                    },
-                },
-            },
-        },
+                    }
+                }
+            }
+        }
     };
 }

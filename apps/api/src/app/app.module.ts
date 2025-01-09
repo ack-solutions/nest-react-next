@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 
@@ -14,12 +12,6 @@ import { TypeOrmConfigService } from './core/typeorm/typeorm-config.service';
 
 @Module({
     imports: [
-        ThrottlerModule.forRoot([
-            {
-                ttl: 60000,
-                limit: 20,
-            },
-        ]),
         ConfigModule.forRoot({ load: Configs }),
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
@@ -34,15 +26,10 @@ import { TypeOrmConfigService } from './core/typeorm/typeorm-config.service';
         ApiModule,
     ],
     controllers: [AppController],
-    providers: [
-        AppService,
-        {
-            provide: APP_GUARD,
-            useClass: ThrottlerGuard,
-        },
-    ],
+    providers: [AppService],
 })
 
 export class AppModule {
 
 }
+

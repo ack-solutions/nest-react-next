@@ -8,10 +8,9 @@ import { Page } from './page.entity';
 
 @Injectable()
 export class PageService extends CrudService<Page> {
-
     constructor(
         @InjectRepository(Page)
-        private pageRepo: Repository<Page>,
+        private pageRepo: Repository<Page>
     ) {
         super(pageRepo);
     }
@@ -19,5 +18,4 @@ export class PageService extends CrudService<Page> {
     find() {
         return this.pageRepo.find();
     }
-
 }

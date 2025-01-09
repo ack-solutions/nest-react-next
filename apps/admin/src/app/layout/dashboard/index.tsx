@@ -9,14 +9,14 @@ import Navbar from './navbar/navbar';
 import NavbarMini from './navbar/navbar-mini';
 
 
-const SPACING = 8;
+const SPACING = 8
 
 export default function DashboardLayout() {
     const { navLayout } = useSettingsContext();
     const isDesktop = useResponsive('up', 'lg');
     const [open, setOpen] = useState(false);
 
-    const isNavMini = useMemo(() => (navLayout === 'mini' && isDesktop), [isDesktop, navLayout]);
+    const isNavMini = useMemo(() => (navLayout === 'mini' && isDesktop), [isDesktop, navLayout])
 
     const handleOpen = () => {
         setOpen(true);
@@ -55,8 +55,8 @@ export default function DashboardLayout() {
                             pb: 2,
                             width: `calc(100% - ${NAV.W_VERTICAL}px)`,
                             ...(isNavMini && {
-                                width: `calc(100% - ${NAV.W_MINI}px)`,
-                            }),
+                                width: `calc(100% - ${NAV.W_MINI}px)`
+                            })
                         }),
                     }}
                 >

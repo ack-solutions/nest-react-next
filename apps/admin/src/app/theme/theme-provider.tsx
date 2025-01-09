@@ -29,10 +29,10 @@ export function ThemeProvider({ children }: Props) {
         colorSchemes,
         shadows: shadows(settings.colorScheme),
         customShadows: customShadows(settings.colorScheme),
-        shape: shape,
+        shape:shape,
         typography,
         cssVarPrefix: '',
-    };
+    }
 
     const updateTheme: ThemeOptions = useMemo(() => {
         return {
@@ -64,7 +64,7 @@ export function ThemeProvider({ children }: Props) {
                 ...presets(settings.primaryColor).customShadows,
             },
         };
-    }, [settings]);
+    }, [settings])
 
     const theme = createTheme(updateTheme);
 
@@ -90,14 +90,14 @@ export function ThemeProvider({ children }: Props) {
                             height: 4,
                         },
                         ' ::-webkit-scrollbar-track': {
-                            background: theme.palette.grey[50],
+                            background: theme.palette.grey[50]
                         },
                         '::-webkit-scrollbar-thumb': {
                             background: theme.palette.grey[300],
                             borderRadius: 12,
                         },
                         '::-webkit-scrollbar-thumb:hover': {
-                            background: theme.palette.grey[400],
+                            background: theme.palette.grey[400]
                         },
                     },
                     input: {
@@ -105,18 +105,18 @@ export function ThemeProvider({ children }: Props) {
                             MozAppearance: 'textfield',
                             '&::-webkit-outer-spin-button': {
                                 margin: 0,
-                                WebkitAppearance: 'none',
+                                WebkitAppearance: 'none'
                             },
                             '&::-webkit-inner-spin-button': {
                                 margin: 0,
-                                WebkitAppearance: 'none',
-                            },
-                        },
+                                WebkitAppearance: 'none'
+                            }
+                        }
                     },
                     body: {
                         a: {
                             textDecoration: 'none',
-                            color: 'inherit',
+                            color: 'inherit'
                         },
                     },
                 }}

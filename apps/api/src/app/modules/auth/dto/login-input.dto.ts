@@ -1,6 +1,6 @@
-import { ILoginInput } from '@libs/types';
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { ILoginInput } from "@libs/types";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNumber, IsString } from "class-validator";
 
 
 export class LoginInputDTO implements ILoginInput {

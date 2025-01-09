@@ -1,3 +1,4 @@
+
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
@@ -12,7 +13,7 @@ import 'react-quill/dist/quill.snow.css';
 
 
 const root = ReactDOM.createRoot(
-    document.getElementById('root') as HTMLElement,
+    document.getElementById('root') as HTMLElement
 );
 root.render(
     <StrictMode>
@@ -21,5 +22,5 @@ root.render(
                 <App />
             </HashRouter>
         </HelmetProvider>
-    </StrictMode>,
+    </StrictMode>
 );

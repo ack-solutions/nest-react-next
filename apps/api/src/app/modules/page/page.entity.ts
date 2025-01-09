@@ -12,7 +12,6 @@ import { Entity, Column, BeforeInsert, BeforeUpdate } from 'typeorm';
 
 @Entity()
 export class Page extends BaseEntity implements IPage {
-
     @ApiProperty({ type: String })
     @IsString()
     @IsOptional()
@@ -30,19 +29,19 @@ export class Page extends BaseEntity implements IPage {
     @IsOptional()
     @Column({
         type: 'text',
-        nullable: true,
+        nullable: true
     })
     content?: string;
 
     @ApiProperty({
         type: String,
-        enum: PageStatusEnum,
+        enum: PageStatusEnum
     })
     @IsEnum(PageStatusEnum)
     @IsOptional()
     @Column({
         type: 'text',
-        nullable: true,
+        nullable: true
     })
     status?: PageStatusEnum;
 
@@ -50,7 +49,7 @@ export class Page extends BaseEntity implements IPage {
     @IsOptional()
     @Column({
         type: 'jsonb',
-        nullable: true,
+        nullable: true
     })
     metaData?: any;
 
@@ -69,5 +68,4 @@ export class Page extends BaseEntity implements IPage {
     async updateSlug() {
         this.slug = await generateSlug(Page, this.title, this.id);
     }
-
 }

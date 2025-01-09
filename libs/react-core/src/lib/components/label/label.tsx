@@ -21,14 +21,15 @@ export const Label = forwardRef<HTMLSpanElement, LabelProps>(({
     sx,
     ...other
 }, ref) => {
+
     const iconStyle = {
         width: 16,
         height: 16,
         '& svg, img': {
             width: 1,
             height: 1,
-            objectFit: 'cover',
-        },
+            objectFit: 'cover'
+        }
     };
 
     return (
@@ -37,12 +38,12 @@ export const Label = forwardRef<HTMLSpanElement, LabelProps>(({
             component="span"
             ownerState={{
                 color,
-                variant,
+                variant
             }}
             sx={{
                 ...(startIcon && { pl: 0.75 }),
                 ...(endIcon && { pr: 0.75 }),
-                ...sx,
+                ...sx
             }}
             {...other}
         >
@@ -50,7 +51,7 @@ export const Label = forwardRef<HTMLSpanElement, LabelProps>(({
                 <Box
                     sx={{
                         mr: 0.75,
-                        ...iconStyle,
+                        ...iconStyle
                     }}
                 >
                     {startIcon}
@@ -62,7 +63,7 @@ export const Label = forwardRef<HTMLSpanElement, LabelProps>(({
                 <Box
                     sx={{
                         ml: 0.75,
-                        ...iconStyle,
+                        ...iconStyle
                     }}
                 >
                     {endIcon}

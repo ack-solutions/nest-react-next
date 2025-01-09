@@ -11,7 +11,6 @@ import { UserService } from '../user';
 
 @Injectable()
 export class IfJwtStrategy extends PassportStrategy(Strategy, 'if-jwt') {
-
     constructor(
         private userService: UserService,
         private configService: ConfigService,
@@ -28,18 +27,17 @@ export class IfJwtStrategy extends PassportStrategy(Strategy, 'if-jwt') {
                 const user = await this.userService.userRepository.findOne({
                     where: {
                         id: payload.id,
-                        status: UserStatusEnum.ACTIVE,
+                        status: UserStatusEnum.ACTIVE
                     },
-                    relations: ['roles'],
+                    relations: ['roles']
                 });
                 done(null, user);
             } else {
                 done(null, true);
             }
         } catch (error) {
-            console.log(error);
+            console.log(error)
             done(null, true);
         }
     }
-
 }

@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormEventHandler, FormHTMLAttributes, PropsWithChildren } from 'react';
+import { FormEventHandler, FormHTMLAttributes, PropsWithChildren } from 'react'
 import {
     FormProvider,
     SubmitErrorHandler,
@@ -7,8 +7,8 @@ import {
     useForm,
     UseFormProps,
     UseFormReturn,
-} from 'react-hook-form';
-import { FieldValues } from 'react-hook-form/dist/types/fields';
+} from 'react-hook-form'
+import { FieldValues } from 'react-hook-form/dist/types/fields'
 
 
 export type FormContainerProps<T extends FieldValues = FieldValues> =
@@ -32,6 +32,7 @@ export function FormContainer<TFieldValues extends FieldValues = FieldValues>({
     onError,
     ...useFormProps
 }: PropsWithChildren<FormContainerProps<TFieldValues>>) {
+
     if (!formContext) {
         return (
             <FormProviderWithoutContext<TFieldValues>
@@ -40,15 +41,15 @@ export function FormContainer<TFieldValues extends FieldValues = FieldValues>({
                     onError,
                     FormProps,
                     children,
-                    ...useFormProps,
+                    ...useFormProps 
                 }}
             />
-        );
+        )
     }
     if (typeof onSuccess === 'function' && typeof handleSubmit === 'function') {
         console.warn(
-            'Property `onSuccess` will be ignored because handleSubmit is provided',
-        );
+            'Property `onSuccess` will be ignored because handleSubmit is provided'
+        )
     }
     return (
         <FormProvider {...formContext}>
@@ -56,15 +57,17 @@ export function FormContainer<TFieldValues extends FieldValues = FieldValues>({
                 noValidate
                 {...FormProps}
                 onSubmit={
-                    handleSubmit || (onSuccess
-                        ? formContext.handleSubmit(onSuccess, onError)
-                        : () => console.log('submit handler `onSuccess` is missing'))
+                    handleSubmit
+                        ? handleSubmit
+                        : onSuccess
+                            ? formContext.handleSubmit(onSuccess, onError)
+                            : () => console.log('submit handler `onSuccess` is missing')
                 }
             >
                 {children}
             </form>
         </FormProvider>
-    );
+    )
 }
 
 function FormProviderWithoutContext<
@@ -77,21 +80,24 @@ function FormProviderWithoutContext<
     validationSchema,
     ...useFormProps
 }: PropsWithChildren<FormContainerProps<TFieldValues>>) {
+  
     const methods = useForm({
         ...useFormProps,
         ...(validationSchema && {
             resolver: yupResolver(validationSchema),
-        }),
-    });
-
-    const { handleSubmit } = methods;
+        })
+    })
+    
+    const { handleSubmit } = methods
 
     return (
         <FormProvider {...methods}>
             <form
                 onSubmit={handleSubmit(
-                    onSuccess || (() => console.log('submit handler `onSuccess` is missing')),
-                    onError,
+                    onSuccess
+                        ? onSuccess
+                        : () => console.log('submit handler `onSuccess` is missing'),
+                    onError
                 )}
                 noValidate
                 {...FormProps}
@@ -99,5 +105,5 @@ function FormProviderWithoutContext<
                 {children}
             </form>
         </FormProvider>
-    );
+    )
 }

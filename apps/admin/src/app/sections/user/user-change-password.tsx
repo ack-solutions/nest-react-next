@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormContainer, RHFPassword, useToasty, useUserQuery } from '@libs/react-core';
-import { Button, Card, CardContent, CardHeader, Container, Stack } from '@mui/material';
-import { useCallback } from 'react';
+import { Button, Card, CardContent, CardHeader, Container, Stack } from '@mui/material'
+import { useCallback } from 'react'
 import { useForm } from 'react-hook-form';
 import { object, ref, string } from 'yup';
 
@@ -19,32 +19,30 @@ const defaultValues = {
 };
 
 const UserChangePassword = () => {
-    const { showToasty } = useToasty();
-    const { useChangePassword } = useUserQuery();
-    const { mutate: changePassword } = useChangePassword();
+    const { showToasty } = useToasty()
+    const { useChangePassword } = useUserQuery()
+    const { mutate: changePassword } = useChangePassword()
     const formContext = useForm({
         defaultValues,
         resolver: validationSchema,
-    });
+    })
     const { reset } = formContext;
 
-    const handleSubmitForm = useCallback((values) => {
-        const options = {
-            onSuccess: () => {
-                showToasty('Password Successfully updated');
-                reset();
-            },
-            onError: (error) => {
-                showToasty(error, 'error');
-                reset();
-            },
-        };
-        changePassword(values, options);
-    }, [
-        changePassword,
-        reset,
-        showToasty,
-    ]);
+    const handleSubmitForm = useCallback(
+        (values) => {
+            const options = {
+                onSuccess: () => {
+                    showToasty('Password Successfully updated');
+                    reset();
+                },
+                onError: (error) => {
+                    showToasty(error, 'error');
+                    reset();
+                }
+            }
+            changePassword(values, options);
+        }, [changePassword, reset, showToasty]
+    )
 
     return (
         <Container>
@@ -53,7 +51,7 @@ const UserChangePassword = () => {
                 <CardContent>
                     <FormContainer
                         FormProps={{
-                            id: 'update-user-profile',
+                            id: "update-user-profile"
                         }}
                         formContext={formContext}
                         validationSchema={validationSchema}
@@ -96,7 +94,7 @@ const UserChangePassword = () => {
                 </CardContent>
             </Card>
         </Container>
-    );
-};
+    )
+}
 
-export default UserChangePassword;
+export default UserChangePassword

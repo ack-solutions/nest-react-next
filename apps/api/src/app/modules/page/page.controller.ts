@@ -9,9 +9,7 @@ import { PageService } from './page.service';
 @ApiTags('Page')
 @Controller('page')
 export class PageController extends CrudController(Page)<Page> {
-
     constructor(private readonly pageService: PageService) {
         super(pageService);
     }
-
 }

@@ -19,15 +19,11 @@ export function RHFAutocomplete({
         (newValue: any) => {
             setValue(name, newValue, { shouldValidate: true });
             if (onChange) {
-                onChange(newValue);
+                onChange(newValue)
             }
         },
-        [
-            name,
-            onChange,
-            setValue,
-        ],
-    );
+        [name, onChange, setValue],
+    )
 
     return (
         <Controller
@@ -43,5 +39,5 @@ export function RHFAutocomplete({
             )}
 
         />
-    );
+    )
 }

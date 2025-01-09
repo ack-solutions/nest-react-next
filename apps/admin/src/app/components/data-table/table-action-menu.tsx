@@ -51,72 +51,53 @@ export function TableActionMenu({
 
     const crudActions: TableAction[] = useMemo(() => {
         const otherActions = (actions || [])?.filter(
-            (action) => !action.permission || hasAnyPermission(action.permission),
+            (action) => !action.permission || hasAnyPermission(action.permission)
         );
 
         return [
             ...otherActions,
             ...onView
-                ? [
-                    {
-                        icon: <VisibilityOutlinedIcon />,
-                        title: 'Preview',
-                        permission: `show-${crudPermissionKey}`,
-                        onClick: onView,
-                    },
-                ]
+                ? [{
+                    icon: <VisibilityOutlinedIcon />,
+                    title: 'Preview',
+                    permission: `show-${crudPermissionKey}`,
+                    onClick: onView,
+                }]
                 : [],
             ...onEdit
-                ? [
-                    {
-                        icon: <EditOutlinedIcon />,
-                        title: 'Edit',
-                        permission: `update-${crudPermissionKey}`,
-                        onClick: onEdit,
-                    },
-                ]
+                ? [{
+                    icon: <EditOutlinedIcon />,
+                    title: 'Edit',
+                    permission: `update-${crudPermissionKey}`,
+                    onClick: onEdit,
+                }]
                 : [],
             ...onDelete
-                ? [
-                    {
-                        icon: <DeleteOutlinedIcon />,
-                        title: 'Delete',
-                        permission: `delete-${crudPermissionKey}`,
-                        onClick: onDelete,
-                    },
-                ]
+                ? [{
+                    icon: <DeleteOutlinedIcon />,
+                    title: 'Delete',
+                    permission: `delete-${crudPermissionKey}`,
+                    onClick: onDelete,
+                }]
                 : [],
             ...onRestore
-                ? [
-                    {
-                        icon: <RestoreOutlinedIcon />,
-                        title: 'Restore',
-                        permission: `restore-${crudPermissionKey}`,
-                        onClick: onRestore,
-                    },
-                ]
+                ? [{
+                    icon: <RestoreOutlinedIcon />,
+                    title: 'Restore',
+                    permission: `restore-${crudPermissionKey}`,
+                    onClick: onRestore,
+                }]
                 : [],
             ...onDeleteForever
-                ? [
-                    {
-                        icon: <DeleteForeverOutlinedIcon />,
-                        title: 'Delete Forever',
-                        permission: `trash-delete-${crudPermissionKey}`,
-                        onClick: onDeleteForever,
-                    },
-                ]
+                ? [{
+                    icon: <DeleteForeverOutlinedIcon />,
+                    title: 'Delete Forever',
+                    permission: `trash-delete-${crudPermissionKey}`,
+                    onClick: onDeleteForever,
+                }]
                 : [],
         ].filter((item) => item);
-    }, [
-        actions,
-        onView,
-        crudPermissionKey,
-        onEdit,
-        onDelete,
-        onRestore,
-        onDeleteForever,
-        hasAnyPermission,
-    ]);
+    }, [actions, onView, crudPermissionKey, onEdit, onDelete, onRestore, onDeleteForever, hasAnyPermission]);
 
     if (crudActions.length <= 2) {
         return (

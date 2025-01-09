@@ -3,7 +3,7 @@ import {
     FieldValues,
     PathValue,
     UseControllerReturn,
-} from 'react-hook-form';
+} from 'react-hook-form'
 
 
 export type UseTransformOptions<
@@ -33,23 +33,23 @@ export function useTransform<
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
     TValue = unknown,
 >(
-    options: UseTransformOptions<TFieldValues, TName, TValue>,
+    options: UseTransformOptions<TFieldValues, TName, TValue>
 ): UseTransformReturn<TFieldValues, TName, TValue> {
     const value =
         typeof options.transform?.input === 'function'
             ? options.transform.input(options.value)
-            : options.value;
+            : options.value
 
     const onChange = (...event): void => {
         if (typeof options.transform?.output === 'function') {
-            options.onChange(options.transform.output(...event));
+            options.onChange(options.transform.output(...event))
         } else {
-            options.onChange(...event);
+            options.onChange(...event)
         }
-    };
+    }
 
     return {
         value,
         onChange,
-    };
+    }
 }

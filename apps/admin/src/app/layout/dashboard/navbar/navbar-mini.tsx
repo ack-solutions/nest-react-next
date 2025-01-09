@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import { useNavData } from './nav-config';
 import NavbarGroup from './navbar-group';
 import NavbarToggleButton from './navbar-toggle-button';
-import { NavbarConfigProps } from '../../../types/navigation';
+import { NavbarConfigProps } from '../../../types/navigation'; 
 import { NAV } from '../../config';
 
 
@@ -15,17 +15,17 @@ export const hideScroll = {
         scrollbarWidth: 'none',
         overflowX: 'scroll',
         '&::-webkit-scrollbar': {
-            display: 'none',
-        },
+            display: 'none'
+        }
     },
     y: {
         msOverflowStyle: 'none',
         scrollbarWidth: 'none',
         overflowY: 'scroll',
         '&::-webkit-scrollbar': {
-            display: 'none',
-        },
-    },
+            display: 'none'
+        }
+    }
 } as const;
 
 export const navMiniConfig = (config?: NavbarConfigProps) => ({
@@ -36,7 +36,7 @@ export const navMiniConfig = (config?: NavbarConfigProps) => ({
     itemSubHeight: config?.itemSubHeight || 34,
     itemPadding: config?.itemPadding || '6px 0 0 0',
     itemRadius: config?.itemRadius || 6,
-    hiddenLabel: config?.hiddenLabel || false,
+    hiddenLabel: config?.hiddenLabel || false
 });
 
 export default function NavbarMini() {
@@ -47,12 +47,12 @@ export default function NavbarMini() {
             component="nav"
             sx={{
                 flexShrink: { lg: 0 },
-                width: { lg: NAV.W_MINI },
+                width: { lg: NAV.W_MINI }
             }}
         >
             <NavbarToggleButton
                 sx={{
-                    left: NAV.W_MINI - 12,
+                    left: NAV.W_MINI - 12
                 }}
             />
 
@@ -63,14 +63,14 @@ export default function NavbarMini() {
                     position: 'fixed',
                     width: NAV.W_MINI,
                     borderRight: (theme) => `dashed 1px ${theme.palette.divider}`,
-                    ...hideScroll.x,
+                    ...hideScroll.x
                 }}
             >
                 <Logo
                     sx={{
                         mx: 'auto',
                         width: 50,
-                        my: 2,
+                        my: 2 
                     }}
                 />
                 <Stack>
@@ -82,7 +82,7 @@ export default function NavbarMini() {
                                 config={navMiniConfig(navMiniConfig())}
                                 isMini
                             />
-                        ),
+                        )
                     )}
                 </Stack>
             </Stack>

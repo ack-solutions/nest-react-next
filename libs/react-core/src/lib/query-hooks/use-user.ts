@@ -1,3 +1,4 @@
+
 import { IChangePasswordInput, IUser } from '@libs/types';
 import { DefinedInitialDataOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -18,7 +19,7 @@ export const useUserQuery = () => {
         useBulkDelete,
         useBulkDeleteForever,
         useRestore,
-        useBulkRestore,
+        useBulkRestore
     } = useCrudOperations(service);
     const queryClient = useQueryClient();
 
@@ -31,8 +32,8 @@ export const useUserQuery = () => {
     const useUpdateProfile = (options?: UpdateQueryOptions<Partial<IUser>, Error, IUser>) => useMutation({
         mutationFn: (input: Partial<IUser>) => service.updateProfile(input),
         onSuccess: (data) => {
-            invalidListQueryCache(queryClient, service);
-            invalidUpdateOrCreateQueryCache(queryClient, service, data?.id);
+            invalidListQueryCache(queryClient, service)
+            invalidUpdateOrCreateQueryCache(queryClient, service, data?.id)
         },
         ...options,
     });
@@ -65,6 +66,6 @@ export const useUserQuery = () => {
         useBulkDeleteUser: useBulkDelete,
         useBulkDeleteForeverUser: useBulkDeleteForever,
         useRestoreUser: useRestore,
-        useBulkRestoreUser: useBulkRestore,
+        useBulkRestoreUser: useBulkRestore
     };
 };

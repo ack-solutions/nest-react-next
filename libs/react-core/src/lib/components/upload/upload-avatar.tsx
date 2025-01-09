@@ -30,7 +30,7 @@ const DropZoneStyle = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.default,
     '& > *': {
         width: '100%',
-        height: '100%',
+        height: '100%'
     },
     '&:hover': {
         cursor: 'pointer',
@@ -56,11 +56,13 @@ const PlaceholderStyle = styled('div')(({ theme }) => ({
 }));
 
 
-export default function UploadAvatar({ error, file, label = 'Photo', helperText, sx, ...other }: UploadProps) {
+
+export default function UploadAvatar({ error, file, label = "Photo", helperText, sx, ...other }: UploadProps) {
     const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
         multiple: false,
         ...other,
     });
+
 
 
     return (
@@ -110,7 +112,7 @@ export default function UploadAvatar({ error, file, label = 'Photo', helperText,
                             sx={{
                                 width: 24,
                                 height: 24,
-                                mb: 1,
+                                mb: 1
                             }}
                         />
                         <Typography

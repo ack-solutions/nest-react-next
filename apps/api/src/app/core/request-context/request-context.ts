@@ -3,7 +3,6 @@ import { Request, Response } from 'express';
 
 
 export class RequestContext {
-
     private static storage = new AsyncLocalStorage<RequestContext>();
 
     readonly id: number;

@@ -1,5 +1,6 @@
 export function strToSlug(str: string) {
-    // replace all special characters | symbols with a space
+
+    //replace all special characters | symbols with a space
     str = str.replace(/[`~!@#$%^&*()_\-+=\\[\]{};:'"\\|\\/,.<>?\s]/g, ' ')
         .toLowerCase();
 

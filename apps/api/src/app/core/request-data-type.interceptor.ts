@@ -1,4 +1,4 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
 
 
 @Injectable()
@@ -6,15 +6,16 @@ export class RequestDataTypeInterceptor implements NestInterceptor {
 
     intercept(
         context: ExecutionContext,
-        next: CallHandler<any>,
+        next: CallHandler<any>
     ) {
+
         const request = context.switchToHttp().getRequest();
         if (request.body) {
-            request.body = this.deepMap(request.body, this.parseDataType);
+            request.body = this.deepMap(request.body, this.parseDataType)
         }
 
         if (request.query) {
-            request.query = this.deepMap(request.query, this.parseDataType);
+            request.query = this.deepMap(request.query, this.parseDataType)
         }
 
 
@@ -25,7 +26,7 @@ export class RequestDataTypeInterceptor implements NestInterceptor {
         let out = {};
 
         if (obj?.length >= 0) {
-            out = [];
+            out = []
         }
 
         Object.keys(obj).forEach((k) => {
@@ -45,16 +46,16 @@ export class RequestDataTypeInterceptor implements NestInterceptor {
     parseDataType(value: any) {
         if (typeof value === 'boolean') {
             return value;
-        } if (typeof value === 'number') {
+        } else if (typeof value === 'number') {
             return value;
-        } if (value == 'true' || value == 'false') {
-            return !!(value == 'true' || value == 1 || value == '1' || value == true);
-        } if (value == 'null' || value == 'Null') {
-            return null;
-        } if (!isNaN(value) && value!='' && value!= null ) {
+        } else if (value == 'true' || value == 'false') {
+            return value == 'true' || value == 1 || value == '1' || value == true ? true : false
+        } else if (value == 'null' || value == 'Null') {
+            return null
+        } else if (!isNaN(value) && value!='' && value!= null ) {
             return Number(value);
+        } else {
+            return value;
         }
-        return value;
     }
-
 }

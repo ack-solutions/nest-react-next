@@ -1,9 +1,9 @@
-import { generateFiles, getProjects, joinPathFragments, names, ProjectConfiguration, Tree } from '@nx/devkit';
-import { join } from 'path';
+import { generateFiles, getProjects, joinPathFragments, names, ProjectConfiguration, Tree } from "@nx/devkit";
+import { join } from "path";
 
-import { PluginGeneratorSchema } from './schema';
-import { addImportStatement } from '../../utils/add-import-statement';
-import { appendArrayItem } from '../../utils/append-array-item';
+import { PluginGeneratorSchema } from "./schema";
+import { addImportStatement } from "../../utils/add-import-statement";
+import { appendArrayItem } from "../../utils/append-array-item";
 
 
 export class ApiGenerator {
@@ -32,15 +32,15 @@ export class ApiGenerator {
         generateFiles(
             this.tree,
             join(__dirname, 'files', 'api'), // Path to your custom template files
-            'apps/api/src/app/modules', // Destination where the custom files should go
+            `apps/api/src/app/modules`, // Destination where the custom files should go
             {
                 tmpl: '',
                 name,
                 className,
                 fileName,
                 propertyName,
-                columns: this.options.columns,
-            }, // Data to pass to the template (e.g., the library name)
+                columns: this.options.columns 
+            } // Data to pass to the template (e.g., the library name)
         );
     }
 
@@ -63,10 +63,10 @@ export class ApiGenerator {
         const importStatement = `import { ${moduleName} } from '${modulePath}';\n`;
 
         // Add the import statement if not already present
-        content = addImportStatement(content, importStatement);
+        content = addImportStatement(content, importStatement)
 
         // Add the module to the imports array if not already present
-        content = appendArrayItem(content, 'Modules', moduleName);
+        content = appendArrayItem(content, 'Modules', moduleName)
 
         // Write the updated content back to `api.module.ts`
         this.tree.write(apiModulePath, content);
@@ -88,10 +88,10 @@ export class ApiGenerator {
         const importStatement = `import { ${entityName} } from '${entityPath}';`;
 
         // Add the import statement if not already present
-        content = addImportStatement(content, importStatement);
+        content = addImportStatement(content, importStatement)
 
         // Add the entity to the array if not already present
-        content = appendArrayItem(content, 'AllEntities', entityName);
+        content = appendArrayItem(content, 'AllEntities', entityName)
 
         // Write the updated content back to the file
         this.tree.write(allEntityFilePath, content);

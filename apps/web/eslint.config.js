@@ -3,7 +3,7 @@ const { FlatCompat } = require('@eslint/eslintrc');
 const js = require('@eslint/js');
 const nx = require('@nx/eslint-plugin');
 
-const baseConfig = require('../../eslint.react.config');
+const baseConfig = require('../../eslint.config.js');
 
 
 const compat = new FlatCompat({

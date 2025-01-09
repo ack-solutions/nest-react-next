@@ -1,4 +1,4 @@
-import { Container } from '@mui/material';
+import { Container } from "@mui/material"
 
 
 const Dashboard = () => {
@@ -6,7 +6,7 @@ const Dashboard = () => {
         <Container maxWidth={false}>
             <div>Dashboard</div>
         </Container>
-    );
-};
+    )
+}
 
-export default Dashboard;
+export default Dashboard

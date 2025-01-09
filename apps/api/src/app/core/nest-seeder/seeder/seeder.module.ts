@@ -23,7 +23,6 @@ export interface SeederModuleOptions extends SeederModuleExtraOptions {
 
 @Module({})
 export class SeederModule {
-
     static register(options: SeederModuleOptions): DynamicModule {
         return {
             module: SeederModule,
@@ -41,5 +40,4 @@ export class SeederModule {
             ],
         };
     }
-
 }

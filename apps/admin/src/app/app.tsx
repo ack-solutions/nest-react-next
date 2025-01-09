@@ -1,3 +1,4 @@
+
 import { AccessProvider, AuthProvider, NotistackProvider, SettingsProvider } from '@libs/react-core';
 import { Box, Typography } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -14,9 +15,10 @@ const queryClient = new QueryClient({
             refetchOnWindowFocus: false, // default: true
         },
     },
-});
+})
 
 export function App() {
+
     const handlePermissionsDeny = useCallback(
         () => {
             return (
@@ -36,7 +38,7 @@ export function App() {
             );
         },
         [],
-    );
+    )
 
     return (
         <QueryClientProvider client={queryClient}>

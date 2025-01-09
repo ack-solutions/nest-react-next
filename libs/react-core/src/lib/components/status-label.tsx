@@ -11,42 +11,43 @@ export interface StatusLabelProps extends LabelProps {
 const StatusLabel = ({
     label,
 }: StatusLabelProps) => {
+
     const color: LabelColor = useMemo(() => {
         switch (label) {
             case 'pending':
-                return 'warning';
+                return 'warning'
 
             case 'hold':
-                return 'warning';
+                return 'warning'
 
             case 'overdue':
-                return 'error';
+                return 'error'
 
             case 'completed':
-                return 'success';
+                return 'success'
 
             case 'rejected':
-                return 'error';
+                return 'error'
 
             case 'approved':
-                return 'success';
+                return 'success'
 
             case 'decline':
-                return 'error';
+                return 'error'
 
             case 'draft':
-                return 'info';
+                return 'info'
 
             case 'published':
-                return 'success';
+                return 'success'
 
             case 'unpublished':
-                return 'error';
+                return 'error'
 
             default:
-                return 'default';
+                return 'default'
         }
-    }, [label]);
+    }, [label])
 
     return (
         <Label
@@ -56,6 +57,6 @@ const StatusLabel = ({
             {startCase(label)}
         </Label>
     );
-};
+}
 
 export default StatusLabel;

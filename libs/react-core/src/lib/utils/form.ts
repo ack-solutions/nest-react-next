@@ -1,5 +1,4 @@
 export class UploadedFile {
-
     type: any;
     name: any;
     size?: string;
@@ -10,8 +9,8 @@ export class UploadedFile {
             Object.assign(this, input);
         }
     }
-
 }
+
 
 
 export function toFormData(obj: any, form?: any, namespace?: any) {
@@ -22,10 +21,12 @@ export function toFormData(obj: any, form?: any, namespace?: any) {
         if (namespace) {
             if (isNaN(property as any)) {
                 formKey = namespace + '[' + property + ']';
-            } else if (value && typeof value === 'object' && (value instanceof File || value instanceof UploadedFile)) {
-                formKey = namespace;
             } else {
-                formKey = namespace + '[' + property + ']';
+                if (value && typeof value === 'object' && (value instanceof File || value instanceof UploadedFile)) {
+                    formKey = namespace;
+                } else {
+                    formKey = namespace + '[' + property + ']';
+                }
             }
         } else {
             formKey = property;
@@ -36,7 +37,7 @@ export function toFormData(obj: any, form?: any, namespace?: any) {
             toFormData(value, fd, formKey);
         } else {
             if (value instanceof UploadedFile) {
-                value = JSON.parse(JSON.stringify(value));
+                value = JSON.parse(JSON.stringify(value))
             }
             fd.append(formKey, value);
         }

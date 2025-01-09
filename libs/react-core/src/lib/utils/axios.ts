@@ -6,7 +6,7 @@ import { API_URL } from '../config';
 const instance = axios.create();
 instance.interceptors.response.use(
     (response) => response,
-    (error) => Promise.reject((error.response && error.response.data) || 'Something went wrong'),
+    (error) => Promise.reject((error.response && error.response.data) || 'Something went wrong')
 );
 
 export default instance;
@@ -15,15 +15,15 @@ const axiosInstance = axios.create({
     baseURL: `${API_URL}/api/`,
     withCredentials: false,
     headers: {
-        'Access-Control-Allow-Origin': '*',
+        "Access-Control-Allow-Origin": "*",
     // "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
     // "Access-Control-Allow-Headers": "Content-Type"
-    },
+    }
 });
 
 axiosInstance.interceptors.response.use(
     (response) => response,
-    (error) => Promise.reject((error.response && error.response.data) || 'Something went wrong'),
+    (error) => Promise.reject((error.response && error.response.data) || 'Something went wrong')
 );
 
 // axiosInstance.interceptors.request.use(config => {

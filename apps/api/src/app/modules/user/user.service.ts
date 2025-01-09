@@ -19,7 +19,6 @@ import { Role } from '../role';
 
 @Injectable()
 export class UserService extends CrudService<User> {
-
     protected hasSoftDelete = true;
 
     constructor(
@@ -38,7 +37,7 @@ export class UserService extends CrudService<User> {
         }
         if (entity?.roles) {
             entity.roles = req.roles.map((id) => {
-                return new Role({ id });
+                return new Role({ id })
             });
         }
 
@@ -46,6 +45,7 @@ export class UserService extends CrudService<User> {
     }
 
     async getStatusCounts(request: FindManyOptions<User>) {
+
         const query = this.userRepository.createQueryBuilder();
 
         query.select(`COUNT("${query.alias}"."id")`, 'count')
@@ -90,7 +90,7 @@ export class UserService extends CrudService<User> {
         }
         return this.userRepository.findOne({
             where: { id: user.id },
-            relations: ['roles'],
+            relations: ['roles']
         });
     }
 
@@ -99,7 +99,9 @@ export class UserService extends CrudService<User> {
             where: {
                 id: id,
             },
-            relations: ['roles'],
+            relations: [
+                'roles'
+            ],
         });
     }
 
@@ -113,24 +115,29 @@ export class UserService extends CrudService<User> {
                 const exists = await this.checkIfExistsEmail(entity.email, userId);
                 if (exists) {
                     throw new ConflictException(
-                        'Email is already taken, Please use other email',
+                        'Email is already taken, Please use other email'
                     );
                 }
             }
-            const userEntity = omit(entity, ['roles']);
+            const userEntity = omit(entity, [
+                'roles',
+            ]);
 
             await this.userRepository.save({
                 ...user,
-                ...userEntity,
+                ...userEntity
             });
             return await this.userRepository.findOne({
                 where: {
                     id: userId,
                 },
-                relations: ['roles'],
+                relations: [
+                    'roles',
+                ],
             });
+        } else {
+            throw new ConflictException('Please try again something is wrong!');
         }
-        throw new ConflictException('Please try again something is wrong!');
     }
 
     async checkIfExistsEmail(email: string, ignoreId?: any): Promise<boolean> {
@@ -148,7 +155,7 @@ export class UserService extends CrudService<User> {
         const user = await this.userRepository.findOne({
             where: {
                 id: currentUser?.id,
-            },
+            }
         });
         const userPassword = await this.userRepository
             .createQueryBuilder()
@@ -160,16 +167,15 @@ export class UserService extends CrudService<User> {
 
         const isMatch = await bcrypt.compare(
             entity.oldPassword,
-            userPassword.passwordHash,
+            userPassword.passwordHash
         );
         if (isMatch) {
             await this.userRepository.update(user.id, {
-                passwordHash: hashPassword(entity.password),
+                passwordHash: hashPassword(entity.password)
             });
         } else {
             throw new BadRequestException('Old password is wrong');
         }
         return 'Password successfully changed.';
     }
-
 }

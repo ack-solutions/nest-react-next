@@ -8,10 +8,9 @@ import { Setting } from './setting.entity';
 
 @Injectable()
 export class SettingSeeder implements Seeder {
-
     constructor(
         @InjectRepository(Setting)
-        private repo: Repository<Setting>,
+        private repo: Repository<Setting>
     ) { }
 
     async seed() {
@@ -22,8 +21,7 @@ export class SettingSeeder implements Seeder {
 
     async drop() {
         return await this.repo.query(
-            `TRUNCATE TABLE "${this.repo.metadata.tableName}" CASCADE`,
+            `TRUNCATE TABLE "${this.repo.metadata.tableName}" CASCADE`
         );
     }
-
 }
