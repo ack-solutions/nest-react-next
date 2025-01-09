@@ -45,7 +45,7 @@ export default function CustomBreadcrumbs({
         <Box
             sx={{
                 mb: 3,
-                ...sx 
+                ...sx,
             }}
         >
             <Stack
@@ -58,7 +58,7 @@ export default function CustomBreadcrumbs({
                     {heading && (
                         <Typography
                             variant="h4"
-                            gutterBottom={isTablet ? false : true}
+                            gutterBottom={!isTablet}
                         >
                             {heading}
                         </Typography>

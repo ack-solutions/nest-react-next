@@ -5,7 +5,7 @@ import { IUser, UserStatusEnum } from '@libs/types';
 import { Button, Card, CardContent, MenuItem, Stack, useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { startCase } from 'lodash';
-import { useEffect } from 'react'
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { object, ref, string } from 'yup';
@@ -22,7 +22,7 @@ const defaultValues: IUser = {
     email: '',
     phoneNumber: '',
     status: UserStatusEnum.INACTIVE,
-    roles: []
+    roles: [],
 };
 
 const validationSchema = yupResolver(object().shape({
@@ -32,10 +32,8 @@ const validationSchema = yupResolver(object().shape({
     phoneNumber: string().required().label('Phone Number'),
     password: string().label('Password').when('id', {
         is: (id: any) => !id,
-        then: (schema) =>
-            schema.nullable().required(),
-        otherwise: (schema) =>
-            schema.nullable(),
+        then: (schema) => schema.nullable().required(),
+        otherwise: (schema) => schema.nullable(),
     }),
     confirmPassword: string().label('Confirm Password').when(['id', 'password'], {
         is: (id: any, password: any) => !id || !!password,
@@ -44,28 +42,28 @@ const validationSchema = yupResolver(object().shape({
 }));
 
 const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const { id: userId } = useParams();
     const { useGetManyRole } = useRoleQuery();
-    const { data: roleData } = useGetManyRole()
+    const { data: roleData } = useGetManyRole();
 
     const formContext = useForm({
         defaultValues,
         resolver: validationSchema,
-    })
+    });
     const { reset } = formContext;
 
 
     useEffect(() => {
         reset({
             ...values,
-        })
+        });
     }, [reset, values]);
 
     return (
         <FormContainer
             FormProps={{
-                id: "add-edit-form-user"
+                id: 'add-edit-form-user',
             }}
             formContext={formContext}
             validationSchema={validationSchema}
@@ -78,7 +76,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                 <Grid
                     size={{
                         xs: 12,
-                        sm: 3
+                        sm: 3,
                     }}
                 >
                     <Card>
@@ -96,7 +94,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 label='Status'
                                 select
                                 sx={{
-                                    mt: 2
+                                    mt: 2,
                                 }}
                             >
                                 {Object.values(UserStatusEnum).map((status, index) => (
@@ -114,7 +112,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                 <Grid
                     size={{
                         xs: 12,
-                        sm: 9
+                        sm: 9,
                     }}
                 >
                     <Card>
@@ -126,7 +124,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        sm: 6
+                                        sm: 6,
                                     }}
                                 >
                                     <RHFTextField
@@ -139,7 +137,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        sm: 6
+                                        sm: 6,
                                     }}
                                 >
                                     <RHFTextField
@@ -154,7 +152,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                         <Grid
                                             size={{
                                                 xs: 12,
-                                                sm: 6
+                                                sm: 6,
                                             }}
                                         >
                                             <RHFPassword
@@ -166,7 +164,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                         <Grid
                                             size={{
                                                 xs: 12,
-                                                sm: 6
+                                                sm: 6,
                                             }}
                                         >
                                             <RHFPassword
@@ -180,7 +178,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        sm: 6
+                                        sm: 6,
                                     }}
                                 >
                                     <RHFTextField
@@ -193,7 +191,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        sm: 6
+                                        sm: 6,
                                     }}
                                 >
                                     <RHFTextField
@@ -206,7 +204,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        sm: 6
+                                        sm: 6,
                                     }}
                                 >
                                     <RHFTextField
@@ -228,7 +226,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                 <Grid
                                     size={{
                                         xs: 12,
-                                        sm: 6
+                                        sm: 6,
                                     }}
                                 >
                                     <RHFSelect
@@ -241,8 +239,8 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                                         options={roleData?.items}
                                         slotProps={{
                                             select: {
-                                                multiple: true
-                                            }
+                                                multiple: true,
+                                            },
                                         }}
                                     />
                                 </Grid>
@@ -271,7 +269,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
                 </Grid>
             </Grid>
         </FormContainer>
-    )
-}
+    );
+};
 
-export default AddEditUserForm
+export default AddEditUserForm;

@@ -17,7 +17,7 @@ export interface MenuDropdownProps extends Omit<MenuProps, 'children' | 'open'> 
     component?: typeof Popover | typeof Menu
 }
 
-export  function MenuDropdown({
+export function MenuDropdown({
     children,
     anchor,
     label,
@@ -34,7 +34,7 @@ export  function MenuDropdown({
             setAnchorEl(event.currentTarget);
         },
         [],
-    )
+    );
     const handleClose = useCallback(
         (event:any) => {
             event?.preventDefault();
@@ -42,7 +42,7 @@ export  function MenuDropdown({
             setAnchorEl(null);
         },
         [],
-    )
+    );
     const anchorNode = useMemo(() => {
         if (anchor) {
             let node = anchor;
@@ -50,20 +50,24 @@ export  function MenuDropdown({
                 node = anchor({ isOpen: isOpen });
             }
             return cloneElement(node as ReactElement<any>, {
-                onClick: handleClick
-            })
-        } else {
-            return (
+                onClick: handleClick,
+            });
+        }
+        return (
                 <Button
                     onClick={handleClick}
                 >
                     {label}
                 </Button>
-            )
-        }
-    }, [anchor, handleClick, isOpen, label])
+        );
+    }, [
+        anchor,
+        handleClick,
+        isOpen,
+        label,
+    ]);
 
-    const DropDownComponent = component || Popover
+    const DropDownComponent = component || Popover;
 
     return (
         <>

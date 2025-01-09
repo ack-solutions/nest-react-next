@@ -1,11 +1,10 @@
-
 import { OptionsObject, useSnackbar, VariantType } from 'notistack';
 import { useCallback, useMemo } from 'react';
 
 import { errorMessage } from '../utils';
 
 
-export  function useToasty() {
+export function useToasty() {
     const { enqueueSnackbar } = useSnackbar();
 
     const showToasty = useCallback(
@@ -15,15 +14,14 @@ export  function useToasty() {
                 {
                     variant: variant,
                     autoHideDuration: variant === 'success' ? 1000 : 5000,
-                    ...options
+                    ...options,
                 },
-            )
+            );
         },
         [enqueueSnackbar],
-    )
+    );
 
     return useMemo(() => ({
-        showToasty
+        showToasty,
     }), [showToasty]);
-  
 }

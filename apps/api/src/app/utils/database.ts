@@ -1,4 +1,4 @@
-import { DataSource } from "typeorm";
+import { DataSource } from 'typeorm';
 
 
 export function getDataSource() {
@@ -7,5 +7,5 @@ export function getDataSource() {
 
 export function getDefaultRepository(entity) {
     const dataSource = getDataSource();
-    return dataSource.getRepository(entity)
+    return dataSource.getRepository(entity);
 }

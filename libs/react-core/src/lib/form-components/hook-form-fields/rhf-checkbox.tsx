@@ -18,7 +18,7 @@ interface RHFCheckboxProps extends Omit<FormControlLabelProps, 'control' | 'labe
 export function RHFCheckbox({ name, control, helperText, label, ...other }: RHFCheckboxProps) {
     const {
         field: { onChange, value },
-        fieldState: { error }
+        fieldState: { error },
     } = useController({
         name,
         control,
@@ -55,7 +55,7 @@ export function RHFMultiCheckbox({
 }: RHFMultiCheckboxProps) {
     const {
         field: { onChange, value },
-        fieldState: { error }
+        fieldState: { error },
     } = useController({
         name,
         control,

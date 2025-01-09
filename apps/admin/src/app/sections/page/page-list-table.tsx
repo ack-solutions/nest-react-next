@@ -61,7 +61,7 @@ export default function PageListTable({ onEdit }: PageListTableProps) {
             ...state,
             where: {
                 ...value !== 'all' ? { status: { $eq: value } } : {},
-            }
+            },
         }));
     }, [datatableRef]);
 
@@ -77,12 +77,12 @@ export default function PageListTable({ onEdit }: PageListTableProps) {
         {
             name: 'content',
             label: 'content',
-            render: (row) => <Typography dangerouslySetInnerHTML={{ __html: row?.content }} />
+            render: (row) => <Typography dangerouslySetInnerHTML={{ __html: row?.content }} />,
         },
         {
             name: 'status',
             label: 'status',
-            render: (row) => <PageStatusLabel label={row?.status} />
+            render: (row) => <PageStatusLabel label={row?.status} />,
         },
         {
             name: 'name',

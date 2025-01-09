@@ -16,7 +16,7 @@ const Scrollbar = forwardRef<HTMLDivElement, ScrollbarProps>(({ children, sx, ..
                 ref={ref}
                 sx={{
                     overflow: 'auto',
-                    ...sx 
+                    ...sx,
                 }}
                 {...other}
             >
@@ -29,7 +29,7 @@ const Scrollbar = forwardRef<HTMLDivElement, ScrollbarProps>(({ children, sx, ..
         <StyledRootScrollbar>
             <StyledScrollbar
                 scrollableNodeProps={{
-                    ref
+                    ref,
                 }}
                 clickOnTrack={false}
                 sx={sx}

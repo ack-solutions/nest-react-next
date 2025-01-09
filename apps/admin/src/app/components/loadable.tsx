@@ -1,6 +1,6 @@
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
-import { LoadingScreen } from "./loading-screen";
+import { LoadingScreen } from './loading-screen';
 
 
 export const Loadable = (Component: React.ElementType) => (props: any) => {

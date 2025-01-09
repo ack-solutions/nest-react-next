@@ -4,9 +4,10 @@ import { IsInt, IsOptional, Min, ValidateNested } from 'class-validator';
 
 
 export class PaginationOptionsDTO {
+
   @ApiPropertyOptional({
       description: 'Number of items to skip',
-      example: 0 
+      example: 0,
   })
   @IsOptional()
   @Type(() => Number)
@@ -16,19 +17,21 @@ export class PaginationOptionsDTO {
 
   @ApiPropertyOptional({
       description: 'Maximum number of items to return',
-      example: 10 
+      example: 10,
   })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
       take?: number;
+
 }
 
 export class OrderOptionsDTO {
+
   @ApiPropertyOptional({
       description: 'Order by field',
-      example: 'name' 
+      example: 'name',
   })
   @IsOptional()
       orderBy?: string;
@@ -36,16 +39,18 @@ export class OrderOptionsDTO {
   @ApiPropertyOptional({
       description: 'Order direction',
       example: 'ASC',
-      enum: ['ASC', 'DESC'] 
+      enum: ['ASC', 'DESC'],
   })
   @IsOptional()
       orderDirection?: 'ASC' | 'DESC';
+
 }
 
 export class FindManyOptionsDTO {
+
   @ApiPropertyOptional({
       description: 'Pagination options',
-      type: PaginationOptionsDTO 
+      type: PaginationOptionsDTO,
   })
   @IsOptional()
   @ValidateNested()
@@ -54,7 +59,7 @@ export class FindManyOptionsDTO {
 
   @ApiPropertyOptional({
       description: 'Ordering options',
-      type: OrderOptionsDTO 
+      type: OrderOptionsDTO,
   })
   @IsOptional()
   @ValidateNested()
@@ -62,4 +67,5 @@ export class FindManyOptionsDTO {
       order?: OrderOptionsDTO;
 
     // Add more properties here as needed, such as filters
+
 }

@@ -1,5 +1,5 @@
 import { Collapse, List, ListSubheader, styled } from '@mui/material';
-import { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react';
 
 import NavbarList from './navbar-list';
 import { NavbarConfigProps, NavigationItem } from '../../../types/navigation';
@@ -16,11 +16,11 @@ const StyledSubheader = styled(ListSubheader)<{ config?: NavbarConfigProps; }>((
     paddingBottom: theme.spacing(1),
     color: theme.palette.text.disabled,
     transition: theme.transitions.create(['color'], {
-        duration: theme.transitions.duration.shortest
+        duration: theme.transitions.duration.shortest,
     }),
     '&:hover': {
-        color: theme.palette.text.primary
-    }
+        color: theme.palette.text.primary,
+    },
 }));
 
 interface NavGroupProps {
@@ -31,7 +31,6 @@ interface NavGroupProps {
   isMini?: boolean;
 }
 
-;
 
 export function NavbarGroup({ subheader, items, config, initialStatus, isMini }: NavGroupProps) {
     const [open, setOpen] = useState(!initialStatus);
@@ -51,8 +50,7 @@ export function NavbarGroup({ subheader, items, config, initialStatus, isMini }:
                     config={config}
                     isMini={isMini}
                 />
-            )))
-
+            )));
     }
 
     return (
@@ -93,7 +91,7 @@ export function NavbarGroup({ subheader, items, config, initialStatus, isMini }:
                 />
             ))}
         </List>
-    )
+    );
 }
 
-export default NavbarGroup
+export default NavbarGroup;

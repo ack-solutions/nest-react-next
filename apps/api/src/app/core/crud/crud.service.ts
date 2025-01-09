@@ -1,4 +1,3 @@
-
 import { IFindOptions, IPaginationResult } from '@libs/types';
 import { BadRequestException } from '@nestjs/common';
 import { cloneDeep, has } from 'lodash';
@@ -43,38 +42,37 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
 
     public getAll(filter: IFindOptions): Promise<T[]> {
         filter.where = this.mapUserIdInWhereForUser(filter.where as any, 'getAll');
-        const builder = new FindQueryBuilder(this.repository, filter)
-        builder.createDistinctQuery()
-        this.doGetMany(builder, filter)
+        const builder = new FindQueryBuilder(this.repository, filter);
+        builder.createDistinctQuery();
+        this.doGetMany(builder, filter);
         return builder.getMany();
     }
 
     public async getMany(filter: IFindOptions): Promise<IPaginationResult<T>> {
         filter.where = this.mapUserIdInWhereForUser(filter.where as any, 'getMany');
-        const builder = new FindQueryBuilder(this.repository, filter)
-        builder.createDistinctQuery()
-        this.doGetMany(builder, filter)
+        const builder = new FindQueryBuilder(this.repository, filter);
+        builder.createDistinctQuery();
+        this.doGetMany(builder, filter);
         const total = await builder.getCount();
         const items = await builder.getMany();
         return {
             items,
-            total: total?.count || 0
+            total: total?.count || 0,
         };
     }
 
 
     public async getOne(
-        criteria: string | number | FindOneOptions<T>
+        criteria: string | number | FindOneOptions<T>,
     ): Promise<T> {
         if (typeof criteria === 'string' || typeof criteria === 'number') {
-            criteria = { where: { id: criteria as any } }
+            criteria = { where: { id: criteria as any } };
         }
         criteria.where = this.mapUserIdInWhereForUser(criteria.where, 'getOne');
         return this.repository.findOne(criteria as FindOneOptions<T>);
     }
 
     public async create(entity: DeepPartial<T>, options?: SaveOptions): Promise<T> {
-
         entity = await this.checkOwnRowForUser(entity, false, 'create');
         let obj = this.repository.create(entity);
 
@@ -83,16 +81,14 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
         await this.repository.save(obj as any, options);
 
         await this.afterSave(oldValue, obj);
-        return obj
-
+        return obj;
     }
 
 
     public async update(
         criteria: string | number | FindOptionsWhere<T>,
-        partialEntity: DeepPartial<T>
+        partialEntity: DeepPartial<T>,
     ): Promise<T> {
-
         let findCondition: any;
         if (typeof criteria === 'string' || typeof criteria === 'number') {
             findCondition = { id: criteria };
@@ -103,7 +99,7 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
         let record = await this.repository.findOne({ where: findCondition });
 
         if (!record) {
-            throw new BadRequestException("No Record Found");
+            throw new BadRequestException('No Record Found');
         }
 
         record = await this.checkOwnRowForUser(record, true, 'update') as T;
@@ -113,7 +109,7 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
         let obj: any = this.repository.create({
             ...record,
             ...partialEntity,
-            updatedAt: new Date()
+            updatedAt: new Date(),
         });
 
         obj = await this.beforeSave(obj, partialEntity);
@@ -122,27 +118,24 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
         await this.handleFileDelete(record, obj);
         await this.afterSave(oldValue, obj);
         return obj;
-
     }
 
     public async restore(
         criteria: string | number | FindOptionsWhere<T>,
     ) {
         if (typeof criteria === 'string' || typeof criteria === 'number') {
-            criteria = { id: criteria as any }
+            criteria = { id: criteria as any };
         }
         const record = await this.repository.findOne({ where: criteria });
         await this.checkOwnRowForUser(record, true, 'restore');
-        return this.repository.restore(criteria)
+        return this.repository.restore(criteria);
     }
 
     public async delete(
-        criteria: string | number | FindOptionsWhere<T>
+        criteria: string | number | FindOptionsWhere<T>,
     ): Promise<DeleteResult> {
-
-
         if (typeof criteria === 'string' || typeof criteria === 'number') {
-            criteria = { id: criteria as any }
+            criteria = { id: criteria as any };
         }
 
         const record = await this.repository.findOne({ where: criteria });
@@ -151,22 +144,18 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
 
         if (this.repository.metadata.deleteDateColumn) {
             return await this.repository.softDelete(criteria);
-        } else {
-
-            await this.handleFileDelete(record);
-
-            return await this.repository.delete(criteria);
         }
 
+        await this.handleFileDelete(record);
+
+        return await this.repository.delete(criteria);
     }
 
     public async permanentDelete(
-        criteria: string | number | FindOptionsWhere<T>
+        criteria: string | number | FindOptionsWhere<T>,
     ): Promise<DeleteResult> {
-
-
         if (typeof criteria === 'string' || typeof criteria === 'number') {
-            criteria = { id: criteria as any }
+            criteria = { id: criteria as any };
         }
 
         const record = await this.repository.findOne({ where: criteria });
@@ -196,9 +185,9 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
         const hasUserIdColumn = this.repository.metadata.columns.filter((column) => column.propertyName === 'userId')?.length > 0;
         if (this.isUserRole() && hasUserIdColumn) {
             if (throwError && has(entity, 'userId') && (entity as any).userId != user?.id) {
-                throw new BadRequestException("You are not authorized.")
+                throw new BadRequestException('You are not authorized.');
             } else {
-                (entity as any).userId = user?.id
+                (entity as any).userId = user?.id;
             }
         }
         return entity;
@@ -206,25 +195,23 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
 
 
     protected mapUserIdInWhereForUser(where: FindOptionsWhere<T> | FindOptionsWhere<T>[], _hookType: 'getMany' | 'getOne' | 'getAll') {
-        const user = RequestContext.currentUser()
+        const user = RequestContext.currentUser();
         const hasUserIdColumn = this.repository.metadata.columns.filter((column) => column.propertyName === 'userId')?.length > 0;
         if (this.isUserRole() && hasUserIdColumn) {
             if (where instanceof Array && where.length > 0) {
                 where?.push({
                     userId: user?.id,
-                } as any)
-            }
-            else if (typeof where === 'object') {
+                } as any);
+            } else if (typeof where === 'object') {
                 where = {
                     ...where,
                     userId: user?.id, // Add the condition to filter by user ID
                 } as any;
-            }
-            else {
+            } else {
                 where = { userId: user?.id } as any;
             }
         }
-        return where
+        return where;
     }
 
     async handleFileDelete(oldValue: T, newValue?: T) {
@@ -242,4 +229,5 @@ export abstract class CrudService<T extends BaseEntity> implements ICrudService<
             }
         }
     }
+
 }

@@ -7,7 +7,6 @@ import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
 
 
 export default function AccountPopover() {
-
     const OPTIONS = [
         {
             label: 'Profile',
@@ -46,11 +45,11 @@ export default function AccountPopover() {
                         sx={{
                             width: {
                                 xs: 48,
-                                sm: 48
+                                sm: 48,
                             },
                             height: {
                                 xs: 48,
-                                sm: 48
+                                sm: 48,
                             },
                         }}
                     />
@@ -61,7 +60,7 @@ export default function AccountPopover() {
                         fontWeight={500}
                         display={{
                             xs: 'none',
-                            sm: 'block'
+                            sm: 'block',
                         }}
                     >
                         {startCase(currentUser?.name)}
@@ -74,7 +73,7 @@ export default function AccountPopover() {
                     <Box
                         sx={{
                             my: 1.5,
-                            px: 2.5
+                            px: 2.5,
                         }}
                     >
                         <Typography

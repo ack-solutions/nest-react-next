@@ -30,13 +30,13 @@ export interface IUserTableFilter {
 const defaultFilter: IUserTableFilter = {
     role: 'all',
     status: 'all',
-}
+};
 
 export default function UsersList() {
     const navigate = useNavigate();
     const datatableRef = useRef<CrudTableActions>(null);
-    const [openPasswordDialog, setOpenPasswordDialog] = useState<any>()
-    const [tableFilter, setTableFilter] = useState<IUserTableFilter>(defaultFilter)
+    const [openPasswordDialog, setOpenPasswordDialog] = useState<any>();
+    const [tableFilter, setTableFilter] = useState<IUserTableFilter>(defaultFilter);
     const {
         useGetManyUser,
         useDeleteUser,
@@ -45,58 +45,58 @@ export default function UsersList() {
         useBulkDeleteForeverUser,
         useRestoreUser,
         useBulkRestoreUser,
-        useGetUserCountByStatus
+        useGetUserCountByStatus,
     } = useUserQuery();
 
     const { data: countByStatus } = useGetUserCountByStatus();
 
     const handleOpenAddEditUser = useCallback(
         (row: IUser) => {
-            navigate(`${PATH_DASHBOARD.users.edit}/${row?.id}`)
+            navigate(`${PATH_DASHBOARD.users.edit}/${row?.id}`);
         },
         [navigate],
-    )
+    );
 
     const handleChangePassword = useCallback(
         (row: IUser) => {
-            setOpenPasswordDialog(row)
+            setOpenPasswordDialog(row);
         },
         [],
-    )
+    );
     const handleCloseDialog = useCallback(
         () => {
-            setOpenPasswordDialog(null)
+            setOpenPasswordDialog(null);
         },
         [],
-    )
+    );
 
     const handleOnChangeTableFilter = useCallback(
         (value, key) => {
             setTableFilter((state) => {
                 const newState = {
                     ...state,
-                    [key]: value
-                }
-                return newState
-            })
+                    [key]: value,
+                };
+                return newState;
+            });
         },
         [],
-    )
+    );
 
     const handleDataTableApiRequestMap = useCallback(
         (filter) => {
             if (has(filter?.where, '$or') && filter?.where['$or']?.length > 0) {
-                const searches = split(filter?.where['$or'][0]['firstName']['$contL'], ' ')
+                const searches = split(filter?.where['$or'][0]['firstName']['$contL'], ' ');
                 if (searches?.length > 1) {
                     filter?.where['$or'].push({
                         firstName: { $contL: searches[0]?.trim() },
-                        lastName: { $contL: searches[1]?.trim() }
-                    })
+                        lastName: { $contL: searches[1]?.trim() },
+                    });
 
                     filter?.where['$or'].push({
                         firstName: { $contL: searches[1]?.trim() },
-                        lastName: { $contL: searches[0]?.trim() }
-                    })
+                        lastName: { $contL: searches[0]?.trim() },
+                    });
                 }
             }
             filter = {
@@ -112,7 +112,7 @@ export default function UsersList() {
             return filter;
         },
         [tableFilter?.role, tableFilter?.status],
-    )
+    );
 
     const tabs: DataTableTabItem[] = useMemo(() => {
         return [
@@ -181,9 +181,9 @@ export default function UsersList() {
 
     useEffect(() => {
         if (datatableRef.current) {
-            datatableRef.current.datatable.refresh()
+            datatableRef.current.datatable.refresh();
         }
-    }, [tableFilter])
+    }, [tableFilter]);
 
     return (
         <Page title='Users'>
@@ -193,11 +193,11 @@ export default function UsersList() {
                     links={[
                         {
                             name: 'Dashboard',
-                            href: PATH_DASHBOARD.root
+                            href: PATH_DASHBOARD.root,
                         },
                         {
                             name: 'Users',
-                            href: PATH_DASHBOARD.users.root
+                            href: PATH_DASHBOARD.users.root,
                         },
                         { name: 'List' },
                     ]}
@@ -252,7 +252,7 @@ export default function UsersList() {
                                 onChange={({ target }) => handleOnChangeTableFilter(target?.value, 'status')}
                                 sx={{ width: 150 }}
                             >
-                                <MenuItem value={"all"}>All Status</MenuItem>
+                                <MenuItem value={'all'}>All Status</MenuItem>
                                 {Object.values(UserStatusEnum)?.map((status) => (
                                     <MenuItem
                                         key={status}

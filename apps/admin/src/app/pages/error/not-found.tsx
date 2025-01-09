@@ -28,7 +28,7 @@ const NotFound = () => {
                 sx={{
                     fontSize: '5rem',
                     fontWeight: 'bold',
-                    color: '#1976d2' 
+                    color: '#1976d2',
                 }}
             >
         404
@@ -47,7 +47,7 @@ const NotFound = () => {
             </Typography>
             {/* <Box
         component="img"
-        src="/404-image.png" 
+        src="/404-image.png"
         alt="Not Found"
         sx={{ width: '300px', mb: 4 }}
       /> */}

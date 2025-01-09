@@ -222,10 +222,11 @@ const OTPInput = ({
 
     return (
         <div
-            style={Object.assign({
+            style={({
                 display: 'flex',
-                alignItems: 'center' 
-            }, isStyleObject(containerStyle) && containerStyle)}
+                alignItems: 'center',
+                ...isStyleObject(containerStyle) && containerStyle,
+            })}
             className={typeof containerStyle === 'string' ? containerStyle : undefined}
             onPaste={onPaste}
         >
@@ -247,16 +248,16 @@ const OTPInput = ({
                             style: Object.assign(
                                 !skipDefaultStyles ? ({
                                     width: '1em',
-                                    textAlign: 'center' 
+                                    textAlign: 'center',
                                 } as const) : {},
-                                isStyleObject(inputStyle) ? inputStyle : {}
+                                isStyleObject(inputStyle) ? inputStyle : {},
                             ),
                             className: typeof inputStyle === 'string' ? inputStyle : undefined,
                             type: inputType,
                             inputMode: isInputNum ? 'numeric' : 'text',
                             onInput: handleInputChange,
                         },
-                        index
+                        index,
                     )}
                     {index < numInputs - 1 && (typeof renderSeparator === 'function' ? renderSeparator(index) : renderSeparator)}
                 </React.Fragment>

@@ -2,9 +2,9 @@ import { DefaultDialog } from '@admin/app/components';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormContainer, RHFSelect, RHFTextField, usePermissionQuery, useRoleQuery, useToasty } from '@libs/react-core';
 import { IPermission } from '@libs/types';
-import { Button, Stack } from '@mui/material'
+import { Button, Stack } from '@mui/material';
 import { map } from 'lodash';
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { object, string } from 'yup';
 
@@ -16,7 +16,7 @@ interface AddEditPermissionDialogProps {
 
 const defaultValues = {
     name: '',
-    roles: []
+    roles: [],
 };
 
 const validationSchema = object().shape({
@@ -24,17 +24,17 @@ const validationSchema = object().shape({
 });
 
 const AddEditPermissionDialog = ({ onClose, values }: AddEditPermissionDialogProps) => {
-    const { useGetManyRole } = useRoleQuery()
-    const { useCreatePermission, useUpdatePermission } = usePermissionQuery()
-    const { data: roleData } = useGetManyRole()
+    const { useGetManyRole } = useRoleQuery();
+    const { useCreatePermission, useUpdatePermission } = usePermissionQuery();
+    const { data: roleData } = useGetManyRole();
     const { showToasty } = useToasty();
     const formContext = useForm({
         defaultValues,
         resolver: yupResolver(validationSchema),
-    })
-    const { reset, handleSubmit, } = formContext;
-    const { mutate: createPermission } = useCreatePermission()
-    const { mutate: updatePermission } = useUpdatePermission()
+    });
+    const { reset, handleSubmit } = formContext;
+    const { mutate: createPermission } = useCreatePermission();
+    const { mutate: updatePermission } = useUpdatePermission();
 
     const handleSubmitForm = useCallback(
         (value: IPermission) => {
@@ -43,28 +43,33 @@ const AddEditPermissionDialog = ({ onClose, values }: AddEditPermissionDialogPro
                     showToasty(
                         value?.id
                             ? 'Permission updated successfully'
-                            : 'Permission added successfully'
+                            : 'Permission added successfully',
                     );
-                    onClose && onClose()
+                    onClose && onClose();
                 },
                 onError: (error) => {
-                    console.log(error)
+                    console.log(error);
                     showToasty(error, 'error');
-                }
-            }
+                },
+            };
             if (value?.id) {
                 updatePermission(value, options);
             } else {
                 createPermission(value, options);
             }
         },
-        [createPermission, onClose, showToasty, updatePermission],
-    )
+        [
+            createPermission,
+            onClose,
+            showToasty,
+            updatePermission,
+        ],
+    );
     useEffect(() => {
         reset({
             ...values,
-            roles: map(values.roles, 'id')
-        })
+            roles: map(values.roles, 'id'),
+        });
     }, [reset, values]);
 
     return (
@@ -76,7 +81,7 @@ const AddEditPermissionDialog = ({ onClose, values }: AddEditPermissionDialogPro
                 <>
                     <Button
                         variant="outlined"
-                        onClick={() => { onClose() }}
+                        onClick={() => { onClose(); }}
                     >
                         Cancel
                     </Button>
@@ -92,7 +97,7 @@ const AddEditPermissionDialog = ({ onClose, values }: AddEditPermissionDialogPro
         >
             <FormContainer
                 FormProps={{
-                    id: "add-edit-form-user"
+                    id: 'add-edit-form-user',
                 }}
                 formContext={formContext}
                 validationSchema={validationSchema}
@@ -116,15 +121,15 @@ const AddEditPermissionDialog = ({ onClose, values }: AddEditPermissionDialogPro
                         options={roleData?.items}
                         slotProps={{
                             select: {
-                                multiple: true
-                            }
+                                multiple: true,
+                            },
                         }}
                     />
                 </Stack>
 
             </FormContainer>
         </DefaultDialog>
-    )
-}
+    );
+};
 
-export default AddEditPermissionDialog
+export default AddEditPermissionDialog;

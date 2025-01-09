@@ -1,7 +1,7 @@
-import { ConfigModule, ConfigService } from "@nestjs/config";
-import { TypeOrmModule } from "@nestjs/typeorm";
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
-import { DataSource } from "typeorm";
+import { DataSource } from 'typeorm';
 
 import database from './app/core/config/database';
 import { AllEntities } from './app/core/entities';
@@ -11,7 +11,6 @@ import { TypeOrmConfigService } from './app/core/typeorm/typeorm-config.service'
 
 
 dotenv.config();
-
 
 
 seeder({

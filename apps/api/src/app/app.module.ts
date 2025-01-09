@@ -14,10 +14,12 @@ import { TypeOrmConfigService } from './core/typeorm/typeorm-config.service';
 
 @Module({
     imports: [
-        ThrottlerModule.forRoot([{
-            ttl: 60000,
-            limit: 20,
-        }]),
+        ThrottlerModule.forRoot([
+            {
+                ttl: 60000,
+                limit: 20,
+            },
+        ]),
         ConfigModule.forRoot({ load: Configs }),
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
@@ -36,8 +38,8 @@ import { TypeOrmConfigService } from './core/typeorm/typeorm-config.service';
         AppService,
         {
             provide: APP_GUARD,
-            useClass: ThrottlerGuard
-        }
+            useClass: ThrottlerGuard,
+        },
     ],
 })
 

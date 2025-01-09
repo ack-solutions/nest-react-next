@@ -20,7 +20,7 @@ export interface SettingsValueProps {
     primaryColor: 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red';
 }
 
-;
+
 export const initialSetting = {
     colorScheme: 'light',
     contrast: 'default',
@@ -44,7 +44,10 @@ export const SettingsContext = createContext({} as SettingsContextProps);
 
 
 export function SettingsProvider({ children, defaultSettings }: SettingsProviderProps) {
-    const { state, update, reset } = useLocalStorage(STORAGE_KEY, Object.assign({}, initialSetting, defaultSettings));
+    const { state, update, reset } = useLocalStorage(STORAGE_KEY, {
+        ...initialSetting,
+        ...defaultSettings,
+    });
     const [openDrawer, setOpenDrawer] = useState(false);
 
     const onToggleDrawer = useCallback(() => {
@@ -65,9 +68,17 @@ export function SettingsProvider({ children, defaultSettings }: SettingsProvider
             onReset: reset,
             open: openDrawer,
             onToggle: onToggleDrawer,
-            onClose: onCloseDrawer
+            onClose: onCloseDrawer,
         }),
-        [reset, update, state, canReset, openDrawer, onCloseDrawer, onToggleDrawer]
+        [
+            reset,
+            update,
+            state,
+            canReset,
+            openDrawer,
+            onCloseDrawer,
+            onToggleDrawer,
+        ],
     );
 
     return <SettingsContext.Provider value={memoizedValue}>{children}</SettingsContext.Provider>;

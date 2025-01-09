@@ -11,7 +11,9 @@ import { FileStorageMiddleware } from './file-storage.middleware';
     providers: [FileStorageMiddleware],
 })
 export class FileStorageModule implements NestModule {
+
     configure(consumer: MiddlewareConsumer) {
         consumer.apply(FileStorageMiddleware).forRoutes('*');
     }
+
 }

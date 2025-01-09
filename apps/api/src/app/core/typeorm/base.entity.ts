@@ -4,13 +4,14 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
     CreateDateColumn,
-    DeleteDateColumn
+    DeleteDateColumn,
 } from 'typeorm';
 
 
 // import { Factory } from '../nest-seeder';
 
 export abstract class BaseEntity implements IBaseEntity {
+
     constructor(input?: any) {
         if (input) {
             Object.assign(this, input);
@@ -20,7 +21,7 @@ export abstract class BaseEntity implements IBaseEntity {
     @ApiProperty({
         readOnly: true,
         type: String,
-        format: 'uuid'
+        format: 'uuid',
     })
     @PrimaryGeneratedColumn('uuid')
     id?: string;

@@ -1,6 +1,5 @@
-
 import { RoleNameEnum } from '@libs/types';
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { find } from 'lodash';
 import { Repository } from 'typeorm';
@@ -14,8 +13,8 @@ type Action = 'list' | 'create' | 'show' | 'update' | 'delete' | 'reorder' | 'tr
 
 // Define the permissions for a single entity
 interface EntityPermission {
-  entity: string;  // The name of the entity, e.g., 'user', 'role', etc.
-  actions?: Action[];  // Optional array of actions for the entity
+  entity: string; // The name of the entity, e.g., 'user', 'role', etc.
+  actions?: Action[]; // Optional array of actions for the entity
 }
 
 // Define the permissions map for each role
@@ -26,19 +25,27 @@ type RolePermissionsMap = {
 @Injectable()
 export class PermissionSeeder implements Seeder {
 
-    defaultActions = ['list', 'create', 'show', 'update', 'delete', 'trash-delete', 'trash-restore'];
+    defaultActions = [
+        'list',
+        'create',
+        'show',
+        'update',
+        'delete',
+        'trash-delete',
+        'trash-restore',
+    ];
 
     constructor(
     @InjectRepository(Permission)
     private permissionRepository: Repository<Permission>,
 
     @InjectRepository(Role)
-    private roleRepository: Repository<Role>
+    private roleRepository: Repository<Role>,
     ) { }
 
     async seed() {
-    // Remove Old Permissions 
-        await this.drop()
+    // Remove Old Permissions
+        await this.drop();
 
         const roles = await this.roleRepository.find();
 
@@ -74,9 +81,10 @@ export class PermissionSeeder implements Seeder {
             const permissionName = `${entity} ${action}`;
             return new Permission({
                 name: permissionName,
-                roles 
+                roles,
             });
         });
     }
+
 }
 

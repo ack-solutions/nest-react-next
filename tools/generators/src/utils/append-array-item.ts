@@ -8,7 +8,6 @@
  * @returns The updated content with the item added to the array.
  */
 export function appendArrayItem(content: string, arrayName: string, arrayItemName: string): string {
-
     const arrayRegex = new RegExp(`${arrayName}\\s*=\\s*\\[\\s*([\\s\\S]*?)\\s*\\]`);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

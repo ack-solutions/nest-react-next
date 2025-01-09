@@ -1,5 +1,5 @@
 import { Box, Button, Card, CardContent, CardHeader, Checkbox, FormControlLabel, FormHelperText, InputLabel, Skeleton, Stack, TextField, useTheme } from '@mui/material';
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid2';
 import { cloneDeep, isEqual } from 'lodash';
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { useController, Control } from 'react-hook-form';
@@ -24,7 +24,7 @@ export const RHFPermissionSelectField = ({
     column,
     renderValue,
     renderLabel,
-    isLoading
+    isLoading,
 }: PermissionSelectFieldProps) => {
     const [selected, setSelected] = useState<any>({});
     const [searchValue, setSearchValue] = useState('');
@@ -41,10 +41,13 @@ export const RHFPermissionSelectField = ({
             return allOptions.filter((option: any) => {
                 return option[renderLabel]?.toLocaleLowerCase()?.includes(searchValue.toLocaleLowerCase());
             });
-        } else {
-            return allOptions;
         }
-    }, [searchValue, renderLabel, allOptions]);
+        return allOptions;
+    }, [
+        searchValue,
+        renderLabel,
+        allOptions,
+    ]);
 
     const handleChange = useCallback(
         async (event: any, checked: any) => {
@@ -80,7 +83,11 @@ export const RHFPermissionSelectField = ({
                 return updatedState;
             });
         },
-        [renderValue, options, field],
+        [
+            renderValue,
+            options,
+            field,
+        ],
     );
 
     useEffect(() => {
@@ -114,7 +121,7 @@ export const RHFPermissionSelectField = ({
             <Card
                 sx={{
                     border: '1px solid',
-                    borderColor: `rgba(0, 0, 0, 0.23)`,
+                    borderColor: 'rgba(0, 0, 0, 0.23)',
                     display: 'flex',
                     flexDirection: 'column',
                     maxHeight: 400,
@@ -126,7 +133,7 @@ export const RHFPermissionSelectField = ({
                         <Stack
                             direction={{
                                 xs: 'column',
-                                sm: 'row'
+                                sm: 'row',
                             }}
                             spacing={2}
                         >
@@ -144,7 +151,7 @@ export const RHFPermissionSelectField = ({
                 <CardContent
                     sx={{
                         flex: 1,
-                        overflow: 'auto'
+                        overflow: 'auto',
                     }}
                 >
                     <Grid
@@ -170,7 +177,7 @@ export const RHFPermissionSelectField = ({
                                             sx={{
                                                 borderRadius: 1,
                                                 marginBottom: 1,
-                                                mr: 2
+                                                mr: 2,
                                             }}
                                         />
                                         <Skeleton

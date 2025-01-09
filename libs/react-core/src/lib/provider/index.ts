@@ -1,1 +1,1 @@
-export { NotistackProvider } from './notistack-provider'
+export { NotistackProvider } from './notistack-provider';

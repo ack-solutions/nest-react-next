@@ -42,7 +42,7 @@ export const LabelDropdown = ({
                 <MenuItem
                     key={getLabel(selected)}
                     selected={getValue(selected) === getValue(option)}
-                    onClick={() => { onChange(option); handleClose() }}
+                    onClick={() => { onChange(option); handleClose(); }}
                 >
                     {getLabel(option)}
                 </MenuItem>

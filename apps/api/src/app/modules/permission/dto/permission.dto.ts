@@ -1,5 +1,4 @@
-
-import { Permission } from "../permission.entity";
+import { Permission } from '../permission.entity';
 
 
 export class PermissionDTO extends Permission {

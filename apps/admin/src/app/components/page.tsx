@@ -9,7 +9,6 @@ interface PageProps extends BoxProps {
 }
 
 const Page = forwardRef<HTMLDivElement, PageProps>(({ children, title = '', ...other }, ref) => {
-
     return (
         <Box
             ref={ref}

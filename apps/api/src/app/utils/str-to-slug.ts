@@ -1,8 +1,8 @@
 import * as dotenv from 'dotenv';
-import { join } from "path";
-import { Not } from "typeorm";
+import { join } from 'path';
+import { Not } from 'typeorm';
 
-import { getDataSource } from "./database";
+import { getDataSource } from './database';
 
 
 dotenv.parse(join(process.cwd(), '.env'));
@@ -21,7 +21,7 @@ export async function generateSlug(type, str: string, exclude?: number | string,
     let slug: string;
     do {
         slug = convertToSlug(str + (index > 1 ? ' ' + index : ''));
-        const dataSource  = getDataSource();
+        const dataSource = getDataSource();
         found = await dataSource
             .createQueryBuilder()
             .select('id')
@@ -29,7 +29,7 @@ export async function generateSlug(type, str: string, exclude?: number | string,
             .withDeleted()
             .where({
                 [slugColumnName]: slug,
-                ...(exclude ? { id: Not(exclude) } : {})
+                ...(exclude ? { id: Not(exclude) } : {}),
             })
             .getRawOne();
 

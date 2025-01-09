@@ -45,7 +45,7 @@ module.exports = [
                         '^@api/',
                         '^@web/',
                         '^@admin/',
-                        '^.*/eslint(\\.base)?\\.config\\.[cm]?js$'
+                        '^.*/eslint(\\.base)?\\.config\\.[cm]?js$',
                     ],
                     depConstraints: [
                         {

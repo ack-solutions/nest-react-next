@@ -45,7 +45,7 @@ export class AuthService {
     async getUserByEmail(email: string): Promise<IUser> {
         return this.userRepo.findOne({
             where: { email: ILike(email) },
-            relations: ['roles']
+            relations: ['roles'],
         });
     }
 
@@ -59,7 +59,7 @@ export class AuthService {
         if (!user) {
             throw new BadRequestException('Your email is not correct');
         }
-        const userPassword = await this.userRepo.createQueryBuilder().where({ id: user.id, }).select('"passwordHash"').getRawOne();
+        const userPassword = await this.userRepo.createQueryBuilder().where({ id: user.id }).select('"passwordHash"').getRawOne();
         if (!await bcrypt.compare(request.password, userPassword?.passwordHash)) {
             throw new BadRequestException('Your email or password incorrect');
         }
@@ -74,7 +74,7 @@ export class AuthService {
             otp: otp,
             email,
         });
-        console.log({ otp })
+        console.log({ otp });
         return { message: 'OTP send successfully' };
     }
 
@@ -83,7 +83,7 @@ export class AuthService {
             const exists = await this.checkIfExistsEmail(request.email);
             if (exists) {
                 throw new ConflictException(
-                    'Email is already taken, Please use other email'
+                    'Email is already taken, Please use other email',
                 );
             }
         }
@@ -93,26 +93,23 @@ export class AuthService {
             console.log(otp);
             await this.verificationRepo.delete({
                 email: request.email,
-            })
+            });
             await this.verificationRepo.insert({
                 otp: otp,
                 email: request.email,
-            })
+            });
             return { message: 'OTP has been sent to your email, please verify' };
         }
-        else {
-            throw new BadRequestException("OTP sent failed ")
-        }
 
+        throw new BadRequestException('OTP sent failed ');
     }
     async login(request: ILoginInput) {
-
-        const user = await this.getUserByEmail(request.email)
+        const user = await this.getUserByEmail(request.email);
 
         if (!user) {
             throw new BadRequestException('Your email is not correct');
         }
-        const userPassword = await this.userRepo.createQueryBuilder().where({ id: user.id, }).select('"passwordHash"').getRawOne();
+        const userPassword = await this.userRepo.createQueryBuilder().where({ id: user.id }).select('"passwordHash"').getRawOne();
 
         if (!await bcrypt.compare(request.password, userPassword?.passwordHash)) {
             throw new BadRequestException('Your email or password incorrect');
@@ -127,15 +124,15 @@ export class AuthService {
         try {
             await this.veryFyOtp({
                 otp: request.otp,
-                email: request.email
+                email: request.email,
             });
         } catch (error) {
             throw new ConflictException(error?.message);
         }
         return {
             user,
-            accessToken: this.jwtFromUser(user)
-        }
+            accessToken: this.jwtFromUser(user),
+        };
     }
 
     async register(req: IRegisterInput) {
@@ -147,16 +144,16 @@ export class AuthService {
 
         await this.veryFyOtp({
             otp: req?.otp,
-            email: req?.email
-        })
-        req.emailVerifiedAt = new Date()
+            email: req?.email,
+        });
+        req.emailVerifiedAt = new Date();
 
         let user = await this.userService.createUser(req);
         user = await this.userService.getUserForAuth(user.id);
 
         return {
             accessToken: this.jwtFromUser(user),
-            user: user
+            user: user,
         } as LoginSuccessDTO;
     }
 
@@ -167,63 +164,58 @@ export class AuthService {
             where: {
                 id: user.id,
             },
-            select: ['passwordHash']
-        })
+            select: ['passwordHash'],
+        });
         if (await bcrypt.compare(request?.oldPassword, userPassword?.passwordHash)) {
             user.passwordHash = hashPassword(request.password);
             await this.userRepo.save(user);
             return user;
         }
-        else {
-            throw new BadRequestException('Old password is not valid');
-        }
 
+        throw new BadRequestException('Old password is not valid');
     }
 
     async resetPassword(request?: any) {
         const bcryptPassword = await bcrypt.hash(request.password, parseInt(process.env.SALT_ROUND, 10));
         const userPassword = await this.userService.userRepository.createQueryBuilder().where({
-            email: request.email
+            email: request.email,
         }).select('"passwordHash", "id"').getRawOne();
 
         await this.veryFyOtp({
             email: request.email,
-            otp: request.otp
-        })
+            otp: request.otp,
+        });
 
         if (userPassword?.id) {
             if (!await bcrypt.compare(bcryptPassword, userPassword?.passwordHash)) {
-
                 await this.userRepo.update(userPassword.id, {
-                    passwordHash: hashPassword(request.password)
+                    passwordHash: hashPassword(request.password),
                 });
 
                 await this.verificationRepo.delete({
                     email: request.email,
-                })
+                });
 
                 return { message: 'Your password reset successfully' };
             }
-            else {
-                throw new BadRequestException('Old password is not valid');
-            }
-        }
-        else {
+
+            throw new BadRequestException('Old password is not valid');
+        } else {
             throw new UnauthorizedException('You are not authorized');
         }
     }
 
     async forgotPassword(request?: any) {
-        const user = await this.getUserByEmail(request.email)
+        const user = await this.getUserByEmail(request.email);
         if (user) {
             const otp = await generateRandomNumber();
             await this.verificationRepo.delete({
                 email: request.email,
-            })
+            });
             await this.verificationRepo.insert({
                 otp: otp,
                 email: request.email,
-            })
+            });
 
             // const mailDetails = {
             //     otp: otp,
@@ -233,16 +225,15 @@ export class AuthService {
             // await this.notificationService.forgotPassword(request, mailDetails)
             return { message: 'OTP has been sent to your email, please verify' };
         }
-        else {
-            throw new BadRequestException("Sorry, we couldn't find an account with that email.")
-        }
+
+        throw new BadRequestException("Sorry, we couldn't find an account with that email.");
     }
 
     async sendOtp(request?: any) {
         const user = await this.userRepo.findOne({
             where: {
                 email: request.email,
-            }
+            },
         });
 
         if (user) {
@@ -256,19 +247,18 @@ export class AuthService {
                 email: request.email,
             });
             return { message: 'OTP send successfully' };
-        } else {
-            throw new BadRequestException(
-                "Sorry, we couldn't find an account with that email."
-            );
         }
+        throw new BadRequestException(
+            "Sorry, we couldn't find an account with that email.",
+        );
     }
 
     async veryFyOtp(request?: any) {
         const otpData = await this.verificationRepo.findOne({
             where: {
                 email: request.email,
-            }
-        })
+            },
+        });
         // const env = this.configService.get('config.env')
 
         //   if (env === 'local' || 'dev') {
@@ -279,15 +269,13 @@ export class AuthService {
 
         if (otpData && (otpData.otp == request.otp)) {
             const otpDateTime = moment((otpData.createdAt)).add(15, 'minutes').format('YYYY-MM-DD HH:mm:ss');
-            const currentDateTime = moment().format('YYYY-MM-DD HH:mm:ss')
+            const currentDateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             if (currentDateTime < otpDateTime) {
                 return { message: 'Your OTP verified successfully' };
             }
-            else {
-                throw new BadRequestException('OTP is expired');
-            }
-        }
-        else {
+
+            throw new BadRequestException('OTP is expired');
+        } else {
             throw new BadRequestException('OTP is not valid');
         }
     }
@@ -296,8 +284,9 @@ export class AuthService {
     jwtFromUser(user) {
         const payload = {
             email: user.email,
-            id: user.id
+            id: user.id,
         };
-        return this.jwtService.sign(payload)
+        return this.jwtService.sign(payload);
     }
+
 }

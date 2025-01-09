@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useCallback, useState } from "react"
+import React, { createContext, ReactNode, useCallback, useState } from 'react';
 
 
 interface IDefineInput {
@@ -14,14 +14,14 @@ const initialState = {
     define: (_options: IDefineInput) => {
         //
     },
-    onDeny: () => { return null }
-}
+    onDeny: () => { return null; },
+};
 
-const AccessContext = createContext(initialState)
+const AccessContext = createContext(initialState);
 
-export default AccessContext
+export default AccessContext;
 
-export const AccessConsumer = AccessContext.Consumer
+export const AccessConsumer = AccessContext.Consumer;
 
 export interface AccessProviderProps {
     children: ReactNode,
@@ -35,22 +35,22 @@ export interface AccessProviderProps {
 }
 
 export const AccessProvider = ({ children, onDeny }: AccessProviderProps) => {
-    const [state, setState] = useState(initialState)
+    const [state, setState] = useState(initialState);
 
     const define = useCallback(
         (values: string[]) => setState(prevState => ({
             ...prevState,
             ...values,
-            isLoaded: true
+            isLoaded: true,
         })),
         [],
-    )
+    );
 
     const providerValue: any = {
         ...state,
         onDeny,
-        define
-    }
+        define,
+    };
 
-    return <AccessContext.Provider value={providerValue}>{children}</AccessContext.Provider>
-}
+    return <AccessContext.Provider value={providerValue}>{children}</AccessContext.Provider>;
+};

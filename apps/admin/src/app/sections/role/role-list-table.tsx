@@ -1,10 +1,10 @@
 import { DataTableColumn } from '@admin/app/components';
-import { CrudTable, CrudTableActions } from '@admin/app/components/crud/crud-table'
+import { CrudTable, CrudTableActions } from '@admin/app/components/crud/crud-table';
 import { useRoleQuery } from '@libs/react-core';
 import { IRole } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
-import { Card } from '@mui/material'
-import { useRef } from 'react'
+import { Card } from '@mui/material';
+import { useRef } from 'react';
 
 
 export interface RoleListTableProps {
@@ -54,7 +54,7 @@ const RoleListTable = ({ onEdit }: RoleListTableProps) => {
                 columns={columns}
             />
         </Card>
-    )
-}
+    );
+};
 
-export default RoleListTable
+export default RoleListTable;

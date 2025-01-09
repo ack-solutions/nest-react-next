@@ -1,7 +1,7 @@
-import { IUser } from '@libs/types'
+import { IUser } from '@libs/types';
 import { Avatar, Stack, StackProps, Typography } from '@mui/material';
 import { startCase } from 'lodash';
-import { ReactNode } from 'react'
+import { ReactNode } from 'react';
 
 
 export interface UserWithAvatarProps extends StackProps {
@@ -18,8 +18,7 @@ const UserWithAvatar = ({
     children,
     ...props
 }: UserWithAvatarProps) => {
-
-    const charAtName = character(user?.name)
+    const charAtName = character(user?.name);
 
     return (
         <Stack
@@ -43,7 +42,7 @@ const UserWithAvatar = ({
                 >{secondaryText}</Typography>
             </Stack>
         </Stack>
-    )
-}
+    );
+};
 
-export default UserWithAvatar
+export default UserWithAvatar;

@@ -22,27 +22,30 @@ import { BaseEntity } from '../typeorm/base.entity';
 
 
 export function CrudController(dto, options?: ICrudControllerOptions) {
-
     class PaginationDto {
+
         @ApiPropertyOptional()
         count: number;
 
         @ApiPropertyOptional({
-            type: [dto]
+            type: [dto],
         })
         items: typeof dto[];
+
     }
 
     class CountDto {
+
         @ApiPropertyOptional()
         count: number;
 
     }
 
-    const CreateDTO = options?.createDto || dto
-    const UpdateDTO = options?.updateDto || dto
+    const CreateDTO = options?.createDto || dto;
+    const UpdateDTO = options?.updateDto || dto;
 
     abstract class CrudControllerClass<T extends BaseEntity> {
+
         protected constructor(readonly crudService: ICrudService<T>) { }
 
 
@@ -57,14 +60,12 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
             description: 'Success',
         })
         @ApiQuery({
-            type: GetManyInputDTO
+            type: GetManyInputDTO,
         })
         @Get('count')
-        async count(
-            @Query() filter: FindManyOptions, ..._extra: any
-        ): Promise<{ [x: string]: number }> {
+        async count(@Query() filter: FindManyOptions, ..._extra: any): Promise<{ [x: string]: number }> {
             const count = await this.crudService.count(filter);
-            return { count }
+            return { count };
         }
 
         @ApiOperation({ summary: 'Get All' })
@@ -78,12 +79,10 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
             description: 'Success',
         })
         @ApiQuery({
-            type: GetManyInputDTO
+            type: GetManyInputDTO,
         })
         @Get('all')
-        async getAll(
-            @Query() filter: IFindOptions, ..._extra: any
-        ): Promise<T[]> {
+        async getAll(@Query() filter: IFindOptions, ..._extra: any): Promise<T[]> {
             return this.crudService.getAll(filter);
         }
 
@@ -98,12 +97,10 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
             description: 'Success',
         })
         @ApiQuery({
-            type: GetManyInputDTO
+            type: GetManyInputDTO,
         })
         @Get()
-        async getMany(
-            @Query() filter?: IFindOptions, ..._extra: any
-        ): Promise<IPaginationResult<T>> {
+        async getMany(@Query() filter?: IFindOptions, ..._extra: any): Promise<IPaginationResult<T>> {
             return this.crudService.getMany(filter);
         }
 
@@ -120,11 +117,12 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         @Get(':id')
         async getOne(
             @Param('id') id: string,
-            @Query() queryParams: FindOneOptions<T>, ..._extra: any
+            @Query() queryParams: FindOneOptions<T>,
+            ..._extra: any
         ): Promise<T> {
             const options: any = {
-                where: { id: id }
-            }
+                where: { id: id },
+            };
             return this.crudService.getOne(merge(queryParams, options));
         }
 
@@ -140,14 +138,12 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
             description: 'Success',
         })
         @ApiBody({
-            type: CreateDTO
+            type: CreateDTO,
         })
         @HttpCode(HttpStatus.CREATED)
         @Post()
         @UseGuards(AuthGuard('jwt'))
-        async create(
-            @Body() entity: DeepPartial<T>, ..._extra: any
-        ): Promise<T> {
+        async create(@Body() entity: DeepPartial<T>, ..._extra: any): Promise<T> {
             return this.crudService.create(entity);
         }
 
@@ -162,14 +158,15 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
             description: 'Success',
         })
         @ApiBody({
-            type: UpdateDTO
+            type: UpdateDTO,
         })
         @HttpCode(HttpStatus.ACCEPTED)
         @Put(':id')
         @UseGuards(AuthGuard('jwt'))
         async update(
             @Param('id') id: string,
-            @Body() entity: Partial<typeof dto>, ..._extra: any
+            @Body() entity: Partial<typeof dto>,
+            ..._extra: any
         ): Promise<any> {
             return this.crudService.update(id, entity as any);
         }
@@ -202,9 +199,7 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         @HttpCode(HttpStatus.ACCEPTED)
         @Put(':id/restore')
         @UseGuards(AuthGuard('jwt'))
-        async restore(
-            @Param('id') id: string, ..._extra: any
-        ) {
+        async restore(@Param('id') id: string, ..._extra: any) {
             return this.crudService.restore(id);
         }
 
@@ -220,9 +215,7 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         @HttpCode(HttpStatus.ACCEPTED)
         @Delete(':id/trash')
         @UseGuards(AuthGuard('jwt'))
-        async permanentDelete(
-            @Param('id') id: string, ..._extra: any
-        ) {
+        async permanentDelete(@Param('id') id: string, ..._extra: any) {
             return this.crudService.permanentDelete(id);
         }
 
@@ -238,11 +231,9 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         @HttpCode(HttpStatus.ACCEPTED)
         @Delete('delete/bulk')
         @UseGuards(AuthGuard('jwt'))
-        async bulkDelete(
-            @Query() request: DeleteManyInputDTO, ..._extra: any
-        ): Promise<any> {
+        async bulkDelete(@Query() request: DeleteManyInputDTO, ..._extra: any): Promise<any> {
             return this.crudService.delete({
-                id: In(request.ids) as any
+                id: In(request.ids) as any,
             });
         }
 
@@ -259,11 +250,9 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         @HttpCode(HttpStatus.ACCEPTED)
         @Put('restore/bulk')
         @UseGuards(AuthGuard('jwt'))
-        async bulkRestore(
-            @Body() request: RestoreManyInputDTO, ..._extra: any
-        ) {
+        async bulkRestore(@Body() request: RestoreManyInputDTO, ..._extra: any) {
             return this.crudService.restore({
-                id: In(request.ids) as any
+                id: In(request.ids) as any,
             });
         }
 
@@ -279,16 +268,14 @@ export function CrudController(dto, options?: ICrudControllerOptions) {
         @HttpCode(HttpStatus.ACCEPTED)
         @Delete('trash/bulk')
         @UseGuards(AuthGuard('jwt'))
-        async bulkPermanentDelete(
-            @Query() request: DeleteManyInputDTO, ..._extra: any
-        ): Promise<any> {
+        async bulkPermanentDelete(@Query() request: DeleteManyInputDTO, ..._extra: any): Promise<any> {
             return this.crudService.permanentDelete({
-                id: In(request.ids) as any
+                id: In(request.ids) as any,
             });
         }
 
 
     }
 
-    return CrudControllerClass
+    return CrudControllerClass;
 }

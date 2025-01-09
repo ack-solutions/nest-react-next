@@ -1,5 +1,5 @@
-import { useCrudOperations } from "../hook";
-import { PermissionService } from "../services";
+import { useCrudOperations } from '../hook';
+import { PermissionService } from '../services';
 
 
 const service = PermissionService.getInstance<PermissionService>();

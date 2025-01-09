@@ -9,6 +9,7 @@ import { FileStorageOption, UploadedFile } from '../types';
 
 
 export class LocalProvider extends Provider<LocalProvider> {
+
     static instance: LocalProvider;
     name = 'local';
     tenantId = '';
@@ -39,8 +40,8 @@ export class LocalProvider extends Provider<LocalProvider> {
         const path = filePath
             ? `${this.getConfig('baseUrl')}/${filePath}`.replace(
                 '/public/public',
-                '/public'
-			  )
+                '/public',
+            )
             : null;
         return path;
     }
@@ -83,7 +84,7 @@ export class LocalProvider extends Provider<LocalProvider> {
                 } else {
                     fileNameString = `${prefix}-${moment().unix()}-${parseInt(
                         '' + Math.random() * 1000,
-                        10
+                        10,
                     )}.${ext}`;
                 }
                 callback(null, fileNameString);
@@ -101,7 +102,7 @@ export class LocalProvider extends Provider<LocalProvider> {
 
     async putFile(
         fileContent: string | Buffer,
-        path = ''
+        path = '',
     ): Promise<UploadedFile> {
         return new Promise((putFileResolve, reject) => {
             const fullPath = join(this.config.rootPath, path);
@@ -132,13 +133,13 @@ export class LocalProvider extends Provider<LocalProvider> {
             if (file.path) {
                 file.key = file.path.replace(
                     this.config.rootPath + separator,
-                    ''
+                    '',
                 );
             }
             file.url = this.url(file.key);
             return file;
-        } else {
-            return null;
         }
+        return null;
     }
+
 }

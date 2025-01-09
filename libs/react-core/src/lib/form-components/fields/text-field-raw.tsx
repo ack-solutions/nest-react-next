@@ -28,12 +28,11 @@ export const TextFieldRaw = memo(({
     inputSx,
     ...props
 }: TextFieldRawProps) => {
-
     return (
         <Box
             sx={{
                 width: '100%',
-                ...sx
+                ...sx,
             }}
         >
             <MUITextField
@@ -53,7 +52,7 @@ const TextField = memo((props: TextFieldProps) => {
     return <TextFieldRaw
         inputSx={props.inputSx}
         {...fieldToTextField(props)}
-    />
-})
+    />;
+});
 
-export default TextField
+export default TextField;
