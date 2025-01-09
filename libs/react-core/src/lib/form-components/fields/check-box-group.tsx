@@ -1,5 +1,5 @@
-import { Checkbox, CheckboxProps, FormControl, FormControlLabel, formControlLabelClasses, FormGroup, FormHelperText, FormLabel, SxProps } from '@mui/material'
-import React, { ReactNode } from 'react'
+import { Checkbox, CheckboxProps, FormControl, FormControlLabel, formControlLabelClasses, FormGroup, FormHelperText, FormLabel, SxProps } from '@mui/material';
+import React, { ReactNode } from 'react';
 
 
 export interface CheckBoxGroupProps extends Omit<CheckboxProps, 'onChange'> {
@@ -27,10 +27,9 @@ export const CheckBoxGroup = ({
     helperText,
     ...other
 }: CheckBoxGroupProps) => {
-
     const getSelected = (selectedItems: string[] = [], item: string) => {
         return selectedItems.includes(item) ? selectedItems.filter((value) => value !== item) : [...selectedItems, item];
-    }
+    };
 
     return (
         <FormControl component="fieldset" >
@@ -45,20 +44,20 @@ export const CheckBoxGroup = ({
             <FormGroup
                 sx={{
                     ...(row && {
-                        flexDirection: 'row'
+                        flexDirection: 'row',
                     }),
                     [`& .${formControlLabelClasses.root}`]: {
                         '&:not(:last-of-type)': {
-                            mb: spacing || 0
+                            mb: spacing || 0,
                         },
                         ...(row && {
                             mr: 0,
                             '&:not(:last-of-type)': {
-                                mr: spacing || 2
-                            }
-                        })
+                                mr: spacing || 2,
+                            },
+                        }),
                     },
-                    ...sx
+                    ...sx,
                 }}
             >
                 {options.map((option) => (
@@ -84,5 +83,5 @@ export const CheckBoxGroup = ({
                 </FormHelperText>
             )}
         </FormControl >
-    )
-}
+    );
+};

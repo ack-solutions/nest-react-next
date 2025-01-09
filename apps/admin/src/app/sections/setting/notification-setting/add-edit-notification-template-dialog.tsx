@@ -1,10 +1,10 @@
-import { DefaultDialog } from '@admin/app/components'
+import { DefaultDialog } from '@admin/app/components';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormContainer, RHFTextEditor, RHFTextField, useNotificationTemplateQuery, useToasty } from '@libs/react-core';
 import { INotificationTemplate } from '@libs/types';
 import { Button, Container } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { object, string } from 'yup';
 
@@ -32,17 +32,17 @@ const validationSchema = object().shape({
 
 const AddEditNotificationTemplateDialog = ({
     onClose,
-    templateValues
+    templateValues,
 }: AddEditNotificationTemplateDialogProps) => {
-    const { showToasty } = useToasty()
+    const { showToasty } = useToasty();
     const { useCreateNotificationTemplate, useUpdateNotificationTemplate } = useNotificationTemplateQuery();
-    const { mutate: createNotificationTemplate } = useCreateNotificationTemplate()
-    const { mutate: updateNotificationTemplate } = useUpdateNotificationTemplate()
+    const { mutate: createNotificationTemplate } = useCreateNotificationTemplate();
+    const { mutate: updateNotificationTemplate } = useUpdateNotificationTemplate();
 
     const formContext = useForm({
         defaultValues,
         resolver: yupResolver(validationSchema),
-    })
+    });
     const { reset, handleSubmit } = formContext;
 
     const handleSubmitForm = useCallback(
@@ -52,7 +52,7 @@ const AddEditNotificationTemplateDialog = ({
                     showToasty(
                         value?.id
                             ? 'Notification template updated successfully'
-                            : 'Notification template added successfully'
+                            : 'Notification template added successfully',
                     );
                     if (onClose) {
                         onClose({ isRefresh: true });
@@ -60,21 +60,26 @@ const AddEditNotificationTemplateDialog = ({
                 },
                 onError: (error) => {
                     showToasty(error, 'error');
-                }
-            }
+                },
+            };
             if (value?.id) {
                 updateNotificationTemplate(value, options);
             } else {
                 createNotificationTemplate(value, options);
             }
         },
-        [createNotificationTemplate, onClose, showToasty, updateNotificationTemplate],
-    )
+        [
+            createNotificationTemplate,
+            onClose,
+            showToasty,
+            updateNotificationTemplate,
+        ],
+    );
 
     useEffect(() => {
         reset({
             ...templateValues,
-        })
+        });
     }, [reset, templateValues]);
 
     return (
@@ -86,7 +91,7 @@ const AddEditNotificationTemplateDialog = ({
                 <>
                     <Button
                         variant="outlined"
-                        onClick={() => { onClose() }}
+                        onClick={() => { onClose(); }}
                     >
                         Cancel
                     </Button>
@@ -103,7 +108,7 @@ const AddEditNotificationTemplateDialog = ({
             <Container>
                 <FormContainer
                     FormProps={{
-                        id: "add-edit-form-notification-template"
+                        id: 'add-edit-form-notification-template',
                     }}
                     formContext={formContext}
                     validationSchema={validationSchema}
@@ -116,7 +121,7 @@ const AddEditNotificationTemplateDialog = ({
                         <Grid
                             size={{
                                 xs: 12,
-                                sm: 6
+                                sm: 6,
                             }}
                         >
                             <RHFTextField
@@ -129,7 +134,7 @@ const AddEditNotificationTemplateDialog = ({
                         <Grid
                             size={{
                                 xs: 12,
-                                sm: 6
+                                sm: 6,
                             }}
                         >
                             <RHFTextField
@@ -143,7 +148,7 @@ const AddEditNotificationTemplateDialog = ({
                         <Grid
                             size={{
                                 xs: 12,
-                                sm: 6
+                                sm: 6,
                             }}
                         >
                             <RHFTextField
@@ -157,7 +162,7 @@ const AddEditNotificationTemplateDialog = ({
                         <Grid
                             size={{
                                 xs: 12,
-                                sm: 6
+                                sm: 6,
                             }}
                         >
                             <RHFTextField
@@ -178,7 +183,7 @@ const AddEditNotificationTemplateDialog = ({
                 </FormContainer>
             </Container>
         </DefaultDialog>
-    )
-}
+    );
+};
 
-export default AddEditNotificationTemplateDialog
+export default AddEditNotificationTemplateDialog;

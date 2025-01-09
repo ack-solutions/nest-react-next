@@ -1,7 +1,7 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode } from 'react';
 
-import context from './context'
-import useAccess from './use-access'
+import context from './context';
+import useAccess from './use-access';
 
 
 export interface WithAccessOptions {
@@ -15,25 +15,23 @@ const withAccess = ({
     resource,
     ...props
 }: WithAccessOptions) => {
-
     return (WrappedComponent:never): ReactNode => {
-
-        const { onDeny } = React.useContext(context)
-        const { hasAnyPermission } = useAccess()
+        const { onDeny } = React.useContext(context);
+        const { hasAnyPermission } = useAccess();
 
         if (!permissions) {
-            return WrappedComponent
-            //throw new Error('No permissions were passed to withAccess')
+            return WrappedComponent;
+            // throw new Error('No permissions were passed to withAccess')
         }
 
         if (permissions.length === 0) {
-            return WrappedComponent
+            return WrappedComponent;
         }
 
-        const allowed = hasAnyPermission(permissions, { resource })
+        const allowed = hasAnyPermission(permissions, { resource });
 
         if (allowed) {
-            return WrappedComponent
+            return WrappedComponent;
         }
 
 
@@ -42,20 +40,17 @@ const withAccess = ({
 			    ? props.onDeny
 			    : typeof onDeny === 'function'
 			        ? onDeny
-			        : null
+			        : null;
 
         if (!nextAction) {
             console.warn(
-                'withAccess does not have have a provided onDeny callback. While this is not an error, you could potentially improve the user experience by implementing one.'
-            )
-            return null
-
+                'withAccess does not have have a provided onDeny callback. While this is not an error, you could potentially improve the user experience by implementing one.',
+            );
+            return null;
         }
 
-        return nextAction() || null
+        return nextAction() || null;
+    };
+};
 
-
-    }
-}
-
-export default withAccess
+export default withAccess;

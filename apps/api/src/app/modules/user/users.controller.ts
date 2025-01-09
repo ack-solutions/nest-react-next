@@ -32,6 +32,7 @@ import { CurrentUser } from '../auth/decorator/current-user';
 @Controller('user')
 @UseGuards()
 export class UsersController extends CrudController(UserDTO)<IUser> {
+
     constructor(private userService: UserService) {
         super(userService);
     }
@@ -43,10 +44,7 @@ export class UsersController extends CrudController(UserDTO)<IUser> {
             where: {
                 id: user?.id,
             },
-            relations: [
-                'roles',
-                'roles.permissions',
-            ],
+            relations: ['roles', 'roles.permissions'],
         });
     }
 
@@ -65,7 +63,7 @@ export class UsersController extends CrudController(UserDTO)<IUser> {
                 prefix: 'avatar',
             }),
         }),
-        RequestDataTypeInterceptor
+        RequestDataTypeInterceptor,
     )
     @Post()
     async create(@Body() req: DeepPartial<User>, @UploadedFileStorage() avatar) {
@@ -84,13 +82,13 @@ export class UsersController extends CrudController(UserDTO)<IUser> {
                 prefix: 'avatar',
             }),
         }),
-        RequestDataTypeInterceptor
+        RequestDataTypeInterceptor,
     )
     @Put(':id')
     async update(
         @Param('id') id: string,
         @Body() req: DeepPartial<User>,
-        @UploadedFileStorage() avatar
+        @UploadedFileStorage() avatar,
     ) {
         if (avatar?.key) {
             req.avatar = avatar?.key;
@@ -110,12 +108,12 @@ export class UsersController extends CrudController(UserDTO)<IUser> {
                 prefix: 'avatar',
             }),
         }),
-        RequestDataTypeInterceptor
+        RequestDataTypeInterceptor,
     )
     @Put('update/profile')
     async updateProfile(
         @Body() entity: IUpdateProfileInput,
-        @UploadedFileStorage() avatar
+        @UploadedFileStorage() avatar,
     ): Promise<User> {
         if (avatar?.key) {
             entity.avatar = avatar?.key;

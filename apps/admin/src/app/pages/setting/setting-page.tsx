@@ -1,37 +1,37 @@
-import Scrollbar from '@admin/app/components/scrollbar/scrollbar'
+import Scrollbar from '@admin/app/components/scrollbar/scrollbar';
 import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 import {
     EmailTwoTone as EmailTwoToneIcon,
     NotificationsNoneTwoTone as NotificationsNoneTwoToneIcon,
     InboxTwoTone as InboxTwoToneIcon,
 } from '@mui/icons-material';
-import { alpha, Box, List, ListItemButton, ListItemText, ListSubheader, Stack, useTheme } from '@mui/material'
+import { alpha, Box, List, ListItemButton, ListItemText, ListSubheader, Stack, useTheme } from '@mui/material';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import { Fragment } from 'react'
-import { matchPath, Outlet, useLocation } from 'react-router-dom'
+import { Fragment } from 'react';
+import { matchPath, Outlet, useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 
 const menuSections = [
     {
         id: 'setting',
-        title: "Setting",
+        title: 'Setting',
         staticPaths: [PATH_DASHBOARD.settings],
         children: [
             {
                 icon: <EmailTwoToneIcon />,
-                text: "Email ",
-                path: PATH_DASHBOARD.settings.emailSetting
+                text: 'Email ',
+                path: PATH_DASHBOARD.settings.emailSetting,
             },
             {
                 icon: <NotificationsNoneTwoToneIcon />,
-                text: "Notification",
-                path: PATH_DASHBOARD.settings.notificationSetting
+                text: 'Notification',
+                path: PATH_DASHBOARD.settings.notificationSetting,
             },
             {
                 icon: <InboxTwoToneIcon />,
-                text: "Email Layout",
-                path: PATH_DASHBOARD.settings.emailLayout
+                text: 'Email Layout',
+                path: PATH_DASHBOARD.settings.emailLayout,
             },
         ],
     },
@@ -39,7 +39,7 @@ const menuSections = [
 
 const SettingPage = () => {
     const { pathname } = useLocation();
-    const theme = useTheme()
+    const theme = useTheme();
     return (
         <Box
             sx={{
@@ -52,7 +52,7 @@ const SettingPage = () => {
                 sx={{
                     flexShrink: 0,
                     width: 280,
-                    mr: 2
+                    mr: 2,
                 }}
             >
                 <Stack
@@ -70,8 +70,8 @@ const SettingPage = () => {
                             '& .simplebar-content': {
                                 height: 1,
                                 display: 'flex',
-                                flexDirection: 'column'
-                            }
+                                flexDirection: 'column',
+                            },
                         }}
                     >
                         <Stack>
@@ -95,14 +95,14 @@ const SettingPage = () => {
                                                         color: active ? theme.palette.primary.main : theme.palette.text.secondary,
                                                         backgroundColor: alpha(theme.palette.primary.main, 0.08),
                                                         '&:hover': {
-                                                            backgroundColor: alpha(theme.palette.primary.main, 0.16)
-                                                        }
+                                                            backgroundColor: alpha(theme.palette.primary.main, 0.16),
+                                                        },
                                                     }}
                                                 >
                                                     <ListItemIcon
                                                         sx={{
                                                             minWidth: 36,
-                                                            color: (theme) => active ? theme.palette.primary.main : theme.palette.text.secondary
+                                                            color: (theme) => active ? theme.palette.primary.main : theme.palette.text.secondary,
                                                         }}
                                                     >
                                                         {item.icon}
@@ -114,7 +114,7 @@ const SettingPage = () => {
                                                         }}
                                                     />
                                                 </ListItemButton>
-                                            )
+                                            );
                                         })}
                                     </Fragment>
                                 ))}
@@ -137,7 +137,7 @@ const SettingPage = () => {
                 <Outlet />
             </Box>
         </Box>
-    )
-}
+    );
+};
 
-export default SettingPage
+export default SettingPage;

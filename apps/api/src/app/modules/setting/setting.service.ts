@@ -8,9 +8,10 @@ import { Setting } from './setting.entity';
 
 @Injectable()
 export class SettingService extends CrudService<Setting> {
+
     constructor(
         @InjectRepository(Setting)
-        private settingRepository: Repository<Setting>
+        private settingRepository: Repository<Setting>,
     ) {
         super(settingRepository);
     }
@@ -38,4 +39,5 @@ export class SettingService extends CrudService<Setting> {
         await this.repository.save(updatedSettings);
         return { message: 'Successfully Updated' };
     }
+
 }

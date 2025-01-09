@@ -47,16 +47,16 @@ export default function Router() {
             children: [
                 {
                     path: 'login',
-                    element: <Login />
+                    element: <Login />,
                 },
                 {
                     path: 'register',
-                    element: <Register />
+                    element: <Register />,
                 },
                 // { path: 'register', element: <Register /> },
                 {
                     path: 'forgot-password',
-                    element: <ForgotPassword />
+                    element: <ForgotPassword />,
                 },
                 // { path: 'verify', element: <VerifyCode /> },
                 // ...routes.auth,
@@ -69,7 +69,7 @@ export default function Router() {
             element: <Navigate
                 to={PATH_DASHBOARD.root}
                 replace
-            />
+            />,
         },
         {
             path: 'app',
@@ -81,42 +81,42 @@ export default function Router() {
             children: [
                 {
                     path: 'app',
-                    element: <Dashboard />
+                    element: <Dashboard />,
                 },
                 {
                     path: 'dashboard',
-                    element: <Dashboard />
+                    element: <Dashboard />,
                 },
                 {
                     path: 'users',
                     children: [
                         {
                             path: 'list',
-                            element: <UserList />
+                            element: <UserList />,
                         },
                         {
                             path: 'edit/:id',
-                            element: <AddEditUser />
+                            element: <AddEditUser />,
                         },
                         {
                             path: 'add',
-                            element: <AddEditUser />
+                            element: <AddEditUser />,
                         },
                         {
                             path: 'roles',
-                            element: <RoleList />
+                            element: <RoleList />,
                         },
                         {
                             path: 'roles/edit/:id',
-                            element: <AddEditRole />
+                            element: <AddEditRole />,
                         },
                         {
                             path: 'roles/add',
-                            element: <AddEditRole />
+                            element: <AddEditRole />,
                         },
                         {
                             path: 'permissions',
-                            element: <PermissionList />
+                            element: <PermissionList />,
                         },
                     ],
                 },
@@ -125,11 +125,11 @@ export default function Router() {
                     children: [
                         {
                             path: '',
-                            element: <PageList />
+                            element: <PageList />,
                         },
                         // { path: 'add', element: <AddEditPage /> },
                         // { path: 'edit/:pageId', element: <AddEditPage /> },
-                    ]
+                    ],
                 },
                 {
                     path: 'settings',
@@ -140,41 +140,41 @@ export default function Router() {
                             element: <Navigate
                                 to="email-setting"
                                 replace
-                            />
+                            />,
                         },
                         {
                             path: 'email-setting',
-                            element: <Settings />
+                            element: <Settings />,
                         },
                         {
                             path: 'notification-setting',
-                            element: <NotificationSetting />
+                            element: <NotificationSetting />,
                         },
                         {
                             path: 'email-layout',
-                            element: <EmailLayoutTemplate />
+                            element: <EmailLayoutTemplate />,
                         },
-                    ]
+                    ],
                 },
                 {
                     path: 'profile',
-                    element: <UserProfile />
+                    element: <UserProfile />,
                 },
                 {
                     path: 'change-password',
-                    element: <UserChangePassword />
+                    element: <UserChangePassword />,
                 },
                 {
                     path: 'profile',
-                    element: <UserProfile />
+                    element: <UserProfile />,
                 },
                 {
                     path: 'page',
-                    element: <PageList />
+                    element: <PageList />,
                 },
                 {
                     path: 'change-password',
-                    element: <UserChangePassword />
+                    element: <UserChangePassword />,
                 },
             ],
         },
@@ -183,14 +183,16 @@ export default function Router() {
             element: <Navigate
                 to="/404"
                 replace
-            />
+            />,
         },
         {
             path: '*',
-            children: [{
-                path: '404',
-                element: <NotFound />
-            }],
+            children: [
+                {
+                    path: '404',
+                    element: <NotFound />,
+                },
+            ],
         },
     ]);
 }

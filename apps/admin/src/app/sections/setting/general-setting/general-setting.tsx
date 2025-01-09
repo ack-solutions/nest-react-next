@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { upperCase } from 'lodash';
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { object, string } from 'yup';
 
@@ -46,7 +46,7 @@ const GeneralSetting = () => {
     const formContext = useForm({
         defaultValues,
         resolver: yupResolver(validationSchema) as any,
-    })
+    });
     const { useGetManySetting } = useSettingQuery();
     const { data, isSuccess } = useGetManySetting();
 
@@ -74,13 +74,12 @@ const GeneralSetting = () => {
             });
             setSettings({ settings: { ...values } });
         }
-
     }, [data, isSuccess]);
 
     useEffect(() => {
         reset({
             ...settings,
-        })
+        });
     }, [reset, settings]);
 
 
@@ -88,7 +87,7 @@ const GeneralSetting = () => {
         <Page title="GeneralSetting">
             <FormContainer
                 FormProps={{
-                    id: "add-edit-form-setting"
+                    id: 'add-edit-form-setting',
                 }}
                 formContext={formContext}
                 validationSchema={validationSchema}
@@ -101,7 +100,7 @@ const GeneralSetting = () => {
                     <Grid
                         size={{
                             xs: 12,
-                            sm: 6
+                            sm: 6,
                         }}
                     >
                         <Card>
@@ -127,7 +126,7 @@ const GeneralSetting = () => {
                     <Grid
                         size={{
                             xs: 12,
-                            sm: 6
+                            sm: 6,
                         }}
                     >
                         <Card>

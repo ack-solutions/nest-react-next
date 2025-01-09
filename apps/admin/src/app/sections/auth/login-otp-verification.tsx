@@ -1,9 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormContainer, RHFOtpInput } from '@libs/react-core';
-import { Alert, Box, Button, Stack, Typography } from '@mui/material'
+import { Alert, Box, Button, Stack, Typography } from '@mui/material';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import { object, string } from 'yup';
 
 import { PATH_AUTH } from '../../routes/paths';
@@ -27,18 +27,22 @@ const LoginOtpVerification = ({
 }: LoginOtpVerificationProps) => {
     const formContext = useForm({
         resolver: yupResolver(VeryFySchema),
-    })
-    const { formState: { errors, }, setError, reset } = formContext;
+    });
+    const { formState: { errors }, setError, reset } = formContext;
     const handleSubmit = useCallback(
         (value) => {
             if (onSubmit) {
                 onSubmit(value, {
                     setError,
-                    reset
+                    reset,
                 });
             }
         },
-        [onSubmit, reset, setError]
+        [
+            onSubmit,
+            reset,
+            setError,
+        ],
     );
     return (
         <Box>
@@ -52,12 +56,12 @@ const LoginOtpVerification = ({
             <Box
                 sx={{
                     mt: 5,
-                    mb: 3
+                    mb: 3,
                 }}
             >
                 <FormContainer
                     FormProps={{
-                        id: "login-otp-form"
+                        id: 'login-otp-form',
                     }}
                     formContext={formContext}
                     validationSchema={VeryFySchema}
@@ -116,7 +120,7 @@ const LoginOtpVerification = ({
 
             </Box >
         </Box>
-    )
-}
+    );
+};
 
-export default LoginOtpVerification
+export default LoginOtpVerification;

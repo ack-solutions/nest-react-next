@@ -22,7 +22,7 @@ export const navVerticalConfig = (config?: NavbarConfigProps) => ({
     itemSubHeight: config?.itemSubHeight || 36,
     itemPadding: config?.itemPadding || '4px 8px 4px 12px',
     itemRadius: config?.itemRadius || 8,
-    hiddenLabel: config?.hiddenLabel || false
+    hiddenLabel: config?.hiddenLabel || false,
 });
 
 interface NavbarProps {
@@ -30,7 +30,6 @@ interface NavbarProps {
     onCloseNav: () => void;
 }
 
-;
 
 export default function Navbar({ openNav, onCloseNav }: NavbarProps) {
     const { pathname } = useLocation();
@@ -51,8 +50,8 @@ export default function Navbar({ openNav, onCloseNav }: NavbarProps) {
                 '& .simplebar-content': {
                     height: 1,
                     display: 'flex',
-                    flexDirection: 'column'
-                }
+                    flexDirection: 'column',
+                },
             }}
         >
             <>
@@ -61,7 +60,7 @@ export default function Navbar({ openNav, onCloseNav }: NavbarProps) {
                         width: 180,
                         height: 48,
                         my: 2,
-                        mx: 'auto'
+                        mx: 'auto',
                     }}
                 />
                 <Stack>
@@ -84,7 +83,7 @@ export default function Navbar({ openNav, onCloseNav }: NavbarProps) {
             component="nav"
             sx={{
                 flexShrink: { lg: 0 },
-                width: { lg: NAV.W_VERTICAL }
+                width: { lg: NAV.W_VERTICAL },
             }}
         >
             {lgUp ? (<>
@@ -94,7 +93,7 @@ export default function Navbar({ openNav, onCloseNav }: NavbarProps) {
                         height: 1,
                         position: 'fixed',
                         width: NAV.W_VERTICAL,
-                        borderRight: (theme) => `dashed 1px ${theme.palette.divider}`
+                        borderRight: (theme) => `dashed 1px ${theme.palette.divider}`,
                     }}
                 >
                     {renderContent}
@@ -107,7 +106,7 @@ export default function Navbar({ openNav, onCloseNav }: NavbarProps) {
                     PaperProps={{
                         sx: {
                             width: NAV.W_VERTICAL,
-                        }
+                        },
                     }}
                 >
                     {renderContent}

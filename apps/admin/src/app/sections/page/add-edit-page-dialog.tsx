@@ -34,7 +34,7 @@ const validationSchema = object({
         object({
             key: string().label('Key'),
             value: string().label('Value'),
-        })
+        }),
     ).label('Meta Data'),
     name: string().label('name').required(),
     status: mixed<PageStatusEnum>().oneOf(Object.values(PageStatusEnum)).label('Status').required(),
@@ -46,7 +46,7 @@ const defaultValues: IPage = {
     content: '',
     metaData: [],
     name: '',
-    status: PageStatusEnum.DRAFT
+    status: PageStatusEnum.DRAFT,
 };
 
 
@@ -97,7 +97,7 @@ export default function AddEditPageDialog({
             } catch (error) {
                 showToasty(
                     errorMessage(error, 'Error while saving Page'),
-                    'error'
+                    'error',
                 );
                 throw error;
             }
@@ -110,7 +110,7 @@ export default function AddEditPageDialog({
             onSubmit,
             showToasty,
             updatePage,
-        ]
+        ],
     );
 
     useEffect(() => {
@@ -157,7 +157,7 @@ export default function AddEditPageDialog({
                         onChange={onChangeTab}
                         sx={{
                             px: 3,
-                            mb: 2
+                            mb: 2,
                         }}
                     >
                         <Tab
@@ -254,10 +254,10 @@ export default function AddEditPageDialog({
                                     type="button"
                                     onClick={() => append({
                                         key: '',
-                                        value: ''
+                                        value: '',
                                     })}
                                     sx={{
-                                        mt: 2
+                                        mt: 2,
                                     }}
                                 >
                                     Add MetaData

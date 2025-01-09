@@ -10,7 +10,7 @@ export const PATH_AUTH = {
     login: path(ROOTS_AUTH, '/login'),
     register: path(ROOTS_AUTH, '/register'),
     verify: path(ROOTS_AUTH, '/verify'),
-    forgotPassword: path(ROOTS_AUTH, '/forgot-password')
+    forgotPassword: path(ROOTS_AUTH, '/forgot-password'),
 };
 
 export const PATH_PAGE = {
@@ -23,7 +23,7 @@ export const PATH_PAGE = {
     faqs: '/faqs',
     page404: '/404',
     page500: '/500',
-    components: '/components'
+    components: '/components',
 };
 
 export const PATH_DASHBOARD = {

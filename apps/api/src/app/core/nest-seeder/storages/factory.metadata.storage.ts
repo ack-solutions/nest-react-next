@@ -14,6 +14,7 @@ export type PropertyMetadataType = {
 
 
 export class FactoryMetadataStorageHost {
+
     private properties = new Array<PropertyMetadataType>();
 
     addPropertyMetadata(metadata: PropertyMetadataType): void {
@@ -23,6 +24,7 @@ export class FactoryMetadataStorageHost {
     getPropertyMetadatasByTarget(target: Type<unknown>): PropertyMetadataType[] {
         return this.properties.filter(property => property.target === target);
     }
+
 }
 
 const globalRef = global as any;

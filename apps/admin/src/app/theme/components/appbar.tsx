@@ -2,13 +2,13 @@ export default function appBar(_theme) {
     return {
         MuiAppBar: {
             defaultProps: {
-                color: 'transparent'
+                color: 'transparent',
             },
             styleOverrides: {
                 root: {
-                    boxShadow: 'none'
-                }
+                    boxShadow: 'none',
+                },
             },
-        }
-    }
+        },
+    };
 }

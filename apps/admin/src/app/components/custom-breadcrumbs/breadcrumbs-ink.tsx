@@ -20,7 +20,7 @@ export default function BreadcrumbsLink({ link, activeLast, disabled }: Props) {
         color: 'text.primary',
         textDecoration: 'none',
         ':hover': {
-            textDecoration: 'underLine'
+            textDecoration: 'underLine',
         },
         ...(disabled &&
       !activeLast && {
@@ -40,7 +40,7 @@ export default function BreadcrumbsLink({ link, activeLast, disabled }: Props) {
                         display: 'inherit',
                         '& svg': {
                             width: 20,
-                            height: 20 
+                            height: 20,
                         },
                     }}
                 >

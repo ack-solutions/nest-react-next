@@ -5,7 +5,16 @@ import 'highlight.js/styles/atom-one-dark.css';
 // ----------------------------------------------------------------------
 
 hljs.configure({
-    languages: ['javascript', 'jsx', 'sh', 'bash', 'html', 'scss', 'css', 'json']
+    languages: [
+        'javascript',
+        'jsx',
+        'sh',
+        'bash',
+        'html',
+        'scss',
+        'css',
+        'json',
+    ],
 });
 
 // @ts-ignore

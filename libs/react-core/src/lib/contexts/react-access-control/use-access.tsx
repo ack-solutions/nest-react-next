@@ -1,10 +1,10 @@
-import { useContext } from "react"
+import { useContext } from 'react';
 
-import context from "./context"
+import context from './context';
 import {
     hasItem as hasItemHelper,
-    hasAnyItem as hasAnyItemHelper
-} from "./helper"
+    hasAnyItem as hasAnyItemHelper,
+} from './helper';
 
 export interface AccessOptions {
     // Default allowSuperAdmin is true. By default it will allow all permission to super admin. if need to disabled for super admin then need to pass "false"
@@ -13,23 +13,23 @@ export interface AccessOptions {
 }
 
 const useAccess = () => {
-    const { permissions, roles, resources, isLoaded, define } = useContext(context)
+    const { permissions, roles, resources, isLoaded, define } = useContext(context);
 
     const hasPermission = (checkPermissions: string[] | string, opts: AccessOptions = {}) => {
-        return hasItemHelper(permissions, resources, checkPermissions, opts)
-    }
+        return hasItemHelper(permissions, resources, checkPermissions, opts);
+    };
 
     const hasAnyPermission = (checkPermissions: string[] | string, opts: AccessOptions = {}) => {
-        return hasAnyItemHelper(permissions, resources, checkPermissions, opts)
-    }
+        return hasAnyItemHelper(permissions, resources, checkPermissions, opts);
+    };
 
     const hasRole = (checkRoles: string[], opts: AccessOptions = {}) => {
-        return hasItemHelper(roles, resources, checkRoles, opts)
-    }
+        return hasItemHelper(roles, resources, checkRoles, opts);
+    };
 
     const hasAnyRole = (checkRoles: string[], opts: AccessOptions = {}) => {
-        return hasAnyItemHelper(roles, resources, checkRoles, opts)
-    }
+        return hasAnyItemHelper(roles, resources, checkRoles, opts);
+    };
 
     return {
         isLoaded,
@@ -37,8 +37,8 @@ const useAccess = () => {
         hasAnyPermission,
         hasRole,
         hasAnyRole,
-        define
-    }
-}
+        define,
+    };
+};
 
-export default useAccess
+export default useAccess;

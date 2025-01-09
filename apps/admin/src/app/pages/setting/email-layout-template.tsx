@@ -2,7 +2,7 @@ import Page from '@admin/app/components/page';
 import { SettingService, useSettingQuery, useToasty } from '@libs/react-core';
 import { isJsonString } from '@libs/utils';
 import { Button, Card, CardActions, CardContent, CardHeader, Box, useTheme } from '@mui/material';
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid2';
 import { useCallback, useRef, useEffect, useState } from 'react';
 import EmailEditor from 'react-email-editor';
 
@@ -16,7 +16,7 @@ const EmailLayoutSetting = () => {
     const { useGetManySetting } = useSettingQuery();
     const { data, isSuccess } = useGetManySetting();
     const unlayer = emailEditorRef.current?.editor;
-    const theme = useTheme()
+    const theme = useTheme();
 
     const handleSaveSettings = useCallback(() => {
         unlayer?.exportHtml(({ design, html }) => {
@@ -24,10 +24,10 @@ const EmailLayoutSetting = () => {
                 settings: {
                     emailLayout: {
                         design,
-                        html
-                    }
-                }
-            }
+                        html,
+                    },
+                },
+            };
             settingService.updateSetting(request)
                 .then(() => {
                     showToasty('Email Layout Successfully Updated');
@@ -70,7 +70,7 @@ const EmailLayoutSetting = () => {
                             <Box
                                 sx={{
                                     border: `1px solid ${theme.palette.divider}`,
-                                    borderRadius: 1
+                                    borderRadius: 1,
                                 }}
                             >
                                 <EmailEditor ref={emailEditorRef} />

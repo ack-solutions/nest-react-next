@@ -49,7 +49,6 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
     dataTableApiRequestMap,
     ...props
 }, ref) => {
-
     const { showToasty } = useToasty();
     const confirmDialog = useConfirm();
     const [dataTableFilters, setDataTableFilters] = useState(getManyOptions);
@@ -62,12 +61,12 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
         enabled: Boolean(dataTableFilters),
     });
 
-    const { mutateAsync: deleteItem } = useDelete()
-    const { mutateAsync: restoreItem } = useRestore()
-    const { mutateAsync: deleteForeverItem } = useDeleteForever()
-    const { mutateAsync: bulkDeleteItems } = useBulkDelete()
-    const { mutateAsync: bulkRestoreItems } = useBulkRestore()
-    const { mutateAsync: bulkDeleteForeverItems } = useBulkDeleteForever()
+    const { mutateAsync: deleteItem } = useDelete();
+    const { mutateAsync: restoreItem } = useRestore();
+    const { mutateAsync: deleteForeverItem } = useDeleteForever();
+    const { mutateAsync: bulkDeleteItems } = useBulkDelete();
+    const { mutateAsync: bulkRestoreItems } = useBulkRestore();
+    const { mutateAsync: bulkDeleteForeverItems } = useBulkDeleteForever();
 
     const handleDelete = useCallback(
         (row: any) => {
@@ -81,9 +80,9 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
                             showToasty(
                                 errorMessage(
                                     error,
-                                    `Oops! Something went wrong while trying to delete the ${crudName}. Please try again.`
+                                    `Oops! Something went wrong while trying to delete the ${crudName}. Please try again.`,
                                 ),
-                                'error'
+                                'error',
                             );
                         });
                 })
@@ -91,7 +90,12 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
                     // Nothing
                 });
         },
-        [confirmDialog, crudName, deleteItem, showToasty]
+        [
+            confirmDialog,
+            crudName,
+            deleteItem,
+            showToasty,
+        ],
     );
 
     const handleRestore = useCallback(
@@ -106,9 +110,9 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
                             showToasty(
                                 errorMessage(
                                     error,
-                                    `Oops! Something went wrong while trying to restore the ${crudName}. Please try again.`
+                                    `Oops! Something went wrong while trying to restore the ${crudName}. Please try again.`,
                                 ),
-                                'error'
+                                'error',
                             );
                         });
                 })
@@ -116,7 +120,12 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
                     // Nothing
                 });
         },
-        [confirmDialog, crudName, restoreItem, showToasty]
+        [
+            confirmDialog,
+            crudName,
+            restoreItem,
+            showToasty,
+        ],
     );
 
     const handleDeleteForever = useCallback(
@@ -131,9 +140,9 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
                             showToasty(
                                 errorMessage(
                                     error,
-                                    `Oops! Something went wrong while trying to delete the ${crudName}. Please try again.`
+                                    `Oops! Something went wrong while trying to delete the ${crudName}. Please try again.`,
                                 ),
-                                'error'
+                                'error',
                             );
                         });
                 })
@@ -141,7 +150,12 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
                     // Nothing
                 });
         },
-        [confirmDialog, crudName, deleteForeverItem, showToasty]
+        [
+            confirmDialog,
+            crudName,
+            deleteForeverItem,
+            showToasty,
+        ],
     );
 
     const handleBulkDelete = useCallback(
@@ -159,9 +173,9 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
                             showToasty(
                                 errorMessage(
                                     error,
-                                    `Oops! Something went wrong while trying to delete the ${crudName}. Please try again.`
+                                    `Oops! Something went wrong while trying to delete the ${crudName}. Please try again.`,
                                 ),
-                                'error'
+                                'error',
                             );
                         });
                 })
@@ -169,7 +183,12 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
                     // Nothing
                 });
         },
-        [confirmDialog, crudName, bulkDeleteItems, showToasty]
+        [
+            confirmDialog,
+            crudName,
+            bulkDeleteItems,
+            showToasty,
+        ],
     );
 
     const handleBulkRestore = useCallback(
@@ -187,9 +206,9 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
                             showToasty(
                                 errorMessage(
                                     error,
-                                    `Oops! Something went wrong while trying to restore the ${crudName}. Please try again.`
+                                    `Oops! Something went wrong while trying to restore the ${crudName}. Please try again.`,
                                 ),
-                                'error'
+                                'error',
                             );
                         });
                 })
@@ -197,7 +216,12 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
                     // Nothing
                 });
         },
-        [confirmDialog, crudName, bulkRestoreItems, showToasty]
+        [
+            confirmDialog,
+            crudName,
+            bulkRestoreItems,
+            showToasty,
+        ],
     );
 
     const handleBulkDeleteForever = useCallback(
@@ -215,9 +239,9 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
                             showToasty(
                                 errorMessage(
                                     error,
-                                    `Oops! Something went wrong while trying to delete the ${crudName}. Please try again.`
+                                    `Oops! Something went wrong while trying to delete the ${crudName}. Please try again.`,
                                 ),
-                                'error'
+                                'error',
                             );
                         });
                 })
@@ -225,28 +249,33 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
                     // Nothing
                 });
         },
-        [confirmDialog, crudName, bulkDeleteForeverItems, showToasty]
+        [
+            confirmDialog,
+            crudName,
+            bulkDeleteForeverItems,
+            showToasty,
+        ],
     );
 
     const handleDataTableChange = useCallback((filters) => {
         if (isTrash.value) {
-            filters.onlyDeleted = true
+            filters.onlyDeleted = true;
         }
         if (dataTableApiRequestMap) {
-            filters = dataTableApiRequestMap(filters)
+            filters = dataTableApiRequestMap(filters);
         }
         // Manage filters mapping here.
         setDataTableFilters(filters);
     }, [dataTableApiRequestMap, isTrash.value]);
 
     useEffect(() => {
-        datatableRef?.current?.refresh()
-    }, [isTrash.value])
+        datatableRef?.current?.refresh();
+    }, [isTrash.value]);
 
     useImperativeHandle(ref, () => ({
         filters: dataTableFilters,
         applyFilters: setDataTableFilters,
-        datatable: datatableRef.current as any
+        datatable: datatableRef.current as any,
     }));
 
     const columns = useMemo(() => {
@@ -258,16 +287,16 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
                 props: {
                     sx: {
                         width: 120,
-                    }
+                    },
                 },
                 render: (row: IBaseEntity) => (
                     <TableActionMenu
                         row={row}
                         {...(hasSoftDelete && row.deletedAt ? {
                             onDeleteForever: () => handleDeleteForever(row),
-                            onRestore: () => handleRestore(row)
+                            onRestore: () => handleRestore(row),
                         } : {
-                            onDelete: () => handleDelete(row)
+                            onDelete: () => handleDelete(row),
                         })}
                         {...(onEdit && { onEdit: () => onEdit(row) })}
                         {...(onView && { onView: () => onView(row) })}
@@ -275,8 +304,17 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
                     />
                 ),
             },
-        ]
-    }, [handleDelete, handleDeleteForever, handleRestore, hasSoftDelete, initialColumn, onEdit, onView, rowActions])
+        ];
+    }, [
+        handleDelete,
+        handleDeleteForever,
+        handleRestore,
+        hasSoftDelete,
+        initialColumn,
+        onEdit,
+        onView,
+        rowActions,
+    ]);
 
     return (
         <DataTable
@@ -293,9 +331,9 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
                 <TableBulkActionMenu
                     {...(hasSoftDelete && isTrash?.value ? {
                         onRestore: () => handleBulkRestore(selectedRowIds),
-                        onDeleteForever: () => handleBulkDeleteForever(selectedRowIds)
+                        onDeleteForever: () => handleBulkDeleteForever(selectedRowIds),
                     } : {
-                        onDelete: () => handleBulkDelete(selectedRowIds)
+                        onDelete: () => handleBulkDelete(selectedRowIds),
                     })}
                     actions={bulkActions(selectedRowIds)}
                 />
@@ -318,4 +356,4 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(({
             {...props}
         />
     );
-})
+});

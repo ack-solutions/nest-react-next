@@ -1,7 +1,7 @@
-import { createWriteStream, mkdirSync } from "fs";
-import { startsWith } from "lodash";
-import { dirname, join } from "path";
-import request from "request";
+import { createWriteStream, mkdirSync } from 'fs';
+import { startsWith } from 'lodash';
+import { dirname, join } from 'path';
+import request from 'request';
 
 
 export function download(uri: any, filename: any) {
@@ -12,19 +12,17 @@ export function download(uri: any, filename: any) {
     return new Promise((resolve, reject) => {
         request.head(uri, (err: any) => {
             if (err) {
-                reject(err)
+                reject(err);
                 return;
             }
             request(uri).pipe(createWriteStream(fullPath)).on('close', (error: any, success: any) => {
                 if (error) {
-                    reject(error)
+                    reject(error);
                     return;
                 }
-                resolve(success)
+                resolve(success);
             });
-        })
-
+        });
     });
 }
 
-;

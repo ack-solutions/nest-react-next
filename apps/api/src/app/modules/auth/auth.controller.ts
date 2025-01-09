@@ -13,6 +13,7 @@ import { LoginSuccessDTO } from './dto/login-success.dto';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
+
     constructor(
         private authService: AuthService,
         private configService: ConfigService,
@@ -149,4 +150,5 @@ export class AuthController {
     async sendOtp(@Body() req: any) {
         return this.authService.sendOtp(req);
     }
+
 }

@@ -19,6 +19,7 @@ export interface S3Config {
 }
 
 export class S3Provider extends Provider<S3Provider> {
+
     static instance: S3Provider;
 
     name = 's3';
@@ -61,7 +62,7 @@ export class S3Provider extends Provider<S3Provider> {
                 new GetObjectCommand({
                     Bucket: this.getS3Bucket(),
                     Key: key,
-                    ...objectConfig && { ...objectConfig }
+                    ...objectConfig && { ...objectConfig },
                 }),
             );
             // Adjustable expiration.
@@ -71,9 +72,8 @@ export class S3Provider extends Provider<S3Provider> {
             // 	Expires: 3600
             // });
             return url;
-        } else {
-            return null;
         }
+        return null;
     }
 
     setAwsDetails() {
@@ -106,7 +106,7 @@ export class S3Provider extends Provider<S3Provider> {
                     } else {
                         fileNameString = `cleardoor-${prefix}-${moment().unix()}-${parseInt(
                             '' + Math.random() * 1000,
-                            10
+                            10,
                         )}.${ext}`;
                     }
                     let dir;
@@ -117,7 +117,7 @@ export class S3Provider extends Provider<S3Provider> {
                     }
                     callback(
                         null,
-                        join(this.config.rootPath, dir, fileNameString)
+                        join(this.config.rootPath, dir, fileNameString),
                     );
                 }
             },
@@ -128,7 +128,7 @@ export class S3Provider extends Provider<S3Provider> {
         const s3 = this.getS3Instance();
         const params = {
             Bucket: this.getS3Bucket(),
-            Key: key ? key : (Math.random() + 1).toString(36).substring(12),
+            Key: key || (Math.random() + 1).toString(36).substring(12),
         };
 
         return new Promise((resolve, reject) => {
@@ -148,7 +148,7 @@ export class S3Provider extends Provider<S3Provider> {
             const params = {
                 Bucket: this.getS3Bucket(),
                 Body: fileContent,
-                Key: key ? key : (Math.random() + 1).toString(36).substring(12),
+                Key: key || (Math.random() + 1).toString(36).substring(12),
                 ContentDisposition: `inline; ${fileName}`,
             };
 
@@ -159,9 +159,9 @@ export class S3Provider extends Provider<S3Provider> {
                     const size = await s3
                         .headObject({
                             Key: key,
-                            Bucket: this.getS3Bucket()
+                            Bucket: this.getS3Bucket(),
                         })
-                        //.promise()
+                        // .promise()
                         .then((res) => res.ContentLength);
 
                     const file = {
@@ -182,7 +182,7 @@ export class S3Provider extends Provider<S3Provider> {
         const s3 = this.getS3Instance();
         const params = {
             Bucket: this.getS3Bucket(),
-            Key: key ? key : (Math.random() + 1).toString(36).substring(12),
+            Key: key || (Math.random() + 1).toString(36).substring(12),
         };
         return new Promise((deleteFileResolve, reject) => {
             s3.deleteObject(params, function (err) {
@@ -226,8 +226,8 @@ export class S3Provider extends Provider<S3Provider> {
             file.filename = file?.originalname;
             file.url = await this.url(file.key); // file.location;
             return file;
-        } else {
-            return null;
         }
+        return null;
     }
+
 }

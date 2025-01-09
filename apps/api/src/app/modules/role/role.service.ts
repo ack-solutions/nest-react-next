@@ -9,10 +9,12 @@ import { Role } from './role.entity';
 
 @Injectable()
 export class RoleService extends CrudService<IRole> {
+
     constructor(
     @InjectRepository(Role)
-        repository: Repository<Role>
+        repository: Repository<Role>,
     ) {
         super(repository);
     }
+
 }

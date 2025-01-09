@@ -72,7 +72,7 @@ export function createPaletteChannel(hexPalette: Record<string, string>) {
 
     return {
         ...hexPalette,
-        ...channelPalette 
+        ...channelPalette,
     };
 }
 
@@ -96,7 +96,7 @@ export function varAlpha(color: string, opacity = 1) {
        - Hex: "#00B8D9".
        - RGB: "rgb(0, 184, 217)".
        - RGBA: "rgba(0, 184, 217, 1)".
-       `
+       `,
         );
     }
 

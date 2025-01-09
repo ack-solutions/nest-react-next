@@ -5,7 +5,7 @@ import General from '@admin/app/sections/user/general';
 import { useTabs } from '@libs/react-core';
 import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 import KeyTwoToneIcon from '@mui/icons-material/KeyTwoTone';
-import { Container, Tab, Tabs } from '@mui/material'
+import { Container, Tab, Tabs } from '@mui/material';
 
 import UserChangePassword from '../../sections/user/user-change-password';
 
@@ -21,7 +21,7 @@ const UserProfile = () => {
                     links={[
                         {
                             name: 'Dashboard',
-                            href: PATH_DASHBOARD.root
+                            href: PATH_DASHBOARD.root,
                         },
                         { name: 'Profile' },
                     ]}
@@ -54,7 +54,7 @@ const UserProfile = () => {
                 )}
             </Container>
         </Page>
-    )
-}
+    );
+};
 
-export default UserProfile
+export default UserProfile;

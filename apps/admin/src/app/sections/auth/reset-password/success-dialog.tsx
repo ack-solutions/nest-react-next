@@ -9,9 +9,8 @@ export interface SuccessDialogProps {
 }
 
 const SuccessDialog = ({
-    onClose
+    onClose,
 }: SuccessDialogProps) => {
-
     return (
         <DefaultDialog
             maxWidth='sm'
@@ -26,7 +25,7 @@ const SuccessDialog = ({
                     to={PATH_AUTH.login}
                     sx={{
                         mt: 1,
-                        marginX: '40px'
+                        marginX: '40px',
                     }}
                 >
                     Continue
@@ -65,7 +64,7 @@ const SuccessDialog = ({
                 </Box>
             </Stack>
         </DefaultDialog>
-    )
-}
+    );
+};
 
-export default SuccessDialog
+export default SuccessDialog;

@@ -15,10 +15,10 @@ export default function RoleList() {
     const navigate = useNavigate();
     const handleOpenEditRole = useCallback(
         (row: IRole) => {
-            navigate(`${PATH_DASHBOARD.users.editRole}/${row?.id}`)
+            navigate(`${PATH_DASHBOARD.users.editRole}/${row?.id}`);
         },
         [],
-    )
+    );
 
     return (
         <Page title='Roles'>
@@ -28,11 +28,11 @@ export default function RoleList() {
                     links={[
                         {
                             name: 'Dashboard',
-                            href: PATH_DASHBOARD.root 
+                            href: PATH_DASHBOARD.root,
                         },
                         {
                             name: 'Roles',
-                            href: PATH_DASHBOARD.users.roles 
+                            href: PATH_DASHBOARD.users.roles,
                         },
                         { name: 'List' },
                     ]}

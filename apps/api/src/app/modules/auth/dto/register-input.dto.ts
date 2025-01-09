@@ -1,7 +1,7 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsOptional } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional } from 'class-validator';
 
-import { UserDTO } from "../../user/dto/user.dto";
+import { UserDTO } from '../../user/dto/user.dto';
 
 
 export class RegisterInputDTO extends UserDTO {

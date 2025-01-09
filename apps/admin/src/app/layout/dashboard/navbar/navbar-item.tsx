@@ -21,10 +21,9 @@ export interface NavbarItemProps extends ListItemButtonProps {
 	config?: NavbarConfigProps;
 }
 
-;
 
 export const StyledNavItem = styled(ListItemButton, {
-    shouldForwardProp: (prop) => prop !== 'active'
+    shouldForwardProp: (prop) => prop !== 'active',
 })<Omit<NavbarItemProps, 'item'>>(({ active, depth, config, theme, isMini, open }) => {
     const subItem = depth !== 1;
     const deepSubItem = depth > 2;
@@ -33,16 +32,16 @@ export const StyledNavItem = styled(ListItemButton, {
             color: theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.primary.light,
             backgroundColor: alpha(theme.palette.primary.main, 0.08),
             '&:hover': {
-                backgroundColor: alpha(theme.palette.primary.main, 0.16)
-            }
+                backgroundColor: alpha(theme.palette.primary.main, 0.16),
+            },
         },
         sub: {
             color: theme.palette.text.primary,
             backgroundColor: isMini ? theme.palette.action.selected : 'transparent',
             '&:hover': {
-                backgroundColor: theme.palette.action.hover
-            }
-        }
+                backgroundColor: theme.palette.action.hover,
+            },
+        },
     };
     return {
         // Root item
@@ -54,7 +53,7 @@ export const StyledNavItem = styled(ListItemButton, {
         position: 'relative',
         // Active root item
         ...(active && {
-            ...activeStyles.root
+            ...activeStyles.root,
         }),
 
         // Sub item
@@ -62,13 +61,13 @@ export const StyledNavItem = styled(ListItemButton, {
             minHeight: config?.itemSubHeight,
             // Active sub item
             ...(active && {
-                ...activeStyles.sub
-            })
+                ...activeStyles.sub,
+            }),
         }),
 
         // Deep sub item
         ...(deepSubItem && {
-            paddingLeft: theme.spacing(depth)
+            paddingLeft: theme.spacing(depth),
         }),
 
         ...isMini && {
@@ -76,7 +75,7 @@ export const StyledNavItem = styled(ListItemButton, {
             justifyContent: 'center',
             margin: `0 ${config?.itemGap}px ${config?.itemGap}px ${config?.itemGap}px`,
             ...((config?.hiddenLabel && !subItem) && {
-                padding: config?.itemPadding
+                padding: config?.itemPadding,
             }),
             ...(subItem && {
                 margin: 0,
@@ -87,9 +86,9 @@ export const StyledNavItem = styled(ListItemButton, {
             ...(open &&
 				!active && {
                 color: theme.palette.text.primary,
-                backgroundColor: theme.palette.action.hover
-            })
-        }
+                backgroundColor: theme.palette.action.hover,
+            }),
+        },
     };
 });
 
@@ -99,7 +98,7 @@ export const StyledIcon = styled(ListItemIcon)<{ size?: number; }>(({ size }) =>
     height: size,
     color: 'inherit',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
 }));
 
 
@@ -109,12 +108,12 @@ export const StyledDotIcon = styled('span')<{ active?: boolean; }>(({ active, th
     borderRadius: '50%',
     backgroundColor: theme.palette.text.disabled,
     transition: theme.transitions.create(['transform'], {
-        duration: theme.transitions.duration.shorter
+        duration: theme.transitions.duration.shorter,
     }),
     ...(active && {
         transform: 'scale(2)',
-        backgroundColor: theme.palette.primary.main
-    })
+        backgroundColor: theme.palette.primary.main,
+    }),
 }));
 
 const NavbarItem = forwardRef(({ item, open, depth, active, config, externalLink, isMini, ...other }: NavbarItemProps, ref?: any) => {
@@ -163,9 +162,9 @@ const NavbarItem = forwardRef(({ item, open, depth, active, config, externalLink
                             flex: 'unset',
                             ...(!subItem && {
                                 px: 0.5,
-                                mt: 0.5
-                            })
-                        }
+                                mt: 0.5,
+                            }),
+                        },
                     } : {}}
                     primaryTypographyProps={{
                         noWrap: true,
@@ -179,15 +178,15 @@ const NavbarItem = forwardRef(({ item, open, depth, active, config, externalLink
                             ...(subItem && {
                                 textAlign: 'unset',
                                 typography: 'caption',
-                            })
-                        } : {}
+                            }),
+                        } : {},
 
                     }}
                     secondaryTypographyProps={{
                         noWrap: true,
                         component: 'span',
                         typography: 'caption',
-                        color: 'text.disabled'
+                        color: 'text.disabled',
                     }}
                 />
             )}
@@ -197,7 +196,7 @@ const NavbarItem = forwardRef(({ item, open, depth, active, config, externalLink
                     component="span"
                     sx={{
                         ml: 1,
-                        lineHeight: 0 
+                        lineHeight: 0,
                     }}
                 >
                     {info}
@@ -210,7 +209,7 @@ const NavbarItem = forwardRef(({ item, open, depth, active, config, externalLink
                     icon={open ? 'arrow-up-2' : 'arrow-right-3'}
                     sx={{
                         ml: 0,
-                        flexShrink: 0 
+                        flexShrink: 0,
                     }}
                 />
             )}
@@ -240,8 +239,8 @@ const NavbarItem = forwardRef(({ item, open, depth, active, config, externalLink
                 color="inherit"
                 sx={{
                     ...(disabled && {
-                        cursor: 'default'
-                    })
+                        cursor: 'default',
+                    }),
                 }}
             >
                 {renderContent}
@@ -262,13 +261,13 @@ const NavbarItem = forwardRef(({ item, open, depth, active, config, externalLink
             color="inherit"
             sx={{
                 ...(disabled && {
-                    cursor: 'default'
-                })
+                    cursor: 'default',
+                }),
             }}
         >
             {renderContent}
         </Link>
     );
-})
+});
 
-export default NavbarItem
+export default NavbarItem;

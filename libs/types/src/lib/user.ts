@@ -1,6 +1,6 @@
 // import { IOrganizationBaseEntity } from "./base-entity";
-import { IBaseEntity } from "./base-entity";
-import { IRole } from "./role";
+import { IBaseEntity } from './base-entity';
+import { IRole } from './role';
 
 
 export interface IUser extends IBaseEntity {

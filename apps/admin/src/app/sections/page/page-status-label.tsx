@@ -9,20 +9,18 @@ export interface PageStatusLabelProps extends LabelProps {
 }
 
 const PageStatusLabel = ({ label }: PageStatusLabelProps) => {
-
     const color: LabelColor = useMemo(() => {
         switch (label) {
-
             case PageStatusEnum.DRAFT:
-                return 'primary'
+                return 'primary';
 
             case PageStatusEnum.PUBLISHED:
-                return 'success'
+                return 'success';
 
             case PageStatusEnum.UNPUBLISHED:
-                return 'warning'
+                return 'warning';
         }
-    }, [label])
+    }, [label]);
 
     return (
         <Label
@@ -32,7 +30,6 @@ const PageStatusLabel = ({ label }: PageStatusLabelProps) => {
             {startCase(label)}
         </Label>
     );
+};
 
-}
-
-export default PageStatusLabel
+export default PageStatusLabel;

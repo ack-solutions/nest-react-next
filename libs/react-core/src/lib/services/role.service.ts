@@ -1,7 +1,8 @@
-import { CRUDService } from "./crud-service";
+import { CRUDService } from './crud-service';
 
 
 export class RoleService extends CRUDService<any> {
+
     protected apiPath = 'role';
 
 }

@@ -1,4 +1,4 @@
-import { DataTableColumn } from '@admin/app/components'
+import { DataTableColumn } from '@admin/app/components';
 import { CrudTable, CrudTableActions } from '@admin/app/components/crud/crud-table';
 import AddEditNotificationTemplateDialog from '@admin/app/sections/setting/notification-setting/add-edit-notification-template-dialog';
 import { useNotificationTemplateQuery } from '@libs/react-core';
@@ -6,11 +6,11 @@ import { INotificationTemplate } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
 import { Card } from '@mui/material';
 import { startCase } from 'lodash';
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react';
 
 
 const NotificationSetting = () => {
-    const [notificationTemplate, setNotificationTemplate] = useState<INotificationTemplate>()
+    const [notificationTemplate, setNotificationTemplate] = useState<INotificationTemplate>();
     const datatableRef = useRef<CrudTableActions>(null);
     const {
         useGetManyNotificationTemplate,
@@ -19,21 +19,21 @@ const NotificationSetting = () => {
         useDeleteForeverNotificationTemplate,
         useBulkDeleteNotificationTemplate,
         useBulkRestoreNotificationTemplate,
-        useBulkDeleteForeverNotificationTemplate
-    } = useNotificationTemplateQuery()
+        useBulkDeleteForeverNotificationTemplate,
+    } = useNotificationTemplateQuery();
 
     const handleOpenEditNotificationTemplateDialog = useCallback(
         (value?: INotificationTemplate) => {
-            setNotificationTemplate(value)
+            setNotificationTemplate(value);
         },
         [],
-    )
+    );
     const handleCloseEditNotificationTemplateDialog = useCallback(
         () => {
-            setNotificationTemplate(null)
+            setNotificationTemplate(null);
         },
         [],
-    )
+    );
 
     const columns: DataTableColumn<INotificationTemplate>[] = [
         {
@@ -41,13 +41,13 @@ const NotificationSetting = () => {
             label: 'Title',
             isSearchable: true,
             isSortable: true,
-            render: (raw) => startCase(raw?.title)
+            render: (raw) => startCase(raw?.title),
         },
         {
             name: 'emailSubject',
             label: 'Email Subject',
             isSearchable: true,
-            render: (raw) => startCase(raw?.emailSubject)
+            render: (raw) => startCase(raw?.emailSubject),
         },
         {
             name: 'slug',
@@ -93,7 +93,7 @@ const NotificationSetting = () => {
                 />
             )}
         </Card>
-    )
-}
+    );
+};
 
-export default NotificationSetting
+export default NotificationSetting;
