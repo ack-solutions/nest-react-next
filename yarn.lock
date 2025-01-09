@@ -3152,11 +3152,6 @@
   dependencies:
     tslib "2.7.0"
 
-"@nestjs/throttler@^6.3.0":
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/@nestjs/throttler/-/throttler-6.3.0.tgz#30e03a49732ea3059dfb36e3068bb31941a29062"
-  integrity sha512-IqTMbl5Iyxjts7NwbVriDND0Cnr8rwNqAPpF5HJE+UV+2VrVUBwCfDXKEiXu47vzzaQLlWPYegBsGO9OXxa+oQ==
-
 "@nestjs/typeorm@^10.0.2":
   version "10.0.2"
   resolved "https://registry.yarnpkg.com/@nestjs/typeorm/-/typeorm-10.0.2.tgz#25e3ec3c9a127b085c06fd7ea25f8690dba145c2"
@@ -4334,14 +4329,6 @@
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/@sqltools/formatter/-/formatter-1.2.5.tgz#3abc203c79b8c3e90fd6c156a0c62d5403520e12"
   integrity sha512-Uy0+khmZqUrUGm5dmMqVlnvufZRSK0FbYzVgp0UMstm+F5+W2/jnEEQyc9vo1ZR/E5ZI/B1WjjoTqBqwJL6Krw==
-
-"@stylistic/eslint-plugin-js@^2.12.1":
-  version "2.12.1"
-  resolved "https://registry.yarnpkg.com/@stylistic/eslint-plugin-js/-/eslint-plugin-js-2.12.1.tgz#93ff844df0ed699e1f4b2ff7010ed9508dc87b0d"
-  integrity sha512-5ybogtEgWIGCR6dMnaabztbWyVdAPDsf/5XOk6jBonWug875Q9/a6gm9QxnU3rhdyDEnckWKX7dduwYJMOWrVA==
-  dependencies:
-    eslint-visitor-keys "^4.2.0"
-    espree "^10.3.0"
 
 "@stylistic/eslint-plugin@^2.12.1":
   version "2.12.1"

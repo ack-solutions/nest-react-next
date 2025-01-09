@@ -2,7 +2,7 @@ import {
     Button,
     ButtonProps,
     DialogContentText,
-    Stack,
+    Stack
 } from '@mui/material';
 import {
     FC,
@@ -10,7 +10,7 @@ import {
     useContext,
     useState,
     createContext,
-    ReactNode,
+    ReactNode
 } from 'react';
 
 import DefaultDialog, { DefaultDialogProps } from '../components/default-dialog';
@@ -103,13 +103,14 @@ export const ConfirmProvider: FC<ConfirmProviderProps> = ({ children }) => {
     const [dialogProps, setDialogProps] = useState<Partial<ConfirmDialogProps> | null>(null);
     const [resolveReject, setResolveReject] = useState<[() => void, () => void] | null>(null);
 
-    const confirm = (options: Partial<ConfirmDialogProps>) => new Promise<void>((resolve, reject) => {
-        if (typeof options === 'string') {
-            options = { message: options };
-        }
-        setDialogProps(options);
-        setResolveReject([resolve, reject]);
-    });
+    const confirm = (options: Partial<ConfirmDialogProps>) =>
+        new Promise<void>((resolve, reject) => {
+            if (typeof options === 'string') {
+                options = { message: options };
+            }
+            setDialogProps(options);
+            setResolveReject([resolve, reject]);
+        });
 
     const handleClose = () => {
         setDialogProps(null);

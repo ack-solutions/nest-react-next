@@ -12,10 +12,10 @@ import { CustomNamingStrategy } from './custom-naming-strategy';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
-
-    constructor(private configService: ConfigService) { }
-
+    constructor(private configService: ConfigService,) { }
+    
     async createTypeOrmOptions(): Promise<TypeOrmModuleOptions> {
+
         const appConfig = this.configService.get('app');
         const database = this.configService.get<IDatabaseConfig>('database');
 
@@ -23,7 +23,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
             type: database?.type,
             ssl: database?.sslMode ? {
                 rejectUnauthorized: true,
-                ca: readFileSync(resolve(database?.sslCaPath)).toString(),
+                ca: readFileSync(resolve(database?.sslCaPath)).toString()
             } as TlsOptions : false,
             host: database?.host,
             username: database?.username,
@@ -35,10 +35,9 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
             logging: !appConfig?.isProd,
             logger: 'file',
             uuidExtension: 'pgcrypto',
-            namingStrategy: new CustomNamingStrategy(),
+            namingStrategy: new CustomNamingStrategy()
         } as TypeOrmModuleOptions;
 
         return options;
     }
-
 }

@@ -15,11 +15,11 @@ import { Verification } from '../user/verification.entity';
 
 @Module({
     imports: [
-        ConfigModule.forRoot({ isGlobal: true }),
+        ConfigModule.forRoot({ isGlobal: true }), 
         JwtModule.registerAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
-            useClass: JwtConfigService,
+            useClass: JwtConfigService
         }),
         PassportModule.register({ defaultStrategy: 'jwt' }),
         TypeOrmModule.forFeature([User, Verification]),
@@ -27,12 +27,14 @@ import { Verification } from '../user/verification.entity';
         // SMSModule,
         forwardRef(() => UsersModule),
     ],
-    controllers: [AuthController],
+    controllers: [
+        AuthController
+    ],
     providers: [
         AuthService,
         JwtStrategy,
         IfJwtStrategy,
     // FacebookStrategy,
-    ],
+    ]
 })
 export class AuthModule { }

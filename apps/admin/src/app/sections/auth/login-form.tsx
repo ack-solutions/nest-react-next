@@ -41,20 +41,20 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
     const formContext = useForm({
         defaultValues,
         resolver: yupResolver(validationSchema),
-    });
+    })
     const { formState: { errors, isSubmitting }, setError } = formContext;
 
     const handleSubmit = useCallback(
         (value: any) => {
             onSubmit && onSubmit(value, setError);
         },
-        [onSubmit, setError],
+        [onSubmit, setError]
     );
 
     return (
         <FormContainer
             FormProps={{
-                id: 'login-from',
+                id: "login-from"
             }}
             formContext={formContext}
             validationSchema={validationSchema}
@@ -87,7 +87,7 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
                 justifyContent="space-between"
                 sx={{
                     my: 2,
-                    marginLeft: '4px',
+                    marginLeft: '4px'
                 }}
             >
 
@@ -101,8 +101,8 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
                     to={PATH_AUTH.forgotPassword}
                     sx={{
                         ':hover': {
-                            textDecoration: 'none',
-                        },
+                            textDecoration: 'none'
+                        }
                     }}
                 >
                     Forgot password?

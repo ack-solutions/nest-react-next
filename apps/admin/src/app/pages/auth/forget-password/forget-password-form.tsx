@@ -13,7 +13,7 @@ export interface ForgetPasswordFormProps {
 
 const defaultValues = {
     email: '',
-};
+}
 
 const validationSchema = object().shape({
     email: string().label('Email').email().required(),
@@ -25,27 +25,23 @@ const ForgetPasswordForm = ({
     const formContext = useForm({
         defaultValues,
         resolver: yupResolver(validationSchema),
-    });
+    })
     const { formState: { errors, isSubmitting }, setError, reset } = formContext;
 
     const handleSubmit = useCallback(
         (value: any) => {
             onSubmit && onSubmit(value, {
                 reset,
-                setError,
+                setError
             });
         },
-        [
-            onSubmit,
-            reset,
-            setError,
-        ],
+        [onSubmit, reset, setError]
     );
 
     return (
         <FormContainer
             FormProps={{
-                id: 'forgot-password-from',
+                id: "forgot-password-from"
             }}
             formContext={formContext}
             validationSchema={validationSchema}

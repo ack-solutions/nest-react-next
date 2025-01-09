@@ -9,12 +9,10 @@ import { NotificationTemplate } from './notification-template.entity';
 
 @Injectable()
 export class NotificationTemplateService extends CrudService<INotificationTemplate> {
-
     constructor(
     @InjectRepository(NotificationTemplate)
-        repository: Repository<NotificationTemplate>,
+        repository: Repository<NotificationTemplate>
     ) {
         super(repository);
     }
-
 }

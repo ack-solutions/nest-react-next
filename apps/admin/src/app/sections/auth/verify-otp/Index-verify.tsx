@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { AuthService, FormContainer, RHFOtpInput } from '@libs/react-core';
 import { errorMessage } from '@libs/react-core';
 import { Alert, Box, Button, Container, Stack, Typography, styled } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { object, string } from 'yup';
@@ -33,24 +33,24 @@ const IndexVerify = ({
     email,
 }: IndexVerifyProps) => {
     const navigate = useNavigate();
-    const [isValidOtp, setIsValidOtp] = useState(null);
+    const [isValidOtp, setIsValidOtp] = useState(null)
     const [resendOtpSuccess, setResendOtpSuccess] = useState<string | null>(null);
     const formContext = useForm({
         resolver: yupResolver(VeryFySchema),
-    });
-    const { formState: { errors }, setError, reset } = formContext;
+    })
+    const { formState: { errors, }, setError, reset } = formContext;
 
     const handleSubmitOtp = useCallback(
         async (values: any) => {
             try {
                 const request = {
                     ...values,
-                    email,
-                };
+                    email
+                }
                 await authService.verifyOtp(request).then((data) => {
-                    reset();
-                    setIsValidOtp(values?.otp);
-                });
+                    reset()
+                    setIsValidOtp(values?.otp)
+                })
             } catch (error) {
                 setError('otp', {
                     type: 'manual',
@@ -58,12 +58,8 @@ const IndexVerify = ({
                 });
             }
         },
-        [
-            email,
-            reset,
-            setError,
-        ],
-    );
+        [email, reset, setError],
+    )
 
     const handleResendOtp = useCallback(
         async () => {
@@ -71,20 +67,20 @@ const IndexVerify = ({
                 await authService.sendOtp({ email }).then(() => {
                     setResendOtpSuccess('OTP resend successfully!'); // Set success message when OTP is resent
                     setTimeout(() => setResendOtpSuccess(null), 3000);
-                });
+                })
             } catch (error) {
-                console.log(error);
+                console.log(error)
             }
         },
         [email],
-    );
+    )
 
     const handleCloseModal = useCallback(
         () => {
-            setIsValidOtp(null);
+            setIsValidOtp(null)
         },
         [],
-    );
+    )
 
     return (
         <>
@@ -113,12 +109,12 @@ const IndexVerify = ({
                         <Box
                             sx={{
                                 mt: 5,
-                                mb: 3,
+                                mb: 3
                             }}
                         >
                             <FormContainer
                                 FormProps={{
-                                    id: 'forgot-otp-form',
+                                    id: "forgot-otp-form"
                                 }}
                                 formContext={formContext}
                                 validationSchema={VeryFySchema}
@@ -191,7 +187,7 @@ const IndexVerify = ({
                 />
             ) : null}
         </>
-    );
-};
+    )
+}
 
-export default IndexVerify;
+export default IndexVerify

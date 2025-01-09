@@ -1,4 +1,4 @@
-import { IBaseEntity } from './base-entity';
+import { IBaseEntity } from "./base-entity";
 
 
 export interface INotificationTemplate extends IBaseEntity {

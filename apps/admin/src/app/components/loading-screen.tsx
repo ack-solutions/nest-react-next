@@ -55,7 +55,7 @@ const RootStyle = styled('div')(() => ({
       #486fbc
     )`,
         backgroundSize: '1000% 1000%',
-    },
+    }
 }));
 
 type Props = {
@@ -86,18 +86,14 @@ export function LoadingScreen({ isDashboard = true, ...other }: Props) {
                             transition={{
                                 repeat: Infinity,
                                 duration: 3,
-                                ease: 'linear',
+                                ease: 'linear'
                             }}
                             sx={{
                                 position: 'absolute',
                                 top: 0,
-                                left: 0,
+                                left: 0
                             }}
-                            borderColor={[
-                                '#0b1436',
-                                '#363392',
-                                '#d21e3f',
-                            ]}
+                            borderColor={['#0b1436', '#363392', '#d21e3f']}
                         >
                             <defs>
                                 <linearGradient
@@ -142,7 +138,7 @@ export function LoadingScreen({ isDashboard = true, ...other }: Props) {
                             sx={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'center',
+                                justifyContent: 'center'
                             }}
                         />
                     </Box>

@@ -46,49 +46,38 @@ export function TableBulkActionMenu({
     const crudActions: TableAction[] = useMemo(
         () => {
             const otherActions = (actions || [])?.filter(
-                (action) => !action.permission || hasAnyPermission(action.permission),
+                (action) => !action.permission || hasAnyPermission(action.permission)
             );
 
             return [
                 ...otherActions,
                 ...onDelete
-                    ? [
-                        {
-                            icon: <DeleteOutlinedIcon />,
-                            title: 'Delete',
-                            permission: `delete-${crudPermissionKey}`,
-                            onClick: onDelete,
-                        },
-                    ]
+                    ? [{
+                        icon: <DeleteOutlinedIcon />,
+                        title: 'Delete',
+                        permission: `delete-${crudPermissionKey}`,
+                        onClick: onDelete,
+                    }]
                     : [],
                 ...onRestore
-                    ? [
-                        {
-                            icon: <RestoreOutlinedIcon />,
-                            title: 'Restore',
-                            permission: `restore-${crudPermissionKey}`,
-                            onClick: onRestore,
-                        },
-                    ]
+                    ? [{
+                        icon: <RestoreOutlinedIcon />,
+                        title: 'Restore',
+                        permission: `restore-${crudPermissionKey}`,
+                        onClick: onRestore,
+                    }]
                     : [],
                 ...onDeleteForever
-                    ? [
-                        {
-                            icon: <DeleteForeverOutlinedIcon />,
-                            title: 'Permanent delete',
-                            permission: `trash-delete-${crudPermissionKey}`,
-                            onClick: onDeleteForever,
-                        },
-                    ]
+                    ? [{
+                        icon: <DeleteForeverOutlinedIcon />,
+                        title: 'Permanent delete',
+                        permission: `trash-delete-${crudPermissionKey}`,
+                        onClick: onDeleteForever,
+                    }]
                     : [],
             ].filter((item) => item);
         },
-        [
-            actions,
-            crudPermissionKey,
-            hasAnyPermission,
-            onDelete,
-        ],
+        [actions, crudPermissionKey, hasAnyPermission, onDelete]
     );
 
     if (crudActions.length <= 2) {

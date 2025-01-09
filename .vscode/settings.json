@@ -1,5 +1,14 @@
 {
     "eslint.validate": ["json"],
+    "cSpell.words": [
+        "datatable",
+        "hookform",
+        "notistack",
+        "ackplus",
+        "datatable",
+        "tmpl",
+        "typeorm"
+    ],
     "editor.codeActionsOnSave": {
         "source.fixAll": "explicit",
         "source.fixAll.eslint": "explicit"
@@ -32,8 +41,5 @@
     },
     "[sql]": {
         "editor.defaultFormatter": "adpyke.vscode-sql-formatter"
-    },
-    "[typescript]": {
-        "editor.defaultFormatter": "vscode.typescript-language-features"
     }
 }

@@ -1,5 +1,5 @@
-import { useCrudOperations } from '../hook';
-import { RoleService } from '../services';
+import { useCrudOperations } from "../hook";
+import { RoleService } from "../services";
 
 
 const service = RoleService.getInstance<RoleService>();
@@ -15,7 +15,7 @@ export const useRoleQuery = () => {
         useBulkDelete,
         useBulkRestore,
         useBulkDeleteForever,
-        useDeleteForever,
+        useDeleteForever
     } = useCrudOperations(service);
 
     return {

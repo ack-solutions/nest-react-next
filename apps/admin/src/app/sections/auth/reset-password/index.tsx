@@ -43,12 +43,12 @@ const ResetPassword = ({
                 const request = {
                     ...values,
                     email,
-                    otp,
-                };
+                    otp
+                }
                 await authService.resetPassword(request).then(() => {
                     form.reset();
                     setIsSuccessDialogOpen(true);
-                });
+                })
             } catch (error) {
                 form.setError('afterSubmit', {
                     type: 'manual',
@@ -58,7 +58,7 @@ const ResetPassword = ({
             }
         },
         [email, otp],
-    );
+    )
 
     const handleSuccessDialogClose = () => {
         setIsSuccessDialogOpen(false);
@@ -75,7 +75,7 @@ const ResetPassword = ({
                         <Typography
                             sx={{
                                 color: 'text.secondary',
-                                mb: 5,
+                                mb: 5
                             }}
                         >
                             Enter your password to access the app next time.
@@ -89,6 +89,6 @@ const ResetPassword = ({
             ) : null}
         </RootStyle>
     );
-};
+}
 
 export default ResetPassword;

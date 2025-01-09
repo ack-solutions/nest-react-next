@@ -35,7 +35,7 @@ export const RHFPhoneNumber = ({
 
             field.onChange(_countryData.numberValue);
         },
-        [field],
+        [field]
     );
 
     return (

@@ -16,7 +16,7 @@ export function Factory(generator: FactoryValueGenerator | FactoryValue, depends
             propertyKey: propertyKey as string,
             arg: {
                 generator,
-                dependsOn,
+                dependsOn 
             },
         });
     };

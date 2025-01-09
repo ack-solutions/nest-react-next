@@ -1,4 +1,4 @@
-import { Box, BoxProps } from '@mui/material';
+import { Box, BoxProps, } from '@mui/material';
 
 
 export default function Logo({ sx, ...props }: BoxProps) {
@@ -8,7 +8,7 @@ export default function Logo({ sx, ...props }: BoxProps) {
                 width: '100%',
                 height: '100%',
                 display: 'flex',
-                ...sx,
+                ...sx
             }}
             {...props}
         >

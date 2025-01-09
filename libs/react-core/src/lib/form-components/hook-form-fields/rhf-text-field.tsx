@@ -1,9 +1,9 @@
-import { TextField, TextFieldProps, useForkRef } from '@mui/material';
-import { forwardRef, Ref } from 'react';
+import { TextField, TextFieldProps, useForkRef } from '@mui/material'
+import { forwardRef, Ref } from 'react'
 import {
     Control,
     useController,
-} from 'react-hook-form';
+} from 'react-hook-form'
 
 
 export type RHFTextFieldProps = Omit<TextFieldProps, 'name'> & {
@@ -14,8 +14,9 @@ export type RHFTextFieldProps = Omit<TextFieldProps, 'name'> & {
 
 export const RHFTextField = forwardRef((
     props: RHFTextFieldProps,
-    ref: Ref<HTMLDivElement>,
+    ref: Ref<HTMLDivElement>
 ) => {
+
     const {
         name,
         control,
@@ -23,7 +24,7 @@ export const RHFTextField = forwardRef((
         inputRef,
         onBlur,
         ...rest
-    } = props;
+    } = props
 
     const {
         field,
@@ -32,9 +33,9 @@ export const RHFTextField = forwardRef((
         name,
         control,
         disabled: rest.disabled,
-    });
+    })
 
-    const handleInputRef = useForkRef(field.ref, inputRef);
+    const handleInputRef = useForkRef(field.ref, inputRef)
 
     return (
         <TextFieldComponent
@@ -42,15 +43,15 @@ export const RHFTextField = forwardRef((
             name={field.name}
             value={field.value}
             onChange={(event) => {
-                field.onChange(event);
+                field.onChange(event)
                 if (typeof rest.onChange === 'function') {
-                    rest.onChange(event);
+                    rest.onChange(event)
                 }
             }}
             onBlur={(event) => {
-                field.onBlur();
+                field.onBlur()
                 if (typeof onBlur === 'function') {
-                    onBlur(event);
+                    onBlur(event)
                 }
             }}
             error={!!error}
@@ -58,5 +59,5 @@ export const RHFTextField = forwardRef((
             ref={ref}
             inputRef={handleInputRef}
         />
-    );
-});
+    )
+})

@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { FormContainer, RHFCheckbox, RHFPassword, RHFTextField } from '@libs/react-core';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Alert, Link, Stack } from '@mui/material';
-import { useCallback } from 'react';
+import { useCallback } from 'react'
 import { useForm, UseFormSetError } from 'react-hook-form';
 import { Link as RouterLink } from 'react-router-dom';
 import { boolean, object, string } from 'yup';
@@ -15,7 +15,7 @@ export interface RegisterFromProps {
 }
 
 const defaultValues = {
-    firstName: '',
+    firstName: "",
     lastName: '',
     email: '',
     password: '',
@@ -36,21 +36,21 @@ const RegisterFrom = ({ onSubmit }: RegisterFromProps) => {
     const formContext = useForm({
         defaultValues,
         resolver: yupResolver(validationSchema),
-    });
+    })
     const { formState: { errors, isSubmitting }, setError } = formContext;
 
     const handleSubmit = useCallback(
         (value: any) => {
             onSubmit && onSubmit(value, setError);
         },
-        [onSubmit, setError],
+        [onSubmit, setError]
     );
 
 
     return (
         <FormContainer
             FormProps={{
-                id: 'register-from',
+                id: "register-from"
             }}
             formContext={formContext}
             validationSchema={validationSchema}
@@ -95,7 +95,7 @@ const RegisterFrom = ({ onSubmit }: RegisterFromProps) => {
                 justifyContent="space-between"
                 sx={{
                     my: 2,
-                    marginLeft: '4px',
+                    marginLeft: '4px'
                 }}
             >
                 <RHFCheckbox
@@ -108,8 +108,8 @@ const RegisterFrom = ({ onSubmit }: RegisterFromProps) => {
                     to={PATH_AUTH.login}
                     sx={{
                         ':hover': {
-                            textDecoration: 'none',
-                        },
+                            textDecoration: 'none'
+                        }
                     }}
                 >
                     Have an Account  Login Here?
@@ -125,7 +125,7 @@ const RegisterFrom = ({ onSubmit }: RegisterFromProps) => {
                 Register
             </LoadingButton>
         </FormContainer>
-    );
-};
+    )
+}
 
-export default RegisterFrom;
+export default RegisterFrom

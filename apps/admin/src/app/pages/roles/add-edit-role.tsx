@@ -1,21 +1,21 @@
-import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
-import Page from '@admin/app/components/page';
-import { PATH_DASHBOARD } from '@admin/app/routes/paths';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { errorMessage, FormContainer, RHFPermissionSelectField, RHFTextField, usePermissionQuery, useRoleQuery, useToasty } from '@libs/react-core';
-import { IRole } from '@libs/types';
-import { Button, Card, CardContent, Container, Stack } from '@mui/material';
-import { map, omit } from 'lodash';
-import { useCallback, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
-import { object, string } from 'yup';
+import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs'
+import Page from '@admin/app/components/page'
+import { PATH_DASHBOARD } from '@admin/app/routes/paths'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { errorMessage, FormContainer, RHFPermissionSelectField, RHFTextField, usePermissionQuery, useRoleQuery, useToasty } from '@libs/react-core'
+import { IRole } from '@libs/types'
+import { Button, Card, CardContent, Container, Stack } from '@mui/material'
+import { map, omit } from 'lodash'
+import { useCallback, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { useNavigate, useParams } from 'react-router-dom'
+import { object, string } from 'yup'
 
 
 const defaultValues = {
     name: '',
-    permissions: [],
-};
+    permissions: []
+}
 
 const validationSchema = yupResolver(object({
     name: string().label('Name').required(),
@@ -32,7 +32,7 @@ const AddEditRole = () => {
     const { mutateAsync: createRole } = useCreateRole();
     const { data: permissionData, isLoading } = useGetManyPermission({
         limit: 999,
-        page: 1,
+        page: 1
     });
     const { data: roleValues } = useGetRoleById(roleId, {
         relations: ['permissions'],
@@ -40,53 +40,43 @@ const AddEditRole = () => {
     const formContext = useForm({
         defaultValues,
         resolver: validationSchema,
-    });
+    })
     const { reset } = formContext;
 
     const handleSubmitForm = useCallback(
         async (value: Partial<IRole>) => {
             const request = {
-                ...omit(value, [
-                    'id',
-                    'createdAt',
-                    'updatedAt',
-                    'deletedAt',
-                ]),
+                ...omit(value, ['id', 'createdAt', 'updatedAt', 'deletedAt',]),
                 permissions: map(value.permissions, (value) => {
-                    return { id: value };
-                }),
-            };
+                    return { id: value }
+                })
+            }
             try {
                 let resp;
                 if (value?.id) {
                     resp = await updateRole({
                         ...request,
-                        id: value?.id,
-                    });
+                        id: value?.id
+                    })
                 } else {
-                    resp = await createRole(request);
+                    resp = await createRole(request)
                 }
-                showToasty('Role successfully saved');
-                navigate(PATH_DASHBOARD.users.roles);
+                showToasty('Role successfully saved')
+                navigate(PATH_DASHBOARD.users.roles)
                 return resp;
             } catch (error) {
-                showToasty(errorMessage(error, 'Error while saving Page'), 'error');
+                showToasty(errorMessage(error, "Error while saving Page"), 'error');
                 throw error;
             }
         },
-        [
-            createRole,
-            navigate,
-            showToasty,
-            updateRole,
-        ],
-    );
+        [createRole, navigate, showToasty, updateRole],
+    )
 
     useEffect(() => {
         reset({
             ...roleValues,
-            permissions: map(roleValues?.permissions, 'id'),
-        });
+            permissions: map(roleValues?.permissions, 'id')
+        })
     }, [reset, roleValues]);
 
     return (
@@ -97,11 +87,11 @@ const AddEditRole = () => {
                     links={[
                         {
                             name: 'Dashboard',
-                            href: PATH_DASHBOARD.root,
+                            href: PATH_DASHBOARD.root
                         },
                         {
                             name: 'Roles',
-                            href: PATH_DASHBOARD.users.roles,
+                            href: PATH_DASHBOARD.users.roles
                         },
                         { name: `${roleId ? 'Edit Role' : 'Add Role'}` },
                     ]}
@@ -110,7 +100,7 @@ const AddEditRole = () => {
                     <CardContent>
                         <FormContainer
                             FormProps={{
-                                id: 'add-edit-form-role',
+                                id: "add-edit-form-role"
                             }}
                             formContext={formContext}
                             validationSchema={validationSchema}
@@ -147,7 +137,7 @@ const AddEditRole = () => {
                 </Card>
             </Container>
         </Page>
-    );
-};
+    )
+}
 
-export default AddEditRole;
+export default AddEditRole

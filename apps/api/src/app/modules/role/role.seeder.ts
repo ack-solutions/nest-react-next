@@ -10,15 +10,15 @@ import { Role } from './role.entity';
 
 @Injectable()
 export class RoleSeeder implements Seeder {
-
     constructor(
         @InjectRepository(Role)
         private repo: Repository<Role>,
     ) { }
 
     async seed() {
+
         const oldRoles = await this.repo.find();
-        const roleByName = keyBy(oldRoles, 'name');
+        const roleByName = keyBy(oldRoles, 'name')
 
         const systemRoles = Object.values(RoleNameEnum).map((name) => {
             if (roleByName[name]) {
@@ -27,7 +27,7 @@ export class RoleSeeder implements Seeder {
             return new Role({
                 name: name,
                 isSystemRole: true,
-            });
+            },)
         }).filter(Boolean);
 
         await this.repo.save(systemRoles);
@@ -35,8 +35,7 @@ export class RoleSeeder implements Seeder {
 
     async drop() {
         return await this.repo.query(
-            `TRUNCATE TABLE "${this.repo.metadata.tableName}" CASCADE`,
+            `TRUNCATE TABLE "${this.repo.metadata.tableName}" CASCADE`
         );
     }
-
 }

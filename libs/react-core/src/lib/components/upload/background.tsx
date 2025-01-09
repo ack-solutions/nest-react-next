@@ -1,5 +1,5 @@
-import { Box } from '@mui/material';
-import React, { ReactNode } from 'react';
+import { Box } from '@mui/material'
+import React, { ReactNode } from 'react'
 
 
 interface BackgroundProps {
@@ -62,7 +62,7 @@ const Background = ({
                     content: "''",
 
                     zIndex: - 1,
-                },
+                }
 
             }}
         >
@@ -85,7 +85,7 @@ const Background = ({
 
 
         </Box>
-    );
-};
+    )
+}
 
-export default Background;
+export default Background

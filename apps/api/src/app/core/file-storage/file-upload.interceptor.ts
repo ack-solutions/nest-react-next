@@ -13,14 +13,13 @@ import { FileStorageOption } from '../file-storage/types';
 
 export function fileUploadInterceptor(
     fields: string[],
-    storageOption?: FileStorageOption,
+    storageOption?: FileStorageOption
 ): any {
 	@Injectable()
     class UploadInterceptor implements NestInterceptor {
-
 	    async intercept(
 	        context: ExecutionContext,
-	        next: CallHandler,
+	        next: CallHandler
 	    ): Promise<Observable<any>> {
 	        console.log(fields, 'fields');
 
@@ -54,7 +53,7 @@ export function fileUploadInterceptor(
 	                                resolve(fileBuffer);
 	                            })
 	                            .on('error', (error) => reject(error));
-	                    },
+	                    }
 	                );
 
 	                const ext = filename.split('.').pop();
@@ -65,14 +64,13 @@ export function fileUploadInterceptor(
 	                    .resolvePath(storageOption?.dest, newFileName);
 	                const uploadedFilePath = await storage.put(
 	                    uploadedFile,
-	                    path,
+	                    path
 	                );
 
 	                set(body, field, uploadedFilePath.key);
 	            }
 	        }
 	    }
-
 	}
 
 	return UploadInterceptor;

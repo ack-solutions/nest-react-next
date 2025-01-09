@@ -28,7 +28,7 @@ export default function PageList() {
                     links={[
                         {
                             name: 'Dashboard',
-                            href: PATH_DASHBOARD.root,
+                            href: PATH_DASHBOARD.root
                         },
                         { name: 'Page' },
                     ]}

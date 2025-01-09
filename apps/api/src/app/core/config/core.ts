@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService, registerAs } from '@nestjs/config';
+import { Injectable } from "@nestjs/common";
+import { ConfigService, registerAs } from "@nestjs/config";
 
 
 export default registerAs('core', () => ({
@@ -14,7 +14,6 @@ export default registerAs('core', () => ({
 
 @Injectable()
 export class ConfigurationService {
-
     constructor(private readonly configService: ConfigService) { }
 
     public isProduction(): boolean {
@@ -24,5 +23,4 @@ export class ConfigurationService {
     public isNotSLS(): boolean {
         return this.configService.get<boolean>('config.isNotSLS') == true;
     }
-
 }

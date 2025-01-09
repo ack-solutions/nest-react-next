@@ -27,7 +27,7 @@ const DataTableTab = ({
             onChange={(event, tab) => onChange && onChange(tab, event)}
             sx={{
                 px: 2,
-                bgcolor: 'background.neutral',
+                bgcolor: 'background.neutral'
             }}
             {...props}
         >
@@ -51,4 +51,4 @@ const DataTableTab = ({
         </Tabs>
     );
 };
-export default DataTableTab;
+export default DataTableTab

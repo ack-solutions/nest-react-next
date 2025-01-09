@@ -1,81 +1,118 @@
-import { IFindOptions, IOrderBy, IWhereCondition, OrderDirectionEnum } from '@libs/types';
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray } from 'class-validator';
+import { IFindOptions, IOrderBy, IWhereCondition, OrderDirectionEnum } from "@libs/types";
+import { ApiPropertyOptional } from "@nestjs/swagger";
+import { IsArray } from "class-validator";
 
 
 export class ConditionOperatorDTO {
-
     @ApiPropertyOptional({
-        oneOf: [{ type: 'string' }, { type: 'number' }],
+        oneOf: [
+            { type: 'string' },
+            { type: 'number' },
+        ]
     })
     $between?: string | number;
 
     @ApiPropertyOptional({
-        oneOf: [{ type: 'string' }, { type: 'number' }],
+        oneOf: [
+            { type: 'string' },
+            { type: 'number' },
+        ]
     })
     $in?: string | number;
 
     @ApiPropertyOptional({
-        oneOf: [{ type: 'string' }, { type: 'number' }],
+        oneOf: [
+            { type: 'string' },
+            { type: 'number' },
+        ]
     })
     $notIn?: string | number;
 
     @ApiPropertyOptional({
-        oneOf: [{ type: 'string' }, { type: 'number' }],
+        oneOf: [
+            { type: 'string' },
+            { type: 'number' },
+        ]
     })
     $eq?: string | number;
 
     @ApiPropertyOptional({
-        oneOf: [{ type: 'string' }, { type: 'number' }],
+        oneOf: [
+            { type: 'string' },
+            { type: 'number' },
+        ]
     })
     $notEq?: string | number;
 
     @ApiPropertyOptional({
-        oneOf: [{ type: 'string' }, { type: 'number' }],
+        oneOf: [
+            { type: 'string' },
+            { type: 'number' },
+        ]
     })
     $lte?: string | number;
 
     @ApiPropertyOptional({
-        oneOf: [{ type: 'string' }, { type: 'number' }],
+        oneOf: [
+            { type: 'string' },
+            { type: 'number' },
+        ]
     })
     $gte?: string | number;
 
     @ApiPropertyOptional({
-        oneOf: [{ type: 'string' }, { type: 'number' }],
+        oneOf: [
+            { type: 'string' },
+            { type: 'number' },
+        ]
     })
     $lt?: string | number;
 
     @ApiPropertyOptional({
-        oneOf: [{ type: 'string' }, { type: 'number' }],
+        oneOf: [
+            { type: 'string' },
+            { type: 'number' },
+        ]
     })
     $gt?: string | number;
 
     @ApiPropertyOptional({
-        oneOf: [{ type: 'string' }, { type: 'number' }],
+        oneOf: [
+            { type: 'string' },
+            { type: 'number' },
+        ]
     })
     $isNull?: string | number;
 
     @ApiPropertyOptional({
-        oneOf: [{ type: 'string' }, { type: 'number' }],
+        oneOf: [
+            { type: 'string' },
+            { type: 'number' },
+        ]
     })
     $notNull?: string | number;
 
     @ApiPropertyOptional({
-        oneOf: [{ type: 'string' }, { type: 'number' }],
+        oneOf: [
+            { type: 'string' },
+            { type: 'number' },
+        ]
     })
     $like?: string | number;
 
     @ApiPropertyOptional({
-        oneOf: [{ type: 'string' }, { type: 'number' }],
+        oneOf: [
+            { type: 'string' },
+            { type: 'number' },
+        ]
     })
     $iLike?: string | number;
-
 }
 
 
 class WhereConditionDTO implements IWhereCondition {
 
-    // [x: string]: string | number | ConditionOperatorDTO;
+    //[x: string]: string | number | ConditionOperatorDTO;
     @ApiPropertyOptional({
         description: `Column Name of entity, You can select any one operator from list $eq, $in or etc... \n
       i.e {"firstName": { "$eq" : "test"}, "lastName": {"$like": "%test%"}}
@@ -106,7 +143,7 @@ class WhereConditionDTO implements IWhereCondition {
         //   }
         // ]
     })
-    $and: WhereConditionDTO | WhereConditionDTO[];
+    $and: WhereConditionDTO | WhereConditionDTO[]
 
     @ApiPropertyOptional({
         description: `If you want "or" condition, you can pass object or array of object  \n
@@ -128,38 +165,37 @@ class WhereConditionDTO implements IWhereCondition {
         //   }
         // ]
     })
-    $or: WhereConditionDTO | WhereConditionDTO[];
+    $or: WhereConditionDTO | WhereConditionDTO[]
 
 }
 
 
 export class OrderByDTO<T> implements IOrderBy {
-
     [x: string]: OrderDirectionEnum;
 
     @ApiPropertyOptional({ type: [String] })
     columnName: OrderDirectionEnum;
-
 }
+
 
 
 export class GetManyInputDTO<T> implements IFindOptions {
 
     @ApiPropertyOptional({ type: [String] })
     @IsArray()
-    select?: string[];
+    select?: string[]
 
     @ApiPropertyOptional({ type: Boolean })
     @IsArray()
-    onlyDeleted?: boolean;
+    onlyDeleted?: boolean
 
     @ApiPropertyOptional({ type: Boolean })
     @IsArray()
-    withDeleted?: boolean;
+    withDeleted?: boolean
 
     @ApiPropertyOptional({ type: [String] })
     @IsArray()
-    relations?: string[];
+    relations?: string[]
 
     @ApiPropertyOptional({
         type: () => [WhereConditionDTO],
@@ -177,7 +213,7 @@ export class GetManyInputDTO<T> implements IFindOptions {
         //     }
         // ]
     })
-    where?: WhereConditionDTO | WhereConditionDTO[];
+    where?: WhereConditionDTO | WhereConditionDTO[]
 
     @ApiPropertyOptional({
         type: () => [OrderByDTO],
@@ -201,18 +237,14 @@ export class GetManyInputDTO<T> implements IFindOptions {
 
 
 export class DeleteManyInputDTO {
-
     @ApiPropertyOptional({ type: [String] })
     @IsArray()
-    ids: string[];
-
+    ids: string[]
 }
 
 
 export class RestoreManyInputDTO {
-
     @ApiPropertyOptional({ type: [String] })
     @IsArray()
-    ids: string[];
-
+    ids: string[]
 }

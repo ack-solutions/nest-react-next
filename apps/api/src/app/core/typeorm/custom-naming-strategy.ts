@@ -1,5 +1,5 @@
-import { snakeCase } from 'lodash';
-import { DefaultNamingStrategy, NamingStrategyInterface, Table } from 'typeorm';
+import { snakeCase } from "lodash";
+import { DefaultNamingStrategy, NamingStrategyInterface, Table } from "typeorm";
 
 
 export class CustomNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
@@ -28,5 +28,4 @@ export class CustomNamingStrategy extends DefaultNamingStrategy implements Namin
         const hashedColumnNames = `${snakeCase(columnHash)}`;
         return `fk_${snakeCase(tableName)}_${hashedColumnNames}`;
     }
-
 }

@@ -4,7 +4,7 @@ import MuiAutocomplete, { AutocompleteProps as MuiAutocompleteProps, createFilte
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { Stack } from '@mui/system';
 import { get, has, isEqual, keyBy, map } from 'lodash';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import Avatar from '../../components/avatar';
 
@@ -28,7 +28,7 @@ export interface AutocompleteProps extends Omit<MuiAutocompleteProps<any, any, a
     placeholder?: string;
     helperText?: any;
     error?: any;
-    size?: 'small' | 'medium';
+    size?: "small" | "medium";
     onChange?: (values: any) => void;
     renderLabel?: (values: any) => any;
     creatable?: boolean;
@@ -64,6 +64,7 @@ export function Autocomplete({
     nullable,
     ...otherProps
 }: AutocompleteProps) {
+
     const [selectedValue, setSelectedValue] = useState(initialValue);
 
     const handleDelete = useCallback(
@@ -72,11 +73,11 @@ export function Autocomplete({
             event.preventDefault();
 
             if (onDelete) {
-                onDelete(option);
+                onDelete(option)
             }
         },
         [onDelete],
-    );
+    )
 
 
     const handleOnChange = useCallback(
@@ -84,17 +85,17 @@ export function Autocomplete({
             // Create a new value from the user input
             let newCreatedValue;
             if (typeof newValue === 'string' || newValue?.inputValue) {
-                let valueText;
+                let valueText
                 if (typeof newValue === 'string') {
-                    valueText = newValue;
+                    valueText = newValue
                 } else {
-                    valueText = newValue.inputValue;
+                    valueText = newValue.inputValue
                 }
 
                 if (onCreate) {
                     newCreatedValue = await onCreate(valueText);
                 } else {
-                    newCreatedValue = valueText;
+                    newCreatedValue = valueText
                 }
             } else {
                 newCreatedValue = newValue;
@@ -103,7 +104,7 @@ export function Autocomplete({
             let updatedValue: any = newCreatedValue;
             if (valueKey) {
                 if (multiple) {
-                    updatedValue = map(newCreatedValue, valueKey);
+                    updatedValue = map(newCreatedValue, valueKey)
                 } else {
                     updatedValue = newCreatedValue && newCreatedValue[valueKey] ? newCreatedValue[valueKey] : newCreatedValue;
                 }
@@ -114,68 +115,55 @@ export function Autocomplete({
                 onChange(updatedValue);
             }
         },
-        [
-            multiple,
-            onChange,
-            onCreate,
-            valueKey,
-        ],
+        [multiple, onChange, onCreate, valueKey],
     );
 
     const getOptionLabel = useMemo(() => {
         if (otherProps.getOptionLabel) {
-            return otherProps.getOptionLabel;
+            return otherProps.getOptionLabel
         }
         return (option) => {
             if (option && option[labelKey] !== undefined) {
-                return get(option, labelKey);
+                return get(option, labelKey)
             }
             if (option && option[valueKey] !== undefined) {
                 return get(option, valueKey);
             }
-            return option;
-        };
-    }, [
-        labelKey,
-        otherProps.getOptionLabel,
-        valueKey,
-    ]);
+            return option
+
+        }
+    }, [labelKey, otherProps.getOptionLabel, valueKey])
 
 
     useEffect(() => {
+
         if (valueKey && initialValue) {
             const byValueKey = keyBy(options, valueKey);
             let valueObj: any;
             if (multiple) {
                 valueObj = (initialValue).map((item) => {
-                    let id = item;
+                    let id = item
                     if (has(id, valueKey)) {
-                        id = item[valueKey];
+                        id = item[valueKey]
                     }
-                    return byValueKey[id];
-                });
+                    return byValueKey[id]
+                })
             } else if (byValueKey[initialValue]) {
                 valueObj = byValueKey[initialValue];
             } else if (creatable) {
                 valueObj = {
-                    [valueKey]: initialValue,
-                };
+                    [valueKey]: initialValue
+                }
             }
             if (!isEqual(valueObj, selectedValue)) {
-                setSelectedValue(valueObj);
+                setSelectedValue(valueObj)
             }
         } else if (!isEqual(initialValue, selectedValue)) {
-            setSelectedValue(initialValue);
+            setSelectedValue(initialValue)
         }
-    }, [
-        creatable,
-        initialValue,
-        labelKey,
-        multiple,
-        options,
-        selectedValue,
-        valueKey,
-    ]);
+
+    }, [creatable, initialValue, labelKey, multiple, options, selectedValue, valueKey])
+
 
 
     return (
@@ -207,7 +195,7 @@ export function Autocomplete({
                         sx={{
                             flexShrink: 0,
                             display: 'flex',
-                            alignItems: 'center',
+                            alignItems: 'center'
                         }}
                     >
                         {multiple && (
@@ -221,7 +209,7 @@ export function Autocomplete({
                                 src={option[avatarKey]}
                                 size='small'
                                 sx={{
-                                    marginRight: 1,
+                                    marginRight: 1
                                 }}
                             />
                         )}
@@ -229,7 +217,7 @@ export function Autocomplete({
                     <Box
                         sx={{
                             width: 1,
-                            flexShrink: 1,
+                            flexShrink: 1
                         }}
                     >
                         {getOptionLabel(option)}
@@ -246,6 +234,7 @@ export function Autocomplete({
             ))}
             renderTags={(value, getTagProps) => {
                 if (multiple) {
+
                     const numTags = value.length;
                     if (avatarOnly && hasAvatar) {
                         return (
@@ -263,7 +252,7 @@ export function Autocomplete({
                                 ))}
                                 {numTags > limitTags && ` + ${numTags - limitTags} `}
                             </Stack>
-                        );
+                        )
                     }
 
                     return (
@@ -295,8 +284,8 @@ export function Autocomplete({
                             />
                             {getOptionLabel(value)}
                         </Stack>
-                    ) : getOptionLabel(value));
-                }
+                    ) : getOptionLabel(value))
+                };
 
                 return '';
             }}
@@ -313,10 +302,10 @@ export function Autocomplete({
                     {...(textFieldProps || {})}
                     InputProps={{
                         ...(params?.InputProps || {}),
-                        ...(textFieldProps?.InputProps || {}),
+                        ...(textFieldProps?.InputProps || {})
                     }}
                     sx={{
-                        ...textFieldProps?.sx,
+                        ...textFieldProps?.sx
                     }}
                     size={size}
                 />
@@ -347,16 +336,16 @@ export function Autocomplete({
                     }
 
                     return filtered;
-                },
+                }
             } : {})}
             {...otherProps}
             sx={{
                 ...otherProps.sx,
                 inputRoot: {
                     paddingRight: '48px',
-                    ...(otherProps.sx as any)?.inputRoot,
+                    ...(otherProps.sx as any)?.inputRoot
                 },
             }}
         />
-    );
+    )
 }

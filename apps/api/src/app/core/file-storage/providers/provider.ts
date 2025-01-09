@@ -5,7 +5,6 @@ import { FileStorageOption, FileSystem, UploadedFile } from '../types';
 
 
 export abstract class Provider<T> {
-
     resolvePath(_dest: string | CallableFunction, _newFileName: string) {
         throw new Error('Method not implemented.');
     }
@@ -28,5 +27,4 @@ export abstract class Provider<T> {
     mapUploadedFile(file): UploadedFile {
         return file;
     }
-
 }

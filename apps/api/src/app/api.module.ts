@@ -27,9 +27,7 @@ const Modules = [
     providers: [],
 })
 export class ApiModule {
-
     configure(consumer: MiddlewareConsumer) {
         consumer.apply(RequestContextMiddleware).forRoutes('*');
     }
-
 }

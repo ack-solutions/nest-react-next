@@ -1,6 +1,6 @@
-import { ILoginInput, ILoginSendOtpInput, ILoginSuccess, IRegisterSendOtpInput } from '@libs/types';
+import { ILoginInput, ILoginSendOtpInput, ILoginSuccess, IRegisterSendOtpInput } from "@libs/types";
 
-import { Service } from './service';
+import { Service } from "./service";
 
 
 export class AuthService extends Service {
@@ -11,13 +11,13 @@ export class AuthService extends Service {
 
 
     sendLoginOtp(request?: ILoginSendOtpInput) {
-        return this.instanceApi.post('auth/send-login-otp', request).then((resp) => {
+        return this.instanceApi.post(`auth/send-login-otp`, request).then((resp) => {
             return resp.data;
         });
     }
 
     sendRegisterOtp(request?: IRegisterSendOtpInput) {
-        return this.instanceApi.post('auth/send-register-otp', request).then((resp) => {
+        return this.instanceApi.post(`auth/send-register-otp`, request).then((resp) => {
             return resp.data;
         });
     }
@@ -25,20 +25,20 @@ export class AuthService extends Service {
     login(request: ILoginInput) {
         return this.instanceApi.post<ILoginSuccess>('auth/login', request).then((resp) => {
             return resp.data;
-        });
+        })
     }
 
     register(request: any) {
         return this.instanceApi.post<ILoginSuccess>('auth/register', request).then((resp) => {
             return resp.data;
-        });
+        })
     }
 
 
     forgotPassword(request: any) {
         return this.instanceApi.post('auth/forget_pass', request).then((resp) => {
             return resp.data;
-        });
+        })
     }
 
     logout() {
@@ -48,21 +48,21 @@ export class AuthService extends Service {
 
     sendOtp(request?: any) {
         return this.instanceApi.post('auth/otp', request).then((resp) => {
-            return resp;
-        });
+            return resp
+        })
     }
 
     verifyOtp(request: any) {
-        return this.instanceApi.post('auth/otp/verify', request).then((resp) => {
+        return this.instanceApi.post(`auth/otp/verify`, request).then((resp) => {
             return resp.data;
-        });
+        })
     }
+
 
 
     resetPassword(request?: any) {
-        return this.instanceApi.post('auth/reset-password', request).then((resp) => {
+        return this.instanceApi.post(`auth/reset-password`, request).then((resp) => {
             return resp.data;
         });
     }
-
 }

@@ -1,5 +1,5 @@
-import { useCrudOperations } from '../hook';
-import { NotificationTemplateService } from '../services';
+import { useCrudOperations } from "../hook";
+import { NotificationTemplateService } from "../services";
 
 
 const service = NotificationTemplateService.getInstance<NotificationTemplateService>();
@@ -15,7 +15,7 @@ export const useNotificationTemplateQuery = () => {
         useBulkDelete,
         useBulkDeleteForever,
         useRestore,
-        useBulkRestore,
+        useBulkRestore
     } = useCrudOperations(service);
 
     return {

@@ -33,7 +33,7 @@ function SnackbarStyles() {
                 '& .SnackbarItem-message': {
                     padding: '0 !important',
                     fontWeight: theme.typography.fontWeightMedium,
-                },
+                }
             }}
         />
     );
@@ -44,8 +44,10 @@ interface NotistackProviderProps {
     children: ReactNode;
 }
 
+;
 
 export function NotistackProvider({ children }: NotistackProviderProps) {
+
     const isRTL = false;
 
     const notistackRef = useRef<any>(null);
@@ -68,7 +70,7 @@ export function NotistackProvider({ children }: NotistackProviderProps) {
                 variant="success" // Set default variant
                 anchorOrigin={{
                     vertical: 'top',
-                    horizontal: 'right',
+                    horizontal: 'right'
                 }}
                 iconVariant={{
                     info: <SnackbarIcon color="info" > <InfoIcon /></SnackbarIcon>,
@@ -106,6 +108,7 @@ export interface SnackbarIconProps {
 }
 
 function SnackbarIcon({ children, color }: SnackbarIconProps) {
+
     return (
         <Box
             component="span"

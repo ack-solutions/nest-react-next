@@ -9,7 +9,6 @@ import { Permission } from '../permission/permission.entity';
 
 @Entity()
 export class Role extends BaseEntity implements IRole {
-
     @ApiProperty()
     @IsString()
     @Column()
@@ -19,7 +18,7 @@ export class Role extends BaseEntity implements IRole {
     @IsString()
     @Column('text', {
         default: RoleGuardEnum.ADMIN,
-        comment: 'This type defines the different contexts or environments where roles may apply. Guard name like admin, web, portal and etc...',
+        comment: 'This type defines the different contexts or environments where roles may apply. Guard name like admin, web, portal and etc...'
     })
     guard?: RoleGuardEnum;
 
@@ -30,9 +29,8 @@ export class Role extends BaseEntity implements IRole {
 
     @ApiProperty({
         type: Permission,
-        readOnly: true,
+        readOnly: true
     })
     @ManyToMany(() => Permission, permission => permission.roles, { onDelete: 'CASCADE' })
     permissions?: IPermission[];
-
 }

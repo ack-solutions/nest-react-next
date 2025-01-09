@@ -35,7 +35,7 @@ const GREY = {
     main: '#919EAB',
     dark: '#454F5B',
     darker: '#161C24',
-    contrastText: '#FFFFFF',
+    contrastText: '#FFFFFF'
 };
 
 const PRIMARY = {
@@ -44,7 +44,7 @@ const PRIMARY = {
     main: '#293b6b',
     dark: '#15234d',
     darker: '#0b1436',
-    contrastText: '#FFFFFF',
+    contrastText: '#FFFFFF'
 };
 
 const SECONDARY = {
@@ -53,7 +53,7 @@ const SECONDARY = {
     main: '#4c4fb4',
     dark: '#3e3d9e',
     darker: '#29207d',
-    contrastText: '#FFFFFF',
+    contrastText: '#FFFFFF'
 };
 
 const TERTIARY = {
@@ -62,7 +62,7 @@ const TERTIARY = {
     main: '#ffea00',
     dark: '#b2a300',
     darker: '#b2a300',
-    contrastText: '#FFFFFF',
+    contrastText: '#FFFFFF'
 };
 
 const INFO = {
@@ -71,7 +71,7 @@ const INFO = {
     main: '#00B8D9',
     dark: '#006C9C',
     darker: '#003768',
-    contrastText: '#FFFFFF',
+    contrastText: '#FFFFFF'
 };
 
 const SUCCESS = {
@@ -89,7 +89,7 @@ const WARNING = {
     main: '#ffab00',
     dark: '#ff9a00',
     darker: '#ff8000',
-    contrastText: '#ffffff',
+    contrastText: '#ffffff'
 };
 
 const BLUE = {
@@ -98,7 +98,7 @@ const BLUE = {
     main: '#0055a1',
     dark: '#00448f',
     darker: '#002a74',
-    contrastText: '#ffffff',
+    contrastText: '#ffffff'
 };
 
 const ERROR = {
@@ -107,13 +107,13 @@ const ERROR = {
     main: '#FF5630',
     dark: '#B71D18',
     darker: '#7A0916',
-    contrastText: '#FFFFFF',
+    contrastText: '#FFFFFF'
 };
 
 const COMMON = {
     common: {
         black: '#000000',
-        white: '#FFFFFF',
+        white: '#FFFFFF'
     },
     primary: PRIMARY,
     secondary: SECONDARY,
@@ -132,8 +132,8 @@ const COMMON = {
         disabledBackground: alpha(GREY[500], 0.24),
         focus: alpha(GREY[500], 0.24),
         hoverOpacity: 0.08,
-        disabledOpacity: 0.48,
-    },
+        disabledOpacity: 0.48
+    }
 };
 
 
@@ -142,7 +142,7 @@ export const lightPalette = {
     text: {
         primary: GREY[800],
         secondary: '#637381',
-        disabled: GREY[500],
+        disabled: GREY[500]
     },
     background: {
         paper: '#FFFFFF',
@@ -151,13 +151,13 @@ export const lightPalette = {
         appPink: '#f7dbf8',
         appPositive: '#d6f7e4',
         appNegative: 'rgba(157, 255, 118, 0.49)',
-        appTheme: 'rgb(218 230 248)',
+        appTheme: 'rgb(218 230 248)'
     },
 
     action: {
         ...COMMON.action,
-        active: GREY[600],
-    },
+        active: GREY[600]
+    }
 };
 
 export const darkPalette = {
@@ -165,7 +165,7 @@ export const darkPalette = {
     text: {
         primary: '#FFFFFF',
         secondary: GREY[500],
-        disabled: GREY[600],
+        disabled: GREY[600]
     },
     background: {
         paper: GREY[800],
@@ -174,12 +174,12 @@ export const darkPalette = {
         appPink: '#a272a4',
         appPositive: '#567a5f',
         appNegative: 'rgba(67, 109, 49, 0.7)',
-        appTheme: 'rgb(98 108 116 / 0.9)',
+        appTheme: 'rgb(98 108 116 / 0.9)'
     },
     action: {
         ...COMMON.action,
-        active: GREY[500],
-    },
+        active: GREY[500]
+    }
 };
 
 

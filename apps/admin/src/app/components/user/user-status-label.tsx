@@ -9,21 +9,23 @@ export interface UserStatusLabelProps extends LabelProps {
 }
 
 const UserStatusLabel = ({ label }: UserStatusLabelProps) => {
+
     const color: LabelColor = useMemo(() => {
         switch (label) {
+
             case UserStatusEnum.ACTIVE:
-                return 'primary';
+                return 'primary'
 
             case UserStatusEnum.INACTIVE:
-                return 'error';
+                return 'error'
 
             case UserStatusEnum.PENDING:
-                return 'warning';
+                return 'warning'
 
             default:
-                return 'default';
+                return 'default'
         }
-    }, [label]);
+    }, [label])
 
     return (
         <Label
@@ -33,6 +35,7 @@ const UserStatusLabel = ({ label }: UserStatusLabelProps) => {
             {startCase(label)}
         </Label>
     );
-};
 
-export default UserStatusLabel;
+}
+
+export default UserStatusLabel

@@ -45,7 +45,7 @@ export const RHFUploadAvatar = ({
                 field.onChange(file);
             }
         },
-        [field],
+        [field]
     );
 
     return (
@@ -56,7 +56,7 @@ export const RHFUploadAvatar = ({
             onDrop={handleDrop}
             error={!!error}
             helperText={error?.message}
-            accept={{ 'image/*': [] }}
+            accept={{ "image/*": [] }}
             {...props}
         />
     );

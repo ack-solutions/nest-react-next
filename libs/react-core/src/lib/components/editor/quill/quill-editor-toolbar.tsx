@@ -5,13 +5,7 @@ import { Quill } from 'react-quill';
 import QuillEditorToolbarStyle from './quill-editor-toolbar-style';
 
 
-const FONT_FAMILY = [
-    'Arial',
-    'Tahoma',
-    'Georgia',
-    'Impact',
-    'Verdana',
-];
+const FONT_FAMILY = ['Arial', 'Tahoma', 'Georgia', 'Impact', 'Verdana'];
 
 const FONT_SIZE = [
     '8px',
@@ -27,16 +21,9 @@ const FONT_SIZE = [
     '54px',
     '68px',
     '84px',
-    '98px',
+    '98px'
 ];
-const HEADINGS = [
-    'Heading 1',
-    'Heading 2',
-    'Heading 3',
-    'Heading 4',
-    'Heading 5',
-    'Heading 6',
-];
+const HEADINGS = ['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4', 'Heading 5', 'Heading 6'];
 
 export function undoChange() {
     // @ts-ignore
@@ -81,7 +68,7 @@ export const formats = [
     'strike',
     'table',
     'underline',
-    'video',
+    'video'
 ];
 
 type EditorToolbarProps = {

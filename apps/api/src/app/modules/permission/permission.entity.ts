@@ -1,3 +1,4 @@
+
 import { BaseEntity } from '@api/app/core/typeorm/base.entity';
 import { IPermission, IRole } from '@libs/types';
 import { ApiProperty } from '@nestjs/swagger';
@@ -17,7 +18,7 @@ export class Permission extends BaseEntity implements IPermission {
 
     @ApiProperty({
         type: Role,
-        readOnly: true,
+        readOnly: true
     })
     @ManyToMany(() => Role, role => role.permissions)
     @JoinTable()
@@ -26,9 +27,8 @@ export class Permission extends BaseEntity implements IPermission {
     @ApiProperty()
     @Column({
         length: 255,
-        nullable: true,
+        nullable: true
     })
     @IsString()
     name?: string;
-
 }

@@ -9,7 +9,6 @@ import { UserService } from '../user';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-
     constructor(
         private userService: UserService,
         configService: ConfigService,
@@ -26,14 +25,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             const user = await this.userService.userRepository.findOne({
                 where: {
                     id: payload.id,
-                    status: UserStatusEnum.ACTIVE,
+                    status: UserStatusEnum.ACTIVE
                 },
-                relations: ['roles'],
+                relations: ['roles']
             });
             done(null, user);
         } catch (error) {
             throw new UnauthorizedException('unauthorized', error.message);
         }
     }
-
 }

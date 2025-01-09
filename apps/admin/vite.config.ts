@@ -7,11 +7,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
     root: __dirname,
     cacheDir: '../../node_modules/.vite/apps/admin',
-    plugins: [
-        react(),
-        nxViteTsPaths(),
-        nxCopyAssetsPlugin(['*.md']),
-    ],
+    plugins: [react(), nxViteTsPaths(), nxCopyAssetsPlugin(['*.md'])],
     // Uncomment this if you are using workers.
     // worker: {
     //  plugins: [ nxViteTsPaths() ],
@@ -24,7 +20,7 @@ export default defineConfig({
         reporters: ['default'],
         coverage: {
             reportsDirectory: '../../coverage/apps/admin',
-            provider: 'v8',
+            provider: 'v8' 
         },
     },
 });

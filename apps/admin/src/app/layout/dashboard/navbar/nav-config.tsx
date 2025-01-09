@@ -68,6 +68,7 @@ const ICONS = {
 };
 
 export function useNavData() {
+
     const navigationItems = useMemo(() => ([
         {
             id: 'dashboard',
@@ -75,7 +76,7 @@ export function useNavData() {
             title: 'Dashboard',
             path: PATH_DASHBOARD.root,
             icon: ICONS.dashboard,
-            staticPaths: [PATH_DASHBOARD.root],
+            staticPaths: [PATH_DASHBOARD.root]
         },
         {
             id: 'users',
@@ -115,7 +116,7 @@ export function useNavData() {
             title: 'Settings',
             path: PATH_DASHBOARD.settings.root,
             icon: ICONS.setting,
-            staticPaths: [PATH_DASHBOARD.settings.root],
+            staticPaths: [PATH_DASHBOARD.settings.root]
         },
         {
             id: 'manage',
@@ -126,9 +127,11 @@ export function useNavData() {
             permissions: [RoleNameEnum.ADMIN],
             staticPaths: ['page'],
         },
-    ]), []);
+    ]), [])
 
-    const groupedItems = [...navigationItems].reduce((acc, item) => {
+    const groupedItems = [
+        ...navigationItems,
+    ].reduce((acc, item) => {
         const group = item.groupName || 'Other';
         if (!acc[group]) {
             acc[group] = [];
@@ -159,7 +162,7 @@ export function buildTree(items: NavigationItem[]): NavigationItem[] {
             permissions: item.permissions,
             order: item.order,
             children: item.children,
-            ...item,
+            ...item
         });
     });
 

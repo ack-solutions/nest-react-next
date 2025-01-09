@@ -1,17 +1,18 @@
-import { Collapse, Popover } from '@mui/material';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Collapse, Popover } from "@mui/material";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 
-import NavbarItem from './navbar-item';
-import { NavbarConfigProps, NavigationItem } from '../../../types/navigation';
+import NavbarItem from "./navbar-item";
+import { NavbarConfigProps, NavigationItem } from "../../../types/navigation";
 
 
 export function useActiveLinkByStaticPaths(staticPaths?: string[], isMatchFull?: boolean): boolean {
     const { pathname } = useLocation();
-    let isInStaticPaths;
+    let isInStaticPaths
     if (isMatchFull) {
         isInStaticPaths = staticPaths?.some((staticPath) => pathname === staticPath);
-    } else {
+    }
+    else {
         isInStaticPaths = staticPaths?.some((staticPath) => pathname?.includes(staticPath));
     }
 
@@ -39,6 +40,8 @@ interface NavbarListRootProps {
     config?: NavbarConfigProps;
     isMini?: boolean
 }
+
+;
 
 
 export default function NavbarList({ data, depth, hasChild, config, isMini }: NavbarListRootProps) {
@@ -81,7 +84,7 @@ export default function NavbarList({ data, depth, hasChild, config, isMini }: Na
                 {...isMini && {
                     onMouseEnter: handleOpen,
                     onMouseLeave: handleClose,
-                    isMini: true,
+                    isMini: true
                 }}
             />
 
@@ -103,11 +106,11 @@ export default function NavbarList({ data, depth, hasChild, config, isMini }: Na
                     anchorEl={navRef?.current}
                     anchorOrigin={{
                         vertical: 'center',
-                        horizontal: 'right',
+                        horizontal: 'right'
                     }}
                     transformOrigin={{
                         vertical: 'center',
-                        horizontal: 'left',
+                        horizontal: 'left'
                     }}
                     slotProps={{
                         paper: {
@@ -117,13 +120,13 @@ export default function NavbarList({ data, depth, hasChild, config, isMini }: Na
                                 mt: 0.5,
                                 width: 160,
                                 ...(open && {
-                                    pointerEvents: 'auto',
-                                }),
-                            },
-                        },
+                                    pointerEvents: 'auto'
+                                })
+                            }
+                        }
                     }}
                     sx={{
-                        pointerEvents: 'none',
+                        pointerEvents: 'none'
                     }}
                 >
                     <NavbarSubList
@@ -154,7 +157,7 @@ function NavbarSubList({ data, depth, config }: NavbarListSubProps) {
                 hasChild={!!list.children}
                 config={{
                     ...config,
-                    ...(list.config || {}),
+                    ...(list.config || {})
                 }}
             />
         ))

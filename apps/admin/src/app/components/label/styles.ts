@@ -15,36 +15,36 @@ export const StyledLabel = styled(Box)<{ ownerState: { color: LabelColor; varian
             ...(ownerState.color === 'default' && {
                 ...(filledVariant && {
                     color: isLight ? theme.palette.common.white : theme.palette.grey[800],
-                    backgroundColor: theme.palette.text.primary,
+                    backgroundColor: theme.palette.text.primary
                 }),
                 ...(outlinedVariant && {
                     backgroundColor: 'transparent',
                     color: theme.palette.text.primary,
-                    border: `2px solid ${theme.palette.text.primary}`,
+                    border: `2px solid ${theme.palette.text.primary}`
                 }),
                 ...(softVariant && {
                     color: theme.palette.text.secondary,
-                    backgroundColor: alpha(theme.palette.grey[500], 0.16),
-                }),
-            }),
+                    backgroundColor: alpha(theme.palette.grey[500], 0.16)
+                })
+            })
         };
 
         const colorStyle = {
             ...(ownerState.color !== 'default' && {
                 ...(filledVariant && {
                     color: (theme.palette[ownerState.color as keyof Palette] as PaletteColor).contrastText,
-                    backgroundColor: (theme.palette[ownerState.color as keyof Palette] as PaletteColor).main,
+                    backgroundColor: (theme.palette[ownerState.color as keyof Palette] as PaletteColor).main
                 }),
                 ...(outlinedVariant && {
                     backgroundColor: 'transparent',
                     color: (theme.palette[ownerState.color as keyof Palette] as PaletteColor).main,
-                    border: `2px solid ${(theme.palette[ownerState.color as keyof Palette] as PaletteColor).main}`,
+                    border: `2px solid ${(theme.palette[ownerState.color as keyof Palette] as PaletteColor).main}`
                 }),
                 ...(softVariant && {
                     color: (theme.palette[ownerState.color as keyof Palette] as PaletteColor)[isLight ? 'dark' : 'light'],
-                    backgroundColor: alpha((theme.palette[ownerState.color as keyof Palette] as PaletteColor).main, 0.16),
-                }),
-            }),
+                    backgroundColor: alpha((theme.palette[ownerState.color as keyof Palette] as PaletteColor).main, 0.16)
+                })
+            })
         };
 
         return {
@@ -62,10 +62,10 @@ export const StyledLabel = styled(Box)<{ ownerState: { color: LabelColor; varian
             fontSize: theme.typography.pxToRem(12),
             fontWeight: theme.typography.fontWeightBold,
             transition: theme.transitions.create('all', {
-                duration: theme.transitions.duration.shorter,
+                duration: theme.transitions.duration.shorter
             }),
             ...defaultStyle,
-            ...colorStyle,
+            ...colorStyle
         };
-    },
+    }
 );

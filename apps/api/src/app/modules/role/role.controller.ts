@@ -1,3 +1,4 @@
+
 import { CrudController } from '@api/app/core/crud';
 import { IRole } from '@libs/types';
 import { Controller, UseGuards } from '@nestjs/common';
@@ -9,12 +10,10 @@ import { RoleService } from './role.service';
 
 
 @ApiTags('Role')
-@Controller('role')
+@Controller("role")
 @UseGuards(AuthGuard('jwt'))
 export class RoleController extends CrudController(RoleDTO)<IRole> {
-
     constructor(private roleService: RoleService) {
         super(roleService);
     }
-
 }
