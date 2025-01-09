@@ -30,6 +30,7 @@ const PermissionList = Loadable(lazy(() => import('../pages/user/permission-list
 const SettingPage = Loadable(lazy(() => import('../pages/setting/setting-page')));
 const Settings = Loadable(lazy(() => import('../pages/setting/settings')));
 const NotificationSetting = Loadable(lazy(() => import('../pages/setting/notification-setting')));
+const EmailLayoutTemplate = Loadable(lazy(() => import('../pages/setting/email-layout-template')));
 const PageList = Loadable(lazy(() => import('../pages/page/page-list-page')));
 
 export default function Router() {
@@ -46,16 +47,16 @@ export default function Router() {
             children: [
                 {
                     path: 'login',
-                    element: <Login />,
+                    element: <Login />
                 },
                 {
                     path: 'register',
-                    element: <Register />,
+                    element: <Register />
                 },
                 // { path: 'register', element: <Register /> },
                 {
                     path: 'forgot-password',
-                    element: <ForgotPassword />,
+                    element: <ForgotPassword />
                 },
                 // { path: 'verify', element: <VerifyCode /> },
                 // ...routes.auth,
@@ -68,7 +69,7 @@ export default function Router() {
             element: <Navigate
                 to={PATH_DASHBOARD.root}
                 replace
-            />,
+            />
         },
         {
             path: 'app',
@@ -80,42 +81,42 @@ export default function Router() {
             children: [
                 {
                     path: 'app',
-                    element: <Dashboard />,
+                    element: <Dashboard />
                 },
                 {
                     path: 'dashboard',
-                    element: <Dashboard />,
+                    element: <Dashboard />
                 },
                 {
                     path: 'users',
                     children: [
                         {
                             path: 'list',
-                            element: <UserList />,
+                            element: <UserList />
                         },
                         {
                             path: 'edit/:id',
-                            element: <AddEditUser />,
+                            element: <AddEditUser />
                         },
                         {
                             path: 'add',
-                            element: <AddEditUser />,
+                            element: <AddEditUser />
                         },
                         {
                             path: 'roles',
-                            element: <RoleList />,
+                            element: <RoleList />
                         },
                         {
                             path: 'roles/edit/:id',
-                            element: <AddEditRole />,
+                            element: <AddEditRole />
                         },
                         {
                             path: 'roles/add',
-                            element: <AddEditRole />,
+                            element: <AddEditRole />
                         },
                         {
                             path: 'permissions',
-                            element: <PermissionList />,
+                            element: <PermissionList />
                         },
                     ],
                 },
@@ -124,11 +125,11 @@ export default function Router() {
                     children: [
                         {
                             path: '',
-                            element: <PageList />,
+                            element: <PageList />
                         },
                         // { path: 'add', element: <AddEditPage /> },
                         // { path: 'edit/:pageId', element: <AddEditPage /> },
-                    ],
+                    ]
                 },
                 {
                     path: 'settings',
@@ -139,37 +140,41 @@ export default function Router() {
                             element: <Navigate
                                 to="email-setting"
                                 replace
-                            />,
+                            />
                         },
                         {
                             path: 'email-setting',
-                            element: <Settings />,
+                            element: <Settings />
                         },
                         {
                             path: 'notification-setting',
-                            element: <NotificationSetting />,
+                            element: <NotificationSetting />
                         },
-                    ],
+                        {
+                            path: 'email-layout',
+                            element: <EmailLayoutTemplate />
+                        },
+                    ]
                 },
                 {
                     path: 'profile',
-                    element: <UserProfile />,
+                    element: <UserProfile />
                 },
                 {
                     path: 'change-password',
-                    element: <UserChangePassword />,
+                    element: <UserChangePassword />
                 },
                 {
                     path: 'profile',
-                    element: <UserProfile />,
+                    element: <UserProfile />
                 },
                 {
                     path: 'page',
-                    element: <PageList />,
+                    element: <PageList />
                 },
                 {
                     path: 'change-password',
-                    element: <UserChangePassword />,
+                    element: <UserChangePassword />
                 },
             ],
         },
@@ -178,16 +183,14 @@ export default function Router() {
             element: <Navigate
                 to="/404"
                 replace
-            />,
+            />
         },
         {
             path: '*',
-            children: [
-                {
-                    path: '404',
-                    element: <NotFound />,
-                },
-            ],
+            children: [{
+                path: '404',
+                element: <NotFound />
+            }],
         },
     ]);
 }

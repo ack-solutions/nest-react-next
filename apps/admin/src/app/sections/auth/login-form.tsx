@@ -46,7 +46,9 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
 
     const handleSubmit = useCallback(
         (value: any) => {
-            onSubmit && onSubmit(value, setError);
+            if (onSubmit) {
+                onSubmit(value, setError)
+            }
         },
         [onSubmit, setError],
     );

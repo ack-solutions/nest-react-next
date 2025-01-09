@@ -36,7 +36,7 @@ const defaultValue: any = {
     logout: () => {
         //
     },
-};
+}
 
 export const AuthContext = createContext<AuthState>(defaultValue);
 
@@ -46,7 +46,7 @@ const reducer = (state: any, action: any) => {
             return {
                 ...state,
                 ...action.payload,
-                isInitialized: true,
+                isInitialized: true
             };
         }
         case 'UPDATE': {
@@ -59,7 +59,7 @@ const reducer = (state: any, action: any) => {
             return {
                 ...state,
                 isAuthenticated: true,
-                ...action.payload,
+                ...action.payload
             };
         }
         case 'LOGOUT': {
@@ -90,15 +90,15 @@ const setSession = async (accessToken?: string | null): Promise<void> => {
 const AuthProvider = ({ children }: any) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const { define } = useAccess();
-    const [token, setToken] = useState(null);
+    const [token, setToken] = useState(null)
     const [loginListeners, setLoginListeners] = useState<any>([]);
     const [logoutListeners, setLogoutListeners] = useState<any>([]);
     const { useGetMe } = useUserQuery();
     const { data: currentUser, refetch: refetchUserData } = useGetMe({
         enabled: Boolean(token),
         throwOnError: (error, _query) => {
-            logout();
-            throw error;
+            logout()
+            throw error
         },
     });
 
@@ -119,37 +119,36 @@ const AuthProvider = ({ children }: any) => {
             const permissions = chain(user?.roles).map((role) => map(role.permissions, 'name')).flatten().value();
             define({
                 roles: roles,
-                permissions: permissions,
-            });
+                permissions: permissions
+            })
         },
         [define],
-    );
+    )
 
     const reFetchCurrentUser = useCallback(
         async (user?: IUser | null) => {
-            refetchUserData();
-
+            refetchUserData()
             initPermissions(user);
             dispatch({
                 type: 'UPDATE',
                 payload: {
                     user,
-                },
+                }
             });
         },
-        [initPermissions, logout],
+        [initPermissions, refetchUserData],
     );
 
 
     const login = useCallback(
         async (token?: string, user?: any) => {
             await setSession(token);
-            setToken(token);
+            setToken(token)
             dispatch({
                 type: 'SIGN_IN',
                 payload: {
                     token,
-                },
+                }
             });
             loginListeners.forEach((listener: any) => listener(user));
         },
@@ -165,11 +164,11 @@ const AuthProvider = ({ children }: any) => {
     };
 
     const removeLoginListener = (listener: any) => {
-        setLoginListeners((prevListeners: any) => prevListeners.filter((l: any) => l != listener));
+        setLoginListeners((prevListeners: any) => prevListeners.filter((l: any) => l !== listener));
     };
 
     const removeLogoutListener = (listener: any) => {
-        setLogoutListeners((prevListeners: any) => prevListeners.filter((l: any) => l != listener));
+        setLogoutListeners((prevListeners: any) => prevListeners.filter((l: any) => l !== listener));
     };
 
     useEffect(() => {
@@ -178,11 +177,11 @@ const AuthProvider = ({ children }: any) => {
             if (token) {
                 await login(token);
             } else {
-                await logout();
+                await logout()
             }
 
             dispatch({ type: 'INITIALIZE' });
-        };
+        }
         initialize();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

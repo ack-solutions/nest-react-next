@@ -3,18 +3,18 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 
 @Injectable()
 export class FileStorageMiddleware implements NestMiddleware {
+    constructor() {
+        //
+    }
 
-    constructor() { }
-
-    async use(req, res, next) {
+    async use(req, _res, next) {
         const authHeader = req.headers.authorization;
 
         if (authHeader) {
             // const token = authHeader.split(' ')[1];
-            // const data: any = jwt.decode(token);
+            //const data: any = jwt.decode(token);
         }
 
         next();
     }
-
 }

@@ -1,55 +1,54 @@
-import { AuthService, errorMessage } from '@libs/react-core';
-import { Box, Stack, Typography } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { AuthService, errorMessage } from '@libs/react-core'
+import { Box, Stack, Typography } from '@mui/material'
+import { useCallback, useState } from 'react'
 
-import AuthLayout from '../../sections/auth/auth-layout';
-import LoginOtpVerification from '../../sections/auth/login-otp-verification';
-import RegisterForm from '../../sections/auth/register-form';
+import AuthLayout from '../../sections/auth/auth-layout'
+import LoginOtpVerification from '../../sections/auth/login-otp-verification'
+import RegisterForm from '../../sections/auth/register-form'
 
 
-const authService = AuthService.getInstance<AuthService>();
+const authService = AuthService.getInstance<AuthService>()
 
 const Register = () => {
-    const [verifyData, setVerifyData] = useState<any>(null);
+    const [verifyData, setVerifyData] = useState<any>(null)
 
     const handleSendOtp = useCallback(
         (value?: any, setError?: any) => {
-            value = value || verifyData;
-            authService.sendRegisterOtp(value).then(({ data }) => {
-                setVerifyData(value);
+            value = value ? value : verifyData
+            authService.sendRegisterOtp(value).then(() => {
+                setVerifyData(value)
             }).catch((error) => {
                 setError('afterSubmit', {
                     type: 'manual',
                     message: errorMessage(error),
                 });
-                setVerifyData(null);
-            });
+                setVerifyData(null)
+            })
         },
         [verifyData],
-    );
+    )
 
     const handleRegisterUser = useCallback(
         (values: any, form: any) => {
             const request = {
                 otp: Number(values?.otp),
                 ...verifyData,
-            };
-
-            authService.register(request).then((data) => {
+            }
+            authService.register(request).then(() => {
                 form.reset();
-                setVerifyData(null);
+                setVerifyData(null)
             }).catch((error) => {
                 form.setError('afterSubmit', {
                     type: 'manual',
                     message: errorMessage(error),
                 });
-            });
+            })
         },
         [verifyData],
-    );
+    )
 
     return (
-        <AuthLayout rootTitle={'Register | Next React'} >
+        <AuthLayout rootTitle={"Register | Next React"} >
             <Box
                 sx={{
                     maxWidth: 480,
@@ -83,7 +82,7 @@ const Register = () => {
             </Box>
 
         </AuthLayout>
-    );
-};
+    )
+}
 
-export default Register;
+export default Register

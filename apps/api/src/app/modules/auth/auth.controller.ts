@@ -8,7 +8,6 @@ import { AuthService } from './auth.service';
 import { LoginInputDTO } from './dto/login-input.dto';
 import { LoginSendOtpDTO } from './dto/login-send-otp.dto';
 import { LoginSuccessDTO } from './dto/login-success.dto';
-import { RegisterInputDTO } from './dto/register-input.dto';
 
 
 @ApiTags('Auth')

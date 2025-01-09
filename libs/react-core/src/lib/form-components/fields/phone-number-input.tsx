@@ -13,24 +13,23 @@ const PhoneNumberInput = ({
     onChange,
     value,
     sx,
-    ...props
+    // ...props
 }: PhoneNumberInputProps) => {
-    // const [phone, setPhone] = useState<any>(value || '');
     const [isValid, setIsValid] = useState(true);
     const phone = useMemo(() => {
         return (
             value
-        );
-    }, [value]);
+        )
+    }, [value])
 
     const handlePhoneChange = (value: string, countryData: MuiTelInputInfo) => {
-        // setPhone(value);
-        onChange && onChange(value, countryData);
-
+        if (onChange) {
+            onChange(value, countryData)
+        }
         const valid = matchIsValidTel(value, {
             onlyCountries: [],
             excludedCountries: [],
-            continents: [],
+            continents: []
         });
         setIsValid(valid);
     };
@@ -39,7 +38,7 @@ const PhoneNumberInput = ({
         <Box
             sx={{
                 width: '100%',
-                ...sx,
+                ...sx
             }}
         >
             <MuiTelInput
@@ -60,6 +59,7 @@ const PhoneNumberInput = ({
                         },
                     },
                 }}
+
             />
         </Box>
     );

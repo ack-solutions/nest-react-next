@@ -13,7 +13,7 @@ import { IPage, PageStatusEnum } from '@libs/types';
 import { LoadingButton } from '@mui/lab';
 import { Button, Card, CardContent, Container, IconButton, MenuItem, Stack, Tab, Tabs } from '@mui/material';
 import { startCase } from 'lodash';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { array, mixed, object, string } from 'yup';
 
@@ -65,7 +65,7 @@ export default function AddEditPageDialog({
         defaultValues,
         resolver: yupResolver(validationSchema),
     });
-    const { reset, handleSubmit, control, formState: { errors } } = formContext;
+    const { reset, handleSubmit, control } = formContext;
 
     const { fields, append, remove } = useFieldArray({
         control: control,

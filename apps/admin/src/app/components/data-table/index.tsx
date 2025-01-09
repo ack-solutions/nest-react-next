@@ -58,25 +58,25 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
     const { count, page, rowsPerPage, onPageChange } = props;
 
     const handleFirstPageButtonClick = (
-        event: React.MouseEvent<HTMLButtonElement>,
+        event: React.MouseEvent<HTMLButtonElement>
     ) => {
         onPageChange(event, 0);
     };
 
     const handleBackButtonClick = (
-        event: React.MouseEvent<HTMLButtonElement>,
+        event: React.MouseEvent<HTMLButtonElement>
     ) => {
         onPageChange(event, page - 1);
     };
 
     const handleNextButtonClick = (
-        event: React.MouseEvent<HTMLButtonElement>,
+        event: React.MouseEvent<HTMLButtonElement>
     ) => {
         onPageChange(event, page + 1);
     };
 
     const handleLastPageButtonClick = (
-        event: React.MouseEvent<HTMLButtonElement>,
+        event: React.MouseEvent<HTMLButtonElement>
     ) => {
         onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
     };
@@ -85,7 +85,7 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
         <Box
             sx={{
                 flexShrink: 0,
-                ml: 2.5,
+                ml: 2.5
             }}
         >
             <IconButton
@@ -211,7 +211,7 @@ const SearchInput = styled(OutlinedInput)(({ theme }) => ({
         padding: 12,
     },
     '& fieldset': {
-        borderWidth: '1px !important',
+        borderWidth: `1px !important`,
         borderColor: `${theme.palette.divider} !important`,
     },
 }));
@@ -246,7 +246,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
             noOptionsText,
             ...props
         },
-        ref,
+        ref
     ) => {
         const [page, setPage] = useState(0);
         const [selected, setSelected] = useState<string[]>([]);
@@ -275,7 +275,9 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
         const handleRowClick = useCallback(
             (row: any) => () => {
                 const { id } = row;
-                onRowClick && onRowClick(row);
+                if (onRowClick) {
+                    onRowClick(row)
+                }
                 if (selectable && !onRowClick) {
                     const selectedIndex = selected.indexOf(id);
                     const newSelected = [...selected];
@@ -285,15 +287,12 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                         newSelected.push(id);
                     }
                     setSelected(newSelected);
-                    onSelect && onSelect(newSelected);
+                    if (onSelect) {
+                        onSelect(newSelected)
+                    }
                 }
             },
-            [
-                onRowClick,
-                onSelect,
-                selectable,
-                selected,
-            ],
+            [onRowClick, onSelect, selectable, selected]
         );
 
         const handleCheckUncheck = useCallback(
@@ -309,9 +308,11 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                     newSelected.push(id);
                 }
                 setSelected(newSelected);
-                onSelect && onSelect(newSelected);
+                if (onSelect) {
+                    onSelect(newSelected)
+                }
             },
-            [onSelect, selected],
+            [onSelect, selected]
         );
 
         const toggleOpenRow = useCallback(
@@ -325,7 +326,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                     };
                 });
             },
-            [],
+            []
         );
 
         const handleSelectAll = useCallback(
@@ -338,7 +339,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                 }
                 setSelected([]);
             },
-            [idKey, data],
+            [idKey, data]
         );
 
         const handleSortChange = useCallback(
@@ -346,17 +347,16 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                 const dir = orderBy === columnName && order === 'asc' ? 'desc' : 'asc';
                 setOrder(dir);
                 setOrderBy(columnName);
-                onSortChange &&
-                    onSortChange({
-                        order: dir,
-                        orderBy: columnName,
-                    });
+                if (onSortChange) {
+                    onSortChange(
+                        {
+                            order: dir,
+                            orderBy: columnName,
+                        }
+                    );
+                }
             },
-            [
-                orderBy,
-                order,
-                onSortChange,
-            ],
+            [orderBy, order, onSortChange]
         );
 
         const handleSearchChange = useCallback((event: any) => {
@@ -365,21 +365,27 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
         }, []);
 
         const handlePageChange = useCallback(
-            (event: any, value: any) => {
-                onPageChange && onPageChange(value);
+            (_event: any, value: any) => {
+                if (onPageChange) {
+                    onPageChange(value)
+                }
                 setPage(value);
             },
-            [onPageChange],
+            [onPageChange]
         );
 
         const handleChangeRowsPerPage = useCallback(
             (event: any) => {
-                onLimitChange && onLimitChange(event.target.value);
+                if (onLimitChange) {
+                    onLimitChange(event.target.value);
+                }
                 setRowsPerPage(event.target.value);
-                onPageChange && onPageChange(0);
+                if (onPageChange) {
+                    onPageChange(0);
+                }
                 setPage(0);
             },
-            [onLimitChange, onPageChange],
+            [onLimitChange, onPageChange]
         );
 
         const resetFilter = useCallback(() => {
@@ -417,31 +423,19 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                     skip: page * rowsPerPage,
                     take: rowsPerPage,
                     ...orderInput,
-                    ...(filter || {}),
+                    ...(filter ? filter : {}),
                 };
-                onChange && onChange(request);
-            }, [
-                searchText,
-                columns,
-                page,
-                rowsPerPage,
-                orderBy,
-                order,
-                onChange,
-            ]),
-            500,
+                if (onChange) {
+                    onChange(request)
+                }
+            }, [searchText, columns, page, rowsPerPage, orderBy, order, onChange]),
+            500
         );
 
         useEffect(() => {
             applyFilters();
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [
-            page,
-            rowsPerPage,
-            orderBy,
-            order,
-            searchText,
-        ]);
+        }, [page, rowsPerPage, orderBy, order, searchText]);
 
         useEffect(() => {
             if (initialLoading) {
@@ -467,7 +461,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                             spacing={1}
                             direction={{
                                 xs: 'column',
-                                sm: 'row',
+                                sm: 'row'
                             }}
                             justifyContent="space-between"
                             alignItems="center"
@@ -494,7 +488,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                         <Stack
                             direction={{
                                 xs: 'column',
-                                sm: 'row',
+                                sm: "row"
                             }}
                             spacing={2}
                             justifyContent="space-between"
@@ -601,13 +595,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
 
                         <TableBody>
                             {!data &&
-                                [
-                                    1,
-                                    2,
-                                    3,
-                                    4,
-                                    5,
-                                ].map((index) => (
+                                [1, 2, 3, 4, 5].map((index) => (
                                     <TableRow
                                         hover={selectable || !!onRowClick}
                                         key={'column-skl' + index}
@@ -743,12 +731,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
 
                 {(showPagination && totalRow > 0) && (
                     <TablePagination
-                        rowsPerPageOptions={[
-                            10,
-                            20,
-                            50,
-                            100,
-                        ]}
+                        rowsPerPageOptions={[10, 20, 50, 100]}
                         component="div"
                         count={totalRow}
                         rowsPerPage={rowsPerPage}
@@ -761,7 +744,7 @@ const DataTable = forwardRef<DataTableHandle, DataTableProps>(
                 )}
             </Box>
         );
-    },
+    }
 );
 
 export default DataTable;

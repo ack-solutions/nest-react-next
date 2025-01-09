@@ -28,7 +28,7 @@ export function RHFCheckbox({ name, control, helperText, label, ...other }: RHFC
             <FormControlLabel
                 control={
                     <Checkbox
-                        onChange={(e, checked) => onChange(checked)}
+                        onChange={(_e, checked) => onChange(checked)}
                         checked={value}
                     />
                 }
