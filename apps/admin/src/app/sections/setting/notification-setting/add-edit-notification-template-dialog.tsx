@@ -110,7 +110,7 @@ const AddEditNotificationTemplateDialog = ({
                     FormProps={{
                         id: 'add-edit-form-notification-template',
                     }}
-                    formContext={formContext}
+                    formContext={formContext as any}
                     validationSchema={validationSchema}
                     onSuccess={handleSubmitForm}
                 >

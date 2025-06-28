@@ -82,7 +82,7 @@ function FormProviderWithoutContext<
         ...(validationSchema && {
             resolver: yupResolver(validationSchema),
         }),
-    });
+    } as any);
 
     const { handleSubmit } = methods;
 

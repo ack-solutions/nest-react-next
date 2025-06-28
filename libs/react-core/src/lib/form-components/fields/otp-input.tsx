@@ -4,53 +4,53 @@ import React from 'react';
 type AllowedInputTypes = 'password' | 'text' | 'number' | 'tel';
 
 type InputProps = Required<
-  Pick<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    | 'value'
-    | 'onChange'
-    | 'onFocus'
-    | 'onBlur'
-    | 'onKeyDown'
-    | 'onPaste'
-    | 'aria-label'
-    | 'maxLength'
-    | 'autoComplete'
-    | 'style'
-    | 'inputMode'
-    | 'onInput'
-  > & {
-    ref: React.RefCallback<HTMLInputElement>;
-    placeholder: string | undefined;
-    className: string | undefined;
-    type: AllowedInputTypes;
-  }
+    Pick<
+        React.InputHTMLAttributes<HTMLInputElement>,
+        | 'value'
+        | 'onChange'
+        | 'onFocus'
+        | 'onBlur'
+        | 'onKeyDown'
+        | 'onPaste'
+        | 'aria-label'
+        | 'maxLength'
+        | 'autoComplete'
+        | 'style'
+        | 'inputMode'
+        | 'onInput'
+    > & {
+        ref: React.RefCallback<HTMLInputElement>;
+        placeholder: string | undefined;
+        className: string | undefined;
+        type: AllowedInputTypes;
+    }
 >;
 
 interface OTPInputProps {
-  /** Value of the OTP input */
-  value?: string;
-  /** Number of OTP inputs to be rendered */
-  numInputs?: number;
-  /** Callback to be called when the OTP value changes */
-  onChange: (otp: string) => void;
-  /** Callback to be called when pasting content into the component */
-  onPaste?: (event: React.ClipboardEvent<HTMLDivElement>) => void;
-  /** Function to render the input */
-  renderInput: (inputProps: InputProps, index: number) => React.ReactNode;
-  /** Whether the first input should be auto focused */
-  shouldAutoFocus?: boolean;
-  /** Placeholder for the inputs */
-  placeholder?: string;
-  /** Function to render the separator */
-  renderSeparator?: ((index: number) => React.ReactNode) | React.ReactNode;
-  /** Style for the container */
-  containerStyle?: React.CSSProperties | string;
-  /** Style for the input */
-  inputStyle?: React.CSSProperties | string;
-  /** The type that will be passed to the input being rendered */
-  inputType?: AllowedInputTypes;
-  /** Do not apply the default styles to the inputs, will be removed in future versions */
-  skipDefaultStyles?: boolean; // TODO: Remove in next major release
+    /** Value of the OTP input */
+    value?: string;
+    /** Number of OTP inputs to be rendered */
+    numInputs?: number;
+    /** Callback to be called when the OTP value changes */
+    onChange: (otp: string) => void;
+    /** Callback to be called when pasting content into the component */
+    onPaste?: (event: React.ClipboardEvent<HTMLDivElement>) => void;
+    /** Function to render the input */
+    renderInput: (inputProps: InputProps, index: number) => React.ReactNode;
+    /** Whether the first input should be auto focused */
+    shouldAutoFocus?: boolean;
+    /** Placeholder for the inputs */
+    placeholder?: string;
+    /** Function to render the separator */
+    renderSeparator?: ((index: number) => React.ReactNode) | React.ReactNode;
+    /** Style for the container */
+    containerStyle?: React.CSSProperties | string;
+    /** Style for the input */
+    inputStyle?: React.CSSProperties | string;
+    /** The type that will be passed to the input being rendered */
+    inputType?: AllowedInputTypes;
+    /** Do not apply the default styles to the inputs, will be removed in future versions */
+    skipDefaultStyles?: boolean; // TODO: Remove in next major release
 }
 
 const isStyleObject = (obj: unknown) => typeof obj === 'object' && obj !== null;
@@ -162,9 +162,9 @@ const OTPInput = ({
             focusInput(activeInput + 1);
         } else if (
             event.code === 'Spacebar' ||
-      event.code === 'Space' ||
-      event.code === 'ArrowUp' ||
-      event.code === 'ArrowDown'
+            event.code === 'Space' ||
+            event.code === 'ArrowUp' ||
+            event.code === 'ArrowDown'
         ) {
             event.preventDefault();
         }
@@ -222,11 +222,11 @@ const OTPInput = ({
 
     return (
         <div
-            style={({
+            style={{
                 display: 'flex',
                 alignItems: 'center',
-                ...isStyleObject(containerStyle) && containerStyle,
-            })}
+                ...(isStyleObject(containerStyle) ? (containerStyle as React.CSSProperties) : {}),
+            }}
             className={typeof containerStyle === 'string' ? containerStyle : undefined}
             onPaste={onPaste}
         >
@@ -236,7 +236,7 @@ const OTPInput = ({
                         {
                             value: getOTPValue()[index] ?? '',
                             placeholder: getPlaceholderValue()?.[index] ?? undefined,
-                            ref: (element) => (inputRefs.current[index] = element),
+                            ref: (element) => { inputRefs.current[index] = element; },
                             onChange: handleChange,
                             onFocus: (event) => handleFocus(event)(index),
                             onBlur: handleBlur,

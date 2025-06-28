@@ -63,7 +63,7 @@ export default function AddEditPageDialog({
 
     const formContext = useForm<IPage>({
         defaultValues,
-        resolver: yupResolver(validationSchema),
+        resolver: yupResolver(validationSchema) as any,
     });
     const { reset, handleSubmit, control } = formContext;
 

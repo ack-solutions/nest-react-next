@@ -112,7 +112,7 @@ const AddEditRole = () => {
                             FormProps={{
                                 id: 'add-edit-form-role',
                             }}
-                            formContext={formContext}
+                            formContext={formContext as any}
                             validationSchema={validationSchema}
                             onSuccess={handleSubmitForm}
                         >

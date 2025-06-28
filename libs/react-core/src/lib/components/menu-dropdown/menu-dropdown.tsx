@@ -36,7 +36,7 @@ export function MenuDropdown({
         [],
     );
     const handleClose = useCallback(
-        (event:any) => {
+        (event: any) => {
             event?.preventDefault();
             event?.stopPropagation();
             setAnchorEl(null);
@@ -54,11 +54,11 @@ export function MenuDropdown({
             });
         }
         return (
-                <Button
-                    onClick={handleClick}
-                >
-                    {label}
-                </Button>
+            <Button
+                onClick={handleClick}
+            >
+                {label}
+            </Button>
         );
     }, [
         anchor,
@@ -72,7 +72,7 @@ export function MenuDropdown({
     return (
         <>
             {anchorNode}
-            <DropDownComponent
+            <DropDownComponent {...({} as any)}
                 anchorEl={anchorEl}
                 open={isOpen}
                 onClose={handleClose}

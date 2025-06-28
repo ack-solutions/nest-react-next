@@ -1,4 +1,4 @@
-import { S3Client, GetObjectCommand, GetObjectCommandInput } from '@aws-sdk/client-s3';
+import { S3Client, GetObjectCommand, GetObjectCommandInput, PutObjectCommand, HeadObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import moment from 'moment';
 import { StorageEngine } from 'multer';
@@ -88,7 +88,7 @@ export class S3Provider extends Provider<S3Provider> {
 
     handler({ dest, filename, prefix }: FileStorageOption): StorageEngine {
         return multerS3({
-            s3: this.getS3Instance(),
+            s3: this.getS3Instance() as any,
             bucket: this.getS3Bucket(),
             metadata: function (_req, file, cb) {
                 cb(null, { fieldName: file.fieldname });
@@ -131,18 +131,21 @@ export class S3Provider extends Provider<S3Provider> {
             Key: key || (Math.random() + 1).toString(36).substring(12),
         };
 
-        return new Promise((resolve, reject) => {
-            s3.getObject(params, (err, data) => {
-                if (err) reject(err);
-                else resolve(data.Body as Buffer);
-            });
-        });
+        return (async () => {
+            try {
+                const command = new GetObjectCommand(params);
+                const data = await s3.send(command);
+                return data.Body as any;
+            } catch (err) {
+                throw err;
+            }
+        })();
         // const data = await s3.getObject(params).promise();
         // return data.Body as Buffer;
     }
 
     async putFile(fileContent: string, key = ''): Promise<any> {
-        return new Promise((putFileResolve, reject) => {
+        return new Promise(async (putFileResolve, reject) => {
             const fileName = basename(key);
             const s3 = this.getS3Instance();
             const params = {
@@ -152,29 +155,29 @@ export class S3Provider extends Provider<S3Provider> {
                 ContentDisposition: `inline; ${fileName}`,
             };
 
-            s3.putObject(params, async (err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    const size = await s3
-                        .headObject({
-                            Key: key,
-                            Bucket: this.getS3Bucket(),
-                        })
-                        // .promise()
-                        .then((res) => res.ContentLength);
+            try {
+                const putCommand = new PutObjectCommand(params);
+                await s3.send(putCommand);
 
-                    const file = {
-                        originalname: fileName, // original file name
-                        size: size, // files in bytes
-                        filename: fileName,
-                        path: key, // Full path of the file
-                        key: key, // Full path of the file
-                    };
-                    const res = await this.mapUploadedFileData(file);
-                    await putFileResolve(res);
-                }
-            });
+                const headCommand = new HeadObjectCommand({
+                    Key: key,
+                    Bucket: this.getS3Bucket(),
+                });
+                const sizeResult = await s3.send(headCommand);
+                const size = sizeResult.ContentLength;
+
+                const file = {
+                    originalname: fileName, // original file name
+                    size: size, // files in bytes
+                    filename: fileName,
+                    path: key, // Full path of the file
+                    key: key, // Full path of the file
+                };
+                const res = await this.mapUploadedFileData(file);
+                putFileResolve(res);
+            } catch (err) {
+                reject(err);
+            }
         });
     }
 
@@ -184,11 +187,14 @@ export class S3Provider extends Provider<S3Provider> {
             Bucket: this.getS3Bucket(),
             Key: key || (Math.random() + 1).toString(36).substring(12),
         };
-        return new Promise((deleteFileResolve, reject) => {
-            s3.deleteObject(params, function (err) {
-                if (err) reject(err);
-                else deleteFileResolve();
-            });
+        return new Promise(async (deleteFileResolve, reject) => {
+            try {
+                const deleteCommand = new DeleteObjectCommand(params);
+                await s3.send(deleteCommand);
+                deleteFileResolve();
+            } catch (err) {
+                reject(err);
+            }
         });
     }
 

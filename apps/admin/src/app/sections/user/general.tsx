@@ -32,7 +32,7 @@ const General = () => {
     const { mutate: updateProfile } = useUpdateProfile();
     const formContext = useForm({
         defaultValues,
-        resolver: validationSchema,
+        resolver: validationSchema as any,
     });
     const { reset } = formContext;
 

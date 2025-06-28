@@ -49,7 +49,7 @@ const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
 
     const formContext = useForm({
         defaultValues,
-        resolver: validationSchema,
+        resolver: validationSchema as any,
     });
     const { reset } = formContext;
 

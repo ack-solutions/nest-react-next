@@ -101,7 +101,7 @@ const AddEditPermissionDialog = ({ onClose, values }: AddEditPermissionDialogPro
                 FormProps={{
                     id: 'add-edit-form-user',
                 }}
-                formContext={formContext}
+                formContext={formContext as any}
                 validationSchema={validationSchema}
                 onSuccess={handleSubmitForm}
             >
