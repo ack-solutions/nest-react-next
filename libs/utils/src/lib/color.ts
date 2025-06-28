@@ -1,25 +1,23 @@
-export function hexToRgbA(hex: string) {
-    let c:any;
-    if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-        c = hex.substring(1).split('');
-        if (c.length == 3) {
-            c = [
-                c[0],
-                c[0],
-                c[1],
-                c[1],
-                c[2],
-                c[2],
-            ];
-        }
-        c = '0x' + c.join('');
-        return [
-            (c >> 16) & 255,
-            (c >> 8) & 255,
-            c & 255,
-        ];
+
+export function hexToRgbA(hex: string): number[] {
+    if (!/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+        throw new Error('Bad Hex');
     }
-    throw new Error('Bad Hex');
+
+    let c = hex.substring(1);
+    if (c.length === 3) {
+        c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
+    }
+
+    const red = parseInt(c.slice(0, 2), 16);
+    const green = parseInt(c.slice(2, 4), 16);
+    const blue = parseInt(c.slice(4, 6), 16);
+
+    return [
+        red,
+        green,
+        blue,
+    ];
 }
 
 export function getRandomHexColor() {
@@ -33,3 +31,4 @@ export function getRandomHexColor() {
 
     return hexColor;
 }
+

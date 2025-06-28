@@ -1,48 +1,83 @@
+import { NestAuthModule } from '@ackplus/nest-auth';
+import { NestDynamicTemplatesModule } from '@ackplus/nest-dynamic-templates';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 
-import { ApiModule } from './api.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Configs } from './core/config';
+import { Configs } from './config';
 import { TypeOrmConfigService } from './core/typeorm/typeorm-config.service';
+import { CmsModule } from './modules/cms/cms.module';
+import { CountryModule } from './modules/country/country.module';
+import { EmailTemplateModule } from './modules/email-template/email-template.module';
+import { PageModule } from './modules/page/page.module';
+import { RoleModule } from './modules/role/role.module';
+import { TemplateModule } from './modules/template/template.module';
+import { UsersModule } from './modules/user/users.module';
+import { templateFilters } from './utils/template-filter';
 
 
 @Module({
     imports: [
-        ThrottlerModule.forRoot([
-            {
-                ttl: 60000,
-                limit: 20,
-            },
-        ]),
         ConfigModule.forRoot({ load: Configs }),
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
             useClass: TypeOrmConfigService,
             dataSourceFactory: async (options) => {
-                const dataSource = await new DataSource(options).initialize();
-                global['dataSource'] = dataSource;
+                const dataSource = await new DataSource(
+                    options,
+                ).initialize();
+                global.dataSource = dataSource;
                 return dataSource;
             },
         }),
-        ApiModule,
+        ThrottlerModule.forRoot([
+            {
+                ttl: 60000,
+                limit: 20,
+            },
+        ]),
+        EventEmitterModule.forRoot({
+            wildcard: true,
+            delimiter: '.',
+            newListener: true,
+            removeListener: true,
+            maxListeners: 10,
+        }),
+        NestAuthModule.forRoot({
+            accessTokenType: 'header',
+            jwt: {
+                secret: process.env.JWT_SECRET,
+            },
+            emailAuth: {
+                enabled: true,
+            },
+            cookieOptions: {
+                secure: process.env.APP_ENV === 'prod',
+                // httpOnly: true,
+            },
+        }),
+
+        NestDynamicTemplatesModule.forRoot({
+            isGlobal: true,
+            enginesOptions: {
+                filters: templateFilters,
+            },
+        }),
+        RoleModule,
+        UsersModule,
+        EmailTemplateModule,
+        PageModule,
+        CountryModule,
+        CmsModule,
+        TemplateModule,
     ],
     controllers: [AppController],
-    providers: [
-        AppService,
-        {
-            provide: APP_GUARD,
-            useClass: ThrottlerGuard,
-        },
-    ],
+    providers: [AppService],
 })
-
-export class AppModule {
-
-}
+export class AppModule { }

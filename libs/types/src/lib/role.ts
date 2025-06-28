@@ -1,23 +1,21 @@
-// import { IOrganizationBaseEntity } from './base-entity';
-import { IBaseEntity } from './base-entity';
-import { IPermission } from './permission';
-import { IUser } from './user';
+import type { Role } from '@ackplus/nest-auth';
 
 
-export interface IRole extends IBaseEntity {
-    name?: RoleNameEnum | string;
-    isSystemRole?: boolean;
-    permissions?: IPermission[];
-    users?: IUser;
+export interface IRole extends Role {
+
 }
 
 export enum RoleNameEnum {
     ADMIN = 'Admin',
     MANGER = 'Manger',
-    USER = 'User',
+    SUPER_ADMIN = 'Super Admin',
 }
-
 export enum RoleGuardEnum {
     ADMIN = 'Admin',
-    WEB = 'web',
+    WEB = 'Web',
+}
+
+
+export interface IRoleGetInput {
+    withPermissions?: boolean;
 }

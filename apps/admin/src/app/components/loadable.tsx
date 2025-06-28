@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Suspense } from 'react';
 
-import { LoadingScreen } from './loading-screen';
+import PageLoading from './loading/page-loading';
 
 
-export const Loadable = (Component: React.ElementType) => (props: any) => {
+export const Loadable = (Component: React.ElementType) => (function(props: any) {
     return (
-        <Suspense fallback={<LoadingScreen />}>
+        <Suspense fallback={<PageLoading showProgressBar />}>
             <Component {...props} />
         </Suspense>
     );
-};
+});

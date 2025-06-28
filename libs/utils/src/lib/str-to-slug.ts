@@ -1,6 +1,7 @@
 export function strToSlug(str: string) {
     // replace all special characters | symbols with a space
-    str = str.replace(/[`~!@#$%^&*()_\-+=\\[\]{};:'"\\|\\/,.<>?\s]/g, ' ')
+    str = str
+        .replace(/[`~!@#$%^&*()_\-+=\\[\]{};:'"\\|\\/,.<>?\s]/g, ' ')
         .toLowerCase();
 
     // trim spaces at start and end of string
@@ -12,7 +13,10 @@ export function strToSlug(str: string) {
     return str;
 }
 
-export async function generateSlug(str: string, databaseCheck: ((str: string) => Promise<boolean> | boolean) = () => false) {
+export async function generateSlug(
+    str: string,
+    databaseCheck: (str: string) => Promise<boolean> | boolean = () => false,
+) {
     let index = 1;
     let found: any;
     let slug: string;

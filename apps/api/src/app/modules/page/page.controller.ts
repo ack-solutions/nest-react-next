@@ -1,17 +1,46 @@
-import { CrudController } from '@api/app/core/crud';
-import { Controller } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { NestAuthAuthGuard } from '@ackplus/nest-auth';
+import { Crud } from '@ackplus/nest-crud';
+import { Get, HttpStatus, Param } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+
+import { PageDTO } from './dto/page.dto';
 import { Page } from './page.entity';
 import { PageService } from './page.service';
 
 
 @ApiTags('Page')
-@Controller('page')
-export class PageController extends CrudController(Page)<Page> {
+@Crud({
+    entity: Page,
+    name: 'Page',
+    path: 'page',
+    softDelete: true,
+    guards: [NestAuthAuthGuard],
+    dto: {
+        create: PageDTO,
+        update: PageDTO,
+    },
+})
+export class PageController {
 
-    constructor(private readonly pageService: PageService) {
-        super(pageService);
+    constructor(
+        private service: PageService,
+    ) {
+    }
+
+
+    @ApiOperation({ summary: 'Get By Slug' })
+    @ApiResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Failed',
+    })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Success',
+    })
+    @Get('slug-or-id/:id')
+    async byIdOrSlug(@Param('id') id: string) {
+        return this.service.byIdOrSlug(id);
     }
 
 }

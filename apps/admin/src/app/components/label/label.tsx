@@ -4,7 +4,15 @@ import React, { forwardRef } from 'react';
 import { StyledLabel } from './styles';
 
 
-export type LabelColor = 'default' | 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error' | 'tertiary';
+export type LabelColor =
+    | 'default'
+    | 'primary'
+    | 'secondary'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | 'error'
+    | 'tertiary';
 
 export type LabelVariant = 'filled' | 'outlined' | 'soft';
 
@@ -15,18 +23,19 @@ export interface LabelProps extends BoxProps {
     variant?: LabelVariant;
 }
 
-const Label = forwardRef<HTMLSpanElement, LabelProps>(
-    ({ children, color = 'default', variant = 'soft', startIcon, endIcon, sx = {}, ...other }, ref) => {
-        const iconStyle = {
-            width: 16,
-            height: 16,
-            '& svg, img': {
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-            },
-        };
-
+export const Label = forwardRef<HTMLSpanElement, LabelProps>(
+    (
+        {
+            children,
+            color = 'default',
+            variant = 'soft',
+            startIcon,
+            endIcon,
+            sx = {},
+            ...other
+        },
+        ref,
+    ) => {
         return (
             <StyledLabel
                 ref={ref}
@@ -41,29 +50,28 @@ const Label = forwardRef<HTMLSpanElement, LabelProps>(
                 }}
                 {...other}
             >
-                {startIcon &&
+                {startIcon ? (
                     <Box
                         sx={{
                             mr: 0.75,
-                            ...iconStyle,
                         }}
                     >
                         {startIcon}
                     </Box>
-                }
+                ) : null}
+
                 {children}
-                {endIcon &&
+
+                {endIcon ? (
                     <Box
                         sx={{
                             ml: 0.75,
-                            ...iconStyle,
                         }}
                     >
                         {endIcon}
-                    </Box>}
+                    </Box>
+                ) : null}
             </StyledLabel>
         );
     },
 );
-
-export default Label;

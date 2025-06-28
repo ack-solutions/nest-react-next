@@ -1,73 +1,58 @@
-import { BaseEntity } from '@api/app/core/typeorm/base.entity';
-import { generateSlug } from '@api/app/utils';
-import { IPage, PageStatusEnum } from '@libs/types';
+import { IMeta } from '@libs/types';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional } from 'class-validator';
 import {
-    IsString,
-    IsEnum,
-    IsOptional,
-} from 'class-validator';
-import { Entity, Column, BeforeInsert, BeforeUpdate } from 'typeorm';
+    Column,
+    Entity,
+    BeforeInsert,
+} from 'typeorm';
+
+import { MetaDTO } from './dto/meta-dto';
+import { CoreEntity } from '../../core/typeorm/core.entity';
+import { getDataSource } from '../../utils/database';
+import { generateSlug } from '../../utils/str-to-slug';
 
 
 @Entity()
-export class Page extends BaseEntity implements IPage {
+export class Page extends CoreEntity {
 
     @ApiProperty({ type: String })
-    @IsString()
-    @IsOptional()
-    @Column({ nullable: true })
+    @Column()
     title?: string;
 
     @ApiProperty({ type: String })
-    @IsString()
+    @Column({ nullable: true })
     @IsOptional()
+    name?: string;
+
+    @ApiProperty({ type: String })
     @Column({ nullable: true })
     slug?: string;
 
     @ApiProperty({ type: String })
-    @IsString()
-    @IsOptional()
-    @Column({
-        type: 'text',
-        nullable: true,
-    })
+    @Column({ nullable: true })
     content?: string;
 
-    @ApiProperty({
-        type: String,
-        enum: PageStatusEnum,
-    })
-    @IsEnum(PageStatusEnum)
-    @IsOptional()
-    @Column({
-        type: 'text',
-        nullable: true,
-    })
-    status?: PageStatusEnum;
-
-    @ApiProperty({ type: Object })
-    @IsOptional()
-    @Column({
-        type: 'jsonb',
-        nullable: true,
-    })
-    metaData?: any;
+    @ApiProperty({ type: () => [MetaDTO] })
+    @Column('jsonb', { nullable: true })
+    extras?: IMeta;
 
     @ApiProperty({ type: String })
-    @IsString()
-    @IsOptional()
     @Column({ nullable: true })
-    name?: string;
+    template?: string;
 
     @BeforeInsert()
-    async createSlug() {
-        this.slug = await generateSlug(Page, this.title, this.id);
-    }
-
-    @BeforeUpdate()
-    async updateSlug() {
-        this.slug = await generateSlug(Page, this.title, this.id);
+    async createSlug?() {
+        if (!this.slug) {
+            this.slug = await generateSlug(this.title, async (slug: string) => {
+                const dataSource = getDataSource();
+                const resp = await dataSource.getRepository(Page)
+                    .createQueryBuilder('page')
+                    .where('page.slug = :slug', { slug })
+                    .getCount();
+                return !!resp;
+            });
+        }
     }
 
 }

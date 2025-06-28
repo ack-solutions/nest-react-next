@@ -1,3 +1,3 @@
 export * from './types';
 
-export { default as Scrollbar } from './scrollbar';
+export { default } from './scrollbar';

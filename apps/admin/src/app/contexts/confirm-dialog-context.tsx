@@ -1,9 +1,5 @@
-import {
-    Button,
-    ButtonProps,
-    DialogContentText,
-    Stack,
-} from '@mui/material';
+/* eslint-disable react/no-multi-comp */
+import { Button, ButtonProps, DialogContentText, Stack } from '@mui/material';
 import {
     useCallback,
     useContext,
@@ -12,7 +8,10 @@ import {
     ReactNode,
 } from 'react';
 
-import DefaultDialog, { DefaultDialogProps } from '../components/default-dialog';
+import {
+    DefaultDialog,
+    DefaultDialogProps,
+} from '../components/default-dialog';
 
 
 export const ConfirmContext = createContext<any>(null);
@@ -27,7 +26,8 @@ export interface ConfirmDialogProps extends DefaultDialogProps {
     onClose: () => void;
 }
 
-const ConfirmDialog = ({
+// ConfirmDialog component
+function ConfirmDialog({
     noButtonProps,
     title = 'Confirm',
     noText = 'No',
@@ -37,9 +37,10 @@ const ConfirmDialog = ({
     resolveReject,
     onClose,
     ...dialogProps
-}: ConfirmDialogProps) => {
+}: ConfirmDialogProps) {
     const [resolve, reject] = resolveReject || [];
 
+    // Handle cancel button action
     const handleCancel = useCallback(() => {
         if (reject) {
             reject();
@@ -49,6 +50,7 @@ const ConfirmDialog = ({
         }
     }, [reject, onClose]);
 
+    // Handle confirm button action
     const handleConfirm = useCallback(() => {
         if (resolve) {
             resolve();
@@ -63,11 +65,11 @@ const ConfirmDialog = ({
             onClose={onClose}
             maxWidth="xs"
             fullWidth
-            actions={
+            actions={(
                 <Stack
-                    direction='row'
+                    direction="row"
                     spacing={2}
-                    justifyContent='end'
+                    justifyContent="end"
                 >
                     <Button
                         variant="outlined"
@@ -88,32 +90,32 @@ const ConfirmDialog = ({
                         {yesText}
                     </Button>
                 </Stack>
-            }
+            )}
             title={title}
             {...dialogProps}
         >
-            {message && <DialogContentText>{message}</DialogContentText>}
+            {message ? <DialogContentText>{message}</DialogContentText> : null}
         </DefaultDialog>
     );
-};
-
-export default ConfirmDialog;
+}
 
 interface ConfirmProviderProps {
     children: ReactNode;
 }
 
-export const ConfirmProvider = ({ children }: ConfirmProviderProps) => {
+export default function ConfirmProvider({
+    children,
+}: ConfirmProviderProps) {
     const [dialogProps, setDialogProps] = useState<Partial<ConfirmDialogProps> | null>(null);
     const [resolveReject, setResolveReject] = useState<[() => void, () => void] | null>(null);
 
-    const confirm = (options: Partial<ConfirmDialogProps>) => new Promise<void>((resolve, reject) => {
+    const confirm = useCallback((options: Partial<ConfirmDialogProps>) => new Promise<void>((resolve, reject) => {
         if (typeof options === 'string') {
             options = { message: options };
         }
         setDialogProps(options);
         setResolveReject([resolve, reject]);
-    });
+    }), []);
 
     const handleClose = () => {
         setDialogProps(null);
@@ -122,16 +124,16 @@ export const ConfirmProvider = ({ children }: ConfirmProviderProps) => {
     return (
         <ConfirmContext.Provider value={confirm}>
             {children}
-            {dialogProps && resolveReject && (
+            {dialogProps && resolveReject ? (
                 <ConfirmDialog
                     {...dialogProps}
                     resolveReject={resolveReject}
                     onClose={handleClose}
                 />
-            )}
+            ) : null}
         </ConfirmContext.Provider>
     );
-};
+}
 
 export const useConfirm = () => {
     const confirm = useContext(ConfirmContext);

@@ -1,175 +1,303 @@
-import { CrudService } from '@api/app/core/crud';
-import { RequestContext } from '@api/app/core/request-context/request-context';
-import { hashPassword } from '@api/app/utils';
-import { IChangePasswordInput, IRegisterInput, IUpdateProfileInput, IUser, RoleNameEnum } from '@libs/types';
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcryptjs';
-import { chain, has, omit, sumBy } from 'lodash';
+import { UserService as NestAuthUserService } from '@ackplus/nest-auth';
+import { ID, PaginationResponse } from '@ackplus/nest-crud';
 import {
-    Repository,
-    DeepPartial,
-    Not,
-    FindManyOptions,
-} from 'typeorm';
+    IChangeEmailInput,
+    IChangePasswordInput,
+    IDeleteAccountInput,
+    ISetPasswordInput,
+    IUpdateProfileInput,
+    IUser,
+    RoleGuardEnum,
+    UserStatusEnum,
+} from '@libs/types';
+import {
+    BadRequestException,
+    ForbiddenException,
+    Injectable,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { has, omit } from 'lodash';
+import { SaveOptions, In, FindOneOptions, SelectQueryBuilder } from 'typeorm';
 
+import { ChangePhoneInputDTO } from './dto/change-phone-input.dto';
+import { CreateUserDTO } from './dto/create-user.dto';
+import { UpdateUserDTO } from './dto/update-user.dto';
 import { User } from './user.entity';
-import { Role } from '../role';
+import { SuccessDTO } from '../../core/dto/success.dto';
+import { RequestContext } from '../../core/request-context/request-context';
+import { BaseService } from '../../core/service/base-service';
+import { BaseRepository } from '../../core/typeorm/base-repository';
 
 
 @Injectable()
-export class UserService extends CrudService<User> {
-
-    protected hasSoftDelete = true;
+export class UserService extends BaseService<User> {
 
     constructor(
-        @InjectRepository(User)
-        public readonly userRepository: Repository<User>,
-        @InjectRepository(Role)
-        public readonly roleRepository: Repository<Role>,
+        private readonly userService: NestAuthUserService,
 
+        @InjectRepository(User)
+        public readonly userRepository: BaseRepository<User>,
     ) {
         super(userRepository);
     }
 
-    async beforeSave(entity: DeepPartial<any>, req): Promise<User> {
-        if (has(req, 'password') && req?.password) {
-            entity.passwordHash = await hashPassword(req.password);
-        }
-        if (entity?.roles) {
-            entity.roles = req.roles.map((id) => {
-                return new Role({ id });
-            });
-        }
-
-        return entity as User;
+    protected override async beforeSave(entity: Partial<CreateUserDTO>, _request?: any) {
+        return entity;
     }
 
-    async getStatusCounts(request: FindManyOptions<User>) {
-        const query = this.userRepository.createQueryBuilder();
+    protected override async afterSave(newValue: any, oldValue: any, request?: any) {
+        if (has(newValue, 'status')) {
+            if (newValue.status === UserStatusEnum.ACTIVE) {
+                this.userService.updateUserStatus(newValue.authUserId, true);
+            } else {
+                this.userService.updateUserStatus(newValue.authUserId, false);
+            }
+        }
 
-        query.select(`COUNT("${query.alias}"."id")`, 'count')
-            .addSelect(`"${query.alias}"."status"`, 'status')
-            .groupBy(`"${query.alias}"."status"`);
+        // Update email if it has changed
+        if (request?.email && request?.email !== oldValue?.email) {
+            await this.userService.updateUser(newValue?.authUserId, { email: request?.email });
+        }
 
-        query.setFindOptions(request);
-
-        const results = await query.getRawMany();
-        const countData = chain(results)
-            .keyBy('status')
-            .mapValues((item) => item.count)
-            .value();
-
-        const total = {
-            ...countData,
-            all: sumBy(results, (item: any) => Number(item?.count || 0)),
-        };
-
-        return total;
+        // Update phone number if it has changed
+        const newPhoneNumber = newValue?.phoneNumber ? `${newValue?.phoneCountryCode}${newValue?.phoneNumber}` : null;
+        const oldPhoneNumber = oldValue?.phoneNumber ? `${oldValue?.phoneCountryCode}${oldValue?.phoneNumber}` : null;
+        if (newValue?.phoneNumber && newPhoneNumber !== oldPhoneNumber) {
+            await this.userService.updateUser(newValue?.authUserId, { phone: newPhoneNumber });
+        }
+        return newValue;
     }
 
-    async createUser(request: IRegisterInput) {
-        const userEntity: User = request;
+    protected override async beforeUpdate(entity: Partial<UpdateUserDTO>) {
+        // Check if the roles are valid for the user
+        if (has(entity, 'roles')) {
+            const { authUserId } = entity;
+            const authUser = await this.userService.getUserById(authUserId);
+            await authUser.assignRoles(entity.roles, RoleGuardEnum.ADMIN) as any; // TODO: change to the correct guard
+            await authUser.save();
+        }
 
-        if (request.password) {
-            userEntity.passwordHash = await hashPassword(request.password.trim());
-        }
-        if (!request?.roles || request.roles?.length === 0) {
-            const userRole = await this.roleRepository.findOne({
-                where: { name: RoleNameEnum.USER },
-            });
-            userEntity.roles = [new Role({ id: userRole.id })];
-        }
-        const user = new User(userEntity);
-
-        try {
-            await this.userRepository.save(user);
-        } catch (error) {
-            console.log(error);
-            throw new BadRequestException(error);
-        }
-        return this.userRepository.findOne({
-            where: { id: user.id },
-            relations: ['roles'],
-        });
+        return super.beforeUpdate(entity);
     }
 
-    async getUserForAuth(id: string): Promise<User> {
-        return this.userRepository.findOne({
+    protected override async beforeDelete(entity: User) {
+        const isSuperAdmin = this.isSuperAdmin();
+        if (entity.isSuperUser && !isSuperAdmin) {
+            throw new ForbiddenException('You can not delete this user');
+        }
+        return entity;
+    }
+
+    protected override async afterDelete(entity: User) {
+        await this.userService.updateUserStatus(entity.authUserId, false);
+        return entity;
+    }
+
+    protected override async afterDeleteMany(ids: ID[]) {
+        const users = await this.userRepository.find({
+            select: ['authUserId'],
             where: {
-                id: id,
+                id: In(ids),
             },
-            relations: ['roles'],
         });
+        for (const user of users) {
+            await this.userService.updateUserStatus(user.authUserId, false);
+        }
+        return ids;
+    }
+
+    protected override async afterRestore(entity: User) {
+        await this.userService.updateUserStatus(entity.authUserId, true);
+        return entity;
+    }
+
+    protected override async afterRestoreMany(ids: ID[]) {
+        const users = await this.userRepository.find({
+            select: ['authUserId'],
+            where: {
+                id: In(ids),
+            },
+        });
+        for (const user of users) {
+            await this.userService.updateUserStatus(user.authUserId, true);
+        }
+        return ids;
+    }
+
+    protected override async afterDeleteFromTrash(oldData: any): Promise<any> {
+        await this.userService.deleteUser(oldData.authUserId);
+        return oldData;
+    }
+
+    protected override async beforeDeleteFromTrashMany(ids: ID[]): Promise<any> {
+        const users = await this.userRepository.find({
+            select: ['authUserId'],
+            where: {
+                id: In(ids),
+            },
+        });
+        for (const user of users) {
+            await this.userService.deleteUser(user.authUserId);
+        }
+        return ids;
+    }
+
+    protected override async beforeFindMany(query: SelectQueryBuilder<User>, orgRequest?: any) {
+        return this.applyLocationAndOrganizationQuery(query, orgRequest);
+    }
+
+    protected override async beforeCounts(query: SelectQueryBuilder<User>, orgRequest?: any) {
+        return this.applyLocationAndOrganizationQuery(query, orgRequest);
+    }
+
+    private applyLocationAndOrganizationQuery(query: SelectQueryBuilder<User>, orgRequest?: any) {
+        const isSuperAdmin = this.isSuperAdmin();
+
+        if (!isSuperAdmin) {
+            // Conditionally join `locations` if not already requested
+            let shouldJoinLocations = true;
+            if (Array.isArray(orgRequest?.relations)) {
+                shouldJoinLocations = !orgRequest?.relations?.some(relation => relation === 'locations');
+            } else if (typeof orgRequest?.relations === 'object') {
+                shouldJoinLocations = !(has(orgRequest?.relations, 'locations') && orgRequest?.relations?.locations === true);
+            }
+            if (shouldJoinLocations) {
+                query.leftJoin(`${query.alias}.locations`, 'locations');
+            }
+            query.andWhere(`${query.alias}.isSuperUser = :isSuperUser`, { isSuperUser: false });
+        }
+
+        return query;
+    }
+
+    async findCurrentUser() {
+        const user = await RequestContext.currentUser({
+            relations: [],
+        });
+        await User.loadAuthUser(user);
+        return user;
+    }
+
+    override async findMany(query: any, ..._others: any[]): Promise<PaginationResponse<any>> {
+        const response = await super.findMany(query, ..._others);
+        await User.loadAuthUser(response.items);
+        return response;
+    }
+
+    override async findOne(id: ID, options?: FindOneOptions<User>) {
+        const user = await super.findOne(id, options);
+        await User.loadAuthUser(user);
+        return user;
+    }
+
+    override async create(entity: CreateUserDTO, options?: SaveOptions) {
+        const authUser = await this.userService.createUser({
+            phone: entity.phoneNumber,
+            email: entity.email,
+            tenantId: 'default',
+        });
+        await authUser.setPassword(entity.password);
+        if (entity.roles?.length > 0) {
+            await authUser.assignRoles(entity.roles, RoleGuardEnum.ADMIN); // TODO: change to the correct guard
+        }
+        if (entity.phoneNumber) {
+            await authUser.findOrCreateIdentity('phone', `${entity.phoneCountryCode}${entity.phoneNumber}`);
+        }
+        if (entity.email) {
+            await authUser.findOrCreateIdentity('email', entity.email);
+        }
+        await authUser.save();
+        entity.authUserId = authUser.id;
+
+
+        const user = await super.create(entity, options);
+        await User.loadAuthUser(user);
+        return user;
     }
 
     async updateProfile(entity: IUpdateProfileInput): Promise<IUser> {
-        const currentUser = RequestContext.currentUser();
-        const userId = currentUser?.id;
-        let user;
-        if (userId) {
-            user = await this.userRepository.findOne({ where: { id: userId } });
-            if (has(entity, 'email')) {
-                const exists = await this.checkIfExistsEmail(entity.email, userId);
-                if (exists) {
-                    throw new ConflictException(
-                        'Email is already taken, Please use other email',
-                    );
-                }
-            }
-            const userEntity = omit(entity, ['roles']);
+        const user = await RequestContext.currentUser();
 
-            await this.userRepository.save({
-                ...user,
-                ...userEntity,
-            });
-            return await this.userRepository.findOne({
-                where: {
-                    id: userId,
-                },
-                relations: ['roles'],
-            });
-        }
-        throw new ConflictException('Please try again something is wrong!');
-    }
+        const userEntity = omit(entity, [
+            'roles',
+            'phoneNumber',
+            'phoneCountryCode',
+            'phoneIsoCode',
+        ]);
 
-    async checkIfExistsEmail(email: string, ignoreId?: any): Promise<boolean> {
-        const count = await this.userRepository.count({
-            where: {
-                email: email,
-                ...(ignoreId ? { id: Not(ignoreId) } : {}),
-            },
+        await this.userRepository.update(user?.id, userEntity);
+        const updatedUser = await this.userRepository.findOneBy({
+            id: user?.id,
         });
-        return count > 0;
+        await User.loadAuthUser(updatedUser);
+        return updatedUser;
     }
 
+    async changeEmail(entity: IChangeEmailInput): Promise<SuccessDTO> {
+        const authUser = await RequestContext.getTokenPayload();
+
+        await this.userService.updateUser(authUser?.sub, { email: entity?.email });
+        return new SuccessDTO({ message: 'Email updated successfully' });
+    }
+
+    async changePhone(entity: ChangePhoneInputDTO): Promise<SuccessDTO> {
+        const user = await RequestContext.currentUser();
+
+        await this.userService.updateUser(user.authUserId, { phone: `${entity?.phoneCountryCode}${entity?.phoneNumber}` });
+
+        await this.userRepository.update(user.id, {
+            phoneNumber: entity?.phoneNumber,
+            phoneCountryCode: entity?.phoneCountryCode,
+            phoneIsoCode: entity?.phoneIsoCode,
+        });
+        return new SuccessDTO({ message: 'Phone number updated successfully' });
+    }
+
+    // Change password for own account
     async changePassword(entity: IChangePasswordInput) {
-        const currentUser = RequestContext.currentUser();
-        const user = await this.userRepository.findOne({
-            where: {
-                id: currentUser?.id,
-            },
-        });
-        const userPassword = await this.userRepository
-            .createQueryBuilder()
-            .where({
-                id: currentUser.id,
-            })
-            .select('"passwordHash"')
-            .getRawOne();
+        const authUser = await RequestContext.getTokenPayload();
 
-        const isMatch = await bcrypt.compare(
-            entity.oldPassword,
-            userPassword.passwordHash,
-        );
-        if (isMatch) {
-            await this.userRepository.update(user.id, {
-                passwordHash: hashPassword(entity.password),
-            });
-        } else {
-            throw new BadRequestException('Old password is wrong');
+        const user = await this.userService.getUserById(authUser.sub);
+
+        const isPasswordMatch = await user.validatePassword(entity.oldPassword);
+        if (!isPasswordMatch) {
+            throw new BadRequestException('Invalid old password. Please re-enter your old password correctly.');
         }
-        return 'Password successfully changed.';
+        await user.setPassword(entity.password);
+        await user.save();
+
+        return new SuccessDTO({ message: 'Password successfully changed.' });
+    }
+
+
+    // Set password for user
+    async setPassword(userId: string, entity: ISetPasswordInput) {
+        const { authUserId } = await this.userRepository.findOne({
+            where: { id: userId },
+            select: ['authUserId'],
+        });
+        const authUser = await this.userService.getUserById(authUserId);
+        if (!authUser) {
+            throw new BadRequestException('User not found');
+        }
+        await authUser.setPassword(entity.password);
+        await authUser.save();
+        return new SuccessDTO({ message: 'Password successfully changed.' });
+    }
+
+    async deleteAccount(request: IDeleteAccountInput) {
+        const user = await RequestContext.currentUser();
+
+        const authUser = await this.userService.getUserById(user.authUserId);
+        const isPasswordMatch = await authUser.validatePassword(request.password);
+        if (!isPasswordMatch) {
+            throw new BadRequestException('Invalid old password. Please re-enter your old password correctly.');
+        }
+
+        await this.userService.updateUserStatus(authUser.id, false);
+        await this.userRepository.softDelete(user.id);
+
+        return new SuccessDTO({ message: 'Your account has been successfully deleted. If this was a mistake, please contact support.' });
     }
 
 }

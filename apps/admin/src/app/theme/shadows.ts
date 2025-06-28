@@ -41,5 +41,7 @@ function createShadow(color: string): Shadows {
 }
 
 export function shadows(mode: 'light' | 'dark') {
-    return mode === 'light' ? createShadow(LIGHT_MODE) : createShadow(DARK_MODE);
+    return mode === 'light' ?
+        createShadow(LIGHT_MODE) :
+        createShadow(DARK_MODE);
 }

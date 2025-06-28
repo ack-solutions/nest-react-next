@@ -9,7 +9,7 @@ import {
 @ValidatorConstraint({ async: true })
 export class IsNumberConstraint implements ValidatorConstraintInterface {
 
-    async validate(_inputValue: number | string, args: ValidationArguments) {
+    async validate(args: ValidationArguments) {
         const { value } = args;
         // const [options] = args.constraints;
         if (!isNaN(value) && value != null) {

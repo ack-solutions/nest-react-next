@@ -1,132 +1,181 @@
-import { FileStorage, UploadedFileStorage } from '@api/app/core/file-storage';
-import { RequestDataTypeInterceptor } from '@api/app/core/request-data-type.interceptor';
-import { IChangePasswordInput, IUpdateProfileInput, IUser } from '@libs/types';
+import { NestAuthAuthGuard } from '@ackplus/nest-auth';
+import { Crud } from '@ackplus/nest-crud';
+import {
+    ISetPasswordInput,
+    IUpdateProfileInput,
+    IUser,
+} from '@libs/types';
 import {
     Body,
-    Controller,
+    Delete,
     Get,
     HttpCode,
     HttpStatus,
     Param,
     Post,
     Put,
-    Query,
     UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags } from '@nestjs/swagger';
-import moment from 'moment';
-import { join } from 'path';
-import { DeepPartial, FindManyOptions } from 'typeorm';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 
-import { UserDTO } from './dto/user.dto';
+import { ChangeEmailInputDTO } from './dto/change-email-input.dto';
+import { ChangePhoneInputDTO } from './dto/change-phone-input.dto';
+import { CreateUserDTO } from './dto/create-user.dto';
+import { DeleteAccountInputDTO } from './dto/delete-account-input.dto';
+import { UpdateUserDTO } from './dto/update-user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
-import { CrudController } from '../../core/crud';
-import { CurrentUser } from '../auth/decorator/current-user';
+import { SuccessDTO } from '../../core/dto/success.dto';
+import { RequestDataTypeInterceptor } from '../../core/interceptors/request-data-type.interceptor';
+import { ChangePasswordInputDTO } from './dto/change-password-input.dto';
 
 
 @ApiTags('User')
-@Controller('user')
-@UseGuards()
-export class UsersController extends CrudController(UserDTO)<IUser> {
+@UseGuards(NestAuthAuthGuard)
+@Crud({
+    entity: User,
+    name: 'User',
+    path: 'user',
+    // guards: [NestAuthAuthGuard],
+    softDelete: true,
+    dto: {
+        create: CreateUserDTO,
+        update: UpdateUserDTO,
+    },
+    routes: {
+        counts: {
+            enabled: true,
+            interceptors: [new RequestDataTypeInterceptor()],
+        },
+    },
+})
+export class UsersController {
 
-    constructor(private userService: UserService) {
-        super(userService);
+    constructor(
+        private service: UserService,
+    ) {
+        // super(userService);
     }
 
     @Get('me')
-    @UseGuards(AuthGuard('jwt'))
-    async findCurrentUser(@CurrentUser() user: IUser): Promise<IUser> {
-        return this.userService.userRepository.findOne({
-            where: {
-                id: user?.id,
-            },
-            relations: ['roles', 'roles.permissions'],
-        });
+    @Throttle({
+        default: {
+            limit: 100,
+            ttl: 60000,
+        },
+    })
+    findCurrentUser(): Promise<IUser> {
+        return this.service.findCurrentUser();
     }
-
-    @Get('status-counts')
-    @UseGuards(AuthGuard('jwt'))
-    async getStatusCounts(@Query() filters: FindManyOptions<User>) {
-        return this.userService.getStatusCounts(filters);
-    }
-
-    @UseInterceptors(
-        FileInterceptor('avatar', {
-            storage: new FileStorage().storage({
-                dest: () => {
-                    return join('avatar', moment().format('YYYY/MM'));
-                },
-                prefix: 'avatar',
-            }),
-        }),
-        RequestDataTypeInterceptor,
-    )
-    @Post()
-    async create(@Body() req: DeepPartial<User>, @UploadedFileStorage() avatar) {
-        if (avatar?.key) {
-            req.avatar = avatar?.key;
-        }
-        return super.create(req);
-    }
-
-    @UseInterceptors(
-        FileInterceptor('avatar', {
-            storage: new FileStorage().storage({
-                dest: () => {
-                    return join('avatar', moment().format('YYYY/MM'));
-                },
-                prefix: 'avatar',
-            }),
-        }),
-        RequestDataTypeInterceptor,
-    )
-    @Put(':id')
-    async update(
-        @Param('id') id: string,
-        @Body() req: DeepPartial<User>,
-        @UploadedFileStorage() avatar,
-    ) {
-        if (avatar?.key) {
-            req.avatar = avatar?.key;
-        }
-        return super.update(id, req);
-    }
-
 
     @HttpCode(HttpStatus.ACCEPTED)
-    @UseGuards(AuthGuard('jwt'))
     @UseInterceptors(
-        FileInterceptor('avatar', {
-            storage: new FileStorage().storage({
-                dest: () => {
-                    return join('avatar', moment().format('YYYY/MM'));
-                },
-                prefix: 'avatar',
-            }),
-        }),
         RequestDataTypeInterceptor,
     )
     @Put('update/profile')
-    async updateProfile(
+    updateProfile(
         @Body() entity: IUpdateProfileInput,
-        @UploadedFileStorage() avatar,
-    ): Promise<User> {
-        if (avatar?.key) {
-            entity.avatar = avatar?.key;
-        }
-        return this.userService.updateProfile(entity);
+    ): Promise<IUser> {
+        return this.service.updateProfile(entity);
     }
 
-
-    @HttpCode(HttpStatus.ACCEPTED)
+    @ApiOperation({ summary: 'Change Password own account' })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        type: SuccessDTO,
+        description: 'Password Change Success',
+    })
+    @Throttle({
+        default: {
+            limit: 5,
+            ttl: 60000,
+        },
+    })
     @Post('change-password')
-    @UseGuards(AuthGuard('jwt'))
-    async changePassword(@Body() entity: IChangePasswordInput) {
-        return this.userService.changePassword(entity);
+    changePassword(@Body() entity: ChangePasswordInputDTO) {
+        return this.service.changePassword(entity);
+    }
+
+    @ApiOperation({ summary: 'Change Password own account' })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        type: SuccessDTO,
+        description: 'Password Change Success',
+    })
+    @Throttle({
+        default: {
+            limit: 5,
+            ttl: 60000,
+        },
+    })
+    @Put('set-password/:userId')
+    setPassword(@Body() entity: ISetPasswordInput, @Param('userId') userId: string) {
+        return this.service.setPassword(userId, entity);
+    }
+
+    @ApiOperation({ summary: 'Change Email' })
+    @ApiResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Change email failed',
+    })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        type: SuccessDTO,
+        description: 'Email update successfully',
+    })
+    @Post('change-email')
+    @Throttle({
+        default: {
+            limit: 5,
+            ttl: 60000,
+        },
+    })
+    async changeEmail(@Body() req: ChangeEmailInputDTO) {
+        return this.service.changeEmail(req);
+    }
+
+    @ApiOperation({ summary: 'Change Phone Number' })
+    @ApiResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Change phone number failed',
+    })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        type: SuccessDTO,
+        description: 'Phone number update successfully',
+    })
+    @Post('change-phone')
+    @Throttle({
+        default: {
+            limit: 5,
+            ttl: 60000,
+        },
+    })
+    async changePhone(@Body() req: ChangePhoneInputDTO) {
+        return this.service.changePhone(req);
+    }
+
+    @ApiOperation({ summary: 'Delete Account' })
+    @ApiResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Failed',
+    })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        type: SuccessDTO,
+        description: 'Success',
+    })
+    @Throttle({
+        default: {
+            limit: 5,
+            ttl: 60000,
+        },
+    })
+    @Delete('delete-account')
+    async deleteAccount(@Body() req: DeleteAccountInputDTO) {
+        return this.service.deleteAccount(req);
     }
 
 }

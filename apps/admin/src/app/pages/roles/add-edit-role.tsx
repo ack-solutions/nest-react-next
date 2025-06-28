@@ -1,77 +1,80 @@
-import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
-import Page from '@admin/app/components/page';
-import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { errorMessage, FormContainer, RHFPermissionSelectField, RHFTextField, usePermissionQuery, useRoleQuery, useToasty } from '@libs/react-core';
-import { IRole } from '@libs/types';
-import { Button, Card, CardContent, Container, Stack } from '@mui/material';
-import { map, omit } from 'lodash';
-import { useCallback, useEffect } from 'react';
+import { useRole } from '@libs/react-shared';
+import { IRole, PermissionsEnum, RoleGuardEnum } from '@libs/types';
+import { errorMessage } from '@libs/utils';
+import { Button, Card, CardContent, Stack, Typography } from '@mui/material';
+import { omit } from 'lodash';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { object, string } from 'yup';
 
+import { Page } from '../../components';
+import PageLoading from '../../components/loading/page-loading';
+import { withPermission } from '../../contexts/react-access-control';
+import { FormContainer, RHFTextField } from '../../form';
+import { useToasty } from '../../hook';
+import { PATH_DASHBOARD } from '../../routes/paths';
+import PermissionSelector from '../../sections/permission/permission-selector';
+import NotFound from '../error/not-found';
 
-const defaultValues = {
+
+const defaultValues: any = {
     name: '',
     permissions: [],
 };
 
-const validationSchema = yupResolver(object({
-    name: string().label('Name').required(),
-}));
+const validationSchema = yupResolver(
+    object({
+        name: string().trim().label('Name').required(),
+    }),
+);
 
-const AddEditRole = () => {
-    const { id: roleId } = useParams();
+function AddEditRole() {
+    const { roleId } = useParams();
     const { showToasty } = useToasty();
     const navigate = useNavigate();
+    const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
 
-    const { useUpdateRole, useCreateRole, useGetRoleById } = useRoleQuery();
-    const { useGetManyPermission } = usePermissionQuery();
+    const { useUpdateRole, useCreateRole, useGetRoleById } = useRole();
     const { mutateAsync: updateRole } = useUpdateRole();
     const { mutateAsync: createRole } = useCreateRole();
-    const { data: permissionData, isLoading } = useGetManyPermission({
-        limit: 999,
-        page: 1,
-    });
-    const { data: roleValues } = useGetRoleById(roleId, {
-        relations: ['permissions'],
-    });
+
+    const permissionData = useMemo(() => Object.values(PermissionsEnum), []);
+
+    const { data: roleValues, isLoading: isRoleLoading, error } = useGetRoleById(roleId || '');
+
     const formContext = useForm({
         defaultValues,
         resolver: validationSchema,
     });
-    const { reset } = formContext;
+    const { reset, formState: { isSubmitting } } = formContext;
 
     const handleSubmitForm = useCallback(
-        async (value: Partial<IRole>) => {
-            const request = {
+        async (value: IRole) => {
+            const request: any = {
                 ...omit(value, [
                     'id',
                     'createdAt',
                     'updatedAt',
                     'deletedAt',
                 ]),
-                permissions: map(value.permissions, (value) => {
-                    return { id: value };
-                }),
+                permissions: selectedPermissions,
+                guard: RoleGuardEnum.ADMIN,
             };
             try {
-                let resp;
-                if (value?.id) {
-                    resp = await updateRole({
+                if (value.id) {
+                    await updateRole({
                         ...request,
-                        id: value?.id,
+                        id: value.id,
                     });
                 } else {
-                    resp = await createRole(request);
+                    await createRole(request);
                 }
                 showToasty('Role successfully saved');
-                navigate(PATH_DASHBOARD.users.roles);
-                return resp;
+                navigate(PATH_DASHBOARD.users.roles.root);
             } catch (error) {
-                showToasty(errorMessage(error, 'Error while saving Page'), 'error');
-                throw error;
+                showToasty(errorMessage(error, 'Error while saving Role'), 'error');
             }
         },
         [
@@ -79,75 +82,116 @@ const AddEditRole = () => {
             navigate,
             showToasty,
             updateRole,
+            selectedPermissions,
         ],
     );
 
     useEffect(() => {
-        reset({
-            ...roleValues,
-            permissions: map(roleValues?.permissions, 'id'),
-        });
+        if (roleValues) {
+            reset({
+                ...roleValues,
+            });
+            setSelectedPermissions(roleValues?.permissions || []);
+        }
     }, [reset, roleValues]);
 
+    if (error && !isRoleLoading) {
+        return (
+            <NotFound
+                entityType="Role"
+                redirectPath={PATH_DASHBOARD.users.roles.root}
+            />
+        );
+    }
+
+    if (isRoleLoading) {
+        return (
+            <Page title={`${roleId ? 'Edit Role' : 'Add Role'}`}>
+                <PageLoading />
+            </Page>
+        );
+    }
+
     return (
-        <Page title={`${roleId ? 'Edit Role' : 'Add Role'}`}>
-            <Container maxWidth={false}>
-                <CustomBreadcrumbs
-                    heading={`${roleId ? 'Edit Role' : 'Add Role'}`}
-                    links={[
-                        {
-                            name: 'Dashboard',
-                            href: PATH_DASHBOARD.root,
-                        },
-                        {
-                            name: 'Roles',
-                            href: PATH_DASHBOARD.users.roles,
-                        },
-                        { name: `${roleId ? 'Edit Role' : 'Add Role'}` },
-                    ]}
-                />
-                <Card>
-                    <CardContent>
-                        <FormContainer
-                            FormProps={{
-                                id: 'add-edit-form-role',
-                            }}
-                            formContext={formContext as any}
-                            validationSchema={validationSchema}
-                            onSuccess={handleSubmitForm}
+        <Page
+            title={`${roleId ? 'Edit Role' : 'Add Role'}`}
+            breadcrumbs={[
+                {
+                    name: 'Dashboard',
+                    href: PATH_DASHBOARD.root,
+                },
+                {
+                    name: 'Roles',
+                    href: PATH_DASHBOARD.users.roles.root,
+                },
+                { name: `${roleId ? 'Edit Role' : 'Add Role'}` },
+            ]}
+        >
+
+            <Card>
+                <CardContent>
+                    <FormContainer
+                        formProps={{
+                            id: 'add-edit-form-role',
+                        }}
+                        formContext={formContext}
+                        validationSchema={validationSchema}
+                        onSuccess={handleSubmitForm}
+                    >
+                        <Stack
+                            spacing={2}
+                            width={1}
                         >
-                            <Stack spacing={2}>
-                                <RHFTextField
-                                    label="Name"
-                                    name="name"
-                                    fullWidth
-                                />
-                                <RHFPermissionSelectField
-                                    name="permissions"
-                                    label="Select Permissions"
-                                    options={permissionData?.items || []}
-                                    column={4}
-                                    renderValue="id"
-                                    renderLabel="name"
-                                    isLoading={isLoading}
-                                />
-                                <Stack
-                                    direction='row'
-                                    spacing={2}
+                            <RHFTextField
+                                label="Name"
+                                name="name"
+                                fullWidth
+                            />
+
+                            <Typography
+                                variant="h6"
+                                gutterBottom
+                            >
+                                Permissions (
+                                {selectedPermissions.length}
+                                {' '}
+                                selected)
+                            </Typography>
+
+                            <PermissionSelector
+                                allPermissions={permissionData}
+                                selectedPermissions={selectedPermissions}
+                                onChange={(updated) => {
+                                    setSelectedPermissions(updated);
+                                }}
+                            />
+                            <Stack
+                                direction="row"
+                                spacing={2}
+                            >
+                                <Button
+                                    onClick={() => navigate(PATH_DASHBOARD.users.roles.root)}
+                                    variant="outlined"
                                 >
-                                    <Button onClick={() => navigate(PATH_DASHBOARD.users.roles)}>Cancel</Button>
-                                    <Button
-                                        variant='contained'
-                                        type='submit'
-                                    >Save</Button>
-                                </Stack>
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    type="submit"
+                                    loading={isSubmitting}
+                                >
+                                    {roleId ? 'Update Role' : 'Create Role'}
+                                </Button>
                             </Stack>
-                        </FormContainer>
-                    </CardContent>
-                </Card>
-            </Container>
+                        </Stack>
+                    </FormContainer>
+                </CardContent>
+            </Card>
         </Page>
     );
-};
+}
 
-export default AddEditRole;
+export default withPermission({
+    roles: RoleGuardEnum.ADMIN,
+    permissions: [PermissionsEnum.CREATE_ROLES, PermissionsEnum.UPDATE_ROLES],
+})(AddEditRole);

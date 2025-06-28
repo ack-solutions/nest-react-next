@@ -1,4 +1,3 @@
-import { Icon } from '@libs/react-core';
 import {
     Dialog,
     DialogActions,
@@ -11,6 +10,9 @@ import {
 } from '@mui/material';
 import { ReactNode } from 'react';
 
+import { Icon } from './icons/icon';
+import { IconEnum } from './icons/icons';
+
 
 export interface DefaultDialogProps extends Omit<DialogProps, 'open'> {
     open?: boolean;
@@ -19,28 +21,27 @@ export interface DefaultDialogProps extends Omit<DialogProps, 'open'> {
     onClose?: () => void;
 }
 
-const DefaultDialog = ({
+export function DefaultDialog({
     open,
     title,
     children,
     actions,
     onClose,
     ...dialogProps
-}: DefaultDialogProps) => {
+}: DefaultDialogProps) {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     return (
         <Dialog
-            open={open ?? true}
-            fullWidth
-            maxWidth={dialogProps.maxWidth || 'md'}
-            fullScreen={fullScreen}
+            open={open ?? true} // Keep open externally controlled
+            maxWidth={dialogProps.maxWidth || 'md'} // Default maxWidth to 'md'
+            fullScreen={fullScreen} // Responsive fullScreen for smaller screens
             onClose={onClose}
             {...dialogProps}
         >
-
-            {title && (
+            {/* Dialog Title Section */}
+            {title ? (
                 <DialogTitle
                     sx={{
                         m: 0,
@@ -52,23 +53,26 @@ const DefaultDialog = ({
                 >
                     {title}
                     <IconButton
-                        aria-label="close"
                         onClick={onClose}
                         sx={{
                             position: 'absolute',
                             right: 8,
-                            top: 8,
+                            top: 13,
                         }}
                     >
                         <Icon
-                            icon='close'
-                            size='small'
+                            size="small"
+                            icon={IconEnum.CLOSE}
                         />
                     </IconButton>
                 </DialogTitle>
-            )}
+            ) : null}
+
+            {/* Dialog Content */}
             <DialogContent dividers>{children}</DialogContent>
-            {actions && (
+
+            {/* Dialog Actions */}
+            {actions ? (
                 <DialogActions
                     sx={{
                         p: 2,
@@ -77,9 +81,7 @@ const DefaultDialog = ({
                 >
                     {actions}
                 </DialogActions>
-            )}
+            ) : null}
         </Dialog>
     );
-};
-
-export default DefaultDialog;
+}

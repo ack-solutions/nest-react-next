@@ -5,7 +5,7 @@ import { palette } from '../palette';
 export function contrast(contrastBold: boolean, mode: 'light' | 'dark') {
     const theme = {
         ...(contrastBold &&
-			mode === 'light' && {
+            mode === 'light' && {
             palette: {
                 background: {
                     default: palette(mode).grey[100],

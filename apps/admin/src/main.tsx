@@ -5,9 +5,6 @@ import { HashRouter } from 'react-router-dom';
 
 import App from './app/app';
 
-
-// editor
-
 import 'react-quill/dist/quill.snow.css';
 
 

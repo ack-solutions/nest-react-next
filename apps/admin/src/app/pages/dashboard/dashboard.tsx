@@ -1,12 +1,16 @@
-import { Container } from '@mui/material';
+import { Typography } from '@mui/material';
+
+import { Page } from '../../components';
 
 
-const Dashboard = () => {
+function Dashboard() {
+
+
     return (
-        <Container maxWidth={false}>
-            <div>Dashboard</div>
-        </Container>
+        <Page title="Dashboard">
+            <Typography variant="h1">Dashboard</Typography>
+        </Page>
     );
-};
+}
 
 export default Dashboard;

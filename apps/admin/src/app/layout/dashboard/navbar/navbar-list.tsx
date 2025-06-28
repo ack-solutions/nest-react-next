@@ -1,71 +1,101 @@
+import { useAccess } from '@admin/app/contexts';
 import { Collapse, Popover } from '@mui/material';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { flattenDeep } from 'lodash';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
+import { NavbarConfigProps, NavigationItem } from './navbar-group';
 import NavbarItem from './navbar-item';
-import { NavbarConfigProps, NavigationItem } from '../../../types/navigation';
 
 
-export function useActiveLinkByStaticPaths(staticPaths?: string[], isMatchFull?: boolean): boolean {
+export function getPathsWithChild(data?: NavigationItem) {
+    if (data) {
+        if (data?.children) {
+            return flattenDeep(data.children.map((item) => getPathsWithChild(item)));
+        }
+        return [...(data?.activePaths || []), data.path];
+    }
+    return [];
+}
+
+export function useActiveLink(
+    data?: NavigationItem,
+    isMatchFull?: boolean,
+): boolean {
     const { pathname } = useLocation();
     let isInStaticPaths;
+    const activePaths = getPathsWithChild(data);
+
     if (isMatchFull) {
-        isInStaticPaths = staticPaths?.some((staticPath) => pathname === staticPath);
+        isInStaticPaths = activePaths?.some(
+            (staticPath) => pathname === staticPath,
+        );
     } else {
-        isInStaticPaths = staticPaths?.some((staticPath) => pathname?.includes(staticPath));
+        isInStaticPaths = activePaths?.some((staticPath) => pathname?.includes(staticPath));
     }
 
     return isInStaticPaths ?? false;
 }
 
-export function useActiveLink(path: string, deep = true): boolean {
-    const { pathname } = useLocation();
-
-    const checkPath = path.startsWith('#');
-
-    const currentPath = path === '/' ? '/' : `${path}/`;
-
-    const normalActive = !checkPath && pathname === currentPath;
-
-    const deepActive = !checkPath && pathname?.includes(currentPath);
-
-    return deep && deepActive ? deepActive : normalActive;
-}
 
 interface NavbarListRootProps {
     data: NavigationItem;
     depth: number;
     hasChild: boolean;
     config?: NavbarConfigProps;
-    isMini?: boolean
+    isMini?: boolean;
+    onCloseNav?: () => void
+
 }
 
-
-export default function NavbarList({ data, depth, hasChild, config, isMini }: NavbarListRootProps) {
+export default function NavbarList({
+    data,
+    depth,
+    hasChild,
+    config,
+    isMini,
+    onCloseNav,
+}: NavbarListRootProps) {
     const { pathname } = useLocation();
     const navRef = useRef(null);
-    const active = useActiveLinkByStaticPaths(data.staticPaths ? data.staticPaths : [], !!config?.fullPatchMatch);
+    const active = useActiveLink(data, !!config?.fullPatchMatch);
     const externalLink = data.path.includes('http');
     const [open, setOpen] = useState(active);
+    const [popoverOpen, setPopoverOpen] = useState(false);
+    const { hasAnyPermission } = useAccess();
 
     const handleToggle = useCallback(() => {
         setOpen((prev) => !prev);
     }, []);
 
     const handleClose = useCallback(() => {
-        setOpen(false);
+        setPopoverOpen(false);
     }, []);
 
     const handleOpen = useCallback(() => {
-        setOpen(true);
+        setPopoverOpen(true);
     }, []);
 
     useEffect(() => {
         if (!active) {
             handleClose();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pathname]);
+    }, [
+        active,
+        handleClose,
+        pathname,
+    ]);
+
+    const filteredChildren = useMemo(() => {
+        if (hasChild) {
+            return data.children.filter((child) => hasAnyPermission(child.permissions));
+        }
+        return [];
+    }, [
+        data.children,
+        hasChild,
+        hasAnyPermission,
+    ]);
 
     return (
         <>
@@ -76,30 +106,39 @@ export default function NavbarList({ data, depth, hasChild, config, isMini }: Na
                 open={open}
                 active={active}
                 externalLink={externalLink}
-                onClick={handleToggle}
+                onClick={() => {
+                    if (hasChild) {
+                        handleToggle();
+                    } else if (onCloseNav) {
+                        onCloseNav();
+                    }
+                }}
                 config={config}
-                {...isMini && {
+                {...(isMini && {
                     onMouseEnter: handleOpen,
                     onMouseLeave: handleClose,
                     isMini: true,
-                }}
+                })}
             />
 
-            {(hasChild && !isMini) && (
+            {hasChild && !isMini ? (
                 <Collapse
                     in={open}
-                    unmountOnExit
+                    sx={{
+                        ml: 4,
+                    }}
                 >
                     <NavbarSubList
-                        data={data.children}
+                        data={filteredChildren}
                         depth={depth}
                         config={config}
+                        onCloseNav={onCloseNav}
                     />
                 </Collapse>
-            )}
-            {(hasChild && isMini) && (
+            ) : null}
+            {hasChild && isMini ? (
                 <Popover
-                    open={open}
+                    open={popoverOpen}
                     anchorEl={navRef?.current}
                     anchorOrigin={{
                         vertical: 'center',
@@ -115,8 +154,9 @@ export default function NavbarList({ data, depth, hasChild, config, isMini }: Na
                             onMouseLeave: handleClose,
                             sx: {
                                 mt: 0.5,
+                                pl: 1.5,
                                 width: 160,
-                                ...(open && {
+                                ...(popoverOpen && {
                                     pointerEvents: 'auto',
                                 }),
                             },
@@ -127,12 +167,12 @@ export default function NavbarList({ data, depth, hasChild, config, isMini }: Na
                     }}
                 >
                     <NavbarSubList
-                        data={data.children}
+                        data={filteredChildren}
                         depth={depth}
                         config={config}
                     />
                 </Popover>
-            )}
+            ) : null}
         </>
     );
 }
@@ -141,18 +181,20 @@ type NavbarListSubProps = {
     data?: NavigationItem[];
     depth: number;
     config?: NavbarConfigProps;
+    onCloseNav?: () => void
 };
 
-function NavbarSubList({ data, depth, config }: NavbarListSubProps) {
+function NavbarSubList({ data, depth, config, onCloseNav }: NavbarListSubProps) {
     return (
-
         data?.map((list) => (
             <NavbarList
                 key={list.title + list.path}
                 data={list}
                 depth={depth + 1}
                 hasChild={!!list.children}
+                onCloseNav={onCloseNav}
                 config={{
+                    fullPatchMatch: true,
                     ...config,
                     ...(list.config || {}),
                 }}

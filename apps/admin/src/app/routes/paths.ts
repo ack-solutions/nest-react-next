@@ -1,5 +1,5 @@
-function path(root: string, sublink: string) {
-    return `${root}${sublink}`;
+function path(root: string, subLink: string) {
+    return `${root}${subLink}`;
 }
 
 const ROOTS_AUTH = '/auth';
@@ -9,6 +9,7 @@ export const PATH_AUTH = {
     root: ROOTS_AUTH,
     login: path(ROOTS_AUTH, '/login'),
     register: path(ROOTS_AUTH, '/register'),
+    onboarding: path(ROOTS_AUTH, '/onboarding'),
     verify: path(ROOTS_AUTH, '/verify'),
     forgotPassword: path(ROOTS_AUTH, '/forgot-password'),
 };
@@ -21,7 +22,7 @@ export const PATH_PAGE = {
     about: '/about-us',
     contact: '/contact-us',
     faqs: '/faqs',
-    page404: '/404',
+    page404: path(ROOTS_DASHBOARD, '/404'),
     page500: '/500',
     components: '/components',
 };
@@ -32,37 +33,82 @@ export const PATH_DASHBOARD = {
         root: path(ROOTS_DASHBOARD, '/reports'),
     },
     products: {
-        root: path(ROOTS_DASHBOARD, '/products'),
+        root: path(ROOTS_DASHBOARD, '/product'),
+        add: path(ROOTS_DASHBOARD, '/product/create'),
+        edit: (id: string) => path(ROOTS_DASHBOARD, `/product/edit/${id}`),
+        view: (id: string) => path(ROOTS_DASHBOARD, `/product/view/${id}`),
+        category: {
+            root: path(ROOTS_DASHBOARD, '/product-category'),
+            add: path(ROOTS_DASHBOARD, '/product-category/create'),
+            edit: (id: string) => path(ROOTS_DASHBOARD, `/product-category/edit/${id}`),
+            view: (id: string) => path(ROOTS_DASHBOARD, `/product-category/view/${id}`),
+        },
+        brand: {
+            root: path(ROOTS_DASHBOARD, '/brand'),
+        },
+    },
+    orders: {
+        root: path(ROOTS_DASHBOARD, '/order'),
+        view: (id: string) => path(ROOTS_DASHBOARD, `/order/view/${id}`),
     },
     users: {
         root: path(ROOTS_DASHBOARD, '/users/list'),
-        edit: path(ROOTS_DASHBOARD, '/users/edit'),
-        add: path(ROOTS_DASHBOARD, '/users/add'),
-        roles: path(ROOTS_DASHBOARD, '/users/roles'),
-        editRole: path(ROOTS_DASHBOARD, '/users/roles/edit'),
-        addRole: path(ROOTS_DASHBOARD, '/users/roles/add'),
+        edit: (userId: string) => path(ROOTS_DASHBOARD, `/users/edit/${userId}`),
+        view: path(ROOTS_DASHBOARD, '/users/edit'),
+        create: path(ROOTS_DASHBOARD, '/users/create'),
+        roles: {
+            root: path(ROOTS_DASHBOARD, '/users/roles'),
+            edit: (roleId: string) => path(ROOTS_DASHBOARD, `/users/roles/edit/${roleId}`),
+            add: path(ROOTS_DASHBOARD, '/users/roles/create'),
+        },
         permissions: path(ROOTS_DASHBOARD, '/users/permissions'),
     },
     profile: {
         root: path(ROOTS_DASHBOARD, '/profile'),
     },
-    changePassword: {
-        root: path(ROOTS_DASHBOARD, '/change-password'),
+    customer: {
+        root: path(ROOTS_DASHBOARD, '/customer'),
+        edit: (id: string) => path(ROOTS_DASHBOARD, `/customer/edit/${id}`),
+        create: path(ROOTS_DASHBOARD, '/customer/create'),
     },
-    page: {
-        root: path(ROOTS_DASHBOARD, '/pages'),
-        add: path(ROOTS_DASHBOARD, '/pages/add'),
-        edit: path(ROOTS_DASHBOARD, '/pages/edit/:pageId'),
+    location: {
+        root: path(ROOTS_DASHBOARD, '/settings/location'),
+        add: path(ROOTS_DASHBOARD, '/settings/location/add'),
+        edit: (locationId: string) => path(ROOTS_DASHBOARD, `/settings/location/edit/${locationId}`),
+        view: (id: string) => path(ROOTS_DASHBOARD, `/settings/location/view/${id}`),
     },
-
+    expense: {
+        root: path(ROOTS_DASHBOARD, '/expense'),
+        edit: (id: string) => path(ROOTS_DASHBOARD, `/expense/edit/${id}`),
+        add: path(ROOTS_DASHBOARD, '/expense/create'),
+        view: (id: string) => path(ROOTS_DASHBOARD, `/expense/view/${id}`),
+        vendor: {
+            root: path(ROOTS_DASHBOARD, '/expense/vendors'),
+            edit: (id: string) => path(ROOTS_DASHBOARD, `/expense/vendors/edit/${id}`),
+            add: path(ROOTS_DASHBOARD, '/expense/vendors/create'),
+        },
+        category: {
+            root: path(ROOTS_DASHBOARD, '/expense/category'),
+            edit: (id: string) => path(ROOTS_DASHBOARD, `/expense/category/edit/${id}`),
+            add: path(ROOTS_DASHBOARD, '/expense/category/create'),
+            view: (id: string) => path(ROOTS_DASHBOARD, `/expense/category/view/${id}`),
+        },
+    },
     settings: {
-        root: path(ROOTS_DASHBOARD, '/settings'),
-        emailSetting: path(ROOTS_DASHBOARD, '/settings/email-setting'),
-        notificationSetting: path(ROOTS_DASHBOARD, '/settings/notification-setting'),
-        emailLayout: path(ROOTS_DASHBOARD, '/settings/email-layout'),
-
+        paymentMethod: path(ROOTS_DASHBOARD, '/settings/payment-methods'),
+        account: path(ROOTS_DASHBOARD, '/settings/account'),
+        location: path(ROOTS_DASHBOARD, '/settings/location'),
     },
-    // page: {
-    //   root: path(ROOTS_DASHBOARD, '/page'),
-    // },
+    invoice: {
+        root: path(ROOTS_DASHBOARD, '/invoice'),
+        edit: (invoiceId: string) => path(ROOTS_DASHBOARD, `/invoice/edit/${invoiceId}`),
+        add: path(ROOTS_DASHBOARD, '/invoice/create'),
+        view: (invoiceId: string) => path(ROOTS_DASHBOARD, `/invoice/view/${invoiceId}`),
+    },
+    income: {
+        root: path(ROOTS_DASHBOARD, '/incomes'),
+    },
+    inquiry: {
+        root: path(ROOTS_DASHBOARD, '/inquiry'),
+    },
 };

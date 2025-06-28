@@ -1,8 +1,13 @@
-import type { CSSObject } from '@mui/material/styles';
+import type { CSSObject } from '@mui/material';
 
 import { remToPx, mediaQueries } from './utils';
 
 
+/**
+ * Usage:
+ * ...hideScrollX,
+ * ...hideScrollY,
+ */
 export const hideScrollX: CSSObject = {
     msOverflowStyle: 'none',
     scrollbarWidth: 'none',
@@ -17,7 +22,10 @@ export const hideScrollY: CSSObject = {
     '&::-webkit-scrollbar': { display: 'none' },
 };
 
-
+/**
+ * Usage:
+ * ...textGradient(`to right, ${theme.vars.palette.text.primary}, ${alpha(theme.vars.palette.text.primary, 0.2)}`
+ */
 export function textGradient(color: string): CSSObject {
     return {
         background: `linear-gradient(${color})`,
@@ -29,10 +37,13 @@ export function textGradient(color: string): CSSObject {
     };
 }
 
-
+/**
+ * Usage:
+ * ...borderGradient({ color: `to right, ${theme.vars.palette.text.primary}, ${alpha(theme.vars.palette.text.primary, 0.2)}`, padding: '4px' }),
+ */
 export type BorderGradientProps = {
-  color?: string;
-  padding?: string;
+    color?: string;
+    padding?: string;
 };
 
 export function borderGradient(props?: BorderGradientProps): CSSObject {
@@ -47,7 +58,8 @@ export function borderGradient(props?: BorderGradientProps): CSSObject {
         padding: props?.padding ?? '2px',
         //
         mask: 'linear-gradient(#FFF 0 0) content-box, linear-gradient(#FFF 0 0)',
-        WebkitMask: 'linear-gradient(#FFF 0 0) content-box, linear-gradient(#FFF 0 0)',
+        WebkitMask:
+            'linear-gradient(#FFF 0 0) content-box, linear-gradient(#FFF 0 0)',
         maskComposite: 'exclude',
         WebkitMaskComposite: 'xor',
         ...(props?.color && {
@@ -56,10 +68,13 @@ export function borderGradient(props?: BorderGradientProps): CSSObject {
     };
 }
 
-
+/**
+ * Usage:
+ * ...bgGradient({ color: `to right, ${theme.vars.palette.grey[900]} 25%, ${varAlpha(theme.vars.palette.primary.darkerChannel, 0.88)}`, imgUrl: '/assets/background/overlay.png' }),
+ */
 export type BgGradientProps = {
-  color: string;
-  imgUrl?: string;
+    color: string;
+    imgUrl?: string;
 };
 
 export function bgGradient({ color, imgUrl }: BgGradientProps): CSSObject {
@@ -74,10 +89,14 @@ export function bgGradient({ color, imgUrl }: BgGradientProps): CSSObject {
     return { background: `linear-gradient(${color})` };
 }
 
+/**
+ * Usage:
+ * ...bgBlur({ color: `varAlpha(theme.vars.palette.background.paperChannel, 0.8)`, imgUrl: '/assets/background/overlay.png', blur: 6 }),
+ */
 export type BgBlurProps = {
-  color: string;
-  blur?: number;
-  imgUrl?: string;
+    color: string;
+    blur?: number;
+    imgUrl?: string;
 };
 
 export function bgBlur({ color, blur = 6, imgUrl }: BgBlurProps): CSSObject {
@@ -106,23 +125,29 @@ export function bgBlur({ color, blur = 6, imgUrl }: BgBlurProps): CSSObject {
     };
 }
 
-
+/**
+ * Usage:
+ * ...maxLine({ line: 2, persistent: theme.typography.caption }),
+ */
 export type MediaFontSize = {
-  [key: string]: {
-    fontSize: React.CSSProperties['fontSize'];
-  };
+    [key: string]: {
+        fontSize: React.CSSProperties['fontSize'];
+    };
 };
 
 export type MaxLineProps = {
-  line: number;
-  persistent?: Partial<React.CSSProperties>;
+    line: number;
+    persistent?: Partial<React.CSSProperties>;
 };
 
 function getFontSize(fontSize: React.CSSProperties['fontSize']) {
     return typeof fontSize === 'string' ? remToPx(fontSize) : fontSize;
 }
 
-function getLineHeight(lineHeight: React.CSSProperties['lineHeight'], fontSize?: number) {
+function getLineHeight(
+    lineHeight: React.CSSProperties['lineHeight'],
+    fontSize?: number,
+) {
     if (typeof lineHeight === 'string') {
         return fontSize ? remToPx(lineHeight) / fontSize : 1;
     }
@@ -140,23 +165,42 @@ export function maxLine({ line, persistent }: MaxLineProps): CSSObject {
 
     if (persistent) {
         const fontSizeBase = getFontSize(persistent.fontSize);
-        const fontSizeSm = getFontSize((persistent as MediaFontSize)[mediaQueries.upSm]?.fontSize);
-        const fontSizeMd = getFontSize((persistent as MediaFontSize)[mediaQueries.upMd]?.fontSize);
-        const fontSizeLg = getFontSize((persistent as MediaFontSize)[mediaQueries.upLg]?.fontSize);
+        const fontSizeSm = getFontSize(
+            (persistent as MediaFontSize)[mediaQueries.upSm]?.fontSize,
+        );
+        const fontSizeMd = getFontSize(
+            (persistent as MediaFontSize)[mediaQueries.upMd]?.fontSize,
+        );
+        const fontSizeLg = getFontSize(
+            (persistent as MediaFontSize)[mediaQueries.upLg]?.fontSize,
+        );
 
         const lineHeight = getLineHeight(persistent.lineHeight, fontSizeBase);
 
         return {
             ...baseStyles,
             ...(lineHeight && {
-                ...(fontSizeBase && { height: fontSizeBase * lineHeight * line }),
-                ...(fontSizeSm && { [mediaQueries.upSm]: { height: fontSizeSm * lineHeight * line } }),
-                ...(fontSizeMd && { [mediaQueries.upMd]: { height: fontSizeMd * lineHeight * line } }),
-                ...(fontSizeLg && { [mediaQueries.upLg]: { height: fontSizeLg * lineHeight * line } }),
+                ...(fontSizeBase && {
+                    height: fontSizeBase * lineHeight * line,
+                }),
+                ...(fontSizeSm && {
+                    [mediaQueries.upSm]: {
+                        height: fontSizeSm * lineHeight * line,
+                    },
+                }),
+                ...(fontSizeMd && {
+                    [mediaQueries.upMd]: {
+                        height: fontSizeMd * lineHeight * line,
+                    },
+                }),
+                ...(fontSizeLg && {
+                    [mediaQueries.upLg]: {
+                        height: fontSizeLg * lineHeight * line,
+                    },
+                }),
             }),
         };
     }
 
     return baseStyles;
 }
-

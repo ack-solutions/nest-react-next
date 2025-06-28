@@ -1,10 +1,12 @@
-import { Icon, useResponsive } from '@libs/react-core';
-import { Stack, AppBar, Toolbar, IconButton } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import { useScroll, UseScrollOptions } from 'framer-motion';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Stack, AppBar, Toolbar, IconButton, useTheme, Tooltip } from '@mui/material';
+import { useMemo } from 'react';
 
 import AccountPopover from './account-popover';
+import { CustomBreadcrumbs, Icon } from '../../../components';
+import { IconEnum } from '../../../components/icons/icons';
+import { useSettingsContext } from '../../../contexts/settings-provider';
+import { useDashboardLayout } from '../../../hook';
+import { useResponsive } from '../../../hook/use-responsive';
 import { bgBlur } from '../../../theme/styles';
 import { HEADER, NAV } from '../../config';
 
@@ -13,43 +15,41 @@ type Props = {
     onOpenNav?: VoidFunction;
 };
 
-export function useOffSetTop(top = 0, options?: UseScrollOptions) {
-    const { scrollY } = useScroll(options);
-    const [value, setValue] = useState(false);
-    const onOffSetTop = useCallback(() => {
-        scrollY.on('change', (scrollHeight) => {
-            if (scrollHeight > top) {
-                setValue(true);
-            } else {
-                setValue(false);
-            }
-        });
-    }, [scrollY, top]);
-
-    useEffect(() => {
-        onOffSetTop();
-    }, [onOffSetTop]);
-
-    const memoizedValue = useMemo(() => value, [value]);
-
-    return memoizedValue;
-}
-
 export default function Header({ onOpenNav }: Props) {
     const theme = useTheme();
-    const lgUp = useResponsive('up', 'lg');
-    const offset = useOffSetTop(HEADER.H_DESKTOP);
-    const offsetTop = offset;
+    const lgUp = useResponsive('up', 'md');
+    const { navLayout } = useSettingsContext();
+    const { breadcrumbs, heading } = useDashboardLayout();
+
     const isNavHorizontal = !lgUp;
-    const isNavMini = !lgUp;
+    const isNavMini = useMemo(
+        () => navLayout === 'mini' && lgUp,
+        [lgUp, navLayout],
+    );
 
     const renderContent = (
         <>
             {!lgUp && (
                 <IconButton onClick={onOpenNav}>
-                    <Icon icon='menu' />
+                    <Icon icon={IconEnum.LIST} />
                 </IconButton>
             )}
+
+            <Stack
+                direction="column"
+                spacing={0}
+            >
+                <CustomBreadcrumbs
+                    heading={heading}
+                    links={breadcrumbs}
+                />
+
+            </Stack>
+
+            <Stack
+                direction="column"
+                spacing={0}
+            />
 
             <Stack
                 flexGrow={1}
@@ -57,10 +57,16 @@ export default function Header({ onOpenNav }: Props) {
                 alignItems="center"
                 justifyContent="flex-end"
                 spacing={{
-                    xs: 0.5,
-                    sm: 1,
+                    xs: 1,
+                    sm: 2,
                 }}
             >
+                <Tooltip title="Notifications">
+                    <IconButton>
+                        <Icon icon={IconEnum.BELL} />
+                    </IconButton>
+                </Tooltip>
+
                 <AccountPopover />
             </Stack>
         </>
@@ -69,27 +75,23 @@ export default function Header({ onOpenNav }: Props) {
     return (
         <AppBar
             sx={{
-                color: 'transparent',
                 boxShadow: 'none',
                 borderBottom: `dashed 1px ${theme.palette.divider}`,
                 height: HEADER.H_MOBILE,
                 zIndex: theme.zIndex.appBar + 1,
                 ...bgBlur({
-                    color: theme.palette.background.default,
+                    color: theme.palette.background.paper,
                 }),
                 transition: theme.transitions.create(['height'], {
                     duration: theme.transitions.duration.shorter,
                 }),
                 ...(lgUp && {
-                    width: `calc(100% - ${NAV.W_VERTICAL + 1}px)`,
+                    width: `calc(100% - ${(navLayout === 'mini' ? NAV.W_MINI : NAV.W_VERTICAL) + 1}px)`,
                     height: HEADER.H_DESKTOP,
-                    ...(offsetTop && {
-                        height: HEADER.H_DESKTOP_OFFSET,
-                    }),
                     ...(isNavHorizontal && {
                         width: 1,
-                        bgcolor: 'background.default',
-                        height: HEADER.H_DESKTOP_OFFSET,
+                        bgcolor: 'background.paper',
+                        height: HEADER.H_DESKTOP,
                         borderBottom: `dashed 1px ${theme.palette.divider}`,
                     }),
                     ...(isNavMini && {
@@ -101,7 +103,15 @@ export default function Header({ onOpenNav }: Props) {
             <Toolbar
                 sx={{
                     height: 1,
-                    px: { lg: 5 },
+                    pr: {
+                        lg: 5,
+                        xs: 2,
+                    },
+                    pl: {
+                        lg: 5,
+                        xs: 2,
+                    },
+
                 }}
             >
                 {renderContent}

@@ -1,39 +1,53 @@
-import { tabClasses } from '@mui/material';
-import { Theme } from '@mui/material/styles';
+import type { Theme, Components } from '@mui/material';
+import { tabClasses } from '@mui/material/Tab';
 
 
-export default function tabs(theme: Theme) {
-    return {
-        MuiTabs: {
-            styleOverrides: {
-                indicator: {
-                    backgroundColor: theme.palette.text.primary,
+const MuiTabs: Components<Theme>['MuiTabs'] = {
+    defaultProps: {
+        textColor: 'inherit',
+        variant: 'scrollable',
+        allowScrollButtonsMobile: true,
+    },
+
+    styleOverrides: {
+        root: ({ theme }) => ({
+            borderBottom: `1px solid ${theme.palette.divider}`,
+        }),
+        flexContainer: ({ ownerState, theme }) => ({
+            ...(ownerState.variant !== 'fullWidth' && {
+                gap: '24px',
+                [theme.breakpoints.up('sm')]: {
+                    gap: '40px',
                 },
-                scrollButtons: {
-                    width: 48,
-                    borderRadius: '50%',
-                },
+            }),
+        }),
+        indicator: { backgroundColor: 'currentColor' },
+    },
+};
+
+const MuiTab: Components<Theme>['MuiTab'] = {
+    defaultProps: {
+        disableRipple: true,
+        iconPosition: 'start',
+    },
+    styleOverrides: {
+        root: ({ theme }) => ({
+            opacity: 1,
+            minWidth: 48,
+            minHeight: 48,
+            padding: theme.spacing(1, 0),
+            color: theme.palette.text.secondary,
+            fontWeight: theme.typography.fontWeightMedium,
+            lineHeight: theme.typography.body2.lineHeight,
+            [`&.${tabClasses.selected}`]: {
+                color: theme.palette.text.primary,
+                fontWeight: theme.typography.fontWeightSemiBold,
             },
-        },
-        MuiTab: {
-            styleOverrides: {
-                root: {
-                    padding: 0,
-                    opacity: 1,
-                    minWidth: 48,
-                    minHeight: 48,
-                    fontWeight: theme.typography.fontWeightSemiBold,
-                    '&:not(:last-of-type)': {
-                        marginRight: theme.spacing(3),
-                        [theme.breakpoints.up('sm')]: {
-                            marginRight: theme.spacing(3),
-                        },
-                    },
-                    [`&:not(.${tabClasses.selected})`]: {
-                        color: theme.palette.text.secondary,
-                    },
-                },
-            },
-        },
-    };
-}
+        }),
+    },
+};
+
+export const tabs = {
+    MuiTabs,
+    MuiTab,
+};

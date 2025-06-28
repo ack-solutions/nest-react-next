@@ -1,18 +1,19 @@
-import { Label, LabelColor, LabelProps } from '@libs/react-core';
 import { UserStatusEnum } from '@libs/types';
 import { startCase } from 'lodash';
 import { useMemo } from 'react';
 
+import { Label, LabelColor, LabelProps } from '../label';
 
-export interface UserStatusLabelProps extends LabelProps {
+
+export interface UserStatusLabelProps extends Omit<LabelProps, 'ref'> {
     label?: string;
 }
 
-const UserStatusLabel = ({ label }: UserStatusLabelProps) => {
+function UserStatusLabel({ label, ...labelProps }: UserStatusLabelProps) {
     const color: LabelColor = useMemo(() => {
         switch (label) {
             case UserStatusEnum.ACTIVE:
-                return 'primary';
+                return 'success';
 
             case UserStatusEnum.INACTIVE:
                 return 'error';
@@ -27,12 +28,13 @@ const UserStatusLabel = ({ label }: UserStatusLabelProps) => {
 
     return (
         <Label
-            className='status-label'
+            className="status-label"
             color={color}
+            {...labelProps}
         >
             {startCase(label)}
         </Label>
     );
-};
+}
 
 export default UserStatusLabel;

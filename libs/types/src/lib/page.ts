@@ -6,8 +6,18 @@ export interface IPage extends IBaseEntity {
     slug?: string;
     content?: string;
     status?: PageStatusEnum;
-    metaData?: any;
+    metaData?: IMeta;
     name?: string;
+}
+
+export interface IMeta {
+    pageTitle: string;
+    meta?: IMetaValue[];
+}
+
+export interface IMetaValue {
+    key: string;
+    value?: string;
 }
 
 export enum PageStatusEnum {

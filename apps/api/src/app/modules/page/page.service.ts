@@ -1,23 +1,28 @@
-import { CrudService } from '@api/app/core/crud';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+
 import { Page } from './page.entity';
+import { BaseService } from '../../core/service/base-service';
 
 
 @Injectable()
-export class PageService extends CrudService<Page> {
+export class PageService extends BaseService<Page> {
 
     constructor(
         @InjectRepository(Page)
-        private pageRepo: Repository<Page>,
+        repository: Repository<Page>,
     ) {
-        super(pageRepo);
+        super(repository);
     }
 
-    find() {
-        return this.pageRepo.find();
+    byIdOrSlug(id: string) {
+        const query = this.repository.createQueryBuilder();
+
+        query.where(`"${query.alias}"."slug" = :slug`, { slug: id });
+        query.orWhere(`"${query.alias}"."id"::text = :id`, { id });
+        return query.getOne();
     }
 
 }

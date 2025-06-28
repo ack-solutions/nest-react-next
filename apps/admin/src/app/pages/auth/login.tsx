@@ -1,92 +1,88 @@
-import { AuthService, errorMessage, useAuth } from '@libs/react-core';
-import { ILoginSendOtpInput } from '@libs/types';
+import { NestAuthService } from '@libs/react-shared';
+import { errorMessage } from '@libs/utils';
 import { Box, Stack, Typography } from '@mui/material';
-import React, { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
-import AuthLayout from '../../sections/auth/auth-layout';
+import { useAuth } from '../../contexts/auth-context';
 import LoginForm from '../../sections/auth/login-form';
-import LoginOtpVerification from '../../sections/auth/login-otp-verification';
 
 
-const authService = AuthService.getInstance<AuthService>();
-const Login = () => {
-    const [verifyData, setVerifyData] = useState<any>(null);
+const nestAuthService = NestAuthService.getInstance<NestAuthService>();
+
+function Login() {
     const { login } = useAuth();
 
-    const handleSendOtp = useCallback(
-        (value?: ILoginSendOtpInput, setError?: any) => {
-            value = value || verifyData;
-            authService.sendLoginOtp(value).then(() => {
-                setVerifyData(value);
-            }).catch((error) => {
-                setError('afterSubmit', {
-                    type: 'manual',
-                    message: errorMessage(error),
-                });
-                setVerifyData(null);
-            });
-        },
-        [verifyData],
-    );
-
     const handleLogin = useCallback(
-        async (values: any, form: any) => {
-            const request = {
-                otp: Number(values?.otp),
-                ...verifyData,
-            };
-            authService.login(request).then((data) => {
-                login(data?.accessToken, data?.user);
-                form.reset();
-                setVerifyData(null);
-            }).catch((error) => {
-                form.setError('afterSubmit', {
-                    type: 'manual',
-                    message: errorMessage(error),
+        async (values, setError) => {
+            await nestAuthService
+                .login({
+                    providerId: 'email',
+                    credentials: values,
+                })
+                .then(({ data }) => {
+                    login(data?.accessToken);
+                }).catch((error) => {
+                    setError('afterSubmit', {
+                        type: 'manual',
+                        message: errorMessage(error),
+                    });
                 });
-            });
         },
-        [login, verifyData],
+        [login],
     );
 
     return (
-        <AuthLayout rootTitle={'Login | React Next'} >
-            {!verifyData ? (
-                <Box
-                    sx={{
-                        maxWidth: 480,
-                        width: '100%',
-                        p: 2,
-                    }}
+        <Box>
+            {/* {!verifyData ? ( */}
+            <Box>
+                <Stack
+                    direction="row"
+                    alignItems="center"
+                    sx={{ mb: 4 }}
                 >
-                    <Stack
-                        direction="row"
-                        alignItems="center"
-                        sx={{ mb: 5 }}
+                    <Box sx={{ flexGrow: 1 }}>
+                        <Typography
+                            variant="h4"
+                            color="common.white"
+                            gutterBottom
+                        >
+                            Login into your account
+                        </Typography>
+                        <Typography color="common.white">
+                            Welcome back, log into your account
+                        </Typography>
+                    </Box>
+                </Stack>
+                <LoginForm onSubmit={handleLogin} />
+                {/* <Stack
+                    direction="row"
+                    spacing={0.5}
+                    justifyContent="center"
+                    mt={2}
+                >
+                    <Typography color="common.white">Don't have an account?</Typography>
+                    <Link
+                        component={RouterLink}
+                        to={PATH_AUTH.register}
+                        sx={{
+                            textDecoration: 'underline',
+                            color: 'common.white',
+                        }}
                     >
-                        <Box sx={{ flexGrow: 1 }}>
-                            <Typography
-                                variant="h1"
-                                gutterBottom
-                            >
-                                Login
-                            </Typography>
-                            <Typography sx={{ color: 'text.secondary' }}>
-                                Welcome back, log into your account
-                            </Typography>
-                        </Box>
-                    </Stack>
-                    <LoginForm onSubmit={handleSendOtp} />
-                </Box>
-            ) : (
+                        Sign up
+                    </Link>
+                </Stack> */}
+            </Box>
+            {/*  ) : (
                 <LoginOtpVerification
                     onSubmit={handleLogin}
-                    onResend={handleSendOtp}
+                    onResent={handleResentOtp}
                     onGoBack={() => setVerifyData(null)}
+                    values={verifyData}
                 />
-            )}
-        </AuthLayout>
+            )} */}
+        </Box>
     );
-};
+}
 
 export default Login;

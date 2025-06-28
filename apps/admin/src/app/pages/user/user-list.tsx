@@ -1,25 +1,33 @@
-import { DataTableColumn } from '@admin/app/components';
-import { CrudTable, CrudTableActions } from '@admin/app/components/crud/crud-table';
-import CustomBreadcrumbs from '@admin/app/components/custom-breadcrumbs/custom-breadcrumbs';
-import DataTableTab, { DataTableTabItem } from '@admin/app/components/data-table/data-table-tab';
-import Page from '@admin/app/components/page';
-import UserStatusLabel from '@admin/app/components/user/user-status-label';
-import UserWithAvatar from '@admin/app/components/user/user-with-avatar';
-import { PATH_DASHBOARD } from '@admin/app/routes/paths';
-import ChangePasswordDialog from '@admin/app/sections/user/change-password-dialog';
-import { TextFieldRaw, useUserQuery } from '@libs/react-core';
-import { IUser, RoleNameEnum, UserStatusEnum } from '@libs/types';
-import { toDisplayDate } from '@libs/utils';
-import LockResetIcon from '@mui/icons-material/LockReset';
+import { QueryBuilder } from '@ackplus/nest-crud-request';
+import { useUser } from '@libs/react-shared';
 import {
-    Container,
-    Button,
-    Card,
-    MenuItem,
-} from '@mui/material';
-import { has, split, startCase } from 'lodash';
+    IUser,
+    PermissionsEnum,
+    RoleGuardEnum,
+    RoleNameEnum,
+    UserStatusEnum,
+} from '@libs/types';
+import { toDisplayDate, toDisplayPhone } from '@libs/utils';
+import { Button, Card } from '@mui/material';
+import { filter, get, includes, isEmpty } from 'lodash';
 import { useState, useCallback, useRef, useMemo, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+
+import {
+    CrudTable,
+    CrudTableActions,
+    Page,
+} from '../../components';
+import {
+    DataTableColumn,
+    DataTableTab,
+    DataTableTabItem,
+} from '../../components/data-table';
+import UserStatusDropdown from '../../components/user/user-status-dropdown';
+import UserWithAvatar from '../../components/user/user-with-avatar';
+import { useAccess, useAuth, withPermission } from '../../contexts';
+import { useToasty } from '../../hook/use-toasty';
+import { PATH_DASHBOARD } from '../../routes/paths';
 
 
 export interface IUserTableFilter {
@@ -32,143 +40,163 @@ const defaultFilter: IUserTableFilter = {
     status: 'all',
 };
 
-export default function UsersList() {
+function UsersList() {
+    const { currentUser } = useAuth();
+    const { showToasty } = useToasty();
+    const { hasPermission } = useAccess();
     const navigate = useNavigate();
     const datatableRef = useRef<CrudTableActions>(null);
-    const [openPasswordDialog, setOpenPasswordDialog] = useState<any>();
-    const [tableFilter, setTableFilter] = useState<IUserTableFilter>(defaultFilter);
+    const [tableFilter, setTableFilter] = useState(defaultFilter);
+    const [countFilter, setCountFilter] = useState({});
+
+    const canCreate = hasPermission(PermissionsEnum.CREATE_USERS);
+    const canUpdate = hasPermission(PermissionsEnum.UPDATE_USERS);
     const {
         useGetManyUser,
         useDeleteUser,
+        useRestoreUser,
         useDeleteForeverUser,
         useBulkDeleteUser,
-        useBulkDeleteForeverUser,
-        useRestoreUser,
         useBulkRestoreUser,
-        useGetUserCountByStatus,
-    } = useUserQuery();
+        useBulkDeleteForeverUser,
+        useUpdateUser,
+        useGetUserCounts,
+    } = useUser();
 
-    const { data: countByStatus } = useGetUserCountByStatus();
+    const { mutateAsync: updateUser } = useUpdateUser();
 
-    const handleOpenAddEditUser = useCallback(
-        (row: IUser) => {
-            navigate(`${PATH_DASHBOARD.users.edit}/${row?.id}`);
+
+    const { data: counts } = useGetUserCounts({
+        filter: countFilter,
+        groupByKey: 'status',
+    });
+
+    const handleEditUser = useCallback(
+        (user) => {
+            navigate(PATH_DASHBOARD.users.edit(user.id));
         },
         [navigate],
     );
 
-    const handleChangePassword = useCallback(
-        (row: IUser) => {
-            setOpenPasswordDialog(row);
+    const handleRowClick = useCallback(
+        (row) => {
+            navigate(`${PATH_DASHBOARD.users.view}/${row?.id}`);
         },
-        [],
-    );
-    const handleCloseDialog = useCallback(
-        () => {
-            setOpenPasswordDialog(null);
-        },
-        [],
+        [navigate],
     );
 
-    const handleOnChangeTableFilter = useCallback(
-        (value, key) => {
-            setTableFilter((state) => {
-                const newState = {
-                    ...state,
-                    [key]: value,
-                };
-                return newState;
+    const handleUpdateStatus = useCallback(
+        (value: UserStatusEnum, row) => {
+            const request: any = {
+                id: row.id,
+                status: value,
+            };
+            updateUser(request).then(() => {
+                showToasty('Status update successfully');
+            }).catch((error) => {
+                showToasty(error, 'error');
             });
         },
-        [],
+        [showToasty, updateUser],
     );
 
-    const handleDataTableApiRequestMap = useCallback(
-        (filter) => {
-            if (has(filter?.where, '$or') && filter?.where['$or']?.length > 0) {
-                const searches = split(filter?.where['$or'][0]['firstName']['$contL'], ' ');
-                if (searches?.length > 1) {
-                    filter?.where['$or'].push({
-                        firstName: { $contL: searches[0]?.trim() },
-                        lastName: { $contL: searches[1]?.trim() },
-                    });
 
-                    filter?.where['$or'].push({
-                        firstName: { $contL: searches[1]?.trim() },
-                        lastName: { $contL: searches[0]?.trim() },
-                    });
-                }
-            }
-            filter = {
-                ...filter,
-                where: {
-                    ...filter?.where,
-                    ...tableFilter?.role !== 'all' ? { 'roles.name': { $in: [tableFilter?.role] } } : {},
-                    ...tableFilter?.status !== 'all' ? { status: { $eq: tableFilter?.status } } : {},
-                },
-                relations: ['roles'],
+    const handleOnChangeTableFilter = useCallback((value, key) => {
+        setTableFilter((state) => {
+            const newState = {
+                ...state,
+                [key]: value,
             };
+            return newState;
+        });
+    }, []);
 
-            return filter;
+    const handleTrashData = useCallback((checked) => {
+        setCountFilter((state) => {
+            const newState = new QueryBuilder(state);
+            newState.setOnlyDeleted(checked);
+            return newState.toObject();
+        });
+    }, []);
+
+    const handleDataTableApiRequestMap = useCallback(
+        (queryBuilder: QueryBuilder, request) => {
+            if (tableFilter?.status !== 'all') {
+                queryBuilder.where({
+                    status: { $eq: tableFilter?.status },
+                });
+            }
+            return queryBuilder;
         },
-        [tableFilter?.role, tableFilter?.status],
+        [tableFilter?.status],
     );
 
     const tabs: DataTableTabItem[] = useMemo(() => {
+        const statusByCount = counts?.data.reduce((acc, item) => {
+            acc[item.status] = item.count;
+            return acc;
+        }, {});
+
         return [
             {
                 value: 'all',
                 label: 'All',
-                count: countByStatus?.all || 0,
+                count: counts?.total || 0,
             },
             {
                 value: UserStatusEnum.ACTIVE,
                 label: 'Active',
                 color: 'success',
-                count: countByStatus?.[UserStatusEnum.ACTIVE] || 0,
-            },
-            {
-                value: UserStatusEnum.INACTIVE,
-                label: 'Inactive',
-                color: 'error',
-                count: countByStatus?.[UserStatusEnum.INACTIVE] || 0,
+                count: get(statusByCount, UserStatusEnum.ACTIVE, 0),
             },
             {
                 value: UserStatusEnum.PENDING,
                 label: 'Pending',
                 color: 'warning',
-                count: countByStatus?.[UserStatusEnum.PENDING] || 0,
+                count: get(statusByCount, UserStatusEnum.PENDING, 0),
+            },
+            {
+                value: UserStatusEnum.INACTIVE,
+                label: 'Inactive',
+                color: 'error',
+                count: get(statusByCount, UserStatusEnum.INACTIVE, 0),
             },
         ];
-    }, [countByStatus]);
+    }, [counts]);
 
     const columns: DataTableColumn<IUser>[] = [
         {
             name: 'firstName',
             label: 'User Name',
-            isSearchable: true,
             isSortable: true,
-            render: (row) => (<UserWithAvatar user={row} />),
+            render: (row) => (
+                <UserWithAvatar
+                    user={row}
+                    secondaryText={row?.authUser?.email ? row?.authUser?.email : toDisplayPhone(row?.formattedPhone)}
+                />
+            ),
         },
-
         {
-            name: 'email',
+            name: 'authUser.email',
             label: 'Email',
-            isSearchable: true,
-            isSortable: true,
-            render: (row) => row?.email,
+            render: (row) => row?.authUser?.email,
         },
         {
-            name: 'roles.name',
+            name: 'authUser.roles.name',
             label: 'Roles',
-            isSearchable: true,
-            isSortable: true,
-            render: (row) => (row?.roles)?.map((role) => role.name).join(', '),
+            render: (row) => row?.authUser?.roles?.map((role) => role.name).join(', '),
         },
         {
             name: 'status',
             label: 'Status',
-            render: (row) => (<UserStatusLabel label={row?.status} />),
+            isSearchable: true,
+            isSortable: true,
+            render: (row) => (
+                <UserStatusDropdown
+                    user={row}
+                    onChange={(option) => handleUpdateStatus(option, row)}
+                />
+            ),
         },
         {
             name: 'createdAt',
@@ -186,88 +214,83 @@ export default function UsersList() {
     }, [tableFilter]);
 
     return (
-        <Page title='Users'>
-            <Container maxWidth={false}>
-                <CustomBreadcrumbs
-                    heading="Users"
-                    links={[
-                        {
-                            name: 'Dashboard',
-                            href: PATH_DASHBOARD.root,
-                        },
-                        {
-                            name: 'Users',
-                            href: PATH_DASHBOARD.users.root,
-                        },
-                        { name: 'List' },
-                    ]}
-                    action={
-                        <Button
-                            variant='contained'
-                            onClick={() => navigate(`${PATH_DASHBOARD.users.add}`)}
-                        >
-                            Add User
-                        </Button>
-                    }
+        <Page
+            title="Users"
+            breadcrumbs={[
+                {
+                    name: 'Dashboard',
+                    href: PATH_DASHBOARD.root,
+                },
+                {
+                    name: 'Users',
+                    href: PATH_DASHBOARD.users.root,
+                },
+                { name: 'List' },
+            ]}
+        >
+            <Card>
+                <DataTableTab
+                    tabs={tabs}
+                    value={tableFilter?.status}
+                    onChange={(tab) => handleOnChangeTableFilter(tab, 'status')}
                 />
-                <Card>
-                    <DataTableTab
-                        tabs={tabs}
-                        value={tableFilter.status}
-                        onChange={(tab) => handleOnChangeTableFilter(tab, 'status')}
-                    />
-                    <CrudTable
-                        crudName={'User'}
-                        columns={columns}
-                        ref={datatableRef}
-                        hasSoftDelete
-                        dataTableApiRequestMap={handleDataTableApiRequestMap}
-                        crudOperationHooks={{
-                            useGetMany: useGetManyUser,
-                            useDelete: useDeleteUser,
-                            useRestore: useRestoreUser,
-                            useDeleteForever: useDeleteForeverUser,
-                            useBulkDelete: useBulkDeleteUser,
-                            useBulkRestore: useBulkRestoreUser,
-                            useBulkDeleteForever: useBulkDeleteForeverUser,
-                        }}
-                        onEdit={handleOpenAddEditUser}
-                        rowActions={(row) => {
-                            return [
-                                {
-                                    icon: <LockResetIcon />,
-                                    title: 'Change Password',
-                                    onClick: () => handleChangePassword(row),
-                                },
-
-                            ];
-                        }}
-                        onRowClick={handleOpenAddEditUser}
-                        extraFilter={(
-                            <TextFieldRaw
-                                select
-                                size="small"
-                                label="Status"
-                                value={tableFilter?.status}
-                                onChange={({ target }) => handleOnChangeTableFilter(target?.value, 'status')}
-                                sx={{ width: 150 }}
-                            >
-                                <MenuItem value={'all'}>All Status</MenuItem>
-                                {Object.values(UserStatusEnum)?.map((status) => (
-                                    <MenuItem
-                                        key={status}
-                                        value={status}
-                                    >{startCase(status)}</MenuItem>
-                                ))}
-                            </TextFieldRaw>
-                        )}
-                    />
-                </Card>
-            </Container>
-            {openPasswordDialog && <ChangePasswordDialog
-                onClose={handleCloseDialog}
-                values={openPasswordDialog}
-            />}
+                <CrudTable
+                    crudName="User"
+                    crudPermissionKey="users"
+                    columns={columns}
+                    ref={datatableRef}
+                    hasSoftDelete
+                    onToggleTrashData={handleTrashData}
+                    dataTableApiRequestMap={handleDataTableApiRequestMap}
+                    crudOperationHooks={{
+                        useGetMany: useGetManyUser,
+                        useDelete: useDeleteUser,
+                        useRestore: useRestoreUser,
+                        useDeleteForever: useDeleteForeverUser,
+                        useBulkDelete: useBulkDeleteUser,
+                        useBulkRestore: useBulkRestoreUser,
+                        useBulkDeleteForever: useBulkDeleteForeverUser,
+                    }}
+                    onEdit={handleEditUser}
+                    onRowClick={canUpdate ? handleRowClick : null}
+                    tableActionMenuProps={
+                        (row) => (
+                            row?.id === currentUser?.id ||
+                            !isEmpty(filter(row?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name))))
+                            && { onDelete: null }
+                    }
+                    filterSelectAll={row => {
+                        return (
+                            !row?.isSuprUser && row?.id !== currentUser?.id && isEmpty(filter(row?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)))
+                        );
+                    }}
+                    checkBoxProps={(row, type) => {
+                        if (!(
+                            !row?.isSuprUser && row?.id !== currentUser?.id &&
+                            isEmpty(filter(row?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)))
+                        ) &&
+                            type === 'row'
+                        ) {
+                            return { disabled: true };
+                        }
+                        return {};
+                    }}
+                    extraFilter={canCreate ? (
+                        <Button
+                            component={Link}
+                            to={PATH_DASHBOARD.users.create}
+                            variant="contained"
+                        >
+                            New User
+                        </Button>
+                    ) : null}
+                />
+            </Card>
         </Page>
     );
 }
+
+export default withPermission({
+    roles: RoleGuardEnum.ADMIN,
+    permissions: [PermissionsEnum.ACCESS_USERS],
+})(UsersList);

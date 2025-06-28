@@ -1,5 +1,5 @@
 // @mui
-import { alpha } from '@mui/material/styles';
+import { alpha } from '@mui/material';
 import { omit } from 'lodash';
 
 import { palette as themePalette } from '../palette';
@@ -20,18 +20,17 @@ export function presets(presetsColor: string) {
     return theme;
 }
 
-
 const palette = themePalette('light');
 
 export const primaryPresets = [
     // DEFAULT
     {
         name: 'default',
-        lighter: '#bac0d1',
-        light: '#657192',
-        main: '#293b6b',
-        dark: '#15234d',
-        darker: '#0b1436',
+        lighter: '#B1B0EA',
+        light: '#5654D1',
+        main: '#0300BB',
+        dark: '#0300AA',
+        darker: '#020085',
         contrastText: '#FFFFFF',
     },
     // CYAN

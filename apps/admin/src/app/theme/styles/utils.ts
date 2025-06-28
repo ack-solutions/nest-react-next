@@ -1,5 +1,3 @@
-// ----------------------------------------------------------------------
-
 export const stylesMode = {
     light: '[data-mui-color-scheme="light"] &',
     dark: '[data-mui-color-scheme="dark"] &',
@@ -37,7 +35,15 @@ export function pxToRem(value: number): string {
 /**
  * Responsive font sizes
  */
-export function responsiveFontSizes({ sm, md, lg }: { sm: number; md: number; lg: number }) {
+export function responsiveFontSizes({
+    sm,
+    md,
+    lg,
+}: {
+    sm: number;
+    md: number;
+    lg: number;
+}) {
     return {
         [mediaQueries.upSm]: { fontSize: pxToRem(sm) },
         [mediaQueries.upMd]: { fontSize: pxToRem(md) },
@@ -80,11 +86,10 @@ export function createPaletteChannel(hexPalette: Record<string, string>) {
  * Color with alpha channel
  */
 export function varAlpha(color: string, opacity = 1) {
-    const unsupported =
-    color.startsWith('#') ||
-    color.startsWith('rgb') ||
-    color.startsWith('rgba') ||
-    (!color.includes('var') && color.includes('Channel'));
+    const unsupported = color.startsWith('#') ||
+        color.startsWith('rgb') ||
+        color.startsWith('rgba') ||
+        (!color.includes('var') && color.includes('Channel'));
 
     if (unsupported) {
         throw new Error(

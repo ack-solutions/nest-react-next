@@ -1,88 +1,71 @@
-import { AuthService, errorMessage } from '@libs/react-core';
-import { Box, Stack, Typography } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { NestAuthService } from '@libs/react-shared';
+import { errorMessage } from '@libs/utils';
+import { Box, Link, Stack, Typography } from '@mui/material';
+import { useCallback } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 
-import AuthLayout from '../../sections/auth/auth-layout';
-import LoginOtpVerification from '../../sections/auth/login-otp-verification';
+import { useAuth } from '../../contexts';
+import { PATH_AUTH } from '../../routes/paths';
 import RegisterForm from '../../sections/auth/register-form';
 
 
-const authService = AuthService.getInstance<AuthService>();
+const nestAuthService = NestAuthService.getInstance<NestAuthService>();
 
-const Register = () => {
-    const [verifyData, setVerifyData] = useState<any>(null);
+function Register() {
+    const { login } = useAuth();
 
-    const handleSendOtp = useCallback(
-        (value?: any, setError?: any) => {
-            value = value || verifyData;
-            authService.sendRegisterOtp(value).then(() => {
-                setVerifyData(value);
+    const handleRegister = useCallback(
+        async (values: any, setError: any) => {
+            const request = {
+                ...values,
+            };
+            await nestAuthService.register(request).then((data) => {
+                login(data?.accessToken, data?.user);
+                // setVerifyData(null);
             }).catch((error) => {
                 setError('afterSubmit', {
                     type: 'manual',
                     message: errorMessage(error),
                 });
-                setVerifyData(null);
             });
         },
-        [verifyData],
-    );
-
-    const handleRegisterUser = useCallback(
-        (values: any, form: any) => {
-            const request = {
-                otp: Number(values?.otp),
-                ...verifyData,
-            };
-            authService.register(request).then(() => {
-                form.reset();
-                setVerifyData(null);
-            }).catch((error) => {
-                form.setError('afterSubmit', {
-                    type: 'manual',
-                    message: errorMessage(error),
-                });
-            });
-        },
-        [verifyData],
+        [login],
     );
 
     return (
-        <AuthLayout rootTitle={'Register | Next React'} >
-            <Box
-                sx={{
-                    maxWidth: 480,
-                    width: '100%',
-                    p: 2,
-                }}
+        <Box>
+            {/* {!verifyData ? ( */}
+            <Typography
+                variant="h4"
+                color="common.white"
+                gutterBottom
+                sx={{ mb: 4 }}
             >
-                <Stack
-                    direction="row"
-                    alignItems="center"
-                    sx={{ mb: 5 }}
-                >
-                    <Box sx={{ flexGrow: 1 }}>
-                        <Typography
-                            variant="h1"
-                            gutterBottom
-                        >
-                            Register
-                        </Typography>
-                    </Box>
-                </Stack>
-                {!verifyData ? (
-                    <RegisterForm onSubmit={handleSendOtp} />
-                ) : (
-                    <LoginOtpVerification
-                        onSubmit={handleRegisterUser}
-                        onResend={handleSendOtp}
-                        onGoBack={() => setVerifyData(null)}
-                    />
-                )}
-            </Box>
+                Create new account.
+            </Typography>
 
-        </AuthLayout>
+            <RegisterForm onSubmit={handleRegister} />
+
+            <Stack
+                direction="row"
+                spacing={0.5}
+                justifyContent="center"
+                mt={2}
+            >
+                <Typography color="common.white">Already A Member?</Typography>
+                <Link
+                    component={RouterLink}
+                    to={PATH_AUTH.login}
+                    sx={{
+                        textDecoration: 'underline',
+                        color: 'common.white',
+                    }}
+                >
+                    Login
+                </Link>
+            </Stack>
+        </Box>
     );
-};
+}
 
 export default Register;

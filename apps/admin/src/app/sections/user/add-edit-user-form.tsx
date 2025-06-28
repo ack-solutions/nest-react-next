@@ -1,14 +1,26 @@
-import { PATH_DASHBOARD } from '@admin/app/routes/paths';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormContainer, RHFPassword, RHFSelect, RHFTextField, RHFUploadAvatar, useRoleQuery } from '@libs/react-core';
-import { IUser, UserStatusEnum } from '@libs/types';
-import { Button, Card, CardContent, MenuItem, Stack } from '@mui/material';
-import Grid from '@mui/material/Grid2';
-import { startCase } from 'lodash';
-import { useEffect } from 'react';
+import { useRole } from '@libs/react-shared';
+import { ICreateUserInput, IRole, IUser, RoleGuardEnum, UserStatusEnum } from '@libs/types';
+import { Box, Button, Card, CardContent, Stack, Typography, Divider, Grid } from '@mui/material';
+import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import { object, ref, string } from 'yup';
+import { array, object, string } from 'yup';
+
+import { Icon } from '../../components';
+import { IconEnum } from '../../components/icons/icons';
+import UserStatusLabel from '../../components/user/user-status-label';
+import {
+    FormContainer,
+    RHFPassword,
+    RHFSelect,
+    RHFTextField,
+    RHFUploadAvatar,
+} from '../../form';
+import RHFLabelDropdown from '../../form/hook-form-fields/rhf-label-dropdown';
+import { RHFPhoneNumber } from '../../form/hook-form-fields/rhf-phone-number';
+import { schemaHelper } from '../../form/hook-form-fields/schema-helper';
+import { PATH_DASHBOARD } from '../../routes/paths';
 
 
 export interface AddEditUserFormProps {
@@ -16,260 +28,267 @@ export interface AddEditUserFormProps {
     onSubmit: (value?: IUser) => void;
 }
 
-const defaultValues: IUser = {
+const defaultValues: Partial<ICreateUserInput> = {
     firstName: '',
     lastName: '',
     email: '',
+    password: '',
     phoneNumber: '',
-    status: UserStatusEnum.INACTIVE,
+    phoneIsoCode: '',
+    phoneCountryCode: '',
+    status: UserStatusEnum.ACTIVE,
     roles: [],
+    locationIds: [],
 };
 
-const validationSchema = yupResolver(object().shape({
-    firstName: string().trim().required().label('First Name'),
-    lastName: string().trim().required().label('Last Name'),
-    email: string().label('Email').required().matches(/^[a-zA-Z0-9._%+-]+@gmail\.com$/, 'Please enter a valid email address'),
-    phoneNumber: string().required().label('Phone Number'),
-    password: string().label('Password').when('id', {
-        is: (id: any) => !id,
-        then: (schema) => schema.nullable().required(),
-        otherwise: (schema) => schema.nullable(),
+const validationSchema = yupResolver(
+    object().shape({
+        firstName: string().trim().required().label('First Name'),
+        lastName: string().trim().required().label('Last Name'),
+        email: schemaHelper.email().label('Email').required(),
+        phoneNumber: schemaHelper.phoneNumber().label('Phone Number'),
+        roles: array().min(1, 'Please select at least one role').label('Roles'),
+        locationIds: array().min(1, 'Please select at least one location').label('Locations'),
+        password: string()
+            .label('Password')
+            .when('id', {
+                is: (id: any) => !id, // if creating
+                then: () => schemaHelper.password({ required: true }).label('Password'),
+                otherwise: () => schemaHelper.password({ required: false }).label('Password'),
+            }),
     }),
-    confirmPassword: string().label('Confirm Password').when(['id', 'password'], {
-        is: (id: any, password: any) => !id || !!password,
-        then: (schema) => schema.oneOf([ref('password'), ''], 'Passwords must match').required(),
-    }),
-}));
+);
 
-const AddEditUserForm = ({ onSubmit, values }: AddEditUserFormProps) => {
+function AddEditUserForm({ onSubmit, values }: AddEditUserFormProps) {
     const navigate = useNavigate();
-    const { id: userId } = useParams();
-    const { useGetManyRole } = useRoleQuery();
-    const { data: roleData } = useGetManyRole();
+    const { userId } = useParams();
+    const { useGetRoleByGuard } = useRole();
+    const { data: roleData } = useGetRoleByGuard(RoleGuardEnum.ADMIN);
 
     const formContext = useForm({
         defaultValues,
         resolver: validationSchema as any,
     });
-    const { reset } = formContext;
+    const { reset, watch, setValue, formState: { isSubmitting } } = formContext;
+    const formValues = watch();
+
+    const handleSubmit = useCallback(
+        (values) => {
+            const requestValues = { ...values };
+            onSubmit(requestValues);
+        },
+        [onSubmit],
+    );
 
 
     useEffect(() => {
         reset({
+            ...defaultValues,
             ...values,
+            email: values?.authUser?.email || '',
+            roles: (values?.authUser?.roles || [])?.map((role: IRole) => role?.name),
         });
-    }, [reset, values]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [values]);
+
 
     return (
         <FormContainer
-            FormProps={{
+            formProps={{
                 id: 'add-edit-form-user',
             }}
             formContext={formContext}
             validationSchema={validationSchema}
-            onSuccess={onSubmit}
+            onSuccess={handleSubmit}
         >
-            <Grid
-                container
-                spacing={2}
-            >
-                <Grid
-                    size={{
-                        xs: 12,
-                        sm: 3,
-                    }}
-                >
-                    <Card>
-                        <CardContent>
-                            <RHFUploadAvatar
-                                small
-                                name='avatar'
-                                label="avatar"
-                                previewUrl={values.avatarUrl}
+            <Card>
+                <CardContent sx={{ p: 3 }}>
+                    {/* Avatar and Status Section */}
+                    <Box
+                        sx={{
+                            mb: 4,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 3,
+                        }}
+                    >
+                        <RHFUploadAvatar
+                            name="avatar"
+                            previewUrl={values?.avatarUrl}
+                            sx={{
+                                width: 100,
+                                height: 100,
+                            }}
+                        />
+                        <Box>
+                            <Typography
+                                variant="h6"
+                                gutterBottom
+                            >
+                                Profile Photo
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                sx={{ mb: 2 }}
+                            >
+                                Upload a profile photo for this user
+                            </Typography>
+                            <RHFLabelDropdown
+                                name="status"
+                                options={Object.values(UserStatusEnum)}
+                                anchor={(
+                                    <UserStatusLabel
+                                        label={formValues?.status}
+                                        endIcon={(
+                                            <Icon
+                                                icon={IconEnum.CARET_DOWN_FILL}
+                                                size={8}
+                                            />
+                                        )}
+                                        sx={{ cursor: 'pointer' }}
+                                    />
+                                )}
                             />
+                        </Box>
+                    </Box>
+
+                    <Divider sx={{ mb: 3 }} />
+
+                    {/* Personal Information Section */}
+                    <Typography
+                        variant="h6"
+                        gutterBottom
+                        sx={{ mb: 2 }}
+                    >
+                        Personal Information
+                    </Typography>
+                    <Grid
+                        container
+                        spacing={3}
+                        sx={{ mb: 4 }}
+                    >
+                        <Grid
+                            size={{
+                                xs: 12,
+                                sm: 6,
+                            }}>
                             <RHFTextField
                                 fullWidth
                                 required
-                                name='status'
-                                label='Status'
-                                select
-                                sx={{
-                                    mt: 2,
-                                }}
-                            >
-                                {Object.values(UserStatusEnum).map((status, index) => (
-                                    <MenuItem
-                                        value={status}
-                                        key={index}
-                                    >
-                                        {startCase(status)}
-                                    </MenuItem>
-                                ))}
-                            </RHFTextField>
-                        </CardContent>
-                    </Card>
-                </Grid>
-                <Grid
-                    size={{
-                        xs: 12,
-                        sm: 9,
-                    }}
-                >
-                    <Card>
-                        <CardContent>
+                                name="firstName"
+                                label="First Name"
+                            />
+                        </Grid>
+                        <Grid
+                            size={{
+                                xs: 12,
+                                sm: 6,
+                            }}>
+                            <RHFTextField
+                                fullWidth
+                                required
+                                name="lastName"
+                                label="Last Name"
+                            />
+                        </Grid>
+                        <Grid
+                            size={{
+                                xs: 12,
+                                sm: 6,
+                            }}>
+                            <RHFTextField
+                                type="email"
+                                fullWidth
+                                required
+                                name="email"
+                                label="Email"
+                            />
+                        </Grid>
+                        <Grid
+                            size={{
+                                xs: 12,
+                                sm: 6,
+                            }}>
+                            <RHFPhoneNumber
+                                fullWidth
+                                name="phoneNumber"
+                                label="Phone Number"
+                            />
+                        </Grid>
+                        {!userId && (
                             <Grid
-                                container
-                                spacing={2}
-                            >
-                                <Grid
-                                    size={{
-                                        xs: 12,
-                                        sm: 6,
-                                    }}
-                                >
-                                    <RHFTextField
-                                        fullWidth
-                                        required
-                                        name='firstName'
-                                        label='First Name'
-                                    />
-                                </Grid>
-                                <Grid
-                                    size={{
-                                        xs: 12,
-                                        sm: 6,
-                                    }}
-                                >
-                                    <RHFTextField
-                                        fullWidth
-                                        required
-                                        name='lastName'
-                                        label='Last Name'
-                                    />
-                                </Grid>
-                                {!userId && (
-                                    <>
-                                        <Grid
-                                            size={{
-                                                xs: 12,
-                                                sm: 6,
-                                            }}
-                                        >
-                                            <RHFPassword
-                                                fullWidth
-                                                name="password"
-                                                label="Password"
-                                            />
-                                        </Grid>
-                                        <Grid
-                                            size={{
-                                                xs: 12,
-                                                sm: 6,
-                                            }}
-                                        >
-                                            <RHFPassword
-                                                fullWidth
-                                                name="confirmPassword"
-                                                label="Confirm Password"
-                                            />
-                                        </Grid>
-                                    </>
-                                )}
-                                <Grid
-                                    size={{
-                                        xs: 12,
-                                        sm: 6,
-                                    }}
-                                >
-                                    <RHFTextField
-                                        fullWidth
-                                        required
-                                        name='email'
-                                        label='Email'
-                                    />
-                                </Grid>
-                                <Grid
-                                    size={{
-                                        xs: 12,
-                                        sm: 6,
-                                    }}
-                                >
-                                    <RHFTextField
-                                        fullWidth
-                                        required
-                                        name='phoneNumber'
-                                        label='Phone Number'
-                                    />
-                                </Grid>
-                                <Grid
-                                    size={{
-                                        xs: 12,
-                                        sm: 6,
-                                    }}
-                                >
-                                    <RHFTextField
-                                        fullWidth
-                                        name='status'
-                                        label='Status'
-                                        select
-                                    >
-                                        {Object.values(UserStatusEnum)?.map((status, index) => (
-                                            <MenuItem
-                                                key={index}
-                                                value={status}
-                                            >
-                                                {startCase(status)}
-                                            </MenuItem>
-                                        ))}
-                                    </RHFTextField>
-                                </Grid>
-                                <Grid
-                                    size={{
-                                        xs: 12,
-                                        sm: 6,
-                                    }}
-                                >
-                                    <RHFSelect
-                                        fullWidth
-                                        required
-                                        name='roles'
-                                        label='Roles'
-                                        valueKey='id'
-                                        labelKey='name'
-                                        options={roleData?.items}
-                                        slotProps={{
-                                            select: {
-                                                multiple: true,
-                                            },
-                                        }}
-                                    />
-                                </Grid>
+                                size={{
+                                    xs: 12,
+                                    sm: 6,
+                                }}>
+                                <RHFPassword
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                />
                             </Grid>
-                            <Stack
-                                direction='row'
-                                spacing={2}
-                                justifyContent='flex-end'
-                                mt={2}
-                            >
-                                <Button
-                                    variant='outlined'
-                                    onClick={() => navigate(PATH_DASHBOARD.users.root)}
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    variant='contained'
-                                    type='submit'
-                                >
-                                    Submit
-                                </Button>
-                            </Stack>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            </Grid>
+                        )}
+                    </Grid>
+
+                    <Divider sx={{ mb: 3 }} />
+
+                    {/* Permissions & Access Section */}
+                    <Typography
+                        variant="h6"
+                        gutterBottom
+                        sx={{ mb: 2 }}
+                    >
+                        Permissions & Access
+                    </Typography>
+                    <Grid
+                        container
+                        spacing={3}
+                        sx={{ mb: 4 }}
+                    >
+                        <Grid
+                            size={{
+                                xs: 12,
+                                sm: 6,
+                            }}>
+                            <RHFSelect
+                                fullWidth
+                                required
+                                name="roles"
+                                label="Roles"
+                                valueKey="name"
+                                labelKey="name"
+                                options={roleData || []}
+                                isMultiple
+                                helperText="Select one or more roles for this user"
+                            />
+                        </Grid>
+                    </Grid>
+
+                    {/* Action Buttons */}
+                    <Stack
+                        direction="row"
+                        spacing={2}
+                        sx={{ pt: 2 }}
+                    >
+                        <Button
+                            variant="outlined"
+                            onClick={() => navigate(PATH_DASHBOARD.users.root)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="contained"
+                            type="submit"
+                            loading={isSubmitting}
+                        >
+                            {values?.id ? 'Update User' : 'Create User'}
+                        </Button>
+                    </Stack>
+                </CardContent>
+            </Card>
         </FormContainer>
     );
-};
+}
 
 export default AddEditUserForm;

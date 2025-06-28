@@ -1,22 +1,23 @@
-import { useAuth } from '@libs/react-core';
 import { useState, ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
-import { LoadingScreen } from '../components';
-import { PATH_AUTH } from '../routes/paths';
+import Error500 from '../components/error/error-500';
+import { Maintenance } from '../components/error/maintenance';
+import { useAuth } from '../contexts/auth-context';
+import { PATH_AUTH, PATH_DASHBOARD } from '../routes/paths';
 
 
 type AuthGuardProps = {
-  children: ReactNode;
+    children: ReactNode;
 };
 
 export default function AuthGuard({ children }: AuthGuardProps) {
-    const { isAuthenticated, isInitialized } = useAuth();
+    const { isAuthenticated, currentUser, authErrorStatus } = useAuth();
     const { pathname } = useLocation();
-    const [requestedLocation, setRequestedLocation] = useState<string | null>(null);
-    if (!isInitialized) {
-        return <LoadingScreen />;
-    }
+    const [requestedLocation, setRequestedLocation] = useState<string | null>(
+        null,
+    );
+
     if (!isAuthenticated) {
         if (pathname !== requestedLocation) {
             setRequestedLocation(pathname);
@@ -24,10 +25,23 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         return <Navigate to={PATH_AUTH.login} />;
     }
 
-    if (requestedLocation && pathname !== requestedLocation) {
-        setRequestedLocation(null);
-        return <Navigate to={requestedLocation} />;
+    if (authErrorStatus === 500) {
+        return <Error500 />;
     }
 
-    return <>{children}</>;
+    if (authErrorStatus && authErrorStatus !== 401) {
+        return <Maintenance />;
+    }
+
+    if (currentUser) {
+        if (requestedLocation && pathname !== requestedLocation) {
+            setRequestedLocation(null);
+            return <Navigate to={requestedLocation} />;
+        }
+        if (pathname === PATH_AUTH.onboarding) {
+            return <Navigate to={PATH_DASHBOARD.root} />;
+        }
+    }
+
+    return children;
 }

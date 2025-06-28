@@ -1,12 +1,11 @@
-import { Box } from '@mui/material';
-import { styled, SxProps } from '@mui/material/styles';
-import { motion } from 'framer-motion';
+import { Box, CircularProgress, SxProps, Typography } from '@mui/material';
+import { styled } from '@mui/material';
+import { motion, AnimatePresence } from 'framer-motion';
 
-import Logo from './logo';
 import ProgressBar from './progress-bar/progress-bar';
 
 
-const RootStyle = styled('div')(() => ({
+const RootStyle = styled(motion.div)(({ theme: _theme }) => ({
     right: 0,
     bottom: 0,
     zIndex: 99999,
@@ -16,138 +15,162 @@ const RootStyle = styled('div')(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f5f5f5',
-    '& .wrapper': {
-        position: 'absolute',
-        left: '50%',
-        top: '50%',
-        marginLeft: '-100px',
-        marginTop: '-100px',
-        width: '200px',
-        height: '200px',
-        backgroundColor: 'transparent',
-    },
-    '& .box-wrap': {
-        width: '70%',
-        height: '70%',
-        margin: 'calc((100% - 70%) / 2) calc((100% - 70%) / 2)',
-        position: 'relative',
-        transform: 'rotate(-45deg)',
-    },
-    '& .box': {
-        width: '100%',
-        height: '100%',
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        background: `linear-gradient(
-      to right,
-      #141562,
-      #486fbc,
-      #eab5a1,
-      #8dd6ff,
-      #4973c9,
-      #d07ca7,
-      #f4915e,
-      #f5919e,
-      #b46f89,
-      #141562,
-      #486fbc
-    )`,
-        backgroundSize: '1000% 1000%',
-    },
+    backgroundColor: '#ffffff',
 }));
 
-type Props = {
+const LoadingContainer = styled(motion.div)({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+});
+
+interface LoadingScreenProps {
     isDashboard?: boolean;
     sx?: SxProps;
-};
+    hideProgressBar?: boolean;
+}
 
-export function LoadingScreen({ isDashboard = true, ...other }: Props) {
+export default function LoadingScreen({
+    isDashboard,
+    hideProgressBar,
+    ...other
+}: LoadingScreenProps) {
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                duration: 0.5,
+                staggerChildren: 0.2,
+            },
+        },
+        exit: {
+            opacity: 0,
+            transition: {
+                duration: 0.3,
+            },
+        },
+    };
+
+    const itemVariants = {
+        hidden: {
+            y: 20,
+            opacity: 0,
+        },
+        visible: {
+            y: 0,
+            opacity: 1,
+            transition: {
+                duration: 0.5,
+                ease: [
+                    0.25,
+                    0.1,
+                    0.25,
+                    1,
+                ],
+            },
+        },
+    };
+
     return (
-        <>
-            <ProgressBar />
+        <AnimatePresence>
+            {!hideProgressBar && <ProgressBar />}
 
             {!isDashboard && (
-                <RootStyle {...other}>
-                    <Box
-                        sx={{
-                            position: 'relative',
-                            width: 225,
-                            height: 225,
-                        }}
-                    >
-                        <Box
-                            component={motion.svg}
-                            width="225"
-                            height="225"
-                            viewBox="0 0 50 50"
-                            animate={{ rotate: 360 }}
-                            transition={{
-                                repeat: Infinity,
-                                duration: 3,
-                                ease: 'linear',
-                            }}
-                            sx={{
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                            }}
-                            borderColor={[
-                                '#0b1436',
-                                '#363392',
-                                '#d21e3f',
-                            ]}
-                        >
-                            <defs>
-                                <linearGradient
-                                    id="gradientArc"
-                                    gradientTransform="rotate(90)"
-                                >
-                                    <stop
-                                        offset="0%"
-                                        stopColor="#0b1436"
-                                    />
-                                    <stop
-                                        offset="50%"
-                                        stopColor="#363392"
-                                    />
-                                    <stop
-                                        offset="100%"
-                                        stopColor="#d21e3f"
-                                    />
-                                </linearGradient>
-                            </defs>
-                            <motion.circle
-                                cx="25"
-                                cy="25"
-                                r="20"
-                                stroke="url(#gradientArc)"
-                                strokeWidth="1.5"
-                                fill="none"
-                                strokeDasharray="125"
-                                strokeDashoffset="100"
-                                animate={{
-                                    strokeDashoffset: [100, 0],
+                <RootStyle
+                    key="loading-screen-root-style"
+                    {...other}
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                >
+                    <LoadingContainer variants={itemVariants as any}>
+                        <motion.div variants={itemVariants as any}>
+                            <CircularProgress
+                                size={50}
+                                thickness={4}
+                                sx={{
+                                    mb: 2,
                                 }}
-                                transition={{
-                                    repeat: Infinity,
-                                    duration: 3,
-                                    ease: 'easeInOut',
-                                }}
-
                             />
-                        </Box>
-                        <Logo
+                        </motion.div>
+
+                        <motion.div variants={itemVariants as any}>
+                            <Typography
+                                variant="h6"
+                                textAlign="center"
+                                sx={{
+                                    fontWeight: 600,
+                                    color: '#333',
+                                    mb: 1,
+                                }}
+                            >
+                                Loading...
+                            </Typography>
+                        </motion.div>
+
+                        <motion.div variants={itemVariants as any}>
+                            <Typography
+                                variant="body2"
+                                textAlign="center"
+                                sx={{
+                                    color: '#666',
+                                    fontWeight: 400,
+                                }}
+                            >
+                                Please wait a moment
+                            </Typography>
+                        </motion.div>
+
+                        {/* Loading Dots Animation */}
+                        <Box
+                            component={motion.div}
                             sx={{
                                 display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
+                                gap: 0.5,
+                                mt: 2,
                             }}
-                        />
-                    </Box>
+                        >
+                            {[
+                                0,
+                                1,
+                                2,
+                            ].map((index) => (
+                                <motion.div
+                                    key={index}
+                                    animate={{
+                                        y: [
+                                            -3,
+                                            3,
+                                            -3,
+                                        ],
+                                        opacity: [
+                                            0.4,
+                                            1,
+                                            0.4,
+                                        ],
+                                    }}
+                                    transition={{
+                                        duration: 1,
+                                        repeat: Infinity,
+                                        delay: index * 0.2,
+                                        ease: 'easeInOut',
+                                    }}
+                                    style={{
+                                        width: 6,
+                                        height: 6,
+                                        borderRadius: '50%',
+                                        backgroundColor: '#1976d2',
+                                    }}
+                                />
+                            ))}
+                        </Box>
+                    </LoadingContainer>
                 </RootStyle>
             )}
-        </>
+        </AnimatePresence>
     );
 }

@@ -1,40 +1,45 @@
-import type { } from '@mui/x-date-pickers/themeAugmentation';
-import type { } from '@mui/material/themeCssVarsAugmentation';
-import { initialSetting, useSettingsContext } from '@libs/react-core';
-import { GlobalStyles } from '@mui/material';
+import {
+    GlobalStyles,
+    createTheme,
+    Experimental_CssVarsProvider as CssVarsProvider,
+    getInitColorSchemeScript as _getInitColorSchemeScript,
+} from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
-import { createTheme, Experimental_CssVarsProvider as CssVarsProvider, getInitColorSchemeScript as _getInitColorSchemeScript, ThemeOptions } from '@mui/material/styles';
 import { useMemo } from 'react';
 
-import ComponentsOverrides from './components';
+import { components } from './components';
 import { customShadows } from './custom-shadows';
-import { presets } from './options/presets';
 import { colorSchemes } from './palette';
+import {
+    initialSetting,
+    useSettingsContext,
+} from '../contexts/settings-provider';
+import { presets } from './options/presets';
 import { shadows } from './shadows';
-import shape from './shape';
 import { typography } from './typography';
 
 
-type Props = {
-  children: React.ReactNode;
+type ThemeProviderProps = {
+    children: React.ReactNode;
 };
 
-export function ThemeProvider({ children }: Props) {
+export function ThemeProvider({ children }: ThemeProviderProps) {
     const settings = useSettingsContext();
     // const darkModeOption = darkMode(settings.themeMode);
     // const presetsOption = presets(settings.themeColorPresets);
     // const contrastOption = contrast(settings.themeContrast === 'bold', settings.themeMode);
 
-    const initialTheme = {
+    const initialTheme = useMemo(() => ({
         colorSchemes,
         shadows: shadows(settings.colorScheme),
         customShadows: customShadows(settings.colorScheme),
-        shape: shape,
+        shape: { borderRadius: 8 },
+        components,
         typography,
         cssVarPrefix: '',
-    };
+    }), [settings.colorScheme]);
 
-    const updateTheme: ThemeOptions = useMemo(() => {
+    const updateTheme = useMemo(() => {
         return {
             ...initialTheme,
             colorSchemes: {
@@ -53,22 +58,18 @@ export function ThemeProvider({ children }: Props) {
                 dark: {
                     palette: {
                         ...colorSchemes?.dark?.palette,
-                        /** [1] */
                         ...presets(settings.primaryColor),
                     },
                 },
             },
             customShadows: {
                 ...customShadows(settings.colorScheme),
-                /** [1] */
                 ...presets(settings.primaryColor).customShadows,
             },
         };
-    }, [settings]);
+    }, [settings, initialTheme]);
 
     const theme = createTheme(updateTheme);
-
-    theme.components = ComponentsOverrides(theme);
 
     const schemeConfig = {
         modeStorageKey: 'theme-mode',

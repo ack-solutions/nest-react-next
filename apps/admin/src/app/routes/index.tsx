@@ -2,7 +2,7 @@ import { lazy } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
 
 import { PATH_DASHBOARD } from './paths';
-import { Loadable } from '../components';
+import { Loadable } from '../components/loadable';
 import AuthGuard from '../guards/auth-guard';
 import GuestGuard from '../guards/guest-guard';
 import AuthLayout from '../layout/auth';
@@ -11,27 +11,33 @@ import DashboardLayout from '../layout/dashboard';
 
 // Main
 const NotFound = Loadable(lazy(() => import('../pages/error/not-found')));
+const ComingSoon = Loadable(lazy(() => import('../components/coming-soon')));
+const Maintenance = Loadable(lazy(() => import('../pages/maintenance')));
 
 // // Authentication
 const Login = Loadable(lazy(() => import('../pages/auth/login')));
 const Register = Loadable(lazy(() => import('../pages/auth/register')));
-const ForgotPassword = Loadable(lazy(() => import('../pages/auth/forget-password')));
+const ForgotPassword = Loadable(lazy(() => import('../pages/auth/forgot-password')));
 
 // Dashboard
 const Dashboard = Loadable(lazy(() => import('../pages/dashboard/dashboard')));
-// User
+// const Product = Loadable(lazy(() => import('../pages/dashboard/Dashboard')));
+// const Reports = Loadable(lazy(() => import('../pages/reports/Reports')));
 const UserList = Loadable(lazy(() => import('../pages/user/user-list')));
-const UserProfile = Loadable(lazy(() => import('../pages/user/user-profile')));
-const UserChangePassword = Loadable(lazy(() => import('../sections/user/user-change-password')));
-const AddEditUser = Loadable(lazy(() => import('../pages/user/add-edit-user')));
-const RoleList = Loadable(lazy(() => import('../pages/roles/role-list')));
-const AddEditRole = Loadable(lazy(() => import('../pages/roles/add-edit-role')));
-const PermissionList = Loadable(lazy(() => import('../pages/user/permission-list')));
-const SettingPage = Loadable(lazy(() => import('../pages/setting/setting-page')));
-const Settings = Loadable(lazy(() => import('../pages/setting/settings')));
-const NotificationSetting = Loadable(lazy(() => import('../pages/setting/notification-setting')));
-const EmailLayoutTemplate = Loadable(lazy(() => import('../pages/setting/email-layout-template')));
-const PageList = Loadable(lazy(() => import('../pages/page/page-list-page')));
+const EditUser = Loadable(lazy(() => import('../pages/user/edit-user')));
+const AddUser = Loadable(lazy(() => import('../pages/user/add-user')));
+const RoleList = Loadable(
+    lazy(() => import('../pages/roles/role-list')),
+);
+const AddEditRole = Loadable(
+    lazy(() => import('../pages/roles/add-edit-role')),
+);
+// const PermissionList = Loadable(
+//     lazy(() => import('../pages/permission/permission-list')),
+// );
+const UserProfile = Loadable(
+    lazy(() => import('../pages/profile/user-profile')),
+);
 
 export default function Router() {
     // const routes = useMemo(() => getPluginRoutes(), []);
@@ -40,26 +46,34 @@ export default function Router() {
         {
             path: 'auth',
             element: (
-                <GuestGuard>
-                    <AuthLayout />
-                </GuestGuard>
+                <AuthLayout />
             ),
             children: [
                 {
                     path: 'login',
-                    element: <Login />,
+                    element: (
+                        <GuestGuard>
+                            <Login />
+                        </GuestGuard>
+                    ),
                 },
                 {
                     path: 'register',
-                    element: <Register />,
+                    element: (
+                        <GuestGuard>
+                            <Register />
+                        </GuestGuard>
+                    ),
                 },
-                // { path: 'register', element: <Register /> },
                 {
                     path: 'forgot-password',
-                    element: <ForgotPassword />,
+                    element: (
+                        <GuestGuard>
+                            <ForgotPassword />
+                        </GuestGuard>
+                    ),
                 },
-                // { path: 'verify', element: <VerifyCode /> },
-                // ...routes.auth,
+                //  ...routes.auth,
             ],
         },
 
@@ -88,6 +102,10 @@ export default function Router() {
                     element: <Dashboard />,
                 },
                 {
+                    path: 'reports',
+                    element: <ComingSoon />,
+                },
+                {
                     path: 'users',
                     children: [
                         {
@@ -95,88 +113,49 @@ export default function Router() {
                             element: <UserList />,
                         },
                         {
-                            path: 'edit/:id',
-                            element: <AddEditUser />,
+                            path: 'edit/:userId',
+                            element: <EditUser />,
                         },
                         {
-                            path: 'add',
-                            element: <AddEditUser />,
+                            path: 'create',
+                            element: <AddUser />,
                         },
                         {
                             path: 'roles',
                             element: <RoleList />,
                         },
                         {
-                            path: 'roles/edit/:id',
+                            path: 'roles/edit/:roleId',
                             element: <AddEditRole />,
                         },
                         {
-                            path: 'roles/add',
+                            path: 'roles/create',
                             element: <AddEditRole />,
                         },
-                        {
-                            path: 'permissions',
-                            element: <PermissionList />,
-                        },
-                    ],
-                },
-                {
-                    path: 'pages',
-                    children: [
-                        {
-                            path: '',
-                            element: <PageList />,
-                        },
-                        // { path: 'add', element: <AddEditPage /> },
-                        // { path: 'edit/:pageId', element: <AddEditPage /> },
-                    ],
-                },
-                {
-                    path: 'settings',
-                    element: <SettingPage />,
-                    children: [
-                        {
-                            path: '',
-                            element: <Navigate
-                                to="email-setting"
-                                replace
-                            />,
-                        },
-                        {
-                            path: 'email-setting',
-                            element: <Settings />,
-                        },
-                        {
-                            path: 'notification-setting',
-                            element: <NotificationSetting />,
-                        },
-                        {
-                            path: 'email-layout',
-                            element: <EmailLayoutTemplate />,
-                        },
+                        // {
+                        //     path: 'permissions',
+                        //     element: <PermissionList />,
+                        // },
                     ],
                 },
                 {
                     path: 'profile',
                     element: <UserProfile />,
                 },
+                //  ...routes.app,
                 {
-                    path: 'change-password',
-                    element: <UserChangePassword />,
-                },
-                {
-                    path: 'profile',
-                    element: <UserProfile />,
-                },
-                {
-                    path: 'page',
-                    element: <PageList />,
-                },
-                {
-                    path: 'change-password',
-                    element: <UserChangePassword />,
+                    path: '*',
+                    element: <NotFound />,
                 },
             ],
+
+        },
+        //  ...routes.other,
+        // Main Routes
+
+        {
+            path: 'maintenance',
+            element: <Maintenance />,
         },
         {
             path: '*',
@@ -185,6 +164,7 @@ export default function Router() {
                 replace
             />,
         },
+
         {
             path: '*',
             children: [

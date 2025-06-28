@@ -1,13 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormContainer, RHFCheckbox, RHFPassword, RHFTextField } from '@libs/react-core';
-import LoadingButton from '@mui/lab/LoadingButton';
-import { Alert, Link, Stack } from '@mui/material';
-import { useCallback } from 'react';
-import { useForm, UseFormSetError } from 'react-hook-form';
-import { Link as RouterLink } from 'react-router-dom';
+import { patterns } from '@libs/utils';
+import { Alert, Button, Link, Stack, Typography } from '@mui/material';
+import { useCallback, useState } from 'react';
+import { Control, useForm, UseFormSetError } from 'react-hook-form';
 import { boolean, object, string } from 'yup';
 
-import { PATH_AUTH } from '../../routes/paths';
+import TermsAndPrivacyDialog from './terms-and-privacy-dialog';
+import { FormContainer, RHFCheckbox, RHFPassword, RHFPhoneNumber, RHFTextField } from '../../form';
+import { schemaHelper } from '../../form/hook-form-fields/schema-helper';
 
 
 export interface RegisterFromProps {
@@ -18,40 +18,59 @@ const defaultValues = {
     firstName: '',
     lastName: '',
     email: '',
+    phoneNumber: '',
+    phoneIsoCode: '',
+    phoneCountryCode: '',
     password: '',
-    remember: false,
+    termsCondition: false,
 };
 
 const validationSchema = object().shape({
-    email: string()
-        .email('Email must be a valid email address')
-        .required('Email is required'),
-    password: string().required('Password is required'),
-    firstName: string().required('First Name is required'),
-    lastName: string().required('Last Name is required'),
-    remember: boolean().label('Remember').required(),
+    firstName: string().label('First Name ').required(),
+    lastName: string().label('Last Name ').required(),
+    email: schemaHelper.email().label('Email').required(),
+    phoneNumber: schemaHelper.phoneNumber().label('Phone Number').required(),
+    password: string()
+        .required()
+        .min(8, 'Password must be at least 8 characters')
+        .matches(patterns.password, 'Password must include at least one uppercase letter, one lowercase letter, one number, and one special character')
+        .label('Password'),
+    termsCondition: boolean()
+        .label('Terms & Conditions')
+        .oneOf([true], 'Please accept the Terms & Conditions')
+        .required(),
 });
 
-const RegisterFrom = ({ onSubmit }: RegisterFromProps) => {
+function RegisterFrom({ onSubmit }: RegisterFromProps) {
+    const [termsAndPrivacySlug, setTermsAndPrivacySlug] = useState();
     const formContext = useForm({
         defaultValues,
         resolver: yupResolver(validationSchema),
     });
-    const { formState: { errors, isSubmitting }, setError } = formContext;
+    const { control, formState: { errors, isSubmitting }, setError } = formContext;
 
     const handleSubmit = useCallback(
-        (value: any) => {
+        async (value: any) => {
             if (onSubmit) {
-                onSubmit(value, setError);
+                await onSubmit(value, setError);
             }
         },
         [onSubmit, setError],
     );
 
+    const handleOpenTermsAndPolicyDialog = useCallback(
+        (value) => (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            setTermsAndPrivacySlug(value);
+        },
+        [],
+    );
+
 
     return (
         <FormContainer
-            FormProps={{
+            formProps={{
                 id: 'register-from',
             }}
             formContext={formContext}
@@ -59,22 +78,28 @@ const RegisterFrom = ({ onSubmit }: RegisterFromProps) => {
             onSuccess={handleSubmit}
         >
             <Stack spacing={2}>
-                {(errors as any).afterSubmit && (
-                    <Alert severity="error">{(errors as any).afterSubmit.message as any}</Alert>
-                )}
-                <RHFTextField
-                    fullWidth
-                    name="firstName"
-                    label="First Name"
-                    required
-                />
+                {(errors as any).afterSubmit ? <Alert severity="error">{(errors as any).afterSubmit.message as any}</Alert> : null}
+                <Stack
+                    spacing={2}
+                    direction={{
+                        xs: 'column',
+                        sm: 'row',
+                    }}
+                >
+                    <RHFTextField
+                        fullWidth
+                        name="firstName"
+                        label="First Name"
+                        required
+                    />
 
-                <RHFTextField
-                    fullWidth
-                    name="lastName"
-                    label="Lase Name"
-                    required
-                />
+                    <RHFTextField
+                        fullWidth
+                        name="lastName"
+                        label="Last Name"
+                        required
+                    />
+                </Stack>
                 <RHFTextField
                     fullWidth
                     type="email"
@@ -83,51 +108,76 @@ const RegisterFrom = ({ onSubmit }: RegisterFromProps) => {
                     autoComplete="email"
                     required
                 />
+                <RHFPhoneNumber
+                    fullWidth
+                    name="phoneNumber"
+                    label="Phone Number"
+                    required
+                />
+
                 <RHFPassword
                     fullWidth
                     name="password"
                     label="Password"
                     required
                 />
-            </Stack>
-
-            <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="space-between"
-                sx={{
-                    my: 2,
-                    marginLeft: '4px',
-                }}
-            >
                 <RHFCheckbox
-                    name="remember"
-                    label='Remember me'
+                    name="termsCondition"
+                    control={control as Control<any>}
+                    label={(
+                        <Typography
+                            component="span"
+                            color="common.white"
+                            variant="body2"
+                        >
+                            I agree to the
+                            <Link
+                                // href={PATH_AUTH.login}
+                                onClick={handleOpenTermsAndPolicyDialog('terms-of-use')}
+                                // target="_blank"
+                                sx={{
+                                    textDecoration: 'underline',
+                                    color: 'common.white',
+                                    mx: 0.5,
+                                }}
+                            >
+                                Terms & Conditions
+                            </Link>
+                            and
+                            <Link
+                                // href={PATH_AUTH.login}
+                                onClick={handleOpenTermsAndPolicyDialog('privacy-policy')}
+                                // target="_blank"
+                                sx={{
+                                    textDecoration: 'underline',
+                                    color: 'common.white',
+                                    mx: 0.5,
+                                }}
+                            >
+                                Privacy Policy
+                            </Link>
+                        </Typography>
+                    )}
                 />
 
-                <Link
-                    component={RouterLink}
-                    to={PATH_AUTH.login}
-                    sx={{
-                        ':hover': {
-                            textDecoration: 'none',
-                        },
-                    }}
+                <Button
+                    fullWidth
+                    type="submit"
+                    variant="contained"
+                    loading={isSubmitting}
+                    sx={{ mt: 2 }}
                 >
-                    Have an Account  Login Here?
-                </Link>
+                    Register
+                </Button>
             </Stack>
-
-            <LoadingButton
-                fullWidth
-                type="submit"
-                variant="contained"
-                loading={isSubmitting}
-            >
-                Register
-            </LoadingButton>
+            {!!termsAndPrivacySlug && (
+                <TermsAndPrivacyDialog
+                    slug={termsAndPrivacySlug}
+                    onClose={() => setTermsAndPrivacySlug(null)}
+                />
+            )}
         </FormContainer>
     );
-};
+}
 
 export default RegisterFrom;

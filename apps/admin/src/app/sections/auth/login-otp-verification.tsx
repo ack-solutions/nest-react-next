@@ -1,12 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormContainer, RHFOtpInput } from '@libs/react-core';
 import { Alert, Box, Button, Stack, Typography } from '@mui/material';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
 import { object, string } from 'yup';
 
-import { PATH_AUTH } from '../../routes/paths';
+import { Icon } from '../../components';
+import { IconEnum } from '../../components/icons/icons';
+import { FormContainer, RHFOtpInput } from '../../form';
 
 
 const VeryFySchema = object().shape({
@@ -14,29 +14,31 @@ const VeryFySchema = object().shape({
 });
 
 interface LoginOtpVerificationProps {
-    onSubmit: (value: any, form?: any) => void;
-    onResend?: (val?: any, form?: any) => void,
-    onGoBack?: () => void,
+    onSubmit: (value: any, setError?: any) => void;
+    onResent?: (setError?: any) => void;
+    onGoBack?: () => void;
+    values?: any;
 }
 
-
-const LoginOtpVerification = ({
+function LoginOtpVerification({
     onGoBack,
     onSubmit,
-    onResend,
-}: LoginOtpVerificationProps) => {
+    onResent,
+    values,
+}: LoginOtpVerificationProps) {
     const formContext = useForm({
         resolver: yupResolver(VeryFySchema),
     });
-    const { formState: { errors }, setError, reset } = formContext;
+    const {
+        formState: { errors, isSubmitting },
+        setError,
+        reset,
+    } = formContext;
+
     const handleSubmit = useCallback(
-        (value) => {
-            if (onSubmit) {
-                onSubmit(value, {
-                    setError,
-                    reset,
-                });
-            }
+        async (value) => {
+            if (onSubmit) { await onSubmit(value, setError); }
+            reset();
         },
         [
             onSubmit,
@@ -44,83 +46,98 @@ const LoginOtpVerification = ({
             setError,
         ],
     );
+
     return (
         <Box>
-            <Typography variant="h1">
+            <Typography
+                variant="h4"
+                color="common.white"
+            >
                 Enter OTP Code
             </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-                Enter 6 - digits code we send you on
+            <Typography sx={{ color: 'common.white' }}>
+                Please enter the OTP code sent to your email.
+            </Typography>
+            <Typography color="textSecondary">
+                {values?.email}
             </Typography>
 
             <Box
                 sx={{
-                    mt: 5,
-                    mb: 3,
+                    mt: 2,
                 }}
             >
                 <FormContainer
-                    FormProps={{
-                        id: 'login-otp-form',
+                    formProps={{
+                        id: 'login-form',
                     }}
                     formContext={formContext}
                     validationSchema={VeryFySchema}
                     onSuccess={handleSubmit}
                 >
-                    <Box
-                        pb={2}
-                        pt={0}
-                    >
-                        {(errors as any)?.afterSubmit && (
-                            <Alert severity="error">{(errors as any)?.afterSubmit.message}</Alert>
-                        )}
-                    </Box>
-
-                    <Box
-                        display='grid'
-                        justifyContent='center'
-                    >
-                        <RHFOtpInput
-                            name="otp"
-                        />
-                    </Box>
-
-                    <Button
-                        sx={{ mt: 6 }}
-                        fullWidth
-                        type="submit"
-                        variant="contained"
-                    >
-                        Submit
-                    </Button>
-
                     <Stack
-                        direction="row"
                         spacing={2}
-                        justifyContent="space-between"
+                        justifyContent="center"
                     >
-                        <Button
-                            size="large"
-                            component={Link}
-                            to={PATH_AUTH.login}
-                            sx={{ mt: 1 }}
-                            onClick={onGoBack}
+                        {(errors as any)?.afterSubmit ? (
+                            <Box
+                                pb={2}
+                                pt={0}
+                            >
+                                <Alert severity="error">
+                                    {(errors as any)?.afterSubmit.message}
+                                </Alert>
+                            </Box>
+                        ) : null}
+
+                        <Box
+                            display="grid"
+                            justifyContent="center"
                         >
-                            Back
-                        </Button>
+                            <RHFOtpInput name="otp" />
+                        </Box>
+
                         <Button
+                            sx={{ mt: 4 }}
+                            fullWidth
                             type="submit"
-                            onClick={() => onResend()}
-                            sx={{ mx: 'auto' }}
+                            variant="contained"
+                            loading={isSubmitting}
                         >
-                            Resend Code
+                            Verify OTP
+                        </Button>
+                        <Stack
+                            direction="row"
+                            spacing={0.5}
+                            justifyContent="center"
+                            mt={2}
+                        >
+                            <Typography color="common.white">Didn't receive the email? </Typography>
+                            <Button
+                                onClick={() => onResent(setError)}
+                                sx={{
+                                    color: 'common.white',
+                                    padding: 0,
+                                }}
+                            >
+                                Click to Resend
+                            </Button>
+                        </Stack>
+                        <Button
+                            onClick={onGoBack}
+                            sx={{
+                                color: 'common.white',
+                                mx: 'auto',
+                            }}
+                            startIcon={<Icon icon={IconEnum.ARROW_LEFT} />}
+                        >
+                            Back to Login
                         </Button>
                     </Stack>
                 </FormContainer>
-
-            </Box >
+            </Box>
         </Box>
     );
-};
+}
 
 export default LoginOtpVerification;

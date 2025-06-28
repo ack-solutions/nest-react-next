@@ -3,15 +3,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
 
-import database from './app/core/config/database';
-import { AllEntities } from './app/core/entities';
-import { seeder } from './app/core/nest-seeder';
-import { AllSeeders } from './app/core/seeders';
+import database from './app/config/database';
 import { TypeOrmConfigService } from './app/core/typeorm/typeorm-config.service';
+import { ALL_ENTITIES } from './app/entities';
+import { seeder } from './app/libs/nest-seeder';
+import { ALL_SEEDERS } from './app/seeders';
 
 
 dotenv.config();
-
 
 seeder({
     imports: [
@@ -26,8 +25,8 @@ seeder({
                 return dataSource;
             },
         }),
-        TypeOrmModule.forFeature(AllEntities),
+        TypeOrmModule.forFeature(ALL_ENTITIES),
     ],
 }).run({
-    seeders: AllSeeders,
+    seeders: ALL_SEEDERS,
 });

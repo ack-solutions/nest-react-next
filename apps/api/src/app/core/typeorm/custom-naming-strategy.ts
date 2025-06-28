@@ -4,7 +4,7 @@ import { DefaultNamingStrategy, NamingStrategyInterface, Table } from 'typeorm';
 
 export class CustomNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
 
-    primaryKeyName(tableOrName: Table | string, columnNames: string[]): string {
+    override primaryKeyName(tableOrName: Table | string, columnNames: string[]): string {
         let tableName: string;
         if (tableOrName instanceof Table) {
             tableName = tableOrName.name;
@@ -17,7 +17,20 @@ export class CustomNamingStrategy extends DefaultNamingStrategy implements Namin
         return `pk_${snakeCase(tableName)}_${hashedColumnNames}`;
     }
 
-    foreignKeyName(tableOrName: Table | string, columnNames: string[]): string {
+    override indexName(tableOrName: Table | string, columnNames: string[]): string {
+        let tableName: string;
+        if (tableOrName instanceof Table) {
+            tableName = tableOrName.name;
+        } else {
+            tableName = tableOrName;
+        }
+        const columnHash = columnNames.reduce((acc, cur) => acc + cur, '');
+        const hashedColumnNames = `${snakeCase(columnHash)}`;
+        return `idx_${snakeCase(tableName)}_${hashedColumnNames}`;
+    }
+
+
+    override foreignKeyName(tableOrName: Table | string, columnNames: string[]): string {
         let tableName: string;
         if (tableOrName instanceof Table) {
             tableName = tableOrName.name;
@@ -27,6 +40,18 @@ export class CustomNamingStrategy extends DefaultNamingStrategy implements Namin
         const columnHash = columnNames.reduce((acc, cur) => acc + cur, '');
         const hashedColumnNames = `${snakeCase(columnHash)}`;
         return `fk_${snakeCase(tableName)}_${hashedColumnNames}`;
+    }
+
+    override  uniqueConstraintName(tableOrName: Table | string, columnNames: string[]): string {
+        let tableName: string;
+        if (tableOrName instanceof Table) {
+            tableName = tableOrName.name;
+        } else {
+            tableName = tableOrName;
+        }
+        const columnHash = columnNames.reduce((acc, cur) => acc + cur, '');
+        const hashedColumnNames = `${snakeCase(columnHash)}`;
+        return `uq_${snakeCase(tableName)}_${hashedColumnNames}`;
     }
 
 }

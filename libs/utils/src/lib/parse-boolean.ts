@@ -1,4 +1,4 @@
-export function parseBoolean(value:string | number | boolean) {
+export function parseBoolean(value: string | number | boolean) {
     switch (value) {
         case true:
         case 'true':

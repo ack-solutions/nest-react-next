@@ -1,4 +1,3 @@
-import { getDataSource } from '@api/app/utils';
 import {
     registerDecorator,
     ValidationOptions,
@@ -8,24 +7,35 @@ import {
 } from 'class-validator';
 import { ObjectLiteral, SelectQueryBuilder } from 'typeorm';
 
+import { getDataSource } from '../../utils/database';
+
 
 export interface IsExistInDBOptions {
-    options?: ValidationOptions,
+    options?: ValidationOptions;
     entity?: any;
     field?: string;
-    ignore?: string | ((query: SelectQueryBuilder<any>) => void | SelectQueryBuilder<any> | Promise<void | SelectQueryBuilder<any>>),
+    ignore?:
+    | string
+    | ((
+        query: SelectQueryBuilder<any>
+    ) =>
+        | void
+        | SelectQueryBuilder<any>
+        | Promise<void | SelectQueryBuilder<any>>);
     ignoreField?: string;
 }
 
 @ValidatorConstraint({ async: true })
 export class IsUniqueConstraint implements ValidatorConstraintInterface {
 
-    async validate(_inputValue: string, args: ValidationArguments) {
+    async validate(args: ValidationArguments) {
         const { property, value, targetName, object: request } = args;
         const [options] = args.constraints;
 
         const dataSource = getDataSource();
-        const repository = dataSource.getRepository<ObjectLiteral>(options.entity || targetName);
+        const repository = dataSource.getRepository<ObjectLiteral>(
+            options.entity || targetName,
+        );
         let query = repository.createQueryBuilder().select(property);
 
         query.where({ [property]: value });
@@ -36,8 +46,8 @@ export class IsUniqueConstraint implements ValidatorConstraintInterface {
                 query = resp;
             }
         } else if (options.ignore || options.ignoreField) {
-            let ignoreField = options.ignoreField,
-                ignore = options.ignore;
+            let ignoreField = options.ignoreField;
+            let ignore = options.ignore;
 
             if (!options.ignoreField) {
                 ignoreField = repository.metadata.primaryColumns.map(
@@ -64,9 +74,7 @@ export class IsUniqueConstraint implements ValidatorConstraintInterface {
 
 }
 
-export function IsExistInDB(
-    options: IsExistInDBOptions,
-) {
+export function IsExistInDB(options: IsExistInDBOptions) {
     return function (object: any, propertyName: string) {
         registerDecorator({
             target: object.constructor,

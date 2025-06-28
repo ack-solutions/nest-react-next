@@ -4,25 +4,27 @@ import { dirname, join } from 'path';
 import request from 'request';
 
 
-export function download(uri: any, filename: any) {
-    const fullPath = startsWith(filename, '/') ? filename : join(process.cwd(), filename);
+export function download(uri, filename) {
+    const fullPath = startsWith(filename, '/') ?
+        filename :
+        join(process.cwd(), filename);
 
     mkdirSync(dirname(fullPath), { recursive: true });
 
     return new Promise((resolve, reject) => {
-        request.head(uri, (err: any) => {
+        request.head(uri, (err) => {
             if (err) {
                 reject(err);
                 return;
             }
-            request(uri).pipe(createWriteStream(fullPath)).on('close', (error: any, success: any) => {
-                if (error) {
+            request(uri)
+                .pipe(createWriteStream(fullPath))
+                .on('error', (error: any) => {
                     reject(error);
-                    return;
-                }
-                resolve(success);
-            });
+                })
+                .on('end', () => {
+                    resolve(fullPath);
+                });
         });
     });
 }
-

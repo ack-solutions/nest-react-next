@@ -1,11 +1,3 @@
-import { Icon, MenuDropdown, useAccess } from '@libs/react-core';
-import {
-    VisibilityOutlined as VisibilityOutlinedIcon,
-    DeleteOutlined as DeleteOutlinedIcon,
-    EditOutlined as EditOutlinedIcon,
-    RestoreOutlined as RestoreOutlinedIcon,
-    DeleteForeverOutlined as DeleteForeverOutlinedIcon,
-} from '@mui/icons-material';
 import {
     IconButton,
     MenuItem,
@@ -14,17 +6,22 @@ import {
     Stack,
     Tooltip,
 } from '@mui/material';
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
+
+import { useAccess } from '../../contexts';
+import { Icon } from '../icons/icon';
+import { IconEnum } from '../icons/icons';
+import { MenuDropdown } from '../menu-dropdown/menu-drop-down';
 
 
 export interface TableAction {
-    icon: any;
+    icon?: ReactNode;
     title: string;
     permission?: string | string[];
     onClick?: (event?: any) => void;
 }
 
-type TableActionMenuProps = {
+export type TableActionMenuProps = {
     onDelete?: (row?: any) => void;
     onEdit?: (row?: any) => void;
     onView?: (row?: any) => void;
@@ -56,56 +53,56 @@ export function TableActionMenu({
 
         return [
             ...otherActions,
-            ...onView
-                ? [
+            ...(onView ?
+                [
                     {
-                        icon: <VisibilityOutlinedIcon />,
+                        icon: <Icon icon={IconEnum.EYE} />,
                         title: 'Preview',
                         permission: `show-${crudPermissionKey}`,
                         onClick: onView,
                     },
-                ]
-                : [],
-            ...onEdit
-                ? [
+                ] :
+                []),
+            ...(onEdit ?
+                [
                     {
-                        icon: <EditOutlinedIcon />,
+                        icon: <Icon icon={IconEnum.PENCIL_SIMPLE} />,
                         title: 'Edit',
                         permission: `update-${crudPermissionKey}`,
                         onClick: onEdit,
                     },
-                ]
-                : [],
-            ...onDelete
-                ? [
+                ] :
+                []),
+            ...(onDelete ?
+                [
                     {
-                        icon: <DeleteOutlinedIcon />,
+                        icon: <Icon icon={IconEnum.TRASH} />,
                         title: 'Delete',
                         permission: `delete-${crudPermissionKey}`,
                         onClick: onDelete,
                     },
-                ]
-                : [],
-            ...onRestore
-                ? [
+                ] :
+                []),
+            ...(onRestore ?
+                [
                     {
-                        icon: <RestoreOutlinedIcon />,
+                        icon: <Icon icon={IconEnum.CLOCK_REVERSE} />,
                         title: 'Restore',
                         permission: `restore-${crudPermissionKey}`,
                         onClick: onRestore,
                     },
-                ]
-                : [],
-            ...onDeleteForever
-                ? [
+                ] :
+                []),
+            ...(onDeleteForever ?
+                [
                     {
-                        icon: <DeleteForeverOutlinedIcon />,
+                        icon: <Icon icon={IconEnum.TRASH_X} />,
                         title: 'Delete Forever',
                         permission: `trash-delete-${crudPermissionKey}`,
                         onClick: onDeleteForever,
                     },
-                ]
-                : [],
+                ] :
+                []),
         ].filter((item) => item);
     }, [
         actions,
@@ -130,7 +127,6 @@ export function TableActionMenu({
                         title={action?.title}
                     >
                         <IconButton
-                            size="small"
                             onClick={(event) => {
                                 event.stopPropagation();
                                 if (action.onClick) {
@@ -148,16 +144,13 @@ export function TableActionMenu({
 
     return (
         <MenuDropdown
-            anchor={
-                <IconButton >
-                    <Icon
-                        icon="more-vertical-outline"
-                        size="medium"
-                    />
+            anchor={(
+                <IconButton>
+                    <Icon icon={IconEnum.DOTS_THREE_VERTICAL} />
                 </IconButton>
-            }
+            )}
         >
-            {() => (
+            {({ handleClose }) => (
                 <>
                     {crudActions.map((action) => (
                         <MenuItem
@@ -166,15 +159,22 @@ export function TableActionMenu({
                                 if (action.onClick) {
                                     action.onClick(event);
                                 }
+                                handleClose();
                             }}
                             key={`${action?.title}-${row?.id}`}
                         >
-                            {action?.icon && (
-                                <ListItemIcon sx={{ mr: 0 }}>{action?.icon}</ListItemIcon>
-                            )}
+                            {action?.icon ? (
+                                <ListItemIcon sx={{ mr: 0 }}>
+                                    {action?.icon}
+                                </ListItemIcon>
+                            ) : null}
                             <ListItemText
                                 primary={action?.title}
-                                primaryTypographyProps={{ variant: 'body2' }}
+                                slotProps={{
+                                    primary: {
+                                        variant: 'body2',
+                                    },
+                                }}
                             />
                         </MenuItem>
                     ))}

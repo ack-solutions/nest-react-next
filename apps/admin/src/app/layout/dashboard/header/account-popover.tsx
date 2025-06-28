@@ -1,13 +1,27 @@
-import { MenuDropdown, useAuth } from '@libs/react-core';
-import { Box, Divider, Typography, Stack, MenuItem, Avatar, Button } from '@mui/material';
-import { startCase } from 'lodash';
+import {
+    Box,
+    Divider,
+    Typography,
+    Stack,
+    MenuItem,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
+import { MenuDropdown } from '../../../components/menu-dropdown/menu-drop-down';
+import UserWithAvatar from '../../../components/user/user-with-avatar';
+import { useAuth } from '../../../contexts/auth-context';
+import { useResponsive } from '../../../hook';
 import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
 
 
 export default function AccountPopover() {
+    const isMobile = useResponsive('down', 'sm');
     const OPTIONS = [
+        {
+            label: 'Home',
+            linkTo: '/',
+        },
+
         {
             label: 'Profile',
             linkTo: PATH_DASHBOARD.profile.root,
@@ -16,13 +30,12 @@ export default function AccountPopover() {
     const navigate = useNavigate();
     const { currentUser, logout } = useAuth();
 
-    const handleLogout = async () => {
+    const handleLogout = () => {
         try {
             logout();
             navigate(PATH_AUTH.login, { replace: true });
         } catch (error) {
             console.error(error);
-            // showToasty('Unable to logout!', 'error');
         }
     };
 
@@ -33,42 +46,15 @@ export default function AccountPopover() {
     return (
         <MenuDropdown
             anchor={(
-                <Button
-                    color="primary"
-                    disableRipple
-                    disableTouchRipple
-                    disableElevation
-                >
-                    <Avatar
-                        alt={currentUser?.name}
-                        src={currentUser?.avatarUrl}
-                        sx={{
-                            width: {
-                                xs: 48,
-                                sm: 48,
-                            },
-                            height: {
-                                xs: 48,
-                                sm: 48,
-                            },
-                        }}
+                <Box sx={{ cursor: 'pointer' }}>
+                    <UserWithAvatar
+                        user={currentUser}
+                        hideName={isMobile}
                     />
-                    <Typography
-                        ml={1}
-                        variant="subtitle1"
-                        noWrap
-                        fontWeight={500}
-                        display={{
-                            xs: 'none',
-                            sm: 'block',
-                        }}
-                    >
-                        {startCase(currentUser?.name)}
-                    </Typography>
-                </Button>
+                </Box>
             )}
         >
-            {() => (
+            {({ handleClose }) => (
                 <Box sx={{ minWidth: 200 }}>
                     <Box
                         sx={{
@@ -80,7 +66,7 @@ export default function AccountPopover() {
                             variant="subtitle2"
                             noWrap
                         >
-                            {startCase(currentUser?.name)}
+                            {currentUser?.name}
                         </Typography>
 
                         <Typography
@@ -88,17 +74,20 @@ export default function AccountPopover() {
                             sx={{ color: 'text.secondary' }}
                             noWrap
                         >
-                            {/* {user?.email} */}
+                            {currentUser?.authUser?.email}
                         </Typography>
                     </Box>
 
                     <Divider sx={{ borderStyle: 'dashed' }} />
-
+                    
                     <Stack sx={{ p: 1 }}>
                         {OPTIONS.map((option) => (
                             <MenuItem
                                 key={option.label}
-                                onClick={() => handleClickItem(option.linkTo)}
+                                onClick={() => {
+                                    handleClose();
+                                    handleClickItem(option.linkTo);
+                                }}
                             >
                                 {option.label}
                             </MenuItem>

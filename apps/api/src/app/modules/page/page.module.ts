@@ -1,3 +1,4 @@
+import { NestAuthModule } from '@ackplus/nest-auth';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -7,9 +8,9 @@ import { PageService } from './page.service';
 
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Page])],
+    imports: [TypeOrmModule.forFeature([Page]), NestAuthModule],
     controllers: [PageController],
     providers: [PageService],
-    exports: [],
+    exports: [PageService],
 })
 export class PageModule { }

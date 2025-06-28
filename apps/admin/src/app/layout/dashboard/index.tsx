@@ -1,22 +1,26 @@
-import { useResponsive, useSettingsContext } from '@libs/react-core';
 import { Box } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import { HEADER, NAV } from '../config';
+import { useResponsive } from '../../hook/use-responsive';
+import { HEADER, NAV, SPACING } from '../config';
 import Header from './header';
 import Navbar from './navbar/navbar';
 import NavbarMini from './navbar/navbar-mini';
+import { useSettingsContext } from '../../contexts/settings-provider';
 
-
-const SPACING = 8;
 
 export default function DashboardLayout() {
-    const { navLayout } = useSettingsContext();
-    const isDesktop = useResponsive('up', 'lg');
+    const { navLayout, onUpdate } = useSettingsContext();
+    const isDesktop = useResponsive('up', 'md');
+    const isLaptopSize = useResponsive('between', 'md', 'lg');
     const [open, setOpen] = useState(false);
 
-    const isNavMini = useMemo(() => (navLayout === 'mini' && isDesktop), [isDesktop, navLayout]);
+    const isNavMini = useMemo(
+        () => navLayout === 'mini' && isDesktop,
+        [isDesktop, navLayout],
+    );
+
 
     const handleOpen = () => {
         setOpen(true);
@@ -26,19 +30,35 @@ export default function DashboardLayout() {
         setOpen(false);
     };
 
+    useEffect(() => {
+        if (isLaptopSize && navLayout !== 'mini') {
+            onUpdate('navLayout', 'mini');
+        }
+    }, [
+        isLaptopSize,
+        isDesktop,
+        navLayout,
+        onUpdate,
+    ]);
+
     return (
         <>
             <Header onOpenNav={handleOpen} />
             <Box
                 sx={{
-                    display: { lg: 'flex' },
-                    minHeight: { lg: 1 },
+                    display: { md: 'flex' },
+                    minHeight: 1,
                 }}
             >
-                {isNavMini ? <NavbarMini /> : <Navbar
-                    openNav={open}
-                    onCloseNav={handleClose}
-                />}
+                {isNavMini ? (
+                    <NavbarMini />
+                ) : (
+                    <Navbar
+                        openNav={open}
+                        onCloseNav={handleClose}
+                    />
+                )}
+
                 <Box
                     component="main"
                     sx={{
@@ -49,14 +69,15 @@ export default function DashboardLayout() {
                         alignSelf: 'stretch',
                         pt: `${HEADER.H_MOBILE + SPACING}px`,
                         pb: 2,
+                        px: 2,
+                        backgroundColor: (theme) => theme.palette.background.default,
                         ...(isDesktop && {
-                            px: 2,
                             pt: `${HEADER.H_DESKTOP + SPACING}px`,
-                            pb: 2,
                             width: `calc(100% - ${NAV.W_VERTICAL}px)`,
-                            ...(isNavMini && {
-                                width: `calc(100% - ${NAV.W_MINI}px)`,
-                            }),
+
+                        }),
+                        ...(isNavMini && {
+                            width: `calc(100% - ${NAV.W_MINI}px)`,
                         }),
                     }}
                 >

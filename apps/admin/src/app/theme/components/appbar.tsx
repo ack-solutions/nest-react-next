@@ -1,14 +1,9 @@
-export default function appBar(_theme) {
-    return {
-        MuiAppBar: {
-            defaultProps: {
-                color: 'transparent',
-            },
-            styleOverrides: {
-                root: {
-                    boxShadow: 'none',
-                },
-            },
-        },
-    };
-}
+import type { Theme, Components } from '@mui/material';
+
+
+const MuiAppBar: Components<Theme>['MuiAppBar'] = {
+    defaultProps: { color: 'transparent' },
+    styleOverrides: { root: { boxShadow: 'none' } },
+};
+
+export const appBar = { MuiAppBar };

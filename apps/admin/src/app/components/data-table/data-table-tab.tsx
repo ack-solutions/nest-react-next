@@ -1,12 +1,13 @@
-import { Label } from '@libs/react-core';
 import { Stack, Tab, Tabs, TabsProps } from '@mui/material';
 import { SyntheticEvent } from 'react';
+
+import { Label } from '../label';
 
 
 export interface DataTableTabItem {
     value: string;
     label: string;
-    count?: string;
+    count?: number | string;
     color?: string;
 }
 
@@ -15,11 +16,11 @@ export interface DataTableTabProps extends Omit<TabsProps, 'onChange'> {
     onChange: (tab: string, event: SyntheticEvent) => void;
 }
 
-const DataTableTab = ({
+export function DataTableTab({
     tabs,
     onChange,
     ...props
-}: DataTableTabProps) => {
+}: DataTableTabProps) {
     return (
         <Tabs
             variant="scrollable"
@@ -27,7 +28,6 @@ const DataTableTab = ({
             onChange={(event, tab) => onChange && onChange(tab, event)}
             sx={{
                 px: 2,
-                bgcolor: 'background.neutral',
             }}
             {...props}
         >
@@ -36,19 +36,22 @@ const DataTableTab = ({
                     disableRipple
                     key={tab.value}
                     value={tab.value}
-                    label={
+                    label={(
                         <Stack
                             spacing={1}
                             direction="row"
                             alignItems="center"
                         >
-                            <Label color={tab.color}> {tab.count} </Label>
+                            <Label color={tab.color}>
+                                {' '}
+                                {tab.count}
+                                {' '}
+                            </Label>
                             <div>{tab.label}</div>
                         </Stack>
-                    }
+                    )}
                 />
             ))}
         </Tabs>
     );
-};
-export default DataTableTab;
+}

@@ -1,17 +1,21 @@
-import { IsExistInDB } from '@api/app/core/class-validators';
-import { FileStorage } from '@api/app/core/file-storage';
-import { Factory } from '@api/app/core/nest-seeder';
-import { BaseEntity } from '@api/app/core/typeorm/base.entity';
-import { IUser, UserStatusEnum } from '@libs/types';
+import { User as AuthUser } from '@ackplus/nest-auth';
+import { UserStatusEnum } from '@libs/types';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsDateString, IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
-import { Column, Entity, AfterLoad, ManyToMany, JoinTable } from 'typeorm';
+import { Transform } from 'class-transformer';
+import {
+    IsEnum,
+    IsOptional,
+    IsString,
+    IsUUID,
+} from 'class-validator';
+import { Column, Entity, AfterLoad, In, Equal, FindManyOptions } from 'typeorm';
 
-import { Role } from '../role/role.entity';
+import { CoreEntity } from '../../core/typeorm/core.entity';
+import { Factory } from '../../libs/nest-seeder';
 
 
 @Entity()
-export class User extends BaseEntity implements IUser {
+export class User extends CoreEntity {
 
     @ApiProperty()
     @Factory((faker) => faker.person.firstName())
@@ -25,39 +29,55 @@ export class User extends BaseEntity implements IUser {
     @Column({ nullable: true })
     lastName?: string;
 
-    @ApiProperty()
-    @Factory((faker, ctx) => faker.internet.email({
-        firstName: ctx.firstName,
-        lastName: ctx.lastName,
-    }), ['firstName', 'lastName'])
+    @ApiProperty({
+        format: 'uuid',
+        nullable: true,
+    })
     @IsString()
-    @IsEmail()
     @Column({
         nullable: true,
-        unique: true,
+        comment: 'Save Nest Auth User ID',
     })
-    @IsExistInDB({
-        entity: User,
-        options: {
-            message: '$value is already taken, Please user other email',
-        },
-        ignoreField: 'id',
-    })
-    email?: string;
+    authUserId?: string;
 
-    @Factory((faker) => '+91' + faker.string.numeric(10))
-    @ApiProperty()
-    @Column('character', {
+    @Factory((faker) => faker.string.numeric(10))
+    @ApiProperty({
+        example: '123 456 7890',
+        description: 'User\'s phone number (digits only or formatted)',
+        required: false,
+    })
+    @Transform(({ value }) => value ? value.replace(/\D/g, '') : null)
+    @Column('varchar', {
         length: 20,
         nullable: true,
     })
     @IsOptional()
-    @IsString()
     phoneNumber?: string;
 
-    @ApiProperty()
-    @Column({ nullable: true })
-    phoneCountryId?: string;
+
+    @ApiProperty({
+        example: 'IN | US | UK | etc.',
+        description: 'User\'s phone ISO code',
+        required: false,
+    })
+    @Column('varchar', {
+        length: 3,
+        nullable: true,
+    })
+    @IsOptional()
+    phoneIsoCode?: string;
+
+    @ApiProperty({
+        example: '+91 | +1 | +44 | etc.',
+        description: 'User\'s phone country code',
+        required: false,
+    })
+    @Column('varchar', {
+        length: 6,
+        nullable: true,
+    })
+    @IsOptional()
+    phoneCountryCode?: string;
 
     @ApiProperty()
     @IsString()
@@ -65,30 +85,13 @@ export class User extends BaseEntity implements IUser {
     @Column({ nullable: true })
     avatar?: string;
 
-    @Factory(() => 'Test@123')
-    @Column({
-        nullable: true,
-        select: false,
-    })
-    passwordHash?: string;
-
     @Column({
         nullable: true,
         default: false,
         update: false,
-        insert: false,
     })
-    isSuperAdmin?: boolean;
+    isSuperUser?: boolean;
 
-    @ApiProperty({ nullable: true })
-    @Factory((faker) => faker.date.past())
-    @IsDateString()
-    @IsOptional()
-    @Column({
-        nullable: true,
-        default: null,
-    })
-    emailVerifiedAt?: Date;
 
     @ApiProperty({
         type: UserStatusEnum,
@@ -102,57 +105,60 @@ export class User extends BaseEntity implements IUser {
     @Column('text', { default: UserStatusEnum.ACTIVE })
     status?: UserStatusEnum;
 
-    @Factory((faker) => faker.datatype.boolean())
-    @ApiProperty({
-        example: 'string',
-        readOnly: true,
-    })
-    @IsBoolean()
+    @ApiProperty()
+    @Column({ nullable: true })
+    @IsUUID()
     @IsOptional()
-    @Column({ default: false })
-    isProfileCompleted?: boolean;
+    tenantId?: string;
 
-    @ApiProperty({
-        type: [Role],
-        readOnly: true,
-    })
-    @ManyToMany(() => Role)
-    @JoinTable()
-    roles?: Role[];
 
-    @ApiProperty({ type: String })
-    @IsString()
-    @IsOptional()
-    @Column('text', { nullable: true })
-    aboutMe?: string;
-
-    @ApiProperty({ type: String })
-    @IsString()
-    @IsOptional()
-    @Column({
-        length: 200,
-        nullable: true,
-    })
-    address?: string;
-
-    @ApiProperty({
-        example: 'string',
-        readOnly: true,
-    })
+    // read only
+    @ApiProperty({ readOnly: true })
     name?: string;
 
+    @ApiProperty({ readOnly: true })
+    password?: string;
+
     @ApiProperty({
-        example: 'string',
+        type: () => AuthUser,
         readOnly: true,
     })
-    avatarUrl?: string;
+    authUser?: AuthUser; // Do not define as relation, it making circular dependency
+
+    @ApiProperty({ readOnly: true })
+    formattedPhone?: string;
 
     @AfterLoad()
-    afterLoad?() {
-        this.name = this.firstName + ' ' + this.lastName;
-        if (this.avatar) {
-            this.avatarUrl = new FileStorage().getProvider().url(this.avatar);
+    async afterLoad?() {
+        this.name = [this.firstName, this.lastName].filter(Boolean).join(' ');
+        if (this.phoneNumber) {
+            this.formattedPhone = `${this.phoneCountryCode}${this.phoneNumber}`;
         }
+    }
+
+
+    static async loadAuthUser(row: User | User[], options?: FindManyOptions<AuthUser>) {
+        if (row instanceof Array) {
+            const authUserIds = row.map(u => u.authUserId);
+            const authUsers = await AuthUser.find({
+                relations: ['roles'],
+                ...options,
+                where: { id: In(authUserIds) },
+            });
+            const authUserMap = new Map(authUsers.map(u => [u.id, u]));
+            for (const user of row) {
+                user.authUser = authUserMap.get(user.authUserId); // runtime add
+            }
+        } else {
+            const authUsers = await AuthUser.findOne({
+                relations: ['roles'],
+                ...options,
+                where: { id: Equal(row.authUserId) },
+            });
+            row.authUser = authUsers;
+        }
+
+        return row;
     }
 
 }

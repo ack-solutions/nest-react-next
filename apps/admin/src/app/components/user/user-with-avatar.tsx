@@ -5,19 +5,21 @@ import { ReactNode } from 'react';
 
 
 export interface UserWithAvatarProps extends StackProps {
-  user: IUser;
-  secondaryText?: any
-  children?: ReactNode
+    user: IUser;
+    secondaryText?: any;
+    children?: ReactNode;
+    hideName?: boolean
 }
 
 const character = (name: string) => name && name.charAt(0).toUpperCase();
 
-const UserWithAvatar = ({
+function UserWithAvatar({
     user,
     secondaryText,
     children,
+    hideName = false,
     ...props
-}: UserWithAvatarProps) => {
+}: UserWithAvatarProps) {
     const charAtName = character(user?.name);
 
     return (
@@ -31,18 +33,28 @@ const UserWithAvatar = ({
                 src={user?.avatarUrl}
                 alt={user?.name}
             >
-                {user?.name && charAtName}
+                {user?.name ? charAtName : null}
                 {children}
             </Avatar>
-            <Stack>
-                <Typography variant="body2">{startCase(user?.name)}</Typography>
-                <Typography
-                    variant="body2"
-                    color="textSecondary"
-                >{secondaryText}</Typography>
-            </Stack>
+            {!hideName ? (
+                <Stack>
+                    <Typography
+                        variant="body2"
+                        noWrap
+                    >
+                        {startCase(user?.name)}
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        color="textSecondary"
+                    >
+                        {secondaryText}
+                    </Typography>
+                </Stack>
+            ) : null}
+
         </Stack>
     );
-};
+}
 
 export default UserWithAvatar;

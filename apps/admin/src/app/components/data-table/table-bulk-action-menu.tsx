@@ -1,9 +1,3 @@
-import { Icon, MenuDropdown, useAccess } from '@libs/react-core';
-import {
-    DeleteOutlined as DeleteOutlinedIcon,
-    RestoreOutlined as RestoreOutlinedIcon,
-    DeleteForeverOutlined as DeleteForeverOutlinedIcon,
-} from '@mui/icons-material';
 import {
     IconButton,
     MenuItem,
@@ -14,13 +8,12 @@ import {
 } from '@mui/material';
 import { useMemo } from 'react';
 
+import { TableAction } from './table-action-menu';
+import { useAccess } from '../../contexts';
+import { Icon } from '../icons/icon';
+import { IconEnum } from '../icons/icons';
+import { MenuDropdown } from '../menu-dropdown/menu-drop-down';
 
-export interface TableAction {
-    icon: any;
-    title: string;
-    permission?: string | string[];
-    onClick?: (event?: any) => void;
-}
 
 type TableBulkActionMenuProps = {
     onDelete?: (row?: any[]) => void;
@@ -43,53 +36,52 @@ export function TableBulkActionMenu({
 }: TableBulkActionMenuProps) {
     const { hasAnyPermission } = useAccess();
 
-    const crudActions: TableAction[] = useMemo(
-        () => {
-            const otherActions = (actions || [])?.filter(
-                (action) => !action.permission || hasAnyPermission(action.permission),
-            );
+    const crudActions: TableAction[] = useMemo(() => {
+        const otherActions = (actions || [])?.filter(
+            (action) => !action.permission || hasAnyPermission(action.permission),
+        );
 
-            return [
-                ...otherActions,
-                ...onDelete
-                    ? [
-                        {
-                            icon: <DeleteOutlinedIcon />,
-                            title: 'Delete',
-                            permission: `delete-${crudPermissionKey}`,
-                            onClick: onDelete,
-                        },
-                    ]
-                    : [],
-                ...onRestore
-                    ? [
-                        {
-                            icon: <RestoreOutlinedIcon />,
-                            title: 'Restore',
-                            permission: `restore-${crudPermissionKey}`,
-                            onClick: onRestore,
-                        },
-                    ]
-                    : [],
-                ...onDeleteForever
-                    ? [
-                        {
-                            icon: <DeleteForeverOutlinedIcon />,
-                            title: 'Permanent delete',
-                            permission: `trash-delete-${crudPermissionKey}`,
-                            onClick: onDeleteForever,
-                        },
-                    ]
-                    : [],
-            ].filter((item) => item);
-        },
-        [
-            actions,
-            crudPermissionKey,
-            hasAnyPermission,
-            onDelete,
-        ],
-    );
+        return [
+            ...otherActions,
+            ...(onDelete ?
+                [
+                    {
+                        icon: <Icon icon={IconEnum.TRASH} />,
+                        title: 'Delete',
+                        permission: `delete-${crudPermissionKey}`,
+                        onClick: onDelete,
+                    },
+                ] :
+                []),
+            ...(onRestore ?
+                [
+                    {
+                        icon: <Icon icon={IconEnum.CLOCK_ANTI_CLOCKWISE} />,
+                        title: 'Restore',
+                        permission: `update-${crudPermissionKey}`,
+                        onClick: onRestore,
+                    },
+                ] :
+                []),
+            ...(onDeleteForever ?
+                [
+                    {
+                        icon: <Icon icon={IconEnum.TRASH_X} />,
+                        title: 'Permanent delete',
+                        permission: `delete-${crudPermissionKey}`,
+                        onClick: onDeleteForever,
+                    },
+                ] :
+                []),
+        ].filter((item) => item.permission ? hasAnyPermission(item.permission) : true);
+    }, [
+        actions,
+        crudPermissionKey,
+        hasAnyPermission,
+        onDelete,
+        onDeleteForever,
+        onRestore,
+    ]);
 
     if (crudActions.length <= 2) {
         return (
@@ -103,7 +95,6 @@ export function TableBulkActionMenu({
                         title={action?.title}
                     >
                         <IconButton
-                            size="small"
                             onClick={(event) => {
                                 event.stopPropagation();
                                 if (action.onClick) {
@@ -121,30 +112,30 @@ export function TableBulkActionMenu({
 
     return (
         <MenuDropdown
-            anchor={
+            anchor={(
                 <IconButton>
-                    <Icon
-                        icon="more-vertical-outline"
-                        size="medium"
-                    />
+                    <Icon icon={IconEnum.DOTS_THREE_VERTICAL} />
                 </IconButton>
-            }
+            )}
         >
-            {() => (
+            {({ handleClose }) => (
                 <>
-                    {crudActions.map((action) => (
+                    {crudActions.map((action, _index) => (
                         <MenuItem
                             onClick={(event) => {
                                 event.stopPropagation();
                                 if (action.onClick) {
                                     action.onClick(event);
                                 }
+                                handleClose();
                             }}
                             key={`${action?.title}-${row?.id}`}
                         >
-                            {action?.icon && (
-                                <ListItemIcon sx={{ mr: 0 }}>{action?.icon}</ListItemIcon>
-                            )}
+                            {action?.icon ? (
+                                <ListItemIcon sx={{ mr: 0 }}>
+                                    {action?.icon}
+                                </ListItemIcon>
+                            ) : null}
                             <ListItemText
                                 primary={action?.title}
                                 primaryTypographyProps={{ variant: 'body2' }}
