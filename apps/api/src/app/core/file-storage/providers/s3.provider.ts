@@ -1,4 +1,4 @@
-import { S3 as AWS_S3, GetObjectCommand, GetObjectCommandInput } from '@aws-sdk/client-s3';
+import { S3Client, GetObjectCommand, GetObjectCommandInput } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import moment from 'moment';
 import { StorageEngine } from 'multer';
@@ -195,7 +195,7 @@ export class S3Provider extends Provider<S3Provider> {
     private getS3Instance() {
         this.setAwsDetails();
 
-        const s3Client = new AWS_S3({
+        const s3Client = new S3Client({
             forcePathStyle: true, // Configures to use subdomain/virtual calling format.
             endpoint: this.config.aws_endpoint,
             region: this.config.aws_default_region,

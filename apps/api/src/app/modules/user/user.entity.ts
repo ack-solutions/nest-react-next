@@ -93,6 +93,7 @@ export class User extends BaseEntity implements IUser {
     @ApiProperty({
         type: UserStatusEnum,
         enum: UserStatusEnum,
+        enumName: 'UserStatusEnum',
         example: UserStatusEnum.ACTIVE,
     })
     @Factory((faker) => faker.helpers.enumValue(UserStatusEnum))

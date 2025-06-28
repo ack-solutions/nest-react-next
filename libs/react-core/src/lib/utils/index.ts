@@ -5,5 +5,3 @@ export * from './axios';
 export * from './form';
 
 export * from './file';
-
-export * from './highlight';

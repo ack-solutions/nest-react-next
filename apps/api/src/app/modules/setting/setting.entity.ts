@@ -11,21 +11,22 @@ export class Setting extends BaseEntity implements ISetting {
     @ApiProperty()
     @IsString()
     @Column()
-        key?: string;
+    key?: string;
 
     @ApiProperty()
     @IsString()
     @Column('text', { nullable: true })
-        value?: string;
+    value?: string;
 
     @ApiProperty({
         type: SettingTypeEnum,
         enum: SettingTypeEnum,
+        enumName: 'SettingTypeEnum',
         example: SettingTypeEnum.PUBLIC,
     })
     @IsEnum(SettingTypeEnum)
     @Column('text', { nullable: true })
     @IsOptional()
-        type?: SettingTypeEnum;
+    type?: SettingTypeEnum;
 
 }

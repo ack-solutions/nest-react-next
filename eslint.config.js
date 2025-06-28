@@ -5,13 +5,12 @@ const importPlugin = require('eslint-plugin-import');
 
 const eslintConfig = require('./eslint-config/base-config');
 
-
 module.exports = [
     {
         files: ['*.json', '**/*.json'],
         // Override or add rules here
-        rules: { '@typescript-eslint/no-unused-expressions': 'off' },
-        languageOptions: { parser: require('jsonc-eslint-parser') },
+        rules: {'@typescript-eslint/no-unused-expressions': 'off'},
+        languageOptions: {parser: require('jsonc-eslint-parser')},
     },
     ...nx.configs['flat/base'],
     ...nx.configs['flat/typescript'],
@@ -25,18 +24,13 @@ module.exports = [
             '.nx',
             '.vscode',
             '**/.next/**',
-
-            // Project Specific
             'apps/portal/src/assets',
+            '**/vite.config.*.timestamp*',
+            '**/vitest.config.*.timestamp*',
         ],
     },
     {
-        files: [
-            '**/*.ts',
-            '**/*.tsx',
-            '**/*.js',
-            '**/*.jsx',
-        ],
+        files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
         rules: {
             '@nx/enforce-module-boundaries': [
                 'error',
@@ -65,12 +59,7 @@ module.exports = [
             '@stylistic/js': stylisticJsPlugin,
         },
 
-        files: [
-            '**/*.ts',
-            '**/*.tsx',
-            '**/*.js',
-            '**/*.jsx',
-        ],
+        files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
 
         // Override or add rules here
         rules: {
@@ -90,7 +79,7 @@ module.exports = [
     },
     {
         files: ['**/package.json', '**/generators.json'],
-        rules: { '@nx/nx-plugin-checks': 'error' },
-        languageOptions: { parser: require('jsonc-eslint-parser') },
+        rules: {'@nx/nx-plugin-checks': 'error'},
+        languageOptions: {parser: require('jsonc-eslint-parser')},
     },
 ];
