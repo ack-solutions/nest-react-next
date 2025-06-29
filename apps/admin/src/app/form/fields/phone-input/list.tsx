@@ -1,5 +1,5 @@
 import { useCountry } from '@libs/react-shared';
-import { ICountry } from '@libs/types';;
+import { ICountry } from '@libs/types';
 import { CircularProgress, InputAdornment, Divider, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';

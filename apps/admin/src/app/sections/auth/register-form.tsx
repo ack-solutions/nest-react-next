@@ -127,7 +127,6 @@ function RegisterFrom({ onSubmit }: RegisterFromProps) {
                     label={(
                         <Typography
                             component="span"
-                            color="common.white"
                             variant="body2"
                         >
                             I agree to the
@@ -137,7 +136,6 @@ function RegisterFrom({ onSubmit }: RegisterFromProps) {
                                 // target="_blank"
                                 sx={{
                                     textDecoration: 'underline',
-                                    color: 'common.white',
                                     mx: 0.5,
                                 }}
                             >
@@ -150,7 +148,6 @@ function RegisterFrom({ onSubmit }: RegisterFromProps) {
                                 // target="_blank"
                                 sx={{
                                     textDecoration: 'underline',
-                                    color: 'common.white',
                                     mx: 0.5,
                                 }}
                             >

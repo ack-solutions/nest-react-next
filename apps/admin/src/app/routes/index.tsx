@@ -38,6 +38,9 @@ const AddEditRole = Loadable(
 const UserProfile = Loadable(
     lazy(() => import('../pages/profile/user-profile')),
 );
+const PageList = Loadable(lazy(() => import('../pages/pages/page-list')));
+const EmailTemplateList = Loadable(lazy(() => import('../pages/email-templates/email-template-list')));
+const SettingsList = Loadable(lazy(() => import('../pages/settings/settings-list')));
 
 export default function Router() {
     // const routes = useMemo(() => getPluginRoutes(), []);
@@ -141,6 +144,18 @@ export default function Router() {
                 {
                     path: 'profile',
                     element: <UserProfile />,
+                },
+                {
+                    path: 'pages',
+                    element: <PageList />,
+                },
+                {
+                    path: 'email-templates',
+                    element: <EmailTemplateList />,
+                },
+                {
+                    path: 'settings',
+                    element: <SettingsList />,
                 },
                 //  ...routes.app,
                 {

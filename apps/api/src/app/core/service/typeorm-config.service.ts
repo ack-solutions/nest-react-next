@@ -5,10 +5,10 @@ import { readFileSync } from 'fs';
 import path, { resolve } from 'path';
 import { TlsOptions } from 'tls';
 
-import { CustomNamingStrategy } from './custom-naming-strategy';
 import { IDatabaseConfig } from '../../config/database';
 import { ALL_ENTITIES } from '../../entities';
-import './typeorm-custom-repositories';
+import { CustomNamingStrategy } from '../typeorm/custom-naming-strategy';
+import '../typeorm/typeorm-custom-repositories';
 
 
 @Injectable()
@@ -39,7 +39,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
             database: isTestEnv ? `${database?.name}_test` : database?.name,
             port: database?.port,
             entities: ALL_ENTITIES,
-            synchronize: false,
+            synchronize: true,
             logging: !appConfig?.isProd,
             logger: 'file',
             uuidExtension: 'pgcrypto',

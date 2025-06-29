@@ -10,13 +10,13 @@ import { useMemo } from 'react';
 import { components } from './components';
 import { customShadows } from './custom-shadows';
 import { colorSchemes } from './palette';
+import { contrast, presets } from './presets';
+import { shadows } from './shadows';
+import { typography } from './typography';
 import {
     initialSetting,
     useSettingsContext,
 } from '../contexts/settings-provider';
-import { presets } from './options/presets';
-import { shadows } from './shadows';
-import { typography } from './typography';
 
 
 type ThemeProviderProps = {
@@ -25,19 +25,57 @@ type ThemeProviderProps = {
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
     const settings = useSettingsContext();
-    // const darkModeOption = darkMode(settings.themeMode);
-    // const presetsOption = presets(settings.themeColorPresets);
-    // const contrastOption = contrast(settings.themeContrast === 'bold', settings.themeMode);
+
+    // Get contrast options
+    const contrastOption = contrast(settings.contrast === 'bold', settings.colorScheme);
 
     const initialTheme = useMemo(() => ({
         colorSchemes,
         shadows: shadows(settings.colorScheme),
         customShadows: customShadows(settings.colorScheme),
-        shape: { borderRadius: 8 },
-        components,
-        typography,
+        shape: {
+            borderRadius: settings.compactLayout ? 4 : 8,
+        },
+        components: {
+            ...components,
+            ...contrastOption.components,
+        },
+        typography: {
+            ...typography,
+            ...(settings.compactLayout && {
+                h1: {
+                    ...typography.h1,
+                    fontSize: '2rem',
+                },
+                h2: {
+                    ...typography.h2,
+                    fontSize: '1.75rem',
+                },
+                h3: {
+                    ...typography.h3,
+                    fontSize: '1.5rem',
+                },
+                h4: {
+                    ...typography.h4,
+                    fontSize: '1.25rem',
+                },
+                h5: {
+                    ...typography.h5,
+                    fontSize: '1.125rem',
+                },
+                h6: {
+                    ...typography.h6,
+                    fontSize: '1rem',
+                },
+            }),
+        },
         cssVarPrefix: '',
-    }), [settings.colorScheme]);
+    }), [
+        settings.colorScheme,
+        settings.contrast,
+        settings.compactLayout,
+        contrastOption,
+    ]);
 
     const updateTheme = useMemo(() => {
         return {
@@ -48,17 +86,24 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
                     palette: {
                         ...colorSchemes?.light?.palette,
                         ...presets(settings.primaryColor).palette,
+                        ...contrastOption.theme?.palette,
                         background: {
                             ...colorSchemes?.light?.palette?.background,
-                            default: settings.contrast,
-                            defaultChannel: settings.contrast,
+                            ...contrastOption.theme?.palette?.background,
                         },
                     },
                 },
                 dark: {
                     palette: {
                         ...colorSchemes?.dark?.palette,
-                        ...presets(settings.primaryColor),
+                        ...presets(settings.primaryColor).palette,
+                        ...(settings.contrast === 'bold' && {
+                            background: {
+                                ...colorSchemes?.dark?.palette?.background,
+                                default: '#0a0a0a',
+                                paper: '#1a1a1a',
+                            },
+                        }),
                     },
                 },
             },
@@ -66,8 +111,41 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
                 ...customShadows(settings.colorScheme),
                 ...presets(settings.primaryColor).customShadows,
             },
+            components: {
+                ...initialTheme.components,
+                ...(settings.compactLayout && {
+                    MuiCard: {
+                        styleOverrides: {
+                            root: {
+                                padding: '12px',
+                            },
+                        },
+                    },
+                    MuiButton: {
+                        styleOverrides: {
+                            root: {
+                                minHeight: '32px',
+                                padding: '6px 12px',
+                            },
+                        },
+                    },
+                    MuiTextField: {
+                        styleOverrides: {
+                            root: {
+                                '& .MuiInputBase-root': {
+                                    minHeight: '36px',
+                                },
+                            },
+                        },
+                    },
+                }),
+            },
         };
-    }, [settings, initialTheme]);
+    }, [
+        settings,
+        initialTheme,
+        contrastOption,
+    ]);
 
     const theme = createTheme(updateTheme);
 
@@ -119,6 +197,18 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
                             textDecoration: 'none',
                             color: 'inherit',
                         },
+                        ...(settings.compactLayout && {
+                            '& .MuiContainer-root': {
+                                paddingTop: '8px !important',
+                                paddingBottom: '8px !important',
+                            },
+                            '& .MuiStack-root': {
+                                gap: '8px !important',
+                            },
+                            '& .MuiBox-root': {
+                                padding: '8px',
+                            },
+                        }),
                     },
                 }}
             />

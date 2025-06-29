@@ -5,6 +5,7 @@ import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link as RouterLink } from 'react-router-dom';
 import { object, string } from 'yup';
+
 import { FormContainer, RHFTextField } from '../../form';
 import { PATH_AUTH } from '../../routes/paths';
 
@@ -45,13 +46,11 @@ function ForgotPasswordForm({ onSubmit }: ForgotPasswordFormProps) {
                 <Box>
                     <Typography
                         variant="h5"
-                        color="common.white"
                     >
                         Forgot Password
                     </Typography>
                     <Typography
                         variant="subtitle1"
-                        color="common.white"
                     >
                         Enter your email for password recovery.
                     </Typography>
@@ -106,7 +105,7 @@ function ForgotPasswordForm({ onSubmit }: ForgotPasswordFormProps) {
                 spacing={0.5}
                 justifyContent="center"
             >
-                <Typography color="common.white">Back to </Typography>
+                <Typography>Back to </Typography>
                 <Link
                     component={RouterLink}
                     to={PATH_AUTH.login}

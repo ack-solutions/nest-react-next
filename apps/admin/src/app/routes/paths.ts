@@ -94,7 +94,20 @@ export const PATH_DASHBOARD = {
             view: (id: string) => path(ROOTS_DASHBOARD, `/expense/category/view/${id}`),
         },
     },
+    pages: {
+        root: path(ROOTS_DASHBOARD, '/pages'),
+        create: path(ROOTS_DASHBOARD, '/pages/create'),
+        edit: (id: string) => path(ROOTS_DASHBOARD, `/pages/edit/${id}`),
+        view: (id: string) => path(ROOTS_DASHBOARD, `/pages/view/${id}`),
+    },
+    emailTemplates: {
+        root: path(ROOTS_DASHBOARD, '/email-templates'),
+        create: path(ROOTS_DASHBOARD, '/email-templates/create'),
+        edit: (id: string) => path(ROOTS_DASHBOARD, `/email-templates/edit/${id}`),
+        view: (id: string) => path(ROOTS_DASHBOARD, `/email-templates/view/${id}`),
+    },
     settings: {
+        root: path(ROOTS_DASHBOARD, '/settings'),
         paymentMethod: path(ROOTS_DASHBOARD, '/settings/payment-methods'),
         account: path(ROOTS_DASHBOARD, '/settings/account'),
         location: path(ROOTS_DASHBOARD, '/settings/location'),

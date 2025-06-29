@@ -1,10 +1,13 @@
+import { NestAuthModule } from '@ackplus/nest-auth';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
 
 import database from './app/config/database';
-import { TypeOrmConfigService } from './app/core/typeorm/typeorm-config.service';
+import jwt from './app/config/jwt';
+import { TypeOrmConfigService } from './app/core/service/typeorm-config.service';
 import { ALL_ENTITIES } from './app/entities';
 import { seeder } from './app/libs/nest-seeder';
 import { ALL_SEEDERS } from './app/seeders';
@@ -14,7 +17,9 @@ dotenv.config();
 
 seeder({
     imports: [
-        ConfigModule.forFeature(database),
+        ConfigModule.forRoot({
+            load: [database, jwt],
+        }),
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
@@ -24,6 +29,16 @@ seeder({
                 global['dataSource'] = dataSource;
                 return dataSource;
             },
+        }),
+        EventEmitterModule.forRoot(),
+        NestAuthModule.forRootAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => ({
+                jwt: {
+                    secret: configService.get('jwt.secret'),
+                },
+            }),
         }),
         TypeOrmModule.forFeature(ALL_ENTITIES),
     ],

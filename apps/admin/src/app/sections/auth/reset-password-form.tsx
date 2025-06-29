@@ -124,15 +124,11 @@ function ResetPasswordForm({ values }: ResetPasswordFormProps) {
                         <Box>
                             <Typography
                                 variant="h4"
-                                color="common.white"
                                 gutterBottom
                             >
                                 Set new password
                             </Typography>
-                            <Typography
-                                variant="subtitle1"
-                                color="common.white"
-                            >
+                            <Typography variant="subtitle1">
                                 Your new password must be different to previously used passwords.
                             </Typography>
                         </Box>

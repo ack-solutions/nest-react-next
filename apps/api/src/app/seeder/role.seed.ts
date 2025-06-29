@@ -1,5 +1,5 @@
-import { RoleService as NestAuthRoleService } from '@ackplus/nest-auth';
-import { RoleGuardEnum, RoleNameEnum } from '@libs/types';
+import { RoleService as NestAuthRoleService, TenantService } from '@ackplus/nest-auth';
+import { RoleGuardEnum, RoleNameEnum, PermissionsEnum } from '@libs/types';
 import { Injectable } from '@nestjs/common';
 
 import { Seeder } from '../libs/nest-seeder';
@@ -10,33 +10,71 @@ export class RoleSeeder implements Seeder {
 
     constructor(
         private nestAuthRoleService: NestAuthRoleService,
+        private tenantService: TenantService,
     ) { }
 
     async seed() {
+        let tenant;
+        try {
+            tenant = await this.tenantService.createTenant({
+                name: 'Default',
+                domain: 'default',
+            });
+        } catch (_error) {
+            tenant = await this.tenantService.getTenantByDomain('default');
+        }
+
+
+        const adminPermissions = [
+            PermissionsEnum.ACCESS_USERS,
+            PermissionsEnum.CREATE_USERS,
+            PermissionsEnum.UPDATE_USERS,
+            PermissionsEnum.DELETE_USERS,
+            PermissionsEnum.ACCESS_REPORTS,
+            PermissionsEnum.EXPORT_REPORTS,
+            PermissionsEnum.ACCESS_ROLES,
+            PermissionsEnum.CREATE_ROLES,
+            PermissionsEnum.UPDATE_ROLES,
+            PermissionsEnum.ASSIGN_ROLES,
+            PermissionsEnum.DELETE_ROLES,
+            PermissionsEnum.ACCESS_PAGES,
+            PermissionsEnum.CREATE_PAGES,
+            PermissionsEnum.UPDATE_PAGES,
+            PermissionsEnum.DELETE_PAGES,
+            PermissionsEnum.ACCESS_EMAIL_TEMPLATES,
+            PermissionsEnum.CREATE_EMAIL_TEMPLATES,
+            PermissionsEnum.UPDATE_EMAIL_TEMPLATES,
+            PermissionsEnum.DELETE_EMAIL_TEMPLATES,
+            PermissionsEnum.ACCESS_SETTINGS,
+            PermissionsEnum.UPDATE_SETTINGS,
+        ];
+
         const organizationRoles = [
             {
                 name: RoleNameEnum.SUPER_ADMIN,
                 isSystemRole: true,
                 guardName: RoleGuardEnum.ADMIN,
+                permissions: adminPermissions,
             },
             {
                 name: RoleNameEnum.ADMIN,
                 isSystemRole: true,
                 guardName: RoleGuardEnum.ADMIN,
+                permissions: adminPermissions,
             },
             {
-                name: RoleNameEnum.MANGER,
+                name: RoleNameEnum.MANAGER,
                 isSystemRole: false,
-                organization: 'default',
                 guardName: RoleGuardEnum.ADMIN,
+                permissions: [PermissionsEnum.ACCESS_USERS, PermissionsEnum.ACCESS_REPORTS],
             },
         ];
 
         for (const role of organizationRoles) {
             try {
-                await this.nestAuthRoleService.createRole(role.name, role.guardName, 'default', role.isSystemRole, []);
-            } catch (error) {
-                console.log('Role error', error);
+                await this.nestAuthRoleService.createRole(role.name, role.guardName, tenant.id, role.isSystemRole, role.permissions);
+            } catch (_error) {
+                // do nothing
             }
         }
     }

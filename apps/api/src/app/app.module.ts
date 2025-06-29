@@ -1,6 +1,6 @@
 import { NestAuthModule } from '@ackplus/nest-auth';
 import { NestDynamicTemplatesModule } from '@ackplus/nest-dynamic-templates';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ThrottlerModule } from '@nestjs/throttler';
@@ -10,7 +10,8 @@ import { DataSource } from 'typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Configs } from './config';
-import { TypeOrmConfigService } from './core/typeorm/typeorm-config.service';
+import { RequestContextMiddleware } from './core/request-context/request-context.middleware';
+import { TypeOrmConfigService } from './core/service/typeorm-config.service';
 import { CmsModule } from './modules/cms/cms.module';
 import { CountryModule } from './modules/country/country.module';
 import { EmailTemplateModule } from './modules/email-template/email-template.module';
@@ -49,18 +50,17 @@ import { templateFilters } from './utils/template-filter';
             removeListener: true,
             maxListeners: 10,
         }),
-        NestAuthModule.forRoot({
-            accessTokenType: 'header',
-            jwt: {
-                secret: process.env.JWT_SECRET,
-            },
-            emailAuth: {
-                enabled: true,
-            },
-            cookieOptions: {
-                secure: process.env.APP_ENV === 'prod',
-                // httpOnly: true,
-            },
+
+        NestAuthModule.forRootAsync({
+            isGlobal: true,
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => ({
+                accessTokenType: 'header',
+                jwt: {
+                    secret: configService.get('jwt.secret'),
+                },
+            }),
         }),
 
         NestDynamicTemplatesModule.forRoot({
@@ -80,4 +80,10 @@ import { templateFilters } from './utils/template-filter';
     controllers: [AppController],
     providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {
+
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(RequestContextMiddleware).forRoutes('*');
+    }
+
+}

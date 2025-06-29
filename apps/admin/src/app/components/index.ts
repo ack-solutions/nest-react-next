@@ -21,3 +21,5 @@ export * from './default-dialog';
 export * from './menu-dropdown';
 export * from './info-card';
 export * from './dashboard-overview-card';
+
+export { default as ComingSoon } from './coming-soon';

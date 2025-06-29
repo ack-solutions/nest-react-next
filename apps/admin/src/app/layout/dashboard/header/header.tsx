@@ -18,7 +18,7 @@ type Props = {
 export default function Header({ onOpenNav }: Props) {
     const theme = useTheme();
     const lgUp = useResponsive('up', 'md');
-    const { navLayout } = useSettingsContext();
+    const { navLayout, onToggle } = useSettingsContext();
     const { breadcrumbs, heading } = useDashboardLayout();
 
     const isNavHorizontal = !lgUp;
@@ -64,6 +64,12 @@ export default function Header({ onOpenNav }: Props) {
                 <Tooltip title="Notifications">
                     <IconButton>
                         <Icon icon={IconEnum.BELL} />
+                    </IconButton>
+                </Tooltip>
+
+                <Tooltip title="Settings">
+                    <IconButton onClick={onToggle}>
+                        <Icon icon={IconEnum.GEAR_SIX} />
                     </IconButton>
                 </Tooltip>
 

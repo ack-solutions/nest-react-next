@@ -84,4 +84,44 @@ export const primaryPresets = [
         darker: '#7A0930',
         contrastText: '#FFFFFF',
     },
+    // GREEN
+    {
+        name: 'green',
+        lighter: '#D8F5E3',
+        light: '#73D13D',
+        main: '#52C41A',
+        dark: '#389E0D',
+        darker: '#237804',
+        contrastText: '#FFFFFF',
+    },
+    // PINK
+    {
+        name: 'pink',
+        lighter: '#FFE7F1',
+        light: '#FF85C0',
+        main: '#FF1744',
+        dark: '#C2185B',
+        darker: '#880E4F',
+        contrastText: '#FFFFFF',
+    },
+    // INDIGO
+    {
+        name: 'indigo',
+        lighter: '#E8EAF6',
+        light: '#7986CB',
+        main: '#3F51B5',
+        dark: '#303F9F',
+        darker: '#1A237E',
+        contrastText: '#FFFFFF',
+    },
+    // TEAL
+    {
+        name: 'teal',
+        lighter: '#E0F2F1',
+        light: '#4DB6AC',
+        main: '#009688',
+        dark: '#00695C',
+        darker: '#004D40',
+        contrastText: '#FFFFFF',
+    },
 ];

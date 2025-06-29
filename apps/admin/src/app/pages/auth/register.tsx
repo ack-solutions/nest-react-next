@@ -37,7 +37,6 @@ function Register() {
             {/* {!verifyData ? ( */}
             <Typography
                 variant="h4"
-                color="common.white"
                 gutterBottom
                 sx={{ mb: 4 }}
             >
@@ -52,13 +51,13 @@ function Register() {
                 justifyContent="center"
                 mt={2}
             >
-                <Typography color="common.white">Already A Member?</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>Already A Member?</Typography>
                 <Link
                     component={RouterLink}
                     to={PATH_AUTH.login}
                     sx={{
                         textDecoration: 'underline',
-                        color: 'common.white',
+                        color: 'primary.main',
                     }}
                 >
                     Login

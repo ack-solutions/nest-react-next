@@ -22,7 +22,7 @@ export interface SettingsValueProps {
     colorScheme: 'light' | 'dark';
     contrast: 'default' | 'bold';
     navLayout: 'vertical' | 'mini';
-    primaryColor: 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red';
+    primaryColor: 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red' | 'green' | 'pink' | 'indigo' | 'teal';
 }
 
 export const initialSetting = {
@@ -64,12 +64,21 @@ export function SettingsProvider({
         setOpenDrawer(false);
     }, []);
 
-    const canReset = !isEqual(state, defaultSettings);
+    const onChangeDirectionByLang = useCallback((lang: string) => {
+        // Implementation for direction change by language if needed
+        console.log('Direction change by language:', lang);
+    }, []);
+
+    const canReset = !isEqual(state, {
+        ...initialSetting,
+        ...defaultSettings,
+    });
 
     const memoizedValue = useMemo(
         () => ({
             ...state,
             onUpdate: update,
+            onChangeDirectionByLang,
             canReset,
             onReset: reset,
             open: openDrawer,
@@ -84,6 +93,7 @@ export function SettingsProvider({
             openDrawer,
             onCloseDrawer,
             onToggleDrawer,
+            onChangeDirectionByLang,
         ],
     );
 

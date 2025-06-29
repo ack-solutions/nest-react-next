@@ -21,6 +21,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 
 import { ChangeEmailInputDTO } from './dto/change-email-input.dto';
+import { ChangePasswordInputDTO } from './dto/change-password-input.dto';
 import { ChangePhoneInputDTO } from './dto/change-phone-input.dto';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { DeleteAccountInputDTO } from './dto/delete-account-input.dto';
@@ -29,7 +30,6 @@ import { User } from './user.entity';
 import { UserService } from './user.service';
 import { SuccessDTO } from '../../core/dto/success.dto';
 import { RequestDataTypeInterceptor } from '../../core/interceptors/request-data-type.interceptor';
-import { ChangePasswordInputDTO } from './dto/change-password-input.dto';
 
 
 @ApiTags('User')

@@ -43,6 +43,9 @@ export class RequestContext {
 
     static currentUser(options?: FindOneOptions<User>): Promise<User | null> {
         const request: any = RequestContext.currentRequest();
+
+        console.log('request', request);
+
         if (request) {
             const user: JWTTokenPayload = request.user;
             return User.findOne({

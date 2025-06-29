@@ -7,7 +7,7 @@ export interface IRole extends Role {
 
 export enum RoleNameEnum {
     ADMIN = 'Admin',
-    MANGER = 'Manger',
+    MANAGER = 'Manager',
     SUPER_ADMIN = 'Super Admin',
 }
 export enum RoleGuardEnum {

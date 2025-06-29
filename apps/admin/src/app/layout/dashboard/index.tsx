@@ -8,6 +8,7 @@ import Header from './header';
 import Navbar from './navbar/navbar';
 import NavbarMini from './navbar/navbar-mini';
 import { useSettingsContext } from '../../contexts/settings-provider';
+import { SettingsDrawer } from '../../theme/settings';
 
 
 export default function DashboardLayout() {
@@ -84,6 +85,8 @@ export default function DashboardLayout() {
                     <Outlet />
                 </Box>
             </Box>
+
+            <SettingsDrawer />
         </>
     );
 }

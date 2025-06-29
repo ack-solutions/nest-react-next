@@ -51,11 +51,10 @@ function RegisterOtpVerification({
         <Box>
             <Typography
                 variant="h4"
-                color="common.white"
             >
                 Enter OTP Code
             </Typography>
-            <Typography sx={{ color: 'common.white' }}>
+            <Typography>
                 Please enter the OTP code sent to your email.
             </Typography>
             <Typography color="textSecondary">
@@ -112,11 +111,10 @@ function RegisterOtpVerification({
                             justifyContent="center"
                             mt={2}
                         >
-                            <Typography color="common.white">Didn't receive the email? </Typography>
+                            <Typography>Didn't receive the email? </Typography>
                             <Button
                                 onClick={() => onResent(setError)}
                                 sx={{
-                                    color: 'common.white',
                                     padding: 0,
                                 }}
                             >
@@ -126,7 +124,6 @@ function RegisterOtpVerification({
                         <Button
                             onClick={onGoBack}
                             sx={{
-                                color: 'common.white',
                                 mx: 'auto',
                             }}
                             startIcon={<Icon icon={IconEnum.ARROW_LEFT} />}

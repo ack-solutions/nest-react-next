@@ -17,7 +17,7 @@ export class CountrySeeder implements Seeder {
     ) { }
 
     async seed() {
-        const countriesFilePath = path.join(__dirname, '..', 'data', 'countries.json');
+        const countriesFilePath = path.join(__dirname, 'data', 'countries.json');
         const rawData = fs.readFileSync(countriesFilePath, 'utf-8');
         const countries = JSON.parse(rawData);
 

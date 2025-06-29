@@ -1,4 +1,4 @@
-import { UserService } from '@ackplus/nest-auth';
+import { TenantService, UserService } from '@ackplus/nest-auth';
 import { RoleGuardEnum, RoleNameEnum } from '@libs/types';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,6 +18,8 @@ export class UserSeeder implements Seeder {
         private userService: UserService,
         @InjectRepository(User)
         private userRepository: BaseRepository<User>,
+
+        private tenantService: TenantService,
     ) { }
 
     async seed() {
@@ -25,28 +27,50 @@ export class UserSeeder implements Seeder {
         await User.loadAuthUser(existingUser);
         this.existingUserByEmail = keyBy(existingUser, 'authUser.email');
 
+        let tenant;
+        try {
+            tenant = await this.tenantService.createTenant({
+                name: 'Default',
+                domain: 'default',
+            });
+        } catch (_error) {
+            tenant = await this.tenantService.getTenantByDomain('default');
+        }
+
         const portalUsers = [
+            {
+                firstName: 'Chetan',
+                lastName: 'Khandla',
+                email: 'chetan@ackplus.com',
+                password: 'Admin@123',
+                isSuperUser: true,
+                roles: [RoleNameEnum.SUPER_ADMIN],
+                tenantId: tenant.id,
+            },
             {
                 firstName: 'Ajay',
                 lastName: 'Khandla',
                 email: 'ajay@ackplus.com',
-                password: 'Test@123',
+                password: 'Admin@123',
                 isSuperUser: true,
                 roles: [RoleNameEnum.ADMIN],
+                tenantId: tenant.id,
             },
             {
                 firstName: 'Kishan',
                 lastName: 'Khandla',
                 email: 'kishan.ackplus@gmail.com',
-                password: 'Test@123',
+                password: 'Admin@123',
                 roles: [RoleNameEnum.ADMIN],
+                tenantId: tenant.id,
             },
             {
                 firstName: 'Manager',
                 lastName: 'Ack',
                 email: 'manager@gmail.com',
-                password: 'Test@123',
-                roles: [RoleNameEnum.MANGER],
+                password: 'Admin@123',
+                roles: [RoleNameEnum.MANAGER],
+                tenantId: tenant.id,
             },
         ];
 
@@ -64,6 +88,7 @@ export class UserSeeder implements Seeder {
             try {
                 authUser = await this.userService.createUser({
                     email: user.email,
+                    tenantId: user.tenantId,
                 });
             } catch (_error) {
                 authUser = await this.userService.getUserByEmail(user.email);

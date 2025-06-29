@@ -4,9 +4,9 @@ import { Suspense } from 'react';
 import PageLoading from './loading/page-loading';
 
 
-export const Loadable = (Component: React.ElementType) => (function(props: any) {
+export const Loadable = (Component: React.ElementType) => (function (props: any) {
     return (
-        <Suspense fallback={<PageLoading showProgressBar />}>
+        <Suspense fallback={<PageLoading />}>
             <Component {...props} />
         </Suspense>
     );

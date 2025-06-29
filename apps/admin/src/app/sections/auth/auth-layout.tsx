@@ -1,6 +1,8 @@
 import { Box, styled, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 
+import { Logo } from '../../components/logo';
+
 
 export interface AuthLayoutProps {
     children?: ReactNode;
@@ -37,19 +39,22 @@ export default function AuthLayout({ children, title }: AuthLayoutProps) {
                     position="relative"
                 >
                     <Box
-                        component="img"
-                        src="assets/auth/auth-logo.png"
                         sx={{
-                            width: 300,
-                            objectFit: 'contain',
                             position: 'absolute',
                             top: 100,
                             left: 100,
                         }}
-                    />
+                    >
+                        <Logo
+                            disabledLink
+                            sx={{
+                                width: 120,
+                                height: 120,
+                            }}
+                        />
+                    </Box>
                     <Typography
                         variant="h1"
-                        color="common.white"
                         maxWidth={300}
                     >
                         {title}

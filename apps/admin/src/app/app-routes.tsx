@@ -7,7 +7,7 @@ function AppRoutes() {
     const { isInitialized } = useAuth();
 
     if (!isInitialized) {
-        return <LoadingScreen hideProgressBar />;
+        return <LoadingScreen />;
     }
 
     return <Routes />;
