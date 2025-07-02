@@ -1,30 +1,41 @@
+import { QueryBuilder, WhereOperatorEnum } from '@ackplus/nest-crud-request';
 import { usePage } from '@libs/react-shared';
-import { IPage, PermissionsEnum } from '@libs/types';
+import { IPage, PermissionsEnum, PageStatusEnum } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
 import { Card, Button, Chip } from '@mui/material';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState, useMemo, useEffect } from 'react';
 
 import {
-    DataTable,
+    CrudTable,
+    CrudTableActions,
     DataTableColumn,
-    DataTableHandle,
+    DataTableTab,
+    DataTableTabItem,
+    IDataTableFilter,
     Page,
-    TableActionMenu,
 } from '../../components';
-import { useConfirm } from '../../contexts/confirm-dialog-context';
 import { useAccess, withPermission } from '../../contexts/react-access-control';
 import { useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import AddEditPageDialog from '../../sections/pages/add-edit-page-dialog';
 
 
+export interface IPageTableFilter {
+    status?: PageStatusEnum | 'all';
+}
+
+const defaultFilter: IPageTableFilter = {
+    status: 'all',
+};
+
 function PageList() {
-    const datatableRef = useRef<DataTableHandle>(null);
-    const confirmDialog = useConfirm();
+    const datatableRef = useRef<CrudTableActions>(null);
     const { showToasty } = useToasty();
     const { hasPermission } = useAccess();
     const [selectedPage, setSelectedPage] = useState<IPage | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [tableFilter, setTableFilter] = useState(defaultFilter);
+    const [countFilter, setCountFilter] = useState({});
 
     const canCreate = hasPermission(PermissionsEnum.CREATE_PAGES);
     const canEdit = hasPermission(PermissionsEnum.UPDATE_PAGES);
@@ -35,12 +46,10 @@ function PageList() {
         useDeletePage,
         useRestorePage,
         useDeleteForeverPage,
+        useBulkDeletePage,
+        useBulkRestorePage,
+        useBulkDeleteForeverPage,
     } = usePage();
-
-    const { data, isLoading } = useGetManyPage();
-    const { mutateAsync: deletePage } = useDeletePage();
-    const { mutateAsync: restorePage } = useRestorePage();
-    const { mutateAsync: deleteForeverPage } = useDeleteForeverPage();
 
     const handleAddEdit = useCallback((page?: IPage) => {
         setSelectedPage(page || null);
@@ -52,65 +61,67 @@ function PageList() {
         setIsDialogOpen(false);
     }, []);
 
-    const handleDelete = useCallback((row: IPage) => () => {
-        confirmDialog({
-            title: 'Delete Page',
-            message: 'Are you sure you want to delete this page?',
-        }).then(async () => {
-            try {
-                await deletePage(row.id);
-                showToasty('Page deleted successfully');
-            } catch (error) {
-                showToasty(error || 'Failed to delete page', 'error');
-            }
-        }).catch((error) => {
-            console.error(error);
-        });
-    }, [
-        confirmDialog,
-        deletePage,
-        showToasty,
-    ]);
+    const handleOnChangeTableFilter = useCallback((value, key) => {
+        setTableFilter((state) => ({
+            ...state,
+            [key]: value,
+        }));
+    }, []);
 
-    const handleRestore = useCallback((row: IPage) => () => {
-        confirmDialog({
-            title: 'Restore Page',
-            message: 'Are you sure you want to restore this page?',
-        }).then(async () => {
-            try {
-                await restorePage(row.id);
-                showToasty('Page restored successfully');
-            } catch (error) {
-                showToasty(error || 'Failed to restore page', 'error');
-            }
-        }).catch((error) => {
-            console.error(error);
+    const handleTrashData = useCallback((checked) => {
+        setCountFilter((state) => {
+            const newState = new QueryBuilder(state);
+            newState.setOnlyDeleted(checked);
+            return newState.toObject();
         });
-    }, [
-        confirmDialog,
-        restorePage,
-        showToasty,
-    ]);
+    }, []);
 
-    const handleDeleteForever = useCallback((row: IPage) => () => {
-        confirmDialog({
-            title: 'Delete Page Forever',
-            message: 'Are you sure you want to permanently delete this page? This action cannot be undone.',
-        }).then(async () => {
-            try {
-                await deleteForeverPage(row.id);
-                showToasty('Page permanently deleted');
-            } catch (error) {
-                showToasty(error || 'Failed to delete page permanently', 'error');
+    const handleDataTableApiRequestMap = useCallback(
+        (queryBuilder: QueryBuilder, request: IDataTableFilter) => {
+            if (tableFilter?.status !== 'all') {
+                queryBuilder.where({
+                    status: { $eq: tableFilter?.status },
+                });
             }
-        }).catch((error) => {
-            console.error(error);
-        });
-    }, [
-        confirmDialog,
-        deleteForeverPage,
-        showToasty,
-    ]);
+
+            if (request?.search) {
+                queryBuilder.orWhere('title', WhereOperatorEnum.ILIKE, `%${request?.search}%`);
+                queryBuilder.orWhere('name', WhereOperatorEnum.ILIKE, `%${request?.search}%`);
+                queryBuilder.orWhere('slug', WhereOperatorEnum.ILIKE, `%${request?.search}%`);
+            }
+
+            return queryBuilder;
+        },
+        [tableFilter?.status],
+    );
+
+    const tabs: DataTableTabItem[] = useMemo(() => {
+        return [
+            {
+                value: 'all',
+                label: 'All',
+                count: 0, // You can add counts later if needed
+            },
+            {
+                value: PageStatusEnum.DRAFT,
+                label: 'Draft',
+                color: 'warning',
+                count: 0,
+            },
+            {
+                value: PageStatusEnum.PUBLISHED,
+                label: 'Published',
+                color: 'success',
+                count: 0,
+            },
+            {
+                value: PageStatusEnum.UNPUBLISHED,
+                label: 'Unpublished',
+                color: 'error',
+                count: 0,
+            },
+        ];
+    }, []);
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -172,23 +183,13 @@ function PageList() {
             isSortable: true,
             render: (row) => toDisplayDate(row?.updatedAt),
         },
-        {
-            name: 'actions',
-            label: 'Actions',
-            isAction: true,
-            render: (row) => (
-                <TableActionMenu
-                    row={row}
-                    {...(canEdit && !row?.deletedAt && { onEdit: () => handleAddEdit(row) })}
-                    {...(canDelete && !row?.deletedAt && { onDelete: handleDelete(row) })}
-                    {...(canDelete && row?.deletedAt && {
-                        onRestore: handleRestore(row),
-                        onDeleteForever: handleDeleteForever(row),
-                    })}
-                />
-            ),
-        },
     ];
+
+    useEffect(() => {
+        if (datatableRef.current) {
+            datatableRef.current.datatable.refresh();
+        }
+    }, [tableFilter]);
 
     return (
         <Page
@@ -202,24 +203,37 @@ function PageList() {
             ]}
         >
             <Card>
-                <DataTable
-                    ref={datatableRef}
+                <DataTableTab
+                    tabs={tabs}
+                    value={tableFilter?.status}
+                    onChange={(tab) => handleOnChangeTableFilter(tab, 'status')}
+                />
+                <CrudTable
+                    crudName="Page"
+                    crudPermissionKey="pages"
                     columns={columns}
-                    data={data?.items || []}
-                    isLoading={isLoading}
-                    totalRow={data?.total || 0}
-                    selectable={false}
-                    hasFilter
-                    topAction={
-                        canCreate ? (
-                            <Button
-                                variant="contained"
-                                onClick={() => handleAddEdit()}
-                            >
-                                Add Page
-                            </Button>
-                        ) : null
-                    }
+                    ref={datatableRef}
+                    hasSoftDelete
+                    onToggleTrashData={handleTrashData}
+                    dataTableApiRequestMap={handleDataTableApiRequestMap}
+                    crudOperationHooks={{
+                        useGetMany: useGetManyPage,
+                        useDelete: useDeletePage,
+                        useRestore: useRestorePage,
+                        useDeleteForever: useDeleteForeverPage,
+                        useBulkDelete: useBulkDeletePage,
+                        useBulkRestore: useBulkRestorePage,
+                        useBulkDeleteForever: useBulkDeleteForeverPage,
+                    }}
+                    onEdit={canEdit ? handleAddEdit : undefined}
+                    extraFilter={canCreate ? (
+                        <Button
+                            variant="contained"
+                            onClick={() => handleAddEdit()}
+                        >
+                            Add Page
+                        </Button>
+                    ) : null}
                 />
             </Card>
 
@@ -228,7 +242,7 @@ function PageList() {
                     initialValue={selectedPage}
                     onClose={handleCloseDialog}
                     onSubmit={() => {
-                        datatableRef.current?.refresh();
+                        datatableRef.current?.datatable?.refresh();
                         handleCloseDialog();
                     }}
                 />
