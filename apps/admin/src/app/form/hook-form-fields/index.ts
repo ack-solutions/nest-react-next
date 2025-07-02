@@ -26,6 +26,8 @@ export * from './rhf-radio-group';
 
 export * from './rhf-text-editor';
 
+export * from './rhf-monaco-editor';
+
 export * from './rhf-switch';
 
 export * from './rhf-password';

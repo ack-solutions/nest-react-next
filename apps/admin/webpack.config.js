@@ -1,5 +1,6 @@
 const { NxReactWebpackPlugin } = require('@nx/react/webpack-plugin');
 const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const { join } = require('path');
 
 
@@ -9,10 +10,24 @@ module.exports = {
     },
     devServer: {
         port: 4200,
+        hot: true,
+        liveReload: false,
         historyApiFallback: {
             index: '/index.html',
             disableDotRule: true,
             htmlAcceptHeaders: ['text/html', 'application/xhtml+xml'],
+        },
+    },
+    mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+    cache: process.env.NODE_ENV !== 'production' ? {
+        type: 'memory',
+    } : false,
+    resolve: {
+        alias: {
+            // Ensure react-refresh works correctly
+            ...(process.env.NODE_ENV !== 'production' && {
+                'react-refresh/runtime': require.resolve('react-refresh/runtime'),
+            }),
         },
     },
     plugins: [
@@ -32,5 +47,6 @@ module.exports = {
             // See: https://react-svgr.com/
             // svgr: false
         }),
+        ...(process.env.NODE_ENV !== 'production' ? [new ReactRefreshWebpackPlugin()] : []),
     ],
 };

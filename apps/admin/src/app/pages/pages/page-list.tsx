@@ -193,13 +193,13 @@ function PageList() {
 
     return (
         <Page
-            title="CMS Pages"
+            title="Pages"
             breadcrumbs={[
                 {
                     name: 'Dashboard',
                     href: PATH_DASHBOARD.root,
                 },
-                { name: 'CMS Pages' },
+                { name: 'Pages' },
             ]}
         >
             <Card>

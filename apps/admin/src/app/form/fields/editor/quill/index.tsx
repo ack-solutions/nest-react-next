@@ -1,4 +1,5 @@
 import { Box, BoxProps, styled } from '@mui/material';
+import './highlight';
 import ReactQuill from 'react-quill-new';
 
 import EditorToolbar, {

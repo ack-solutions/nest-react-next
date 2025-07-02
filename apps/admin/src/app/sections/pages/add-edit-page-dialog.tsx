@@ -23,6 +23,7 @@ import {
     RHFTextField,
     RHFSelect,
     RHFTextEditor,
+    RHFMonacoEditor,
 } from '../../form';
 import { useToasty } from '../../hook';
 
@@ -167,7 +168,7 @@ export default function AddEditPageDialog({
                                         Visual
                                     </ToggleButton>
                                     <ToggleButton value="code">
-                                        <Icon icon={IconEnum.FILE} sx={{ mr: 1 }} />
+                                        <Icon icon={IconEnum.FILE_DOC} sx={{ mr: 1 }} />
                                         Code
                                     </ToggleButton>
                                 </ToggleButtonGroup>
@@ -180,19 +181,12 @@ export default function AddEditPageDialog({
                                     helperText="Create rich content using the visual editor"
                                 />
                             ) : (
-                                <RHFTextField
+                                <RHFMonacoEditor
                                     name="content"
                                     label=""
-                                    multiline
-                                    rows={12}
-                                    fullWidth
-                                    helperText="Edit HTML code directly"
-                                    InputProps={{
-                                        sx: {
-                                            fontFamily: 'monospace',
-                                            fontSize: '0.875rem',
-                                        },
-                                    }}
+                                    height="400px"
+                                    language="html"
+                                    helperText="Edit HTML code directly with syntax highlighting and auto-completion"
                                 />
                             )}
                         </Box>
