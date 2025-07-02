@@ -1,4 +1,4 @@
-import { QueryBuilder } from '@ackplus/nest-crud-request';
+import { QueryBuilder, WhereBuilderCondition, WhereOperatorEnum } from '@ackplus/nest-crud-request';
 import { useUser } from '@libs/react-shared';
 import {
     IUser,
@@ -22,6 +22,7 @@ import {
     DataTableColumn,
     DataTableTab,
     DataTableTabItem,
+    IDataTableFilter,
 } from '../../components/data-table';
 import UserStatusDropdown from '../../components/user/user-status-dropdown';
 import UserWithAvatar from '../../components/user/user-with-avatar';
@@ -120,12 +121,22 @@ function UsersList() {
     }, []);
 
     const handleDataTableApiRequestMap = useCallback(
-        (queryBuilder: QueryBuilder, request) => {
+        (queryBuilder: QueryBuilder, request: IDataTableFilter) => {
             if (tableFilter?.status !== 'all') {
                 queryBuilder.where({
                     status: { $eq: tableFilter?.status },
                 });
             }
+
+            if (request?.search) {
+                // TODO: need to fix search with concat firstName and lastName
+                queryBuilder.orWhere('firstName', WhereOperatorEnum.ILIKE, `%${request?.search}%`);
+                queryBuilder.orWhere('lastName', WhereOperatorEnum.ILIKE, `%${request?.search}%`);
+            }
+
+            queryBuilder.addRelation('authUser');
+            queryBuilder.addRelation('authUser.roles');
+
             return queryBuilder;
         },
         [tableFilter?.status],
@@ -179,11 +190,13 @@ function UsersList() {
         {
             name: 'authUser.email',
             label: 'Email',
+            isSearchable: true,
             render: (row) => row?.authUser?.email,
         },
         {
             name: 'authUser.roles.name',
             label: 'Roles',
+            isSearchable: true,
             render: (row) => row?.authUser?.roles?.map((role) => role.name).join(', '),
         },
         {
@@ -291,6 +304,5 @@ function UsersList() {
 }
 
 export default withPermission({
-    roles: RoleGuardEnum.ADMIN,
     permissions: [PermissionsEnum.ACCESS_USERS],
 })(UsersList);

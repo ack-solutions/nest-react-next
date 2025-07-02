@@ -192,6 +192,5 @@ function AddEditRole() {
 }
 
 export default withPermission({
-    roles: RoleGuardEnum.ADMIN,
     permissions: [PermissionsEnum.CREATE_ROLES, PermissionsEnum.UPDATE_ROLES],
 })(AddEditRole);

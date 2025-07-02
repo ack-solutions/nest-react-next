@@ -17,7 +17,29 @@ export class RequestDataTypeInterceptor implements NestInterceptor {
         }
 
         if (request.query) {
-            request.query = this.deepMap(request.query, this.parseDataType);
+            try {
+                request.query = this.deepMap(request.query, this.parseDataType);
+            } catch (_error) {
+                // Handle read-only query property in newer Node.js versions
+                const transformedQuery = this.deepMap(request.query, this.parseDataType);
+                try {
+                    Object.defineProperty(request, 'query', {
+                        value: transformedQuery,
+                        writable: true,
+                        configurable: true,
+                        enumerable: true,
+                    });
+                } catch (_defineError) {
+                    // If we can't redefine the property, copy properties individually
+                    Object.keys(transformedQuery).forEach(key => {
+                        try {
+                            request.query[key] = transformedQuery[key];
+                        } catch (_keyError) {
+                            // Silently ignore if individual key assignment fails
+                        }
+                    });
+                }
+            }
         }
 
         return next.handle();

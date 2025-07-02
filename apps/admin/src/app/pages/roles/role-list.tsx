@@ -112,7 +112,7 @@ function RoleList() {
                     hasFilter
                     hideSearch
                     columns={columns}
-                    // eslint-disable-next-line react/jsx-no-leaked-render
+
                     extraFilter={canCreate && (
                         <Button
                             component={Link}
@@ -129,6 +129,5 @@ function RoleList() {
 }
 
 export default withPermission({
-    roles: RoleGuardEnum.ADMIN,
     permissions: [PermissionsEnum.ACCESS_ROLES],
 })(RoleList);

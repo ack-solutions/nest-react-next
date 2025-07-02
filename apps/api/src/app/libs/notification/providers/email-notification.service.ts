@@ -3,9 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import * as nunjucks from 'nunjucks';
 
-import { EmailTemplate } from '../../../modules/email-template/email-template.entity';
-import { getDataSource } from '../../../utils/database';
-
 
 @Injectable()
 export class EmailNotificationService {
@@ -57,32 +54,34 @@ export class EmailNotificationService {
 
     getTemplate(slug, data = {}): Promise<any> {
         return new Promise((resolve, reject) => {
-            if (slug) {
-                const dataSource = getDataSource();
-                const query = dataSource.getRepository(EmailTemplate).createQueryBuilder('emailTemplate');
-                query.where({
-                    slug: slug,
-                });
-                query.getOne().then((template: EmailTemplate) => {
-                    if (template) {
-                        const replaceData = this.getReplaceData(data);
-                        nunjucks.configure({ autoescape: false });
-                        const subject = nunjucks.renderString(template?.emailSubject, replaceData);
-                        nunjucks.configure({ autoescape: false });
-                        const body = nunjucks.renderString(template?.emailBody, replaceData);
-                        resolve({
-                            subject,
-                            body,
-                        });
-                    } else {
-                        reject('Template not found');
-                    }
-                }).catch(() => {
-                    reject('Template not found');
-                });
-            } else {
-                reject('Slug not found');
-            }
+            // TODO: Implement EmailTemplate functionality
+            reject('Email template functionality not implemented');
+            // if (slug) {
+            //     const dataSource = getDataSource();
+            //     const query = dataSource.getRepository(EmailTemplate).createQueryBuilder('emailTemplate');
+            //     query.where({
+            //         slug: slug,
+            //     });
+            //     query.getOne().then((template: EmailTemplate) => {
+            //         if (template) {
+            //             const replaceData = this.getReplaceData(data);
+            //             nunjucks.configure({ autoescape: false });
+            //             const subject = nunjucks.renderString(template?.emailSubject, replaceData);
+            //             nunjucks.configure({ autoescape: false });
+            //             const body = nunjucks.renderString(template?.emailBody, replaceData);
+            //             resolve({
+            //                 subject,
+            //                 body,
+            //             });
+            //         } else {
+            //             reject('Template not found');
+            //         }
+            //     }).catch(() => {
+            //         reject('Template not found');
+            //     });
+            // } else {
+            //     reject('Slug not found');
+            // }
         });
     }
 

@@ -1,4 +1,4 @@
-import { User as AuthUser } from '@ackplus/nest-auth';
+import { User as NestAuthUser } from '@ackplus/nest-auth';
 import { UserStatusEnum } from '@libs/types';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
@@ -8,7 +8,7 @@ import {
     IsString,
     IsUUID,
 } from 'class-validator';
-import { Column, Entity, AfterLoad, In, Equal, FindManyOptions } from 'typeorm';
+import { Column, Entity, AfterLoad, ManyToOne } from 'typeorm';
 
 import { CoreEntity } from '../../core/typeorm/core.entity';
 import { Factory } from '../../libs/nest-seeder';
@@ -39,6 +39,16 @@ export class User extends CoreEntity {
         comment: 'Save Nest Auth User ID',
     })
     authUserId?: string;
+
+    @ApiProperty({
+        type: () => NestAuthUser,
+        nullable: true,
+    })
+    @ManyToOne(() => NestAuthUser, {
+        nullable: true,
+        onDelete: 'CASCADE',
+    })
+    authUser?: NestAuthUser;
 
     @Factory((faker) => faker.string.numeric(10))
     @ApiProperty({
@@ -119,11 +129,11 @@ export class User extends CoreEntity {
     @ApiProperty({ readOnly: true })
     password?: string;
 
-    @ApiProperty({
-        type: () => AuthUser,
-        readOnly: true,
-    })
-    authUser?: AuthUser; // Do not define as relation, it making circular dependency
+    // @ApiProperty({
+    //     type: () => NestAuthUser,
+    //     readOnly: true,
+    // })
+    // authUser?: NestAuthUser; // Do not define as relation, it making circular dependency
 
     @ApiProperty({ readOnly: true })
     formattedPhone?: string;
@@ -136,29 +146,5 @@ export class User extends CoreEntity {
         }
     }
 
-
-    static async loadAuthUser(row: User | User[], options?: FindManyOptions<AuthUser>) {
-        if (row instanceof Array) {
-            const authUserIds = row.map(u => u.authUserId);
-            const authUsers = await AuthUser.find({
-                relations: ['roles'],
-                ...options,
-                where: { id: In(authUserIds) },
-            });
-            const authUserMap = new Map(authUsers.map(u => [u.id, u]));
-            for (const user of row) {
-                user.authUser = authUserMap.get(user.authUserId); // runtime add
-            }
-        } else {
-            const authUsers = await AuthUser.findOne({
-                relations: ['roles'],
-                ...options,
-                where: { id: Equal(row.authUserId) },
-            });
-            row.authUser = authUsers;
-        }
-
-        return row;
-    }
 
 }

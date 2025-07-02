@@ -1,9 +1,9 @@
 import { TemplateLayoutService as NestTemplateLayoutService } from '@ackplus/nest-dynamic-templates';
 import { RenderContentTemplateLayoutDto } from '@ackplus/nest-dynamic-templates/src/lib/dto/render-content-template-layout.dto';
 import { TemplateLayoutFilterDto } from '@ackplus/nest-dynamic-templates/src/lib/dto/template-layout-filter.dto';
+import { RequestContext } from '@api/app/core/request-context/request-context';
 import { Injectable } from '@nestjs/common';
 
-import { RequestContext } from '../../core/request-context/request-context';
 import { CreateTemplateLayoutDto } from './dto/create-template-layout.dto ';
 import { UpdateTemplateLayoutDto } from './dto/update-template-layout.dto';
 

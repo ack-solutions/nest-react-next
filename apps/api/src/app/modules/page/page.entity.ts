@@ -1,4 +1,4 @@
-import { IMeta } from '@libs/types';
+import { IMeta, PageStatusEnum } from '@libs/types';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
 import {
@@ -32,6 +32,14 @@ export class Page extends CoreEntity {
     @ApiProperty({ type: String })
     @Column({ nullable: true })
     content?: string;
+
+    @ApiProperty({ enum: PageStatusEnum })
+    @Column({
+        type: 'enum',
+        enum: PageStatusEnum,
+        default: PageStatusEnum.DRAFT,
+    })
+    status?: PageStatusEnum;
 
     @ApiProperty({ type: () => [MetaDTO] })
     @Column('jsonb', { nullable: true })

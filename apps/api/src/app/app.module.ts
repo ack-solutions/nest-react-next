@@ -14,7 +14,6 @@ import { RequestContextMiddleware } from './core/request-context/request-context
 import { TypeOrmConfigService } from './core/service/typeorm-config.service';
 import { CmsModule } from './modules/cms/cms.module';
 import { CountryModule } from './modules/country/country.module';
-import { EmailTemplateModule } from './modules/email-template/email-template.module';
 import { PageModule } from './modules/page/page.module';
 import { RoleModule } from './modules/role/role.module';
 import { TemplateModule } from './modules/template/template.module';
@@ -71,7 +70,6 @@ import { templateFilters } from './utils/template-filter';
         }),
         RoleModule,
         UsersModule,
-        EmailTemplateModule,
         PageModule,
         CountryModule,
         CmsModule,

@@ -1,7 +1,9 @@
 import { RoleService as NestAuthRoleService, TenantService } from '@ackplus/nest-auth';
 import { RoleGuardEnum, RoleNameEnum, PermissionsEnum } from '@libs/types';
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
+import { IAppConfig } from '../config/app';
 import { Seeder } from '../libs/nest-seeder';
 
 
@@ -11,17 +13,16 @@ export class RoleSeeder implements Seeder {
     constructor(
         private nestAuthRoleService: NestAuthRoleService,
         private tenantService: TenantService,
+        private configService: ConfigService,
     ) { }
 
     async seed() {
-        let tenant;
-        try {
-            tenant = await this.tenantService.createTenant({
-                name: 'Default',
-                domain: 'default',
-            });
-        } catch (_error) {
-            tenant = await this.tenantService.getTenantByDomain('default');
+        const defaultTenantName = this.configService.get<IAppConfig>('app').defaultTenantName;
+
+        const tenant = await this.tenantService.getTenantByDomain(defaultTenantName);
+
+        if (!tenant) {
+            throw new Error('Tenant not found');
         }
 
 
@@ -82,7 +83,11 @@ export class RoleSeeder implements Seeder {
     async drop() {
         const roles = await this.nestAuthRoleService.getRoles();
         for (const role of roles) {
-            await this.nestAuthRoleService.deleteRole(role.id);
+            if (role.isSystem) {
+                await this.nestAuthRoleService.deleteSystemRole(role.id);
+            } else {
+                await this.nestAuthRoleService.deleteRole(role.id);
+            }
         }
     }
 

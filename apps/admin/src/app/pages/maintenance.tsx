@@ -4,7 +4,7 @@ import { Maintenance as ErrorMaintenance } from '../components/error/maintenance
 
 function Maintenance() {
     return (
-        <Page title="Maintenance">
+        <Page>
             <ErrorMaintenance />
         </Page>
     );

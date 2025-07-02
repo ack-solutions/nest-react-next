@@ -1,4 +1,4 @@
-import core from './core';
+import app from './app';
 import database from './database';
 import jwt from './jwt';
 import mail from './mail';
@@ -6,7 +6,7 @@ import mail from './mail';
 
 export const Configs = [
     database,
-    core,
+    app,
     jwt,
     mail,
 ];

@@ -1,9 +1,11 @@
 import { TenantService, UserService } from '@ackplus/nest-auth';
 import { RoleGuardEnum, RoleNameEnum } from '@libs/types';
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { keyBy } from 'lodash';
 
+import { IAppConfig } from '../config/app';
 import { BaseRepository } from '../core/typeorm/base-repository';
 import { Seeder } from '../libs/nest-seeder';
 import { User } from '../modules/user/user.entity';
@@ -20,21 +22,21 @@ export class UserSeeder implements Seeder {
         private userRepository: BaseRepository<User>,
 
         private tenantService: TenantService,
+
+        private configService: ConfigService,
     ) { }
 
     async seed() {
-        const existingUser = await this.userRepository.find();
-        await User.loadAuthUser(existingUser);
+        const existingUser = await this.userRepository.find({
+            relations: ['authUser', 'authUser.roles'],
+        });
         this.existingUserByEmail = keyBy(existingUser, 'authUser.email');
 
-        let tenant;
-        try {
-            tenant = await this.tenantService.createTenant({
-                name: 'Default',
-                domain: 'default',
-            });
-        } catch (_error) {
-            tenant = await this.tenantService.getTenantByDomain('default');
+        const defaultTenantName = this.configService.get<IAppConfig>('app').defaultTenantName;
+
+        const tenant = await this.tenantService.getTenantByDomain(defaultTenantName);
+        if (!tenant) {
+            throw new Error('Tenant not found');
         }
 
         const portalUsers = [
@@ -91,7 +93,7 @@ export class UserSeeder implements Seeder {
                     tenantId: user.tenantId,
                 });
             } catch (_error) {
-                authUser = await this.userService.getUserByEmail(user.email);
+                authUser = await this.userService.getUserByEmail(user.email, user.tenantId);
             }
 
             await authUser.setPassword(user.password);

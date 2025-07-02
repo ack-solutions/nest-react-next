@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@ackplus/nest-auth@^0.1.33":
-  version "0.1.33"
-  resolved "https://registry.yarnpkg.com/@ackplus/nest-auth/-/nest-auth-0.1.33.tgz#a3d79dd29a5d1bdbb39465f028a8c443b2cedcfd"
-  integrity sha512-oOosiht+nvL0IfAh9hhMwj7prmMi6eSsRXrTUfNjaXeLyf5M5Gk8XtLJygo8aEgwS5WIsHXVxAUQqTlcg1e+4A==
+"@ackplus/nest-auth@^0.1.34":
+  version "0.1.34"
+  resolved "https://registry.yarnpkg.com/@ackplus/nest-auth/-/nest-auth-0.1.34.tgz#309a750574811a748a199fb965fe525e2e2b1d3e"
+  integrity sha512-y+wJ0izgZ6PzLfdDCna+rFlMjb2J1RdWO90a89euqBaV7tYHKeP3mLotVswSzrPbe3WugA+bAzIHWrJIfE2hJw==
   dependencies:
     apple-auth "^1.0.0"
     bcrypt "^5.1.0"
@@ -23,31 +23,32 @@
     speakeasy "^2.0.0"
     uuid "^9.0.0"
 
-"@ackplus/nest-crud-request@^0.1.33":
-  version "0.1.33"
-  resolved "https://registry.yarnpkg.com/@ackplus/nest-crud-request/-/nest-crud-request-0.1.33.tgz#13e83fd4aaf32805e4ca76ff5cd971014cc6001c"
-  integrity sha512-t0gpcrsgXFNMty5tA6dHQW5A88Jn0w2fVCOigatQqBa6WO5GPiIuaHr3RfhCI89t6KWGe1qXFKMNc2W+1oFWRg==
+"@ackplus/nest-crud-request@^0.1.34":
+  version "0.1.34"
+  resolved "https://registry.yarnpkg.com/@ackplus/nest-crud-request/-/nest-crud-request-0.1.34.tgz#f9a738899ce84461e9e0f9fd9df678f78acb2155"
+  integrity sha512-bIcOj30gDNco6r74lxIYVsRwU48uoiKsYHsZ9BKI293iKH73lakWaXNWjTKwsoUxN7TtTxBI0sOep9xM+YnbcQ==
   dependencies:
     tslib "^2.3.0"
 
-"@ackplus/nest-crud@^0.1.33":
-  version "0.1.33"
-  resolved "https://registry.yarnpkg.com/@ackplus/nest-crud/-/nest-crud-0.1.33.tgz#f0c1a025e1d64e281f7225c64134129fe13fe84c"
-  integrity sha512-3jPJnMl+uKDrADKCi4CFxyBIZFOfB9SKOnna5jfjGP/nrxitDW8YXm3314YppmOumz9I6/drq723s7jHaF+JbQ==
+"@ackplus/nest-crud@^0.1.34":
+  version "0.1.34"
+  resolved "https://registry.yarnpkg.com/@ackplus/nest-crud/-/nest-crud-0.1.34.tgz#8c16894a00c9de467182963ca32d28bf942c9081"
+  integrity sha512-zoOfW+E6a6wcdNY+i0Zd8M2UuuiZo6tU1qP41apYYPr4i/pr51DRTZ7omH3dS0yoRYymZI8J6obi2THNC4zKAg==
   dependencies:
-    "@ackplus/nest-crud-request" "^0.1.33"
+    "@ackplus/nest-crud-request" "^0.1.34"
     class-transformer "^0.5.1"
     class-validator "^0.14.1"
     deepmerge "4.3.1"
     lodash "^4.17.21"
     pluralize "8.0.0"
+    qs "^6.12.0"
     rxjs "^7.8.0"
     tslib "^2.3.0"
 
-"@ackplus/nest-dynamic-templates@^0.1.33":
-  version "0.1.33"
-  resolved "https://registry.yarnpkg.com/@ackplus/nest-dynamic-templates/-/nest-dynamic-templates-0.1.33.tgz#aafab1a6eda8471da9bea4083f822dcbea5a2bc9"
-  integrity sha512-79m5leYr3EdsajGlz1k99xd6SnGWV5OrdfSTnt7Q/9JoWNyov2rT+NuftMIUQ6w9/SXrxUZ8d9lsl7TspbubpQ==
+"@ackplus/nest-dynamic-templates@^0.1.34":
+  version "0.1.34"
+  resolved "https://registry.yarnpkg.com/@ackplus/nest-dynamic-templates/-/nest-dynamic-templates-0.1.34.tgz#21e5174667c40e8f6ed4aa33d75cb95519e231bb"
+  integrity sha512-HM959mTIewPPH7TsJZp62JrkTV0xrN6ziKRi82F33s8bBfCNz3u/S6SBqIApve+yCy+SyJYPJK+pj+h3U55Vhw==
   dependencies:
     class-transformer "^0.5.1"
     class-validator "^0.14.0"
@@ -17547,7 +17548,7 @@ qs@6.13.0, qs@^6.4.0:
   dependencies:
     side-channel "^1.0.6"
 
-qs@6.14.0, qs@^6.14.0:
+qs@6.14.0, qs@^6.12.0, qs@^6.14.0:
   version "6.14.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.14.0.tgz#c63fa40680d2c5c941412a0e899c89af60c0a930"
   integrity sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==

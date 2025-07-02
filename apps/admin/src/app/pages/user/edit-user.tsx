@@ -1,5 +1,5 @@
 import { useUser } from '@libs/react-shared';
-import { IUser, PermissionsEnum, RoleGuardEnum } from '@libs/types';
+import { IUser, PermissionsEnum } from '@libs/types';
 import { Tab, Tabs } from '@mui/material';
 import { useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -125,6 +125,5 @@ function EditUser() {
 }
 
 export default withPermission({
-    roles: RoleGuardEnum.ADMIN,
     permissions: [PermissionsEnum.UPDATE_USERS],
 })(EditUser);

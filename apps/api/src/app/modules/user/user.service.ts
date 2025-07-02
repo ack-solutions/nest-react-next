@@ -172,21 +172,18 @@ export class UserService extends BaseService<User> {
 
     async findCurrentUser() {
         const user = await RequestContext.currentUser({
-            relations: [],
+            relations: ['authUser', 'authUser.roles'],
         });
-        await User.loadAuthUser(user);
         return user;
     }
 
     override async findMany(query: any, ..._others: any[]): Promise<PaginationResponse<any>> {
         const response = await super.findMany(query, ..._others);
-        await User.loadAuthUser(response.items);
         return response;
     }
 
     override async findOne(id: ID, options?: FindOneOptions<User>) {
         const user = await super.findOne(id, options);
-        await User.loadAuthUser(user);
         return user;
     }
 
@@ -211,7 +208,6 @@ export class UserService extends BaseService<User> {
 
 
         const user = await super.create(entity, options);
-        await User.loadAuthUser(user);
         return user;
     }
 
@@ -229,7 +225,6 @@ export class UserService extends BaseService<User> {
         const updatedUser = await this.userRepository.findOneBy({
             id: user?.id,
         });
-        await User.loadAuthUser(updatedUser);
         return updatedUser;
     }
 

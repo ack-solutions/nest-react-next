@@ -1,4 +1,4 @@
-import { PermissionsEnum, RoleGuardEnum } from '@libs/types';
+import { PermissionsEnum, RoleNameEnum } from '@libs/types';
 import React, { ComponentType } from 'react';
 
 import useAccess from './use-access';
@@ -7,7 +7,7 @@ import PermissionDenied from '../../pages/error/permission-denied';
 
 export interface WithPermissionOptions {
     permissions?: PermissionsEnum[] | PermissionsEnum;
-    roles?: RoleGuardEnum[] | RoleGuardEnum;
+    roles?: RoleNameEnum[] | RoleNameEnum;
     requireAll?: boolean;
     fallback?: React.ComponentType<any>;
     message?: string;
@@ -28,11 +28,16 @@ const withPermission = <T extends object>(
             } = options;
 
             const roleArray = Array.isArray(roles) ? roles : [roles];
-
             const permissionArray = Array.isArray(permissions) ? permissions : [permissions];
 
             if (!isLoaded) {
                 return null;
+            }
+
+            // Check if user is Super Admin - if so, grant access automatically
+            const isSuperAdmin = hasRole([RoleNameEnum.SUPER_ADMIN]);
+            if (isSuperAdmin) {
+                return React.createElement(wrappedComponent, props);
             }
 
             const hasAccess = requireAll

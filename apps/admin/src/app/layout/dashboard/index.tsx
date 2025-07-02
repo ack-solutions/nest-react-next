@@ -5,8 +5,7 @@ import { Outlet } from 'react-router-dom';
 import { useResponsive } from '../../hook/use-responsive';
 import { HEADER, NAV, SPACING } from '../config';
 import Header from './header';
-import Navbar from './navbar/navbar';
-import NavbarMini from './navbar/navbar-mini';
+import { Navigation } from './navigation';
 import { useSettingsContext } from '../../contexts/settings-provider';
 import { SettingsDrawer } from '../../theme/settings';
 
@@ -51,14 +50,10 @@ export default function DashboardLayout() {
                     minHeight: 1,
                 }}
             >
-                {isNavMini ? (
-                    <NavbarMini />
-                ) : (
-                    <Navbar
-                        openNav={open}
-                        onCloseNav={handleClose}
-                    />
-                )}
+                <Navigation
+                    openNav={open}
+                    onCloseNav={handleClose}
+                />
 
                 <Box
                     component="main"
@@ -67,18 +62,13 @@ export default function DashboardLayout() {
                         minHeight: 1,
                         display: 'flex',
                         flexDirection: 'column',
-                        alignSelf: 'stretch',
                         pt: `${HEADER.H_MOBILE + SPACING}px`,
                         pb: 2,
                         px: 2,
                         backgroundColor: (theme) => theme.palette.background.default,
                         ...(isDesktop && {
                             pt: `${HEADER.H_DESKTOP + SPACING}px`,
-                            width: `calc(100% - ${NAV.W_VERTICAL}px)`,
-
-                        }),
-                        ...(isNavMini && {
-                            width: `calc(100% - ${NAV.W_MINI}px)`,
+                            ml: isNavMini ? `${NAV.W_MINI}px` : `${NAV.W_VERTICAL}px`,
                         }),
                     }}
                 >

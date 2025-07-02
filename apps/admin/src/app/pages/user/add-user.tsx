@@ -1,5 +1,5 @@
 import { useUser } from '@libs/react-shared';
-import { IUser, PermissionsEnum, RoleGuardEnum } from '@libs/types';
+import { IUser, PermissionsEnum } from '@libs/types';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -53,6 +53,5 @@ function AddUser() {
 }
 
 export default withPermission({
-    roles: RoleGuardEnum.ADMIN,
     permissions: [PermissionsEnum.CREATE_USERS],
 })(AddUser);

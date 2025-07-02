@@ -22,8 +22,8 @@ const useAccess = () => {
     ) => {
         const { allowSuperAdmin = true } = opts;
         if (allowSuperAdmin) {
-            // Skip  permission check if role is Super admin
-            const isSuperUser = hasRole([RoleNameEnum.ADMIN]);
+            // Skip permission check if role is Super Admin
+            const isSuperUser = hasRole([RoleNameEnum.SUPER_ADMIN]);
             if (isSuperUser) {
                 return true;
             }
@@ -37,8 +37,8 @@ const useAccess = () => {
     ) => {
         const { allowSuperAdmin = true } = opts;
         if (allowSuperAdmin) {
-            // Skip  permission check if role is Super admin
-            const isSuperUser = hasRole([RoleNameEnum.ADMIN]);
+            // Skip permission check if role is Super Admin
+            const isSuperUser = hasRole([RoleNameEnum.SUPER_ADMIN]);
             if (isSuperUser) {
                 return true;
             }

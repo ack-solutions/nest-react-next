@@ -5,8 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
 
-import database from './app/config/database';
-import jwt from './app/config/jwt';
+import { Configs } from './app/config';
 import { TypeOrmConfigService } from './app/core/service/typeorm-config.service';
 import { ALL_ENTITIES } from './app/entities';
 import { seeder } from './app/libs/nest-seeder';
@@ -18,7 +17,7 @@ dotenv.config();
 seeder({
     imports: [
         ConfigModule.forRoot({
-            load: [database, jwt],
+            load: Configs,
         }),
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
