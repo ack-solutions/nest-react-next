@@ -42,7 +42,7 @@ export class CustomNamingStrategy extends DefaultNamingStrategy implements Namin
         return `fk_${snakeCase(tableName)}_${hashedColumnNames}`;
     }
 
-    override  uniqueConstraintName(tableOrName: Table | string, columnNames: string[]): string {
+    override uniqueConstraintName(tableOrName: Table | string, columnNames: string[]): string {
         let tableName: string;
         if (tableOrName instanceof Table) {
             tableName = tableOrName.name;

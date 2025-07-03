@@ -1,4 +1,5 @@
 export class UploadedFile {
+
     type?: string;
     name?: string;
     size?: string;

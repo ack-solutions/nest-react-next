@@ -41,11 +41,11 @@ export class DatabaseErrorFilter implements ExceptionFilter {
                     if (constraintName === 'uq_product_batch_batch_codeproduct_id') {
                         message = 'A batch with the same code already exists for this product.';
                     } else if (constraintName === 'uq_payment_method_namelocation_id') {
-                        message = `This payment method name already exists`;
+                        message = 'This payment method name already exists';
                     } else if (constraintName === 'uq_order_order_numberlocation_id') {
-                        message = `This order number already exists`;
+                        message = 'This order number already exists';
                     } else if (constraintName === 'uq_invoice_invoice_numberlocation_id') {
-                        message = `This invoice number already exists`;
+                        message = 'This invoice number already exists';
                     } else {
                         message = `This ${fieldName} already exists.`;
                     }

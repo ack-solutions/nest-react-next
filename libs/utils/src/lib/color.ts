@@ -1,4 +1,3 @@
-
 export function hexToRgbA(hex: string): number[] {
     if (!/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
         throw new Error('Bad Hex');
