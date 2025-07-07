@@ -37,7 +37,7 @@ function EditUser() {
     const { currentTab, onChangeTab } = useTabs('general');
 
     const { data: userData, isLoading, error } = useGetUserById(userId, {
-        relations: ['locations'],
+        relations: ['authUser', 'authUser.roles'],
     });
 
     const handleSubmit = useCallback(

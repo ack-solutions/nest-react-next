@@ -9,8 +9,12 @@ import { UsersController } from './users.controller';
 
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User]), NestAuthModule],
-    providers: [UserService, ConfigModule],
+    imports: [
+        TypeOrmModule.forFeature([User]),
+        NestAuthModule,
+        ConfigModule,
+    ],
+    providers: [UserService],
     controllers: [UsersController],
     exports: [UserService],
 })

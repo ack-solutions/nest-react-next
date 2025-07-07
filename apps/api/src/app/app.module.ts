@@ -23,7 +23,9 @@ import { templateFilters } from './utils/template-filter';
 
 @Module({
     imports: [
-        ConfigModule.forRoot({ load: Configs }),
+        ConfigModule.forRoot({
+            load: Configs,
+        }),
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],

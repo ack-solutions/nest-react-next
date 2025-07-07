@@ -129,12 +129,6 @@ export class User extends CoreEntity {
     @ApiProperty({ readOnly: true })
     password?: string;
 
-    // @ApiProperty({
-    //     type: () => NestAuthUser,
-    //     readOnly: true,
-    // })
-    // authUser?: NestAuthUser; // Do not define as relation, it making circular dependency
-
     @ApiProperty({ readOnly: true })
     formattedPhone?: string;
 

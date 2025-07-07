@@ -38,7 +38,6 @@ const defaultValues: Partial<ICreateUserInput> = {
     phoneCountryCode: '',
     status: UserStatusEnum.ACTIVE,
     roles: [],
-    locationIds: [],
 };
 
 const validationSchema = yupResolver(
@@ -48,7 +47,6 @@ const validationSchema = yupResolver(
         email: schemaHelper.email().label('Email').required(),
         phoneNumber: schemaHelper.phoneNumber().label('Phone Number'),
         roles: array().min(1, 'Please select at least one role').label('Roles'),
-        locationIds: array().min(1, 'Please select at least one location').label('Locations'),
         password: string()
             .label('Password')
             .when('id', {
