@@ -1120,6 +1120,24 @@
     {
       "icon": {
         "paths": [
+          "M945.231 78.77h-866.462c-43.503 0-78.769 35.266-78.769 78.769v0 708.923c0 43.503 35.266 78.769 78.769 78.769v0h866.462c43.503 0 78.769-35.266 78.769-78.769v0-708.923c0-43.503-35.266-78.769-78.769-78.769v0zM945.231 157.539v196.923h-866.462v-196.923zM78.769 433.232h275.692v433.231h-275.692zM945.231 866.463h-512v-433.231h512v433.231z"
+        ],
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "tags": [
+          "layout"
+        ],
+        "grid": 0
+      },
+      "properties": {
+        "name": "layout",
+        "code": 59709
+      }
+    },
+    {
+      "icon": {
+        "paths": [
           "M13.64 195.869c-8.427-8.427-13.64-20.070-13.64-32.929 0-25.719 20.85-46.569 46.569-46.569 12.859 0 24.502 5.213 32.929 13.64l432.502 432.56 432.502-432.56c8.427-8.427 20.070-13.64 32.929-13.64 25.719 0 46.569 20.85 46.569 46.569 0 12.859-5.213 24.502-13.64 32.929l-465.431 465.431c-8.424 8.433-20.067 13.65-32.929 13.65s-24.505-5.217-32.929-13.65v0zM977.431 814.543h-930.862c-25.705 0-46.543 20.838-46.543 46.543s20.838 46.543 46.543 46.543v0h930.862c25.705 0 46.543-20.838 46.543-46.543s-20.838-46.543-46.543-46.543v0z"
         ],
         "attrs": [],
@@ -1132,7 +1150,7 @@
       },
       "properties": {
         "name": "line-arrow-down",
-        "code": 59709
+        "code": 59710
       }
     },
     {
@@ -1150,7 +1168,7 @@
       },
       "properties": {
         "name": "line-arrow-left",
-        "code": 59710
+        "code": 59711
       }
     },
     {
@@ -1168,7 +1186,7 @@
       },
       "properties": {
         "name": "line-arrow-right",
-        "code": 59711
+        "code": 59712
       }
     },
     {
@@ -1186,7 +1204,7 @@
       },
       "properties": {
         "name": "line-arrow-up",
-        "code": 59712
+        "code": 59713
       }
     },
     {
@@ -1204,7 +1222,7 @@
       },
       "properties": {
         "name": "link",
-        "code": 59713
+        "code": 59714
       }
     },
     {
@@ -1222,7 +1240,7 @@
       },
       "properties": {
         "name": "list-bullets",
-        "code": 59714
+        "code": 59715
       }
     },
     {
@@ -1240,7 +1258,7 @@
       },
       "properties": {
         "name": "list",
-        "code": 59715
+        "code": 59716
       }
     },
     {
@@ -1258,7 +1276,7 @@
       },
       "properties": {
         "name": "lock-key-open",
-        "code": 59716
+        "code": 59717
       }
     },
     {
@@ -1276,7 +1294,7 @@
       },
       "properties": {
         "name": "lock",
-        "code": 59717
+        "code": 59718
       }
     },
     {
@@ -1294,7 +1312,7 @@
       },
       "properties": {
         "name": "magnifying-glass",
-        "code": 59718
+        "code": 59719
       }
     },
     {
@@ -1312,7 +1330,7 @@
       },
       "properties": {
         "name": "map-pin",
-        "code": 59719
+        "code": 59720
       }
     },
     {
@@ -1330,7 +1348,7 @@
       },
       "properties": {
         "name": "minus-circle",
-        "code": 59720
+        "code": 59721
       }
     },
     {
@@ -1348,7 +1366,7 @@
       },
       "properties": {
         "name": "money",
-        "code": 59721
+        "code": 59722
       }
     },
     {
@@ -1366,7 +1384,7 @@
       },
       "properties": {
         "name": "package-fill",
-        "code": 59722
+        "code": 59723
       }
     },
     {
@@ -1384,7 +1402,7 @@
       },
       "properties": {
         "name": "package",
-        "code": 59723
+        "code": 59724
       }
     },
     {
@@ -1402,7 +1420,7 @@
       },
       "properties": {
         "name": "payment",
-        "code": 59724
+        "code": 59725
       }
     },
     {
@@ -1420,7 +1438,7 @@
       },
       "properties": {
         "name": "pencil-simple",
-        "code": 59725
+        "code": 59726
       }
     },
     {
@@ -1438,7 +1456,7 @@
       },
       "properties": {
         "name": "phone",
-        "code": 59726
+        "code": 59727
       }
     },
     {
@@ -1456,7 +1474,7 @@
       },
       "properties": {
         "name": "plus-circle",
-        "code": 59727
+        "code": 59728
       }
     },
     {
@@ -1474,7 +1492,7 @@
       },
       "properties": {
         "name": "plus",
-        "code": 59728
+        "code": 59729
       }
     },
     {
@@ -1492,7 +1510,7 @@
       },
       "properties": {
         "name": "printer",
-        "code": 59729
+        "code": 59730
       }
     },
     {
@@ -1522,7 +1540,7 @@
       },
       "properties": {
         "name": "qr-code",
-        "code": 59730
+        "code": 59731
       }
     },
     {
@@ -1540,7 +1558,7 @@
       },
       "properties": {
         "name": "redo",
-        "code": 59731
+        "code": 59732
       }
     },
     {
@@ -1558,7 +1576,7 @@
       },
       "properties": {
         "name": "replay",
-        "code": 59732
+        "code": 59733
       }
     },
     {
@@ -1576,7 +1594,7 @@
       },
       "properties": {
         "name": "report",
-        "code": 59733
+        "code": 59734
       }
     },
     {
@@ -1594,7 +1612,7 @@
       },
       "properties": {
         "name": "save",
-        "code": 59734
+        "code": 59735
       }
     },
     {
@@ -1612,7 +1630,7 @@
       },
       "properties": {
         "name": "scan",
-        "code": 59735
+        "code": 59736
       }
     },
     {
@@ -1630,7 +1648,7 @@
       },
       "properties": {
         "name": "share",
-        "code": 59736
+        "code": 59737
       }
     },
     {
@@ -1648,7 +1666,7 @@
       },
       "properties": {
         "name": "shield",
-        "code": 59737
+        "code": 59738
       }
     },
     {
@@ -1666,7 +1684,7 @@
       },
       "properties": {
         "name": "shipping-label",
-        "code": 59738
+        "code": 59739
       }
     },
     {
@@ -1684,7 +1702,7 @@
       },
       "properties": {
         "name": "shopping-cart",
-        "code": 59739
+        "code": 59740
       }
     },
     {
@@ -1702,7 +1720,7 @@
       },
       "properties": {
         "name": "sidebar",
-        "code": 59740
+        "code": 59741
       }
     },
     {
@@ -1720,7 +1738,7 @@
       },
       "properties": {
         "name": "smiley",
-        "code": 59741
+        "code": 59742
       }
     },
     {
@@ -1738,7 +1756,7 @@
       },
       "properties": {
         "name": "store",
-        "code": 59742
+        "code": 59743
       }
     },
     {
@@ -1756,7 +1774,7 @@
       },
       "properties": {
         "name": "storefront",
-        "code": 59743
+        "code": 59744
       }
     },
     {
@@ -1774,7 +1792,25 @@
       },
       "properties": {
         "name": "tag",
-        "code": 59744
+        "code": 59745
+      }
+    },
+    {
+      "icon": {
+        "paths": [
+          "M810.667 426.667c0 23.564-19.103 42.667-42.667 42.667v0h-341.333c-23.564 0-42.667-19.103-42.667-42.667s19.103-42.667 42.667-42.667v0h341.333c23.564 0 42.667 19.103 42.667 42.667v0zM768 554.667h-341.333c-23.564 0-42.667 19.103-42.667 42.667s19.103 42.667 42.667 42.667v0h341.333c23.564 0 42.667-19.103 42.667-42.667s-19.103-42.667-42.667-42.667v0zM1024 85.333v853.333c0 47.128-38.205 85.333-85.333 85.333v0h-853.333c-47.128 0-85.333-38.205-85.333-85.333v0-853.333c0-47.128 38.205-85.333 85.333-85.333v0h853.333c47.128 0 85.333 38.205 85.333 85.333v0zM85.333 938.667h128v-853.333h-128zM938.667 938.667v-853.333h-640v853.333h640z"
+        ],
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "tags": [
+          "template"
+        ],
+        "grid": 0
+      },
+      "properties": {
+        "name": "template",
+        "code": 59746
       }
     },
     {
@@ -1794,7 +1830,7 @@
       },
       "properties": {
         "name": "trash-x",
-        "code": 59745
+        "code": 59747
       }
     },
     {
@@ -1812,7 +1848,7 @@
       },
       "properties": {
         "name": "trash",
-        "code": 59746
+        "code": 59748
       }
     },
     {
@@ -1830,7 +1866,7 @@
       },
       "properties": {
         "name": "trend-down",
-        "code": 59747
+        "code": 59749
       }
     },
     {
@@ -1848,7 +1884,7 @@
       },
       "properties": {
         "name": "trend-up",
-        "code": 59748
+        "code": 59750
       }
     },
     {
@@ -1866,7 +1902,7 @@
       },
       "properties": {
         "name": "truck-fill",
-        "code": 59749
+        "code": 59751
       }
     },
     {
@@ -1884,7 +1920,7 @@
       },
       "properties": {
         "name": "truck",
-        "code": 59750
+        "code": 59752
       }
     },
     {
@@ -1902,7 +1938,7 @@
       },
       "properties": {
         "name": "undo",
-        "code": 59751
+        "code": 59753
       }
     },
     {
@@ -1920,7 +1956,7 @@
       },
       "properties": {
         "name": "upload",
-        "code": 59752
+        "code": 59754
       }
     },
     {
@@ -1938,7 +1974,7 @@
       },
       "properties": {
         "name": "user-circle",
-        "code": 59753
+        "code": 59755
       }
     },
     {
@@ -1956,7 +1992,7 @@
       },
       "properties": {
         "name": "user-plus",
-        "code": 59754
+        "code": 59756
       }
     },
     {
@@ -1974,7 +2010,7 @@
       },
       "properties": {
         "name": "user",
-        "code": 59755
+        "code": 59757
       }
     },
     {
@@ -1992,7 +2028,7 @@
       },
       "properties": {
         "name": "users",
-        "code": 59756
+        "code": 59758
       }
     },
     {
@@ -2010,7 +2046,7 @@
       },
       "properties": {
         "name": "wallet",
-        "code": 59757
+        "code": 59759
       }
     },
     {
@@ -2028,7 +2064,7 @@
       },
       "properties": {
         "name": "warehouse",
-        "code": 59758
+        "code": 59760
       }
     },
     {
@@ -2046,7 +2082,7 @@
       },
       "properties": {
         "name": "warning-circle",
-        "code": 59759
+        "code": 59761
       }
     },
     {
@@ -2064,7 +2100,7 @@
       },
       "properties": {
         "name": "warning",
-        "code": 59760
+        "code": 59762
       }
     }
   ]

@@ -1,3 +1,4 @@
+import { DefaultDialog } from '@admin/app/components';
 import { usePage } from '@libs/react-shared';
 import { IPage, PageStatusEnum } from '@libs/types';
 import {
@@ -12,7 +13,6 @@ import {
     ToggleButton,
     ToggleButtonGroup,
     Typography,
-    TextField,
 } from '@mui/material';
 import { useCallback, useState } from 'react';
 
@@ -75,125 +75,14 @@ export default function AddEditPageDialog({
     ]);
 
     return (
-        <Dialog
+        <DefaultDialog
             open
             onClose={onClose}
             maxWidth="lg"
             fullWidth
-        >
-            <DialogTitle>
-                {isEditing ? 'Edit Page' : 'Add New Page'}
-            </DialogTitle>
-
-            <FormContainer
-                onSuccess={handleFormSubmit}
-                defaultValues={{
-                    title: initialValue?.title || '',
-                    name: initialValue?.name || '',
-                    slug: initialValue?.slug || '',
-                    content: initialValue?.content || '',
-                    status: initialValue?.status || PageStatusEnum.DRAFT,
-                }}
-            >
-                <DialogContent>
-                    <Stack spacing={3}>
-                        <Box sx={{
-                            display: 'flex',
-                            gap: 2,
-                        }}>
-                            <RHFTextField
-                                name="title"
-                                label="Title"
-                                required
-                                fullWidth
-                            />
-                            <RHFSelect
-                                name="status"
-                                label="Status"
-                                required
-                                sx={{ minWidth: 150 }}
-                            >
-                                <MenuItem value={PageStatusEnum.DRAFT}>
-                                    Draft
-                                </MenuItem>
-                                <MenuItem value={PageStatusEnum.PUBLISHED}>
-                                    Published
-                                </MenuItem>
-                                <MenuItem value={PageStatusEnum.UNPUBLISHED}>
-                                    Unpublished
-                                </MenuItem>
-                            </RHFSelect>
-                        </Box>
-
-                        <Box sx={{
-                            display: 'flex',
-                            gap: 2,
-                        }}>
-                            <RHFTextField
-                                name="name"
-                                label="Name"
-                                fullWidth
-                                helperText="Internal name for reference"
-                            />
-                            <RHFTextField
-                                name="slug"
-                                label="Slug"
-                                fullWidth
-                                helperText="URL-friendly version of the title"
-                            />
-                        </Box>
-
-                        <Box>
-                            <Box sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                mb: 1,
-                            }}>
-                                <Typography variant="body1" component="label" sx={{ fontWeight: 500 }}>
-                                    Content
-                                </Typography>
-                                <ToggleButtonGroup
-                                    value={editorMode}
-                                    exclusive
-                                    onChange={(_, newMode) => {
-                                        if (newMode !== null) {
-                                            setEditorMode(newMode);
-                                        }
-                                    }}
-                                    size="small"
-                                >
-                                    <ToggleButton value="visual">
-                                        <Icon icon={IconEnum.EYE} sx={{ mr: 1 }} />
-                                        Visual
-                                    </ToggleButton>
-                                    <ToggleButton value="code">
-                                        <Icon icon={IconEnum.FILE_DOC} sx={{ mr: 1 }} />
-                                        Code
-                                    </ToggleButton>
-                                </ToggleButtonGroup>
-                            </Box>
-
-                            {editorMode === 'visual' ? (
-                                <RHFTextEditor
-                                    name="content"
-                                    label=""
-                                    helperText="Create rich content using the visual editor"
-                                />
-                            ) : (
-                                <RHFMonacoEditor
-                                    name="content"
-                                    label=""
-                                    height="400px"
-                                    language="html"
-                                    helperText="Edit HTML code directly with syntax highlighting and auto-completion"
-                                />
-                            )}
-                        </Box>
-                    </Stack>
-                </DialogContent>
-
-                <DialogActions>
+            title={isEditing ? 'Edit Page' : 'Add New Page'}
+            actions={
+                <>
                     <Button
                         onClick={onClose}
                         disabled={isLoading}
@@ -207,8 +96,117 @@ export default function AddEditPageDialog({
                     >
                         {isEditing ? 'Update' : 'Create'} Page
                     </Button>
-                </DialogActions>
+                </>
+            }
+        >
+
+            <FormContainer
+                onSuccess={handleFormSubmit}
+                defaultValues={{
+                    title: initialValue?.title || '',
+                    name: initialValue?.name || '',
+                    slug: initialValue?.slug || '',
+                    content: initialValue?.content || '',
+                    status: initialValue?.status || PageStatusEnum.DRAFT,
+                }}
+            >
+
+                <Stack spacing={3}>
+                    <Box sx={{
+                        display: 'flex',
+                        gap: 2,
+                    }}>
+                        <RHFTextField
+                            name="title"
+                            label="Title"
+                            required
+                            fullWidth
+                        />
+                        <RHFSelect
+                            name="status"
+                            label="Status"
+                            required
+                            sx={{ minWidth: 150 }}
+                        >
+                            <MenuItem value={PageStatusEnum.DRAFT}>
+                                Draft
+                            </MenuItem>
+                            <MenuItem value={PageStatusEnum.PUBLISHED}>
+                                Published
+                            </MenuItem>
+                            <MenuItem value={PageStatusEnum.UNPUBLISHED}>
+                                Unpublished
+                            </MenuItem>
+                        </RHFSelect>
+                    </Box>
+
+                    <Box sx={{
+                        display: 'flex',
+                        gap: 2,
+                    }}>
+                        <RHFTextField
+                            name="name"
+                            label="Name"
+                            fullWidth
+                            helperText="Internal name for reference"
+                        />
+                        <RHFTextField
+                            name="slug"
+                            label="Slug"
+                            fullWidth
+                            helperText="URL-friendly version of the title"
+                        />
+                    </Box>
+
+                    <Box>
+                        <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            mb: 1,
+                        }}>
+                            <Typography variant="body1" component="label" sx={{ fontWeight: 500 }}>
+                                Content
+                            </Typography>
+                            <ToggleButtonGroup
+                                value={editorMode}
+                                exclusive
+                                onChange={(_, newMode) => {
+                                    if (newMode !== null) {
+                                        setEditorMode(newMode);
+                                    }
+                                }}
+                                size="small"
+                            >
+                                <ToggleButton value="visual">
+                                    <Icon icon={IconEnum.EYE} sx={{ mr: 1 }} />
+                                    Visual
+                                </ToggleButton>
+                                <ToggleButton value="code">
+                                    <Icon icon={IconEnum.FILE_DOC} sx={{ mr: 1 }} />
+                                    Code
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                        </Box>
+
+                        {editorMode === 'visual' ? (
+                            <RHFTextEditor
+                                name="content"
+                                label=""
+                                helperText="Create rich content using the visual editor"
+                            />
+                        ) : (
+                            <RHFMonacoEditor
+                                name="content"
+                                label=""
+                                height="400px"
+                                language="html"
+                                helperText="Edit HTML code directly with syntax highlighting and auto-completion"
+                            />
+                        )}
+                    </Box>
+                </Stack>
             </FormContainer>
-        </Dialog>
+        </DefaultDialog>
     );
 }
