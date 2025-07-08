@@ -10,7 +10,11 @@
         "metatype",
         "mingcute",
         "tanstack",
-        "typeorm"
+        "typeorm",
+        "nunjucks",
+        "mjml",
+        "iconmoon",
+        "svgson"
     ],
     "useGitignore": true,
     "ignorePaths": [
