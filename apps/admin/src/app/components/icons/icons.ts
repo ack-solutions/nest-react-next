@@ -1,5 +1,4 @@
 export enum IconEnum {
-    GROUP_7 = 'Group-7',
     ARROW_COUNTER_CLOCKWISE = 'arrow-counter-clockwise',
     ARROW_DOWN_LEFT = 'arrow-down-left',
     ARROW_DOWN_RIGHT = 'arrow-down-right',
@@ -55,6 +54,7 @@ export enum IconEnum {
     FUNNEL_SIMPLE = 'funnel-simple',
     GEAR_SIX = 'gear-six',
     GRID = 'grid',
+    GROUP_7 = 'Group-7',
     HOUSE_LINE = 'house-line',
     INFO = 'info',
     INQUIRY = 'inquiry',

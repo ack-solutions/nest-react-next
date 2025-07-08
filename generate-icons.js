@@ -5,7 +5,7 @@ const svgson = require('svgson');
 
 (async () => {
     const inputDir = path.join(__dirname, 'icons');
-    const outputDirs = [path.join(__dirname, 'apps/portal/src/app/plugins/core/components/icons'), path.join(__dirname, 'apps/admin/src/app/components/icons')];
+    const outputDirs = [path.join(__dirname, 'apps/admin/src/app/components/icons')];
 
     // Validate input directory
     if (!fs.existsSync(inputDir)) {

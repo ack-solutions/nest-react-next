@@ -4,7 +4,7 @@ import { useBoolean, useToasty } from '@admin/app/hook';
 import { useTemplate } from '@libs/react-shared';
 import { ITemplate, PermissionsEnum } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
-import { Button, Card, Stack } from '@mui/material';
+import { Button, Card } from '@mui/material';
 import { useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -40,13 +40,12 @@ function TemplateList({ organizationId }: TemplateListProps) {
 
     const handleDeleteTemplate = useCallback((template: ITemplate) => {
         confirmDialog('Are you sure you want to delete this template?').then(async () => {
-            try {
-                await deleteTemplate(template.id || '');
+            await deleteTemplate(template.id).then(() => {
                 showToasty('Template deleted successfully', 'success');
                 datatableRef.current?.refresh();
-            } catch (error) {
-                console.error(error);
-            }
+            }).catch((error) => {
+                showToasty(error, 'error');
+            });
         }).catch(() => {
             showToasty('Template deletion cancelled', 'error');
         });
