@@ -83,7 +83,6 @@ export class UserService extends BaseService<User> {
             await authUser.assignRoles(entity.roles, RoleGuardEnum.ADMIN) as any; // TODO: change to the correct guard
             await authUser.save();
         }
-
         return super.beforeUpdate(entity);
     }
 

@@ -48,7 +48,7 @@ export class User extends CoreEntity {
         nullable: true,
         onDelete: 'CASCADE',
     })
-    authUser?: NestAuthUser;
+    authUser?: NestAuthUser; // TODO: Create a new user Time show error Circular Dependency
 
     @Factory((faker) => faker.string.numeric(10))
     @ApiProperty({

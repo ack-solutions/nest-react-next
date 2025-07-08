@@ -35,3 +35,5 @@ export * from './rhf-password';
 export * from './rhf-date-picker';
 
 export * from './rhf-phone-number';
+
+export * from './rhf-mjml-editor';

@@ -32,4 +32,13 @@ export enum PermissionsEnum {
     ACCESS_SETTINGS = 'access-settings',
     UPDATE_SETTINGS = 'update-settings',
 
+    ACCESS_TEMPLATES = 'access-templates',
+    CREATE_TEMPLATES = 'create-templates',
+    UPDATE_TEMPLATES = 'update-templates',
+    DELETE_TEMPLATES = 'delete-templates',
+
+    ACCESS_TEMPLATE_LAYOUTS = 'access-template-layouts',
+    CREATE_TEMPLATE_LAYOUTS = 'create-template-layouts',
+    UPDATE_TEMPLATE_LAYOUTS = 'update-template-layouts',
+    DELETE_TEMPLATE_LAYOUTS = 'delete-template-layouts',
 }

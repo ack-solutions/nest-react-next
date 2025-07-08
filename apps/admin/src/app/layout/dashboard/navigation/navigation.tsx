@@ -43,7 +43,7 @@ const ToggleButton = styled(IconButton)(({ theme }) => ({
     position: 'fixed',
     top: 20,
     left: NAV.W_VERTICAL - 12,
-    zIndex: theme.zIndex.appBar + 1,
+    zIndex: theme.zIndex.drawer + 1,
     width: 24,
     height: 24,
     padding: 0,

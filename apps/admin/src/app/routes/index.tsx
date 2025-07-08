@@ -41,6 +41,10 @@ const UserProfile = Loadable(
 const PageList = Loadable(lazy(() => import('../pages/pages/page-list')));
 const EmailTemplateList = Loadable(lazy(() => import('../pages/email-templates/email-template-list')));
 const SettingsList = Loadable(lazy(() => import('../pages/settings/settings-list')));
+const TemplateList = Loadable(lazy(() => import('../pages/template/template-list')));
+const EditTemplate = Loadable(lazy(() => import('../pages/template/edit-template')));
+const TemplateLayoutList = Loadable(lazy(() => import('../pages/template-layout/template-layout-list')));
+const EditTemplateLayout = Loadable(lazy(() => import('../pages/template-layout/edit-template-layout')));
 
 export default function Router() {
     // const routes = useMemo(() => getPluginRoutes(), []);
@@ -152,6 +156,22 @@ export default function Router() {
                 {
                     path: 'email-templates',
                     element: <EmailTemplateList />,
+                },
+                {
+                    path: 'templates',
+                    element: <TemplateList />,
+                },
+                {
+                    path: 'templates/edit/:templateId',
+                    element: <EditTemplate />,
+                },
+                {
+                    path: 'template-layouts',
+                    element: <TemplateLayoutList />,
+                },
+                {
+                    path: 'template-layouts/edit/:templateLayoutId',
+                    element: <EditTemplateLayout />,
                 },
                 {
                     path: 'settings',
