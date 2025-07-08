@@ -13,8 +13,12 @@
         "typeorm",
         "nunjucks",
         "mjml",
+        "MJML",
+        "RHFMJML",
         "iconmoon",
-        "svgson"
+        "svgson",
+        "ackplus",
+        "Ijoi"
     ],
     "useGitignore": true,
     "ignorePaths": [
