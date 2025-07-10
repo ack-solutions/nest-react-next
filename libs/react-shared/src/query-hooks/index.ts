@@ -7,3 +7,4 @@ export * from './use-permission';
 export * from './use-page';
 export * from './use-template';
 export * from './use-template-layout';
+export * from './use-setting';

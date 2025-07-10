@@ -16,6 +16,7 @@ import { CmsModule } from './modules/cms/cms.module';
 import { CountryModule } from './modules/country/country.module';
 import { PageModule } from './modules/page/page.module';
 import { RoleModule } from './modules/role/role.module';
+import { SettingModule } from './modules/setting/setting.module';
 import { TemplateModule } from './modules/template/template.module';
 import { UsersModule } from './modules/user/users.module';
 import { templateFilters } from './utils/template-filter';
@@ -76,6 +77,7 @@ import { templateFilters } from './utils/template-filter';
         CountryModule,
         CmsModule,
         TemplateModule,
+        SettingModule,
     ],
     controllers: [AppController],
     providers: [AppService],

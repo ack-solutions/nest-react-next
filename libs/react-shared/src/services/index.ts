@@ -9,3 +9,4 @@ export * from './permission.service';
 export * from './page.service';
 export * from './template.service';
 export * from './template-layout.service';
+export * from './setting.service';
