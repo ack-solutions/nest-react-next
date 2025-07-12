@@ -52,7 +52,7 @@ function IncrementButton({
                 sx={{ borderRadius: 0.75 }}
                 disableRipple
             >
-                <Icon icon={IconEnum.MINUS_CIRCLE} />
+                <Icon icon={IconEnum.CircleMinus} />
             </IconButton>
             <InputBase
                 value={quantity}
@@ -77,7 +77,7 @@ function IncrementButton({
                 sx={{ borderRadius: 0.75 }}
                 disableRipple
             >
-                <Icon icon={IconEnum.PLUS_CIRCLE} />
+                <Icon icon={IconEnum.CirclePlus} />
             </IconButton>
         </Stack>
     );

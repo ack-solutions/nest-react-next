@@ -258,7 +258,7 @@ function MJMLSplitEditor({
                             language={monacoLang}
                             value={typeof code === 'string' ? code : JSON.stringify(code || {}, null, 2)}
                             onChange={handleChangeCode}
-                            theme="vs-dark"
+                            theme="monokai"
                             options={getEditorOptions}
                             beforeMount={handleBeforeMount}
                             height="500px"
@@ -305,7 +305,7 @@ function MJMLSplitEditor({
                             language={monacoLang}
                             value={typeof code === 'string' ? code : JSON.stringify(code || {}, null, 2)}
                             onChange={handleChangeCode}
-                            theme="vs-dark"
+                            theme="monokai"
                             options={getEditorOptions}
                             beforeMount={handleBeforeMount}
                             {...props}

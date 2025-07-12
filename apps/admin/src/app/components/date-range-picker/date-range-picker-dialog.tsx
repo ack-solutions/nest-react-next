@@ -97,12 +97,12 @@ function DateRangePickerDialog({
                                         >
                                             <Icon
                                                 size="x-small"
-                                                icon={IconEnum.CLOSE}
+                                                icon={IconEnum.X}
                                             />
                                         </IconButton>
                                     ) : null}
                                     <Icon
-                                        icon={IconEnum.CALENDAR}
+                                        icon={IconEnum.Calendar}
                                         sx={{
                                             cursor: 'pointer',
                                         }}

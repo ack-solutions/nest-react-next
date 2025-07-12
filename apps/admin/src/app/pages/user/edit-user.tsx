@@ -19,12 +19,12 @@ const userTabs = [
     {
         name: 'General',
         value: 'general',
-        icon: <Icon icon={IconEnum.USER_CIRCLE} />,
+        icon: <Icon icon={IconEnum.CircleUser} />,
     },
     {
         name: 'Reset Password',
         value: 'password',
-        icon: <Icon icon={IconEnum.KEY} />,
+        icon: <Icon icon={IconEnum.Key} />,
     },
 ];
 

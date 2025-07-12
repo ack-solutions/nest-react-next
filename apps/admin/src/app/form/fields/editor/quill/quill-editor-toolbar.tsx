@@ -245,14 +245,14 @@ export default function QuillEditorToolbar({
                             type="button"
                             className="ql-undo"
                         >
-                            <Icon icon={IconEnum.UNDO} />
+                            <Icon icon={IconEnum.Undo} />
                         </button>
                         <button
                             type="button"
                             className="ql-redo"
                         >
                             <Icon
-                                icon={IconEnum.REDO}
+                                icon={IconEnum.Redo}
                             />
                         </button>
                     </div>

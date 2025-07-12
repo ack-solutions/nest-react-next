@@ -49,13 +49,13 @@ const profileSections = [
     {
         id: 'contact',
         label: 'Contact Information',
-        icon: IconEnum.EMAIL,
+        icon: IconEnum.Mail,
         description: 'Manage your email address and phone number',
     },
     {
         id: 'password',
         label: 'Security & Password',
-        icon: IconEnum.KEY,
+        icon: IconEnum.Key,
         description: 'Update your password and security settings',
     },
 ];
@@ -89,7 +89,7 @@ function UserProfile() {
                     }}
                 >
                     <Icon
-                        icon={IconEnum.PENCIL_SIMPLE}
+                        icon={IconEnum.Pencil}
                         sx={{ fontSize: 16 }}
                     />
                 </IconButton>

@@ -2,7 +2,7 @@ import { QueryBuilder, WhereOperatorEnum } from '@ackplus/nest-crud-request';
 import { usePage } from '@libs/react-shared';
 import { IPage, PermissionsEnum, PageStatusEnum } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
-import { Card, Button, Chip } from '@mui/material';
+import { Card, Button } from '@mui/material';
 import { useCallback, useRef, useState, useMemo, useEffect } from 'react';
 
 import {
@@ -13,6 +13,8 @@ import {
     DataTableTabItem,
     IDataTableFilter,
     Page,
+    StatusChip,
+    getStatusConfig,
 } from '../../components';
 import { useAccess, withPermission } from '../../contexts/react-access-control';
 import { useToasty } from '../../hook';
@@ -123,19 +125,6 @@ function PageList() {
         ];
     }, []);
 
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'published':
-                return 'success';
-            case 'draft':
-                return 'warning';
-            case 'unpublished':
-                return 'error';
-            default:
-                return 'default';
-        }
-    };
-
     const columns: DataTableColumn<IPage>[] = [
         {
             name: 'name',
@@ -163,11 +152,9 @@ function PageList() {
             label: 'Status',
             isSortable: true,
             render: (row) => (
-                <Chip
-                    label={row?.status || 'Draft'}
-                    color={getStatusColor(row?.status) as any}
-                    size="small"
-                    variant="outlined"
+                <StatusChip
+                    status={row?.status || 'draft'}
+                    statusConfig={getStatusConfig('page')}
                 />
             ),
         },
@@ -214,6 +201,11 @@ function PageList() {
                     columns={columns}
                     ref={datatableRef}
                     hasSoftDelete
+                    // Permission props
+                    canEdit={canEdit}
+                    canDelete={canDelete}
+                    canRestore={canDelete} // Usually same as delete permission
+                    canDeleteForever={canDelete} // Usually same as delete permission
                     onToggleTrashData={handleTrashData}
                     dataTableApiRequestMap={handleDataTableApiRequestMap}
                     crudOperationHooks={{

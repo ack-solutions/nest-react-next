@@ -233,7 +233,7 @@ export function AutocompleteSearchTags({
                     <Box sx={{ flexShrink: 0 }}>
                         {(deletable && !option.inputValue && canDeleteOptions && canDeleteOptions(option)) ? (
                             <IconButton onClick={handleDelete(option)}>
-                                <Icon icon={IconEnum.TRASH} />
+                                <Icon icon={IconEnum.Trash} />
                             </IconButton>
                         ) : null}
                     </Box>

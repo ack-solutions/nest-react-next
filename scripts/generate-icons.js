@@ -35,18 +35,39 @@ const path = require('path');
             continue;
         }
 
-        // Read SVG content and extract just the inner content
+        // Read SVG content
         const svgContent = fs.readFileSync(svgFilePath, 'utf8');
 
-        // Extract everything between <svg> and </svg> tags
-        const svgMatch = svgContent.match(/<svg[^>]*>(.*?)<\/svg>/s);
+        // Extract viewBox and inner content
+        const svgMatch = svgContent.match(/<svg[^>]*viewBox="([^"]*)"[^>]*>(.*?)<\/svg>/s);
         if (!svgMatch) {
             console.warn(`Could not parse SVG for icon: ${iconName}`);
             continue;
         }
 
-        // Get the inner SVG content and clean it
-        let innerSvg = svgMatch[1].trim();
+        const originalViewBox = svgMatch[1];
+        let innerSvg = svgMatch[2].trim();
+
+        // Parse original viewBox
+        const viewBoxParts = originalViewBox.split(/\s+/).map(Number);
+        const [
+            _origX,
+            _origY,
+            origWidth,
+            origHeight,
+        ] = viewBoxParts;
+
+        // Calculate scale factor to fit into 24x24
+        const scale = 24 / Math.max(origWidth, origHeight);
+
+        // Calculate offset to center the icon
+        const offsetX = (24 - origWidth * scale) / 2;
+        const offsetY = (24 - origHeight * scale) / 2;
+
+        // Transform the SVG content to fit 24x24 viewBox
+        if (scale !== 1 || offsetX !== 0 || offsetY !== 0) {
+            innerSvg = `<g transform="translate(${offsetX}, ${offsetY}) scale(${scale})">${innerSvg}</g>`;
+        }
 
         // Remove any existing fill attributes
         innerSvg = innerSvg.replace(/fill="[^"]*"/g, '');

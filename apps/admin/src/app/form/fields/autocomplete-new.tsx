@@ -241,7 +241,7 @@ export function AutocompleteNew({
                     </Box>
                     {deletable && !option.inputValue && canDeleteOptions?.(option) ? (
                         <IconButton onClick={handleDelete(option)}>
-                            <Icon icon={IconEnum.TRASH} />
+                            <Icon icon={IconEnum.Trash} />
                         </IconButton>
                     ) : null}
                 </Stack>

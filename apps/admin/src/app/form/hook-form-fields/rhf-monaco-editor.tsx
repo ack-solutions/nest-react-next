@@ -53,7 +53,7 @@ export const RHFMonacoEditor = forwardRef(
                         language={language}
                         value={value || ''}
                         onChange={(newValue) => onChange(newValue || '')}
-                        theme="vs-dark"
+                        theme="monokai"
                         options={{
                             minimap: { enabled: false },
                             scrollBeyondLastLine: false,

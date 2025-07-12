@@ -56,7 +56,7 @@ export function TableActionMenu({
             ...(onView ?
                 [
                     {
-                        icon: <Icon icon={IconEnum.EYE} />,
+                        icon: <Icon icon={IconEnum.Eye} />,
                         title: 'Preview',
                         permission: `show-${crudPermissionKey}`,
                         onClick: onView,
@@ -66,7 +66,7 @@ export function TableActionMenu({
             ...(onEdit ?
                 [
                     {
-                        icon: <Icon icon={IconEnum.PENCIL_SIMPLE} />,
+                        icon: <Icon icon={IconEnum.Pencil} />,
                         title: 'Edit',
                         permission: `update-${crudPermissionKey}`,
                         onClick: onEdit,
@@ -76,7 +76,7 @@ export function TableActionMenu({
             ...(onDelete ?
                 [
                     {
-                        icon: <Icon icon={IconEnum.TRASH} />,
+                        icon: <Icon icon={IconEnum.Trash} />,
                         title: 'Delete',
                         permission: `delete-${crudPermissionKey}`,
                         onClick: onDelete,
@@ -86,7 +86,7 @@ export function TableActionMenu({
             ...(onRestore ?
                 [
                     {
-                        icon: <Icon icon={IconEnum.CLOCK_REVERSE} />,
+                        icon: <Icon icon={IconEnum.RotateCcw} />,
                         title: 'Restore',
                         permission: `restore-${crudPermissionKey}`,
                         onClick: onRestore,
@@ -96,7 +96,7 @@ export function TableActionMenu({
             ...(onDeleteForever ?
                 [
                     {
-                        icon: <Icon icon={IconEnum.TRASH_X} />,
+                        icon: <Icon icon={IconEnum.Trash2} />,
                         title: 'Delete Forever',
                         permission: `trash-delete-${crudPermissionKey}`,
                         onClick: onDeleteForever,
@@ -146,7 +146,7 @@ export function TableActionMenu({
         <MenuDropdown
             anchor={(
                 <IconButton>
-                    <Icon icon={IconEnum.DOTS_THREE_VERTICAL} />
+                    <Icon icon={IconEnum.EllipsisVertical} />
                 </IconButton>
             )}
         >

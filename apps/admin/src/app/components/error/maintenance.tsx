@@ -75,7 +75,7 @@ export function Maintenance() {
                             }}
                         >
                             <Icon
-                                icon={IconEnum.GEAR_SIX}
+                                icon={IconEnum.Settings}
                                 sx={{
                                     color: theme.palette.warning.main,
                                 }}

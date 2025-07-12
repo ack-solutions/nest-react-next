@@ -1,9 +1,6 @@
 import { IUser, UserStatusEnum } from '@libs/types';
 
-import UserStatusLabel from './user-status-label';
-import { Icon } from '../icons/icon';
-import { IconEnum } from '../icons/icons';
-import { LabelDropdown } from '../label/label-dropdown';
+import { StatusChip, getStatusConfig } from '../status-chip';
 
 
 interface UserStatusDropdownProps {
@@ -13,34 +10,15 @@ interface UserStatusDropdownProps {
 
 
 function UserStatusDropdown({ user, onChange }: UserStatusDropdownProps) {
+    const userStatusOptions = Object.values(UserStatusEnum);
+    const userStatusConfig = getStatusConfig('user');
+
     return (
-        <LabelDropdown
-            selected={user?.status}
-            options={Object.values(UserStatusEnum)}
-            anchor={(
-                <UserStatusLabel
-                    label={user?.status}
-                    endIcon={(
-                        <Icon
-                            icon={IconEnum.CARET_DOWN_FILL}
-                            size={8}
-                        />
-                    )}
-                    sx={{
-                        cursor: 'pointer',
-                    }}
-                />
-            )}
-            renderOption={(option) => (
-                <UserStatusLabel
-                    label={option}
-                    sx={{
-                        cursor: 'pointer',
-                        width: '100%',
-                    }}
-                />
-            )}
-            onChange={(option) => onChange(option)}
+        <StatusChip
+            status={user?.status || UserStatusEnum.PENDING}
+            statusConfig={userStatusConfig}
+            options={userStatusOptions}
+            onChange={(newStatus) => onChange(newStatus as UserStatusEnum)}
         />
     );
 }

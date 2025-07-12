@@ -137,14 +137,8 @@ function AddEditUserForm({ onSubmit, values }: AddEditUserFormProps) {
                                 options={Object.values(UserStatusEnum)}
                                 anchor={(
                                     <UserStatusLabel
-                                        label={formValues?.status}
-                                        endIcon={(
-                                            <Icon
-                                                icon={IconEnum.CARET_DOWN_FILL}
-                                                size={8}
-                                            />
-                                        )}
-                                        sx={{ cursor: 'pointer' }}
+                                        user={{ status: formValues?.status } as IUser}
+                                        variant="soft"
                                     />
                                 )}
                             />

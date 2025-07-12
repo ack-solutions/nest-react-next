@@ -122,7 +122,7 @@ export function CountryListPopover({ isoCode, onClickCountry }: CountryListProps
                     </Typography>
 
                     <Icon
-                        icon={IconEnum.CARET_DOWN}
+                        icon={IconEnum.ChevronDown}
                         size={12}
                         sx={{
                             color: 'text.disabled',
@@ -187,7 +187,7 @@ export function CountryListPopover({ isoCode, onClickCountry }: CountryListProps
                                         startAdornment: (
                                             <InputAdornment position="start">
                                                 <Icon
-                                                    icon={IconEnum.MAGNIFYING_GLASS}
+                                                    icon={IconEnum.Search}
                                                     sx={{ color: 'text.disabled' }}
                                                 />
                                             </InputAdornment>

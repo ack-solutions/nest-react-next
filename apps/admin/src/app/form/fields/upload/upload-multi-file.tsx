@@ -18,9 +18,9 @@ import { useDropzone, DropzoneOptions } from 'react-dropzone';
 
 
 import RejectionFiles from './rejection-files';
+import { fData } from './utils';
 import { Icon } from '../../../components';
 import { IconEnum } from '../../../components/icons/icons';
-import { fData } from './utils';
 
 
 const DropZoneStyle = styled('div')(({ theme }) => ({
@@ -222,7 +222,7 @@ export function UploadMultiFile({
                                             },
                                         }}
                                     >
-                                        <Icon icon={IconEnum.CLOSE} />
+                                        <Icon icon={IconEnum.X} />
                                     </IconButton>
                                 </Box>
                             </ListItem>
@@ -248,7 +248,7 @@ export function UploadMultiFile({
                                     onClick={() => onRemove && onRemove(file, index)
                                     }
                                 >
-                                    <Icon icon={IconEnum.CLOSE} />
+                                    <Icon icon={IconEnum.X} />
                                 </IconButton>
                             )}
                         >

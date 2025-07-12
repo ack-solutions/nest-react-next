@@ -171,12 +171,12 @@ export default function SettingsDrawer() {
                     {
                         value: 'vertical',
                         label: 'Vertical',
-                        icon: IconEnum.SIDEBAR,
+                        icon: IconEnum.PanelLeft,
                     },
                     {
                         value: 'mini',
                         label: 'Mini',
-                        icon: IconEnum.LIST,
+                        icon: IconEnum.List,
                     },
                 ].map((layout) => {
                     const isSelected = settings.navLayout === layout.value;
@@ -240,7 +240,7 @@ export default function SettingsDrawer() {
             >
                 <Typography variant="h6">Settings</Typography>
                 <IconButton onClick={settings.onClose}>
-                    <Icon icon={IconEnum.CLOSE} />
+                    <Icon icon={IconEnum.X} />
                 </IconButton>
             </Stack>
 

@@ -90,7 +90,7 @@ function FilterDrawer({
                 >
                     <Typography variant="h4">{title}</Typography>
                     <IconButton onClick={onClose}>
-                        <Icon icon={IconEnum.CLOSE} />
+                        <Icon icon={IconEnum.X} />
                     </IconButton>
                 </Stack>
 

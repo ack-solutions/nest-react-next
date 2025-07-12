@@ -13,6 +13,7 @@ import { CrudTable, CrudTableActions } from '../../components/crud/crud-table';
 import { DataTableColumn, DataTableTab, DataTableTabItem, IDataTableFilter } from '../../components/data-table';
 import { IconEnum } from '../../components/icons/icons';
 import UserStatusDropdown from '../../components/user/user-status-dropdown';
+import UserStatusLabel from '../../components/user/user-status-label';
 import UserWithAvatar from '../../components/user/user-with-avatar';
 import { useAccess, useAuth, withPermission } from '../../contexts';
 import { useToasty } from '../../hook';
@@ -40,9 +41,12 @@ function UsersList() {
     const [countFilter, setCountFilter] = useState({});
     const [resetPasswordUser, setResetPasswordUser] = useState<IUser | null>(null);
 
+    // Permission checks
     const canCreate = hasPermission(PermissionsEnum.CREATE_USERS);
     const canUpdate = hasPermission(PermissionsEnum.UPDATE_USERS);
+    const canDelete = hasPermission(PermissionsEnum.DELETE_USERS);
     const canResetPassword = hasPermission(PermissionsEnum.RESET_PASSWORD_USERS);
+
     const {
         useGetManyUser,
         useDeleteUser,
@@ -56,7 +60,6 @@ function UsersList() {
     } = useUser();
 
     const { mutateAsync: updateUser } = useUpdateUser();
-
 
     const { data: counts } = useGetUserCounts({
         filter: countFilter,
@@ -88,7 +91,6 @@ function UsersList() {
         setResetPasswordUser(null);
     }, []);
 
-
     const handleUpdateStatus = useCallback(
         (value: UserStatusEnum, row) => {
             const request: any = {
@@ -103,7 +105,6 @@ function UsersList() {
         },
         [showToasty, updateUser],
     );
-
 
     const handleOnChangeTableFilter = useCallback((value, key) => {
         setTableFilter((state) => {
@@ -208,10 +209,17 @@ function UsersList() {
             isSearchable: true,
             isSortable: true,
             render: (row) => (
-                <UserStatusDropdown
-                    user={row}
-                    onChange={(option) => handleUpdateStatus(option, row)}
-                />
+                canUpdate ? (
+                    <UserStatusDropdown
+                        user={row}
+                        onChange={(option) => handleUpdateStatus(option, row)}
+                    />
+                ) : (
+                    <UserStatusLabel
+                        user={row}
+                        onChange={(option) => handleUpdateStatus(option, row)}
+                    />
+                )
             ),
         },
         {
@@ -256,6 +264,11 @@ function UsersList() {
                     columns={columns}
                     ref={datatableRef}
                     hasSoftDelete
+                    // Permission props
+                    canEdit={canUpdate}
+                    canDelete={canDelete}
+                    canRestore={canDelete} // Usually same as delete permission
+                    canDeleteForever={canDelete} // Usually same as delete permission
                     onToggleTrashData={handleTrashData}
                     dataTableApiRequestMap={handleDataTableApiRequestMap}
                     crudOperationHooks={{
@@ -272,16 +285,21 @@ function UsersList() {
                     tableActionMenuProps={
                         (row) => {
                             const isCurrentUser = row?.id === currentUser?.id;
-                            const isSuperAdmin = !isEmpty(filter(row?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)));
-                            const canDeleteUser = !isCurrentUser && !isSuperAdmin;
-                            const canResetUserPassword = canResetPassword && !isCurrentUser;
+                            const isSuperAdmin = !isEmpty(filter(row?.authUser?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)));
+                            const canDeleteUser = canDelete && !isCurrentUser && !isSuperAdmin;
+                            const canResetUserPassword = canResetPassword && !isCurrentUser && !isSuperAdmin;
 
                             return {
-                                ...(canDeleteUser ? {} : { onDelete: null }),
+                                // Override delete permission for specific users
+                                ...(canDeleteUser ? {} : {
+                                    onDelete: null,
+                                    onDeleteForever: null,
+                                }),
+                                // Add reset password action
                                 ...(canResetUserPassword ? {
                                     actions: [
                                         {
-                                            icon: <Icon icon={IconEnum.KEY} />,
+                                            icon: <Icon icon={IconEnum.Key} />,
                                             title: 'Reset Password',
                                             onClick: () => handleResetPassword(row),
                                         },
@@ -291,14 +309,15 @@ function UsersList() {
                         }
                     }
                     filterSelectAll={row => {
+                        const isSuperAdmin = !isEmpty(filter(row?.authUser?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)));
                         return (
-                            !row?.isSuprUser && row?.id !== currentUser?.id && isEmpty(filter(row?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)))
+                            !row?.isSuprUser && row?.id !== currentUser?.id && !isSuperAdmin
                         );
                     }}
                     checkBoxProps={(row, type) => {
+                        const isSuperAdmin = !isEmpty(filter(row?.authUser?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)));
                         if (!(
-                            !row?.isSuprUser && row?.id !== currentUser?.id &&
-                            isEmpty(filter(row?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)))
+                            !row?.isSuprUser && row?.id !== currentUser?.id && !isSuperAdmin
                         ) &&
                             type === 'row'
                         ) {

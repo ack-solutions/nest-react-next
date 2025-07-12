@@ -62,7 +62,7 @@ export function TableBulkActionMenu({
             ...(showView && canView && onView ?
                 [
                     {
-                        icon: <Icon icon={IconEnum.EYE} />,
+                        icon: <Icon icon={IconEnum.Eye} />,
                         title: 'View',
                         onClick: onView,
                     },
@@ -71,7 +71,7 @@ export function TableBulkActionMenu({
             ...(showEdit && canEdit && onEdit ?
                 [
                     {
-                        icon: <Icon icon={IconEnum.PENCIL_SIMPLE} />,
+                        icon: <Icon icon={IconEnum.Pencil} />,
                         title: 'Edit',
                         onClick: onEdit,
                     },
@@ -80,7 +80,7 @@ export function TableBulkActionMenu({
             ...(onDelete && canDelete ?
                 [
                     {
-                        icon: <Icon icon={IconEnum.TRASH} />,
+                        icon: <Icon icon={IconEnum.Trash} />,
                         title: 'Delete',
                         onClick: onDelete,
                     },
@@ -89,7 +89,7 @@ export function TableBulkActionMenu({
             ...(onRestore && canRestore ?
                 [
                     {
-                        icon: <Icon icon={IconEnum.CLOCK_ANTI_CLOCKWISE} />,
+                        icon: <Icon icon={IconEnum.RotateCcw} />,
                         title: 'Restore',
                         onClick: onRestore,
                     },
@@ -98,7 +98,7 @@ export function TableBulkActionMenu({
             ...(onDeleteForever && canDeleteForever ?
                 [
                     {
-                        icon: <Icon icon={IconEnum.TRASH_X} />,
+                        icon: <Icon icon={IconEnum.Trash2} />,
                         title: 'Permanent delete',
                         onClick: onDeleteForever,
                     },
@@ -109,11 +109,17 @@ export function TableBulkActionMenu({
         actions,
         canDelete,
         canDeleteForever,
+        canEdit,
         canRestore,
+        canView,
         hasAnyPermission,
         onDelete,
         onDeleteForever,
+        onEdit,
         onRestore,
+        onView,
+        showEdit,
+        showView,
     ]);
 
     if (crudActions.length <= 2) {
@@ -147,7 +153,7 @@ export function TableBulkActionMenu({
         <MenuDropdown
             anchor={(
                 <IconButton>
-                    <Icon icon={IconEnum.DOTS_THREE_VERTICAL} />
+                    <Icon icon={IconEnum.EllipsisVertical} />
                 </IconButton>
             )}
         >

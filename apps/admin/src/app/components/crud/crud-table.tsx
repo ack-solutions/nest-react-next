@@ -440,8 +440,6 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(
                                 onDelete: () => handleBulkDelete(selectedRowIds),
                             })}
                         actions={bulkActions(selectedRowIds)}
-                        canCreate={canCreate}
-                        canUpdate={canUpdate}
                         canDelete={canDelete}
                         canRestore={canRestore}
                         canDeleteForever={canDeleteForever}

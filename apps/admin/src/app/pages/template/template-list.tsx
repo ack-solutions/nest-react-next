@@ -1,5 +1,5 @@
 import { Page } from '@admin/app/components/page';
-import { useAccess } from '@admin/app/contexts';
+import { useAccess, withPermission } from '@admin/app/contexts';
 import { useBoolean, useToasty } from '@admin/app/hook';
 import { useTemplate } from '@libs/react-shared';
 import { ITemplate, PermissionsEnum } from '@libs/types';
@@ -9,6 +9,7 @@ import { useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import AddEditTemplateDialog from './add-edit-template-dialog';
+import { StatusChip, getStatusConfig } from '../../components';
 import { DataTable, TableActionMenu } from '../../components/data-table';
 import { useConfirm } from '../../contexts/confirm-dialog-context';
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -27,12 +28,15 @@ function TemplateList({ organizationId }: TemplateListProps) {
     const datatableRef = useRef<any>(null);
     const isAddDialogOpen = useBoolean(false);
     const { hasPermission } = useAccess();
+
+    // Permission checks
     const canCreate = hasPermission(PermissionsEnum.CREATE_TEMPLATES);
+    const canUpdate = hasPermission(PermissionsEnum.UPDATE_TEMPLATES);
+    const canDelete = hasPermission(PermissionsEnum.DELETE_TEMPLATES);
 
     const { data, isLoading } = useGetTemplate({
         scopeId: organizationId,
     });
-
 
     const handleEditTemplate = (template: ITemplate) => {
         navigate(PATH_DASHBOARD.templates.edit(template.id));
@@ -74,8 +78,13 @@ function TemplateList({ organizationId }: TemplateListProps) {
         },
         {
             name: 'isActive',
-            label: 'Active',
-            render: (row: ITemplate) => row.isActive ? 'Yes' : 'No',
+            label: 'Status',
+            render: (row: ITemplate) => (
+                <StatusChip
+                    status={row.isActive ? 'active' : 'inactive'}
+                    statusConfig={getStatusConfig('template')}
+                />
+            ),
         },
         {
             name: 'createdAt',
@@ -93,13 +102,12 @@ function TemplateList({ organizationId }: TemplateListProps) {
             render: (row: ITemplate) => (
                 <TableActionMenu
                     row={row}
-                    onDelete={() => handleDeleteTemplate(row)}
-                    onEdit={() => handleEditTemplate(row)}
+                    {...(canDelete && { onDelete: () => handleDeleteTemplate(row) })}
+                    {...(canUpdate && { onEdit: () => handleEditTemplate(row) })}
                 />
             ),
         },
     ];
-
 
     return (
         <Page
@@ -116,14 +124,13 @@ function TemplateList({ organizationId }: TemplateListProps) {
                 { name: 'List' },
             ]}
         >
-
             <Card>
                 <DataTable
                     isLoading={isLoading}
                     ref={datatableRef}
                     data={data || null}
                     totalRow={data?.length || 0}
-                    onRowClick={handleEditTemplate}
+                    onRowClick={canUpdate ? handleEditTemplate : undefined}
                     columns={columns}
                     hasFilter
                     hideSearch
@@ -145,4 +152,6 @@ function TemplateList({ organizationId }: TemplateListProps) {
     );
 }
 
-export default TemplateList;
+export default withPermission({
+    permissions: [PermissionsEnum.ACCESS_TEMPLATES],
+})(TemplateList);

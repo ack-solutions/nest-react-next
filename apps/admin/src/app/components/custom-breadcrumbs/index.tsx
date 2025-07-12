@@ -84,7 +84,7 @@ export function CustomBreadcrumbs({
                     linkIcon={link.icon || index === 0 ? (
                         <Icon
                             size="x-small"
-                            icon={IconEnum.HOUSE_LINE}
+                            icon={IconEnum.House}
                         />
                     ) : null}
                     key={link.name ?? index}

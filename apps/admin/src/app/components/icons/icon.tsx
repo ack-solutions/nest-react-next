@@ -9,13 +9,12 @@ interface IconProps extends SvgIconProps {
     sx?: SxProps;
     icon: IconEnum;
     size?: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'inherit' | number;
-    offset?: number;
     strokeWidth?: number;
 }
 
 export interface IconMap {
     name: string;
-    paths: Array<string>;
+    content: string;
 }
 
 export function Icon({
@@ -23,8 +22,7 @@ export function Icon({
     sx,
     size = 18,
     className,
-    offset = 0,
-    strokeWidth = 1,
+    strokeWidth = 2,
     ...props
 }: IconProps) {
     const sizeNumber = useMemo(() => {
@@ -46,25 +44,37 @@ export function Icon({
         }
     }, [size]);
 
-    const viewBoxMax = 1024;
-    const localOffset = (offset / 2) * -viewBoxMax;
-    const offsetViewBox = viewBoxMax - localOffset;
-
     const currentIcon: IconMap | undefined = useMemo(() => {
         if (selection && selection.icons) {
             return selection.icons
                 .map((i: any) => ({
                     name: i.properties.name,
-                    paths: i.icon.paths,
+                    content: i.icon.content,
                 }))
                 .find((i: IconMap) => i.name === icon);
         }
         return undefined;
     }, [icon]);
 
+    // Process the SVG content to add stroke properties
+    const processedContent = useMemo(() => {
+        if (!currentIcon?.content) return '';
+
+        // Add stroke properties to the SVG content
+        let processed = currentIcon.content;
+
+        // Add stroke and strokeWidth to all SVG elements
+        processed = processed.replace(
+            /<(path|circle|rect|ellipse|line|polyline|polygon)([^>]*?)\/>/g,
+            `<$1$2 stroke="currentColor" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round"/>`,
+        );
+
+        return processed;
+    }, [currentIcon?.content, strokeWidth]);
+
     return (
         <SvgIcon
-            viewBox={`${localOffset} ${localOffset} ${offsetViewBox} ${offsetViewBox}`}
+            viewBox="0 0 24 24"
             className={className}
             sx={{
                 width: sizeNumber,
@@ -73,13 +83,9 @@ export function Icon({
             }}
             {...props}
         >
-            {currentIcon?.paths?.map((p) => (
-                <path
-                    key={p}
-                    d={p}
-                    strokeWidth={5 * strokeWidth}
-                />
-            )) || null}
+            {processedContent ? (
+                <g dangerouslySetInnerHTML={{ __html: processedContent }} />
+            ) : null}
         </SvgIcon>
     );
 }

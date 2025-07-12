@@ -1,5 +1,5 @@
 import { Page } from '@admin/app/components/page';
-import { useAccess } from '@admin/app/contexts';
+import { useAccess, withPermission } from '@admin/app/contexts';
 import { useBoolean, useToasty } from '@admin/app/hook';
 import { useTemplateLayout } from '@libs/react-shared';
 import { ITemplateLayout, PermissionsEnum } from '@libs/types';
@@ -9,6 +9,7 @@ import { useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import AddEditTemplateLayoutDialog from './add-edit-template-layout-dialog';
+import { StatusChip, getStatusConfig } from '../../components';
 import { DataTable, TableActionMenu } from '../../components/data-table';
 import { useConfirm } from '../../contexts/confirm-dialog-context';
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -25,8 +26,10 @@ function TemplateLayoutList() {
     const { hasPermission } = useAccess();
     const { data, isLoading } = useGetTemplateLayout({});
 
+    // Permission checks
     const canCreate = hasPermission(PermissionsEnum.CREATE_TEMPLATE_LAYOUTS);
-
+    const canUpdate = hasPermission(PermissionsEnum.UPDATE_TEMPLATE_LAYOUTS);
+    const canDelete = hasPermission(PermissionsEnum.DELETE_TEMPLATE_LAYOUTS);
 
     const handleEditTemplateLayout = (templateLayout: ITemplateLayout) => {
         navigate(PATH_DASHBOARD.templateLayouts.edit(templateLayout.id));
@@ -69,8 +72,13 @@ function TemplateLayoutList() {
         },
         {
             name: 'isActive',
-            label: 'Active',
-            render: (row: ITemplateLayout) => row.isActive ? 'Yes' : 'No',
+            label: 'Status',
+            render: (row: ITemplateLayout) => (
+                <StatusChip
+                    status={row.isActive ? 'active' : 'inactive'}
+                    statusConfig={getStatusConfig('template')}
+                />
+            ),
         },
         {
             name: 'createdAt',
@@ -88,13 +96,12 @@ function TemplateLayoutList() {
             render: (row: ITemplateLayout) => (
                 <TableActionMenu
                     row={row}
-                    onDelete={() => handleDeleteTemplateLayout(row)}
-                    onEdit={() => handleEditTemplateLayout(row)}
+                    {...(canDelete && { onDelete: () => handleDeleteTemplateLayout(row) })}
+                    {...(canUpdate && { onEdit: () => handleEditTemplateLayout(row) })}
                 />
             ),
         },
     ];
-
 
     return (
         <Page
@@ -117,7 +124,7 @@ function TemplateLayoutList() {
                     ref={datatableRef}
                     data={data || null}
                     totalRow={data?.length || 0}
-                    onRowClick={handleEditTemplateLayout}
+                    onRowClick={canUpdate ? handleEditTemplateLayout : undefined}
                     columns={columns}
                     hasFilter
                     hideSearch
@@ -139,8 +146,9 @@ function TemplateLayoutList() {
                 ) : null
             }
         </Page>
-
     );
 }
 
-export default TemplateLayoutList;
+export default withPermission({
+    permissions: [PermissionsEnum.ACCESS_TEMPLATE_LAYOUTS],
+})(TemplateLayoutList);

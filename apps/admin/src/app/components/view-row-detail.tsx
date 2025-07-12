@@ -87,7 +87,7 @@ function ViewRowDetail({
                     secondaryAction={(
                         <Tooltip title="View File">
                             <IconButton onClick={() => handleFileDownload(downloadUrl)}>
-                                <Icon icon={IconEnum.EYE} />
+                                <Icon icon={IconEnum.Eye} />
                             </IconButton>
                         </Tooltip>
                     )}
@@ -99,7 +99,7 @@ function ViewRowDetail({
                             }}
                         >
                             <Icon
-                                icon={IconEnum.COPY}
+                                icon={IconEnum.Copy}
                                 color="primary"
                             />
                         </Avatar>

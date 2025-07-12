@@ -179,11 +179,11 @@ export default function AddEditPageDialog({
                                 size="small"
                             >
                                 <ToggleButton value="visual">
-                                    <Icon icon={IconEnum.EYE} sx={{ mr: 1 }} />
+                                    <Icon icon={IconEnum.Eye} sx={{ mr: 1 }} />
                                     Visual
                                 </ToggleButton>
                                 <ToggleButton value="code">
-                                    <Icon icon={IconEnum.FILE_DOC} sx={{ mr: 1 }} />
+                                    <Icon icon={IconEnum.FileText} sx={{ mr: 1 }} />
                                     Code
                                 </ToggleButton>
                             </ToggleButtonGroup>
