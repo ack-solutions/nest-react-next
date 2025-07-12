@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Icons Viewer</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                    Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                background-color: #f5f5f5;
+                color: #333;
+                line-height: 1.6;
+            }
+
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+
+            .header {
+                text-align: center;
+                margin-bottom: 15px;
+                background: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+                color: #2c3e50;
+                margin-bottom: 5px;
+            }
+
+            .header p {
+                color: #7f8c8d;
+                font-size: 0.9rem;
+            }
+
+            .search-container {
+                margin-bottom: 15px;
+                background: white;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+            }
+
+            .search-input {
+                width: 100%;
+                padding: 12px 16px;
+                font-size: 0.9rem;
+                border: 2px solid #e0e0e0;
+                border-radius: 6px;
+                outline: none;
+                transition: border-color 0.3s ease;
+            }
+
+            .search-input:focus {
+                border-color: #3498db;
+            }
+
+            .stats {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px solid #e0e0e0;
+                font-size: 0.8rem;
+                color: #7f8c8d;
+            }
+
+            .update-notice {
+                background: #3498db;
+                color: white;
+                padding: 8px 15px;
+                border-radius: 6px;
+                margin-bottom: 15px;
+                text-align: center;
+                font-size: 0.8rem;
+            }
+
+            .icons-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 8px;
+                margin-bottom: 15px;
+            }
+
+            .icon-card {
+                background: white;
+                border-radius: 8px;
+                padding: 12px 8px;
+                text-align: center;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease;
+                cursor: pointer;
+                position: relative;
+                aspect-ratio: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .icon-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+                z-index: 10000;
+                position: relative;
+            }
+
+            .icon-svg {
+                width: 24px;
+                height: 24px;
+                margin: 0 auto 6px;
+                fill: #2c3e50;
+                transition: fill 0.3s ease;
+                flex-shrink: 0;
+            }
+
+            .icon-card:hover .icon-svg {
+                fill: #3498db;
+            }
+
+            .icon-name {
+                display: none; /* Hidden by default */
+            }
+
+            /* Tooltip styles */
+            .icon-card {
+                position: relative;
+            }
+
+            .icon-card::after {
+                content: attr(data-name);
+                position: absolute;
+                bottom: -35px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0, 0, 0, 0.9);
+                color: white;
+                padding: 8px 12px;
+                border-radius: 6px;
+                font-size: 12px;
+                white-space: nowrap;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+                z-index: 10001;
+                pointer-events: none;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            }
+
+            .icon-card:hover::after {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .icon-code {
+                display: none; /* Hidden in grid view */
+            }
+
+            .copy-feedback {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: #27ae60;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 0.75rem;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                pointer-events: none;
+            }
+
+            .copy-feedback.show {
+                opacity: 1;
+            }
+
+            .no-results {
+                text-align: center;
+                padding: 50px;
+                color: #7f8c8d;
+                font-size: 1.1rem;
+            }
+
+            /* Modal Styles */
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(2px);
+            }
+
+            .modal.show {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .modal-content {
+                background-color: white;
+                padding: 30px;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                max-width: 500px;
+                width: 90%;
+                max-height: 90vh;
+                overflow-y: auto;
+                position: relative;
+            }
+
+            .modal-close {
+                position: absolute;
+                top: 15px;
+                right: 20px;
+                font-size: 28px;
+                font-weight: bold;
+                cursor: pointer;
+                color: #999;
+                line-height: 1;
+                background: none;
+                border: none;
+            }
+
+            .modal-close:hover {
+                color: #333;
+            }
+
+            .modal-icon {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+
+            .modal-icon svg {
+                width: 64px;
+                height: 64px;
+                fill: #2c3e50;
+            }
+
+            .modal-title {
+                font-size: 24px;
+                font-weight: 600;
+                text-align: center;
+                margin-bottom: 20px;
+                color: #333;
+            }
+
+            .modal-info {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .info-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px;
+                background: #f8f9fa;
+                border-radius: 6px;
+            }
+
+            .info-label {
+                font-weight: 600;
+                color: #555;
+            }
+
+            .info-value {
+                font-family: 'Courier New', monospace;
+                background: #e9ecef;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 14px;
+                word-break: break-all;
+            }
+
+            .copy-button {
+                background: #3498db;
+                color: white;
+                border: none;
+                padding: 6px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                transition: background 0.2s ease;
+                margin-left: 8px;
+            }
+
+            .copy-button:hover {
+                background: #2980b9;
+            }
+
+            .copy-button.copied {
+                background: #27ae60;
+            }
+
+            .download-button {
+                background: #e67e22;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: 600;
+                transition: background 0.2s ease;
+                margin-top: 20px;
+                width: 100%;
+            }
+
+            .download-button:hover {
+                background: #d35400;
+            }
+
+            @media (max-width: 768px) {
+                .icons-grid {
+                    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+                    gap: 6px;
+                }
+
+                .header h1 {
+                    font-size: 2rem;
+                }
+
+                .container {
+                    padding: 15px;
+                }
+
+                .modal-content {
+                    padding: 20px;
+                    margin: 20px;
+                }
+
+                .info-row {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 8px;
+                }
+
+                .info-value {
+                    width: 100%;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Icons Viewer</h1>
+                <p>Browse and copy icon names from your collection</p>
+            </div>
+
+            <div class="update-notice">
+                💡 To add new icons: Add SVG files to <code>icons/</code> folder
+                and run <code>yarn icons</code>
+            </div>
+
+            <div class="search-container">
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="Search icons by name..."
+                    autocomplete="off" />
+                <div class="stats">
+                    <span id="resultsCount">Showing {{TOTAL_ICONS}} icons</span>
+                    <span id="totalCount">Total: {{TOTAL_ICONS}}</span>
+                </div>
+            </div>
+
+            <div id="iconsContainer" class="icons-grid"></div>
+        </div>
+
+        <!-- Modal -->
+        <div id="iconModal" class="modal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="iconViewer.closeModal()">
+                    &times;
+                </button>
+                <div class="modal-icon" id="modalIcon"></div>
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <div class="modal-info">
+                    <div class="info-row">
+                        <span class="info-label">Icon Name:</span>
+                        <div>
+                            <span class="info-value" id="modalIconName"></span>
+                            <button
+                                class="copy-button"
+                                onclick="iconViewer.copyText(document.getElementById('modalIconName').textContent, this)">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Unicode:</span>
+                        <div>
+                            <span class="info-value" id="modalUnicode"></span>
+                            <button
+                                class="copy-button"
+                                onclick="iconViewer.copyText(document.getElementById('modalUnicode').textContent, this)">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Usage in React:</span>
+                        <div>
+                            <span
+                                class="info-value"
+                                id="modalReactUsage"></span>
+                            <button
+                                class="copy-button"
+                                onclick="iconViewer.copyText(document.getElementById('modalReactUsage').textContent, this)">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <button
+                    class="download-button"
+                    onclick="iconViewer.downloadSVG()">
+                    Download SVG
+                </button>
+            </div>
+        </div>
+
+        <script>
+                        const ICONS_DATA = {{ICONS_DATA}};
+
+                        class IconsViewer {
+                            constructor() {
+                                this.icons = ICONS_DATA.icons || [];
+                                this.filteredIcons = [...this.icons];
+                                this.searchInput = document.getElementById('searchInput');
+                                this.iconsContainer = document.getElementById('iconsContainer');
+                                this.resultsCount = document.getElementById('resultsCount');
+                                this.totalCount = document.getElementById('totalCount');
+                                this.modal = document.getElementById('iconModal');
+                                this.currentIcon = null;
+
+                                this.init();
+                            }
+
+                            init() {
+                                this.setupEventListeners();
+                                this.renderIcons();
+                            }
+
+                            setupEventListeners() {
+                                this.searchInput.addEventListener('input', (e) => {
+                                    this.filterIcons(e.target.value);
+                                });
+
+                                // Close modal when clicking outside
+                                this.modal.addEventListener('click', (e) => {
+                                    if (e.target === this.modal) {
+                                        this.closeModal();
+                                    }
+                                });
+
+                                // Close modal with Escape key
+                                document.addEventListener('keydown', (e) => {
+                                    if (e.key === 'Escape' && this.modal.classList.contains('show')) {
+                                        this.closeModal();
+                                    }
+                                });
+                            }
+
+                            filterIcons(searchTerm) {
+                                const term = searchTerm.toLowerCase().trim();
+
+                                if (!term) {
+                                    this.filteredIcons = [...this.icons];
+                                } else {
+                                    this.filteredIcons = this.icons.filter(icon =>
+                                        icon.properties.name.toLowerCase().includes(term)
+                                    );
+                                }
+
+                                this.renderIcons();
+                                this.updateStats();
+                            }
+
+                            renderIcons() {
+                                if (this.filteredIcons.length === 0) {
+                                    this.iconsContainer.innerHTML = '<div class="no-results">No icons found matching your search.</div>';
+                                    return;
+                                }
+
+                                                    const iconsHtml = this.filteredIcons.map((icon, index) => {
+                        const content = icon.icon.content;
+
+                        return `
+                            <div class="icon-card" data-name="${icon.properties.name}" onclick="iconViewer.showModal(${index})">
+                                <svg class="icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    ${content}
+                                </svg>
+                                <div class="copy-feedback">Copied!</div>
+                            </div>
+                        `;
+                    }).join('');
+
+                                this.iconsContainer.innerHTML = iconsHtml;
+                            }
+
+                            updateStats() {
+                                this.resultsCount.textContent = `Showing ${this.filteredIcons.length} icons`;
+                                this.totalCount.textContent = `Total: ${this.icons.length}`;
+                            }
+
+                            showModal(index) {
+                                this.currentIcon = this.filteredIcons[index];
+
+                                // Update modal content
+                                const modalIcon = document.getElementById('modalIcon');
+                                const modalTitle = document.getElementById('modalTitle');
+                                const modalIconName = document.getElementById('modalIconName');
+                                const modalUnicode = document.getElementById('modalUnicode');
+                                const modalReactUsage = document.getElementById('modalReactUsage');
+
+                                const content = this.currentIcon.icon.content;
+
+                                modalIcon.innerHTML = `
+                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        ${content}
+                                    </svg>
+                                `;
+
+                                modalTitle.textContent = this.currentIcon.properties.name;
+                                modalIconName.textContent = this.currentIcon.properties.name;
+                                modalUnicode.textContent = `U+${this.currentIcon.properties.code.toString(16).toUpperCase()}`;
+                                const camelCaseName = this.currentIcon.properties.name
+                                    .replace(/[-\s]+(.)/g, (_, char) => char.toUpperCase())
+                                    .replace(/[^a-zA-Z0-9]/g, '')
+                                    .replace(/^./, char => char.toUpperCase());
+                                modalReactUsage.textContent = `<Icon icon={IconEnum.${camelCaseName}} />`;
+
+                                this.modal.classList.add('show');
+                                document.body.style.overflow = 'hidden';
+                            }
+
+                            closeModal() {
+                                this.modal.classList.remove('show');
+                                document.body.style.overflow = '';
+                                this.currentIcon = null;
+                            }
+
+                            copyText(text, button) {
+                                navigator.clipboard.writeText(text).then(() => {
+                                    this.showCopyButton(button);
+                                }).catch(() => {
+                                    // Fallback for older browsers
+                                    const textArea = document.createElement('textarea');
+                                    textArea.value = text;
+                                    document.body.appendChild(textArea);
+                                    textArea.select();
+                                    document.execCommand('copy');
+                                    document.body.removeChild(textArea);
+                                    this.showCopyButton(button);
+                                });
+                            }
+
+                            showCopyButton(button) {
+                                const originalText = button.textContent;
+                                button.textContent = 'Copied!';
+                                button.classList.add('copied');
+
+                                setTimeout(() => {
+                                    button.textContent = originalText;
+                                    button.classList.remove('copied');
+                                }, 1500);
+                            }
+
+                            downloadSVG() {
+                                if (!this.currentIcon) return;
+
+                                const content = this.currentIcon.icon.content;
+
+                                const svgContent = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                ${content}
+            </svg>`;
+
+                                const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = `${this.currentIcon.properties.name}.svg`;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                URL.revokeObjectURL(url);
+                            }
+
+                            copyIconName(iconName, element) {
+                                // Copy to clipboard
+                                navigator.clipboard.writeText(iconName).then(() => {
+                                    this.showCopyFeedback(element);
+                                }).catch(() => {
+                                    // Fallback for older browsers
+                                    const textArea = document.createElement('textarea');
+                                    textArea.value = iconName;
+                                    document.body.appendChild(textArea);
+                                    textArea.select();
+                                    document.execCommand('copy');
+                                    document.body.removeChild(textArea);
+                                    this.showCopyFeedback(element);
+                                });
+                            }
+
+                            showCopyFeedback(element) {
+                                const feedback = element.querySelector('.copy-feedback');
+                                feedback.classList.add('show');
+                                setTimeout(() => {
+                                    feedback.classList.remove('show');
+                                }, 1500);
+                            }
+                        }
+
+                        // Initialize the icons viewer when the page loads
+                        const iconViewer = new IconsViewer();
+        </script>
+    </body>
+</html>

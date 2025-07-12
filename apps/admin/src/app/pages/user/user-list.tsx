@@ -1,34 +1,23 @@
-import { QueryBuilder, WhereBuilderCondition, WhereOperatorEnum } from '@ackplus/nest-crud-request';
+import { WhereOperatorEnum } from '@ackplus/nest-crud-request';
+import { QueryBuilder } from '@ackplus/nest-crud-request';
 import { useUser } from '@libs/react-shared';
-import {
-    IUser,
-    PermissionsEnum,
-    RoleGuardEnum,
-    RoleNameEnum,
-    UserStatusEnum,
-} from '@libs/types';
+import { IUser, PermissionsEnum, RoleNameEnum, UserStatusEnum } from '@libs/types';
 import { toDisplayDate, toDisplayPhone } from '@libs/utils';
 import { Button, Card } from '@mui/material';
-import { filter, get, includes, isEmpty } from 'lodash';
-import { useState, useCallback, useRef, useMemo, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { filter, get, isEmpty, includes } from 'lodash';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
-import {
-    CrudTable,
-    CrudTableActions,
-    Page,
-} from '../../components';
-import {
-    DataTableColumn,
-    DataTableTab,
-    DataTableTabItem,
-    IDataTableFilter,
-} from '../../components/data-table';
+import { Page, Icon } from '../../components';
+import { CrudTable, CrudTableActions } from '../../components/crud/crud-table';
+import { DataTableColumn, DataTableTab, DataTableTabItem, IDataTableFilter } from '../../components/data-table';
+import { IconEnum } from '../../components/icons/icons';
 import UserStatusDropdown from '../../components/user/user-status-dropdown';
 import UserWithAvatar from '../../components/user/user-with-avatar';
 import { useAccess, useAuth, withPermission } from '../../contexts';
-import { useToasty } from '../../hook/use-toasty';
+import { useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
+import ResetPasswordDialog from '../../sections/user/reset-password-dialog';
 
 
 export interface IUserTableFilter {
@@ -49,9 +38,11 @@ function UsersList() {
     const datatableRef = useRef<CrudTableActions>(null);
     const [tableFilter, setTableFilter] = useState(defaultFilter);
     const [countFilter, setCountFilter] = useState({});
+    const [resetPasswordUser, setResetPasswordUser] = useState<IUser | null>(null);
 
     const canCreate = hasPermission(PermissionsEnum.CREATE_USERS);
     const canUpdate = hasPermission(PermissionsEnum.UPDATE_USERS);
+    const canResetPassword = hasPermission(PermissionsEnum.RESET_PASSWORD_USERS);
     const {
         useGetManyUser,
         useDeleteUser,
@@ -85,6 +76,18 @@ function UsersList() {
         },
         [navigate],
     );
+
+    const handleResetPassword = useCallback(
+        (user) => {
+            setResetPasswordUser(user);
+        },
+        [],
+    );
+
+    const handleCloseResetPasswordDialog = useCallback(() => {
+        setResetPasswordUser(null);
+    }, []);
+
 
     const handleUpdateStatus = useCallback(
         (value: UserStatusEnum, row) => {
@@ -267,10 +270,25 @@ function UsersList() {
                     onEdit={handleEditUser}
                     onRowClick={canUpdate ? handleRowClick : null}
                     tableActionMenuProps={
-                        (row) => (
-                            row?.id === currentUser?.id ||
-                            !isEmpty(filter(row?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name))))
-                            && { onDelete: null }
+                        (row) => {
+                            const isCurrentUser = row?.id === currentUser?.id;
+                            const isSuperAdmin = !isEmpty(filter(row?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)));
+                            const canDeleteUser = !isCurrentUser && !isSuperAdmin;
+                            const canResetUserPassword = canResetPassword && !isCurrentUser;
+
+                            return {
+                                ...(canDeleteUser ? {} : { onDelete: null }),
+                                ...(canResetUserPassword ? {
+                                    actions: [
+                                        {
+                                            icon: <Icon icon={IconEnum.KEY} />,
+                                            title: 'Reset Password',
+                                            onClick: () => handleResetPassword(row),
+                                        },
+                                    ],
+                                } : {}),
+                            };
+                        }
                     }
                     filterSelectAll={row => {
                         return (
@@ -299,6 +317,12 @@ function UsersList() {
                     ) : null}
                 />
             </Card>
+
+            <ResetPasswordDialog
+                open={!!resetPasswordUser}
+                onClose={handleCloseResetPasswordDialog}
+                user={resetPasswordUser}
+            />
         </Page>
     );
 }

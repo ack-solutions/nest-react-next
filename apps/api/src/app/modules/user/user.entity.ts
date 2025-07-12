@@ -1,4 +1,4 @@
-import { User as NestAuthUser } from '@ackplus/nest-auth';
+import { NestAuthUser } from '@ackplus/nest-auth';
 import { UserStatusEnum } from '@libs/types';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';

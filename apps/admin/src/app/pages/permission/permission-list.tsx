@@ -1,8 +1,8 @@
 import { usePermission } from '@libs/react-shared';
 import { toDisplayDate } from '@libs/utils';
-import { Button, Card } from '@mui/material';
+import { Card } from '@mui/material';
 import { startCase } from 'lodash';
-import { useState, useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 
 import {
     CrudTableActions,
@@ -12,12 +12,10 @@ import {
     CrudTable,
 } from '../../components';
 import { PATH_DASHBOARD } from '../../routes/paths';
-import AddEditPermissionDialog from '../../sections/permission/add-edit-permission-dialog';
 
 
 export default function PermissionList() {
     const datatableRef = useRef<CrudTableActions>(null);
-    const [selectPermission, setSelectPermission] = useState<any>();
 
     const {
         useGetManyPermission,
@@ -28,14 +26,6 @@ export default function PermissionList() {
         useBulkRestorePermission,
         useBulkDeleteForeverPermission,
     } = usePermission();
-
-    const handleOpenAddEditRoleDialog = useCallback((row?: any) => {
-        setSelectPermission(row);
-    }, []);
-
-    const handleCloseAddEditRoleDialog = useCallback(() => {
-        setSelectPermission(null);
-    }, []);
 
     const handleDataTableApiRequestMap = useCallback((filter) => {
         filter = {
@@ -79,18 +69,10 @@ export default function PermissionList() {
                     },
                     { name: 'List' },
                 ]}
-                action={(
-                    <Button
-                        variant="contained"
-                        onClick={() => handleOpenAddEditRoleDialog()}
-                    >
-                        Add Permission
-                    </Button>
-                )}
+
             />
             <Card>
                 <CrudTable
-                    hasSoftDelete
                     crudName="Permission"
                     crudOperationHooks={{
                         useGetMany: useGetManyPermission,
@@ -102,17 +84,16 @@ export default function PermissionList() {
                         useBulkDeleteForever: useBulkDeleteForeverPermission,
                     }}
                     dataTableApiRequestMap={handleDataTableApiRequestMap}
-                    onEdit={handleOpenAddEditRoleDialog}
                     ref={datatableRef}
                     columns={columns}
+                    canCreate={false}
+                    canUpdate={false}
+                    canDelete={false}
+                    canRestore={false}
+                    canDeleteForever={false}
                 />
             </Card>
-            {selectPermission ? (
-                <AddEditPermissionDialog
-                    onClose={handleCloseAddEditRoleDialog}
-                    values={!!selectPermission && selectPermission}
-                />
-            ) : null}
+
         </Page>
     );
 }

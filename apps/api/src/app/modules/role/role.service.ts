@@ -1,5 +1,5 @@
 import { RoleService as NestAuthRoleService, TenantService as NestAuthTenantService } from '@ackplus/nest-auth';
-import { Role } from '@ackplus/nest-auth';
+import { NestAuthRole } from '@ackplus/nest-auth';
 import { IAppConfig } from '@api/app/config/app';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -20,7 +20,7 @@ export class RoleService {
     ) {
     }
 
-    async getRoles(options?: FindManyOptions<Role>) {
+    async getRoles(options?: FindManyOptions<NestAuthRole>) {
         return this.roleService.getRoles(options);
     }
 
