@@ -515,7 +515,7 @@ export const DataTable = forwardRef<DataTableHandle, DataTableProps>(({
                                 type="search"
                                 startAdornment={(
                                     <InputAdornment position="start">
-                                        <Icon icon={IconEnum.MAGNIFYING_GLASS} />
+                                        <Icon icon={IconEnum.Search} />
                                     </InputAdornment>
                                 )}
                             />
@@ -640,7 +640,7 @@ export const DataTable = forwardRef<DataTableHandle, DataTableProps>(({
                         {(!data || isLoading) ? Array.from({ length: 5 }).map((_, inx) => (
                             <TableRow
                                 hover={selectable || !!onRowClick}
-                                // eslint-disable-next-line react/no-array-index-key
+
                                 key={`column-skeleton-${inx}`}
                                 tabIndex={-1}
                                 role="checkbox"

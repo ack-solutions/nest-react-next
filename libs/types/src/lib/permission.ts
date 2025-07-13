@@ -9,6 +9,7 @@ export enum PermissionsEnum {
     CREATE_USERS = 'create-users',
     UPDATE_USERS = 'update-users',
     DELETE_USERS = 'delete-users',
+    RESET_PASSWORD_USERS = 'reset-password-users',
 
     ACCESS_REPORTS = 'access-reports',
     EXPORT_REPORTS = 'export-reports',
@@ -18,6 +19,7 @@ export enum PermissionsEnum {
     UPDATE_ROLES = 'update-roles',
     ASSIGN_ROLES = 'assign-roles',
     DELETE_ROLES = 'delete-roles',
+
 
     ACCESS_PAGES = 'access-pages',
     CREATE_PAGES = 'create-pages',
@@ -31,5 +33,16 @@ export enum PermissionsEnum {
 
     ACCESS_SETTINGS = 'access-settings',
     UPDATE_SETTINGS = 'update-settings',
+
+    ACCESS_TEMPLATES = 'access-templates',
+    CREATE_TEMPLATES = 'create-templates',
+    UPDATE_TEMPLATES = 'update-templates',
+    DELETE_TEMPLATES = 'delete-templates',
+
+    ACCESS_TEMPLATE_LAYOUTS = 'access-template-layouts',
+    CREATE_TEMPLATE_LAYOUTS = 'create-template-layouts',
+    UPDATE_TEMPLATE_LAYOUTS = 'update-template-layouts',
+    DELETE_TEMPLATE_LAYOUTS = 'delete-template-layouts',
+
 
 }

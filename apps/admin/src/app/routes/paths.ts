@@ -106,6 +106,14 @@ export const PATH_DASHBOARD = {
         edit: (id: string) => path(ROOTS_DASHBOARD, `/email-templates/edit/${id}`),
         view: (id: string) => path(ROOTS_DASHBOARD, `/email-templates/view/${id}`),
     },
+    templates: {
+        root: path(ROOTS_DASHBOARD, '/templates'),
+        edit: (templateId: string) => path(ROOTS_DASHBOARD, `/templates/edit/${templateId}`),
+    },
+    templateLayouts: {
+        root: path(ROOTS_DASHBOARD, '/template-layouts'),
+        edit: (templateLayoutId: string) => path(ROOTS_DASHBOARD, `/template-layouts/edit/${templateLayoutId}`),
+    },
     settings: {
         root: path(ROOTS_DASHBOARD, '/settings'),
         paymentMethod: path(ROOTS_DASHBOARD, '/settings/payment-methods'),

@@ -79,7 +79,7 @@ export function InfoCard({
                                     startIcon={(
                                         <Icon
                                             size="small"
-                                            icon={IconEnum.PENCIL_SIMPLE}
+                                            icon={IconEnum.Pencil}
                                         />
                                     )}
                                     variant="outlined"

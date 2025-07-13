@@ -62,7 +62,7 @@ export function DefaultDialog({
                     >
                         <Icon
                             size="small"
-                            icon={IconEnum.CLOSE}
+                            icon={IconEnum.X}
                         />
                     </IconButton>
                 </DialogTitle>

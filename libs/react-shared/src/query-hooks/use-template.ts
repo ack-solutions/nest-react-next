@@ -44,7 +44,7 @@ export const useTemplate = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === templateService.getQueryKey('get-template-by-id') || query.queryKey[0] === templateService.getQueryKey('get-template');
+                    return query.queryKey[0] === templateService.getQueryKey('get-template-by-id') || query.queryKey[0] === templateService.getQueryKey('get-templates');
                 },
             });
         },
@@ -55,7 +55,7 @@ export const useTemplate = () => {
         mutationFn: (id: string) => templateService.delete(id),
         onSuccess: (_data, _variable) => {
             queryClient.invalidateQueries({
-                predicate: (query) => query.queryKey[0] === templateService.getQueryKey('get-template-by-id') || query.queryKey[0] === templateService.getQueryKey('get-template'),
+                predicate: (query) => query.queryKey[0] === templateService.getQueryKey('get-template-by-id') || query.queryKey[0] === templateService.getQueryKey('get-templates'),
             });
         },
         ...options,

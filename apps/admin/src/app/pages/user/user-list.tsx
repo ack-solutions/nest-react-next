@@ -1,34 +1,24 @@
-import { QueryBuilder, WhereBuilderCondition, WhereOperatorEnum } from '@ackplus/nest-crud-request';
+import { WhereOperatorEnum } from '@ackplus/nest-crud-request';
+import { QueryBuilder } from '@ackplus/nest-crud-request';
 import { useUser } from '@libs/react-shared';
-import {
-    IUser,
-    PermissionsEnum,
-    RoleGuardEnum,
-    RoleNameEnum,
-    UserStatusEnum,
-} from '@libs/types';
+import { IUser, PermissionsEnum, RoleNameEnum, UserStatusEnum } from '@libs/types';
 import { toDisplayDate, toDisplayPhone } from '@libs/utils';
 import { Button, Card } from '@mui/material';
-import { filter, get, includes, isEmpty } from 'lodash';
-import { useState, useCallback, useRef, useMemo, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { filter, get, isEmpty, includes } from 'lodash';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
-import {
-    CrudTable,
-    CrudTableActions,
-    Page,
-} from '../../components';
-import {
-    DataTableColumn,
-    DataTableTab,
-    DataTableTabItem,
-    IDataTableFilter,
-} from '../../components/data-table';
+import { Page, Icon } from '../../components';
+import { CrudTable, CrudTableActions } from '../../components/crud/crud-table';
+import { DataTableColumn, DataTableTab, DataTableTabItem, IDataTableFilter } from '../../components/data-table';
+import { IconEnum } from '../../components/icons/icons';
 import UserStatusDropdown from '../../components/user/user-status-dropdown';
+import UserStatusLabel from '../../components/user/user-status-label';
 import UserWithAvatar from '../../components/user/user-with-avatar';
 import { useAccess, useAuth, withPermission } from '../../contexts';
-import { useToasty } from '../../hook/use-toasty';
+import { useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
+import ResetPasswordDialog from '../../sections/user/reset-password-dialog';
 
 
 export interface IUserTableFilter {
@@ -49,9 +39,14 @@ function UsersList() {
     const datatableRef = useRef<CrudTableActions>(null);
     const [tableFilter, setTableFilter] = useState(defaultFilter);
     const [countFilter, setCountFilter] = useState({});
+    const [resetPasswordUser, setResetPasswordUser] = useState<IUser | null>(null);
 
+    // Permission checks
     const canCreate = hasPermission(PermissionsEnum.CREATE_USERS);
     const canUpdate = hasPermission(PermissionsEnum.UPDATE_USERS);
+    const canDelete = hasPermission(PermissionsEnum.DELETE_USERS);
+    const canResetPassword = hasPermission(PermissionsEnum.RESET_PASSWORD_USERS);
+
     const {
         useGetManyUser,
         useDeleteUser,
@@ -65,7 +60,6 @@ function UsersList() {
     } = useUser();
 
     const { mutateAsync: updateUser } = useUpdateUser();
-
 
     const { data: counts } = useGetUserCounts({
         filter: countFilter,
@@ -86,6 +80,17 @@ function UsersList() {
         [navigate],
     );
 
+    const handleResetPassword = useCallback(
+        (user) => {
+            setResetPasswordUser(user);
+        },
+        [],
+    );
+
+    const handleCloseResetPasswordDialog = useCallback(() => {
+        setResetPasswordUser(null);
+    }, []);
+
     const handleUpdateStatus = useCallback(
         (value: UserStatusEnum, row) => {
             const request: any = {
@@ -100,7 +105,6 @@ function UsersList() {
         },
         [showToasty, updateUser],
     );
-
 
     const handleOnChangeTableFilter = useCallback((value, key) => {
         setTableFilter((state) => {
@@ -205,10 +209,17 @@ function UsersList() {
             isSearchable: true,
             isSortable: true,
             render: (row) => (
-                <UserStatusDropdown
-                    user={row}
-                    onChange={(option) => handleUpdateStatus(option, row)}
-                />
+                canUpdate ? (
+                    <UserStatusDropdown
+                        user={row}
+                        onChange={(option) => handleUpdateStatus(option, row)}
+                    />
+                ) : (
+                    <UserStatusLabel
+                        user={row}
+                        onChange={(option) => handleUpdateStatus(option, row)}
+                    />
+                )
             ),
         },
         {
@@ -253,6 +264,11 @@ function UsersList() {
                     columns={columns}
                     ref={datatableRef}
                     hasSoftDelete
+                    // Permission props
+                    canEdit={canUpdate}
+                    canDelete={canDelete}
+                    canRestore={canDelete} // Usually same as delete permission
+                    canDeleteForever={canDelete} // Usually same as delete permission
                     onToggleTrashData={handleTrashData}
                     dataTableApiRequestMap={handleDataTableApiRequestMap}
                     crudOperationHooks={{
@@ -267,20 +283,41 @@ function UsersList() {
                     onEdit={handleEditUser}
                     onRowClick={canUpdate ? handleRowClick : null}
                     tableActionMenuProps={
-                        (row) => (
-                            row?.id === currentUser?.id ||
-                            !isEmpty(filter(row?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name))))
-                            && { onDelete: null }
+                        (row) => {
+                            const isCurrentUser = row?.id === currentUser?.id;
+                            const isSuperAdmin = !isEmpty(filter(row?.authUser?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)));
+                            const canDeleteUser = canDelete && !isCurrentUser && !isSuperAdmin;
+                            const canResetUserPassword = canResetPassword && !isCurrentUser && !isSuperAdmin;
+
+                            return {
+                                // Override delete permission for specific users
+                                ...(canDeleteUser ? {} : {
+                                    onDelete: null,
+                                    onDeleteForever: null,
+                                }),
+                                // Add reset password action
+                                ...(canResetUserPassword ? {
+                                    actions: [
+                                        {
+                                            icon: <Icon icon={IconEnum.Key} />,
+                                            title: 'Reset Password',
+                                            onClick: () => handleResetPassword(row),
+                                        },
+                                    ],
+                                } : {}),
+                            };
+                        }
                     }
                     filterSelectAll={row => {
+                        const isSuperAdmin = !isEmpty(filter(row?.authUser?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)));
                         return (
-                            !row?.isSuprUser && row?.id !== currentUser?.id && isEmpty(filter(row?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)))
+                            !row?.isSuprUser && row?.id !== currentUser?.id && !isSuperAdmin
                         );
                     }}
                     checkBoxProps={(row, type) => {
+                        const isSuperAdmin = !isEmpty(filter(row?.authUser?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)));
                         if (!(
-                            !row?.isSuprUser && row?.id !== currentUser?.id &&
-                            isEmpty(filter(row?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)))
+                            !row?.isSuprUser && row?.id !== currentUser?.id && !isSuperAdmin
                         ) &&
                             type === 'row'
                         ) {
@@ -299,6 +336,12 @@ function UsersList() {
                     ) : null}
                 />
             </Card>
+
+            <ResetPasswordDialog
+                open={!!resetPasswordUser}
+                onClose={handleCloseResetPasswordDialog}
+                user={resetPasswordUser}
+            />
         </Page>
     );
 }

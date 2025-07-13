@@ -1,4 +1,4 @@
-import { User as NestAuthUser } from '@ackplus/nest-auth';
+import { NestAuthUser } from '@ackplus/nest-auth';
 import { UserStatusEnum } from '@libs/types';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
@@ -48,7 +48,7 @@ export class User extends CoreEntity {
         nullable: true,
         onDelete: 'CASCADE',
     })
-    authUser?: NestAuthUser;
+    authUser?: NestAuthUser; // TODO: Create a new user Time show error Circular Dependency
 
     @Factory((faker) => faker.string.numeric(10))
     @ApiProperty({
@@ -128,12 +128,6 @@ export class User extends CoreEntity {
 
     @ApiProperty({ readOnly: true })
     password?: string;
-
-    // @ApiProperty({
-    //     type: () => NestAuthUser,
-    //     readOnly: true,
-    // })
-    // authUser?: NestAuthUser; // Do not define as relation, it making circular dependency
 
     @ApiProperty({ readOnly: true })
     formattedPhone?: string;

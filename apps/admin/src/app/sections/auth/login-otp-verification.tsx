@@ -124,7 +124,7 @@ function LoginOtpVerification({
                             sx={{
                                 mx: 'auto',
                             }}
-                            startIcon={<Icon icon={IconEnum.ARROW_LEFT} />}
+                            startIcon={<Icon icon={IconEnum.ArrowLeft} />}
                         >
                             Back to Login
                         </Button>

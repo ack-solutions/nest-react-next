@@ -29,9 +29,9 @@ export const RHFPassword = forwardRef(
                                     edge="end"
                                 >
                                     {showPassword ? (
-                                        <Icon icon={IconEnum.EYE_SLASH} />
+                                        <Icon icon={IconEnum.EyeOff} />
                                     ) : (
-                                        <Icon icon={IconEnum.EYE} />
+                                        <Icon icon={IconEnum.Eye} />
                                     )}
                                 </IconButton>
                             </InputAdornment>

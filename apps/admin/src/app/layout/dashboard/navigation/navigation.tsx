@@ -43,7 +43,7 @@ const ToggleButton = styled(IconButton)(({ theme }) => ({
     position: 'fixed',
     top: 20,
     left: NAV.W_VERTICAL - 12,
-    zIndex: theme.zIndex.appBar + 1,
+    zIndex: theme.zIndex.drawer + 1,
     width: 24,
     height: 24,
     padding: 0,
@@ -153,7 +153,7 @@ export default function Navigation({ openNav = false, onCloseNav }: NavigationPr
                 </StyledMiniDrawer>
                 {isDesktop && (
                     <MiniToggleButton onClick={handleToggleNav}>
-                        <Icon icon={IconEnum.CARET_RIGHT} size="x-small" />
+                        <Icon icon={IconEnum.ChevronRight} size="x-small" />
                     </MiniToggleButton>
                 )}
             </>
@@ -174,7 +174,7 @@ export default function Navigation({ openNav = false, onCloseNav }: NavigationPr
             </StyledDrawer>
             {isDesktop && (
                 <ToggleButton onClick={handleToggleNav}>
-                    <Icon icon={IconEnum.CARET_LEFT} size="x-small" />
+                    <Icon icon={IconEnum.ChevronLeft} size="x-small" />
                 </ToggleButton>
             )}
         </>

@@ -19,12 +19,12 @@ const userTabs = [
     {
         name: 'General',
         value: 'general',
-        icon: <Icon icon={IconEnum.USER_CIRCLE} />,
+        icon: <Icon icon={IconEnum.CircleUser} />,
     },
     {
         name: 'Reset Password',
         value: 'password',
-        icon: <Icon icon={IconEnum.KEY} />,
+        icon: <Icon icon={IconEnum.Key} />,
     },
 ];
 
@@ -37,7 +37,7 @@ function EditUser() {
     const { currentTab, onChangeTab } = useTabs('general');
 
     const { data: userData, isLoading, error } = useGetUserById(userId, {
-        relations: ['locations'],
+        relations: ['authUser', 'authUser.roles'],
     });
 
     const handleSubmit = useCallback(

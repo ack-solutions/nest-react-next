@@ -21,7 +21,7 @@ export function BackButton() {
             >
                 <Icon
                     size="small"
-                    icon={IconEnum.ARROW_LEFT}
+                    icon={IconEnum.ArrowLeft}
                 />
             </IconButton>
         ) : null

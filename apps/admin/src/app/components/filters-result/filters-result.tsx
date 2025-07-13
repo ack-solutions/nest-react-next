@@ -34,7 +34,7 @@ export function FiltersResult({ onReset, sx, children }: FiltersResultProps) {
                 <Button
                     color="error"
                     onClick={onReset}
-                    startIcon={<Icon icon={IconEnum.TRASH} />}
+                    startIcon={<Icon icon={IconEnum.Trash} />}
                 >
                     Clear
                 </Button>

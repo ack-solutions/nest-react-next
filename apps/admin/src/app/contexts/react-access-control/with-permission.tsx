@@ -1,16 +1,19 @@
-import { PermissionsEnum, RoleNameEnum } from '@libs/types';
+import { RoleNameEnum } from '@libs/types';
 import React, { ComponentType } from 'react';
 
+
 import useAccess from './use-access';
+import PermissionDeniedContent from '../../components/error/permission-denied-content';
 import PermissionDenied from '../../pages/error/permission-denied';
 
 
 export interface WithPermissionOptions {
-    permissions?: PermissionsEnum[] | PermissionsEnum;
-    roles?: RoleNameEnum[] | RoleNameEnum;
+    permissions?: string[] | string;
+    roles?: string[] | string;
     requireAll?: boolean;
-    fallback?: React.ComponentType<any>;
+    fallback?: ComponentType<{ message?: string }>;
     message?: string;
+    preserveLayout?: boolean; // New option to preserve layout
 }
 
 const withPermission = <T extends object>(
@@ -23,8 +26,9 @@ const withPermission = <T extends object>(
                 permissions,
                 roles,
                 requireAll = false,
-                fallback: FallbackComponent = PermissionDenied,
+                fallback: FallbackComponent,
                 message,
+                preserveLayout = true, // Default to preserving layout
             } = options;
 
             const roleArray = Array.isArray(roles) ? roles : [roles];
@@ -45,7 +49,14 @@ const withPermission = <T extends object>(
                 : hasAnyPermission(permissionArray) || hasAnyRole(roleArray);
 
             if (!hasAccess) {
-                return React.createElement(FallbackComponent, { message });
+                // Use custom fallback component if provided
+                if (FallbackComponent) {
+                    return React.createElement(FallbackComponent, { message });
+                }
+
+                // Choose between layout-preserving and full-screen error based on preserveLayout option
+                const ErrorComponent = preserveLayout ? PermissionDeniedContent : PermissionDenied;
+                return React.createElement(ErrorComponent, { message });
             }
 
             return React.createElement(wrappedComponent, props);

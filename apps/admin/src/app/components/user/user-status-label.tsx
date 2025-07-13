@@ -1,39 +1,32 @@
-import { UserStatusEnum } from '@libs/types';
-import { startCase } from 'lodash';
-import { useMemo } from 'react';
+import { IUser, UserStatusEnum } from '@libs/types';
 
-import { Label, LabelColor, LabelProps } from '../label';
+import { StatusLabel, getStatusConfig } from '../status-label';
 
 
-export interface UserStatusLabelProps extends Omit<LabelProps, 'ref'> {
-    label?: string;
+interface UserStatusLabelProps {
+    user?: IUser;
+    onChange?: (newStatus: UserStatusEnum) => void;
+    // Additional props that StatusLabel supports
+    variant?: 'filled' | 'outlined' | 'soft';
 }
 
-function UserStatusLabel({ label, ...labelProps }: UserStatusLabelProps) {
-    const color: LabelColor = useMemo(() => {
-        switch (label) {
-            case UserStatusEnum.ACTIVE:
-                return 'success';
 
-            case UserStatusEnum.INACTIVE:
-                return 'error';
-
-            case UserStatusEnum.PENDING:
-                return 'warning';
-
-            default:
-                return 'default';
-        }
-    }, [label]);
+function UserStatusLabel({
+    user,
+    onChange,
+    variant = 'filled',
+}: UserStatusLabelProps) {
+    const userStatusOptions = Object.values(UserStatusEnum);
+    const userStatusConfig = getStatusConfig('user');
 
     return (
-        <Label
-            className="status-label"
-            color={color}
-            {...labelProps}
-        >
-            {startCase(label)}
-        </Label>
+        <StatusLabel
+            status={user?.status || UserStatusEnum.PENDING}
+            statusConfig={userStatusConfig}
+            defaultVariant={variant}
+            options={onChange ? userStatusOptions : undefined}
+            onChange={onChange ? (newStatus) => onChange(newStatus as UserStatusEnum) : undefined}
+        />
     );
 }
 

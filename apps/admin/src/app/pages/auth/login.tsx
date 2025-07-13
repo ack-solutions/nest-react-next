@@ -55,7 +55,7 @@ function Login() {
                     </Box>
                 </Stack>
                 <LoginForm onSubmit={handleLogin} />
-                <Stack
+                {/* <Stack
                     direction="row"
                     spacing={0.5}
                     justifyContent="center"
@@ -72,7 +72,7 @@ function Login() {
                     >
                         Sign up
                     </Link>
-                </Stack>
+                </Stack> */}
             </Box>
             {/*  ) : (
                 <LoginOtpVerification

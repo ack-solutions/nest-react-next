@@ -31,7 +31,7 @@ export default function Header({ onOpenNav }: Props) {
         <>
             {!lgUp && (
                 <IconButton onClick={onOpenNav}>
-                    <Icon icon={IconEnum.LIST} />
+                    <Icon icon={IconEnum.List} />
                 </IconButton>
             )}
 
@@ -63,13 +63,13 @@ export default function Header({ onOpenNav }: Props) {
             >
                 <Tooltip title="Notifications">
                     <IconButton>
-                        <Icon icon={IconEnum.BELL} />
+                        <Icon icon={IconEnum.Bell} />
                     </IconButton>
                 </Tooltip>
 
                 <Tooltip title="Settings">
                     <IconButton onClick={onToggle}>
-                        <Icon icon={IconEnum.GEAR_SIX} />
+                        <Icon icon={IconEnum.Settings} />
                     </IconButton>
                 </Tooltip>
 

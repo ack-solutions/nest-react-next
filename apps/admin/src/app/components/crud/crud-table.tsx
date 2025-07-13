@@ -13,7 +13,7 @@ import {
     useEffect,
 } from 'react';
 
-import { useAccess, useConfirm } from '../../contexts';
+import { useConfirm } from '../../contexts';
 import { useBoolean, useToasty } from '../../hook';
 import {
     DataTable,
@@ -41,6 +41,13 @@ export interface CrudTableProps<T>
     crudName: string;
     crudPermissionKey?: string;
     hasSoftDelete?: boolean;
+    canView?: boolean;
+    canEdit?: boolean;
+    canCreate?: boolean;
+    canUpdate?: boolean;
+    canDelete?: boolean;
+    canRestore?: boolean;
+    canDeleteForever?: boolean;
     onView?: (row: Partial<T>) => void;
     onRowClick?: (row: Partial<T>) => void;
     onEdit?: (row: Partial<T>) => void;
@@ -63,7 +70,13 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(
         {
             crudOperationHooks,
             crudName,
-            crudPermissionKey,
+            canEdit,
+            canView,
+            canCreate,
+            canUpdate,
+            canDelete,
+            canRestore,
+            canDeleteForever,
             hasSoftDelete,
             bulkActions = () => [],
             getManyOptions,
@@ -87,13 +100,6 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(
         const [dataTableFilters, setDataTableFilters] = useState(getManyOptions);
         const datatableRef = useRef<DataTableHandle>(null);
         const isTrash = useBoolean();
-        const { hasPermission } = useAccess();
-
-        const canDelete = hasPermission(`delete-${crudPermissionKey}`);
-        const canDeleteForever = hasPermission(`delete-forever-${crudPermissionKey}`);
-        const canRestore = hasPermission(`restore-${crudPermissionKey}`);
-        const canEdit = hasPermission(`update-${crudPermissionKey}`);
-        const canView = hasPermission(`access-${crudPermissionKey}`);
 
         const {
             useGetMany,
@@ -434,7 +440,9 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(
                                 onDelete: () => handleBulkDelete(selectedRowIds),
                             })}
                         actions={bulkActions(selectedRowIds)}
-                        crudPermissionKey={crudPermissionKey}
+                        canDelete={canDelete}
+                        canRestore={canRestore}
+                        canDeleteForever={canDeleteForever}
                     />
                 )}
                 extraFilter={(

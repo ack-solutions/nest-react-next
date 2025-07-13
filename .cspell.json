@@ -10,7 +10,15 @@
         "metatype",
         "mingcute",
         "tanstack",
-        "typeorm"
+        "typeorm",
+        "nunjucks",
+        "mjml",
+        "MJML",
+        "RHFMJML",
+        "icomoon",
+        "svgson",
+        "ackplus",
+        "Ijoi"
     ],
     "useGitignore": true,
     "ignorePaths": [

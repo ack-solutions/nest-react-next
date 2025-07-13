@@ -1,7 +1,7 @@
-import type { Role } from '@ackplus/nest-auth';
+import type { NestAuthRole } from '@ackplus/nest-auth';
 
 
-export interface IRole extends Role {
+export interface IRole extends NestAuthRole {
 
 }
 

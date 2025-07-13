@@ -33,7 +33,7 @@ export function LabelDropdown({
                         title={selected}
                         endIcon={(
                             <Icon
-                                icon={IconEnum.CARET_DOWN_FILL}
+                                icon={IconEnum.ChevronDown}
                                 size={8}
                             />
                         )}

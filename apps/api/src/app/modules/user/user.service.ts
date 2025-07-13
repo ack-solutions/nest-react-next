@@ -1,5 +1,6 @@
-import { UserService as NestAuthUserService } from '@ackplus/nest-auth';
+import { UserService as NestAuthUserService, TenantService } from '@ackplus/nest-auth';
 import { ID, PaginationResponse } from '@ackplus/nest-crud';
+import { IAppConfig } from '@api/app/config/app';
 import {
     IChangeEmailInput,
     IChangePasswordInput,
@@ -15,9 +16,10 @@ import {
     ForbiddenException,
     Injectable,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { has, omit } from 'lodash';
-import { SaveOptions, In, FindOneOptions, SelectQueryBuilder } from 'typeorm';
+import { SaveOptions, In, FindOneOptions } from 'typeorm';
 
 import { ChangePhoneInputDTO } from './dto/change-phone-input.dto';
 import { CreateUserDTO } from './dto/create-user.dto';
@@ -37,6 +39,11 @@ export class UserService extends BaseService<User> {
 
         @InjectRepository(User)
         public readonly userRepository: BaseRepository<User>,
+
+        private tenantService: TenantService,
+
+        private configService: ConfigService,
+
     ) {
         super(userRepository);
     }
@@ -76,7 +83,6 @@ export class UserService extends BaseService<User> {
             await authUser.assignRoles(entity.roles, RoleGuardEnum.ADMIN) as any; // TODO: change to the correct guard
             await authUser.save();
         }
-
         return super.beforeUpdate(entity);
     }
 
@@ -142,34 +148,6 @@ export class UserService extends BaseService<User> {
         return ids;
     }
 
-    protected override async beforeFindMany(query: SelectQueryBuilder<User>, orgRequest?: any) {
-        return this.applyLocationAndOrganizationQuery(query, orgRequest);
-    }
-
-    protected override async beforeCounts(query: SelectQueryBuilder<User>, orgRequest?: any) {
-        return this.applyLocationAndOrganizationQuery(query, orgRequest);
-    }
-
-    private applyLocationAndOrganizationQuery(query: SelectQueryBuilder<User>, orgRequest?: any) {
-        const isSuperAdmin = this.isSuperAdmin();
-
-        if (!isSuperAdmin) {
-            // Conditionally join `locations` if not already requested
-            let shouldJoinLocations = true;
-            if (Array.isArray(orgRequest?.relations)) {
-                shouldJoinLocations = !orgRequest?.relations?.some(relation => relation === 'locations');
-            } else if (typeof orgRequest?.relations === 'object') {
-                shouldJoinLocations = !(has(orgRequest?.relations, 'locations') && orgRequest?.relations?.locations === true);
-            }
-            if (shouldJoinLocations) {
-                query.leftJoin(`${query.alias}.locations`, 'locations');
-            }
-            query.andWhere(`${query.alias}.isSuperUser = :isSuperUser`, { isSuperUser: false });
-        }
-
-        return query;
-    }
-
     async findCurrentUser() {
         const user = await RequestContext.currentUser({
             relations: ['authUser', 'authUser.roles'],
@@ -188,11 +166,15 @@ export class UserService extends BaseService<User> {
     }
 
     override async create(entity: CreateUserDTO, options?: SaveOptions) {
+        const defaultTenantName = this.configService.get<IAppConfig>('app').defaultTenantName;
+
+        const tenant = await this.tenantService.getTenantByDomain(defaultTenantName);
         const authUser = await this.userService.createUser({
             phone: entity.phoneNumber,
             email: entity.email,
-            tenantId: 'default',
+            tenantId: tenant.id,
         });
+
         await authUser.setPassword(entity.password);
         if (entity.roles?.length > 0) {
             await authUser.assignRoles(entity.roles, RoleGuardEnum.ADMIN); // TODO: change to the correct guard
@@ -205,8 +187,6 @@ export class UserService extends BaseService<User> {
         }
         await authUser.save();
         entity.authUserId = authUser.id;
-
-
         const user = await super.create(entity, options);
         return user;
     }

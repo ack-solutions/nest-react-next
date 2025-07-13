@@ -1,4 +1,4 @@
-import type { User as AuthUser } from '@ackplus/nest-auth';
+import type { NestAuthUser } from '@ackplus/nest-auth';
 
 import { IBaseEntity } from './base-entity';
 
@@ -14,7 +14,7 @@ export interface IUser extends IBaseEntity {
   status?: UserStatusEnum;
   isProfileCompleted?: boolean;
   authUserId?: string;
-  authUser?: AuthUser;
+  authUser?: NestAuthUser;
   name?: string;
   avatarUrl?: string;
   razorpayCustomerId?: string

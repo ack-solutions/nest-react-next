@@ -19,15 +19,31 @@ type TableBulkActionMenuProps = {
     onDelete?: (row?: any[]) => void;
     onDeleteForever?: (row?: any[]) => void;
     onRestore?: (row?: any[]) => void;
+    onEdit?: (row?: any[]) => void;
+    onView?: (row?: any[]) => void;
     row?: any;
     actions?: TableAction[];
-    crudPermissionKey?: string;
     children?: any;
+    showEdit?: boolean;
+    showView?: boolean;
+    canEdit?: boolean;
+    canView?: boolean;
+    canDelete?: boolean;
+    canRestore?: boolean;
+    canDeleteForever?: boolean;
 };
 
 export function TableBulkActionMenu({
-    crudPermissionKey,
+    canView,
+    canEdit,
+    canDelete,
+    canRestore,
+    canDeleteForever,
     children,
+    showView,
+    onView,
+    showEdit,
+    onEdit,
     onDelete,
     onDeleteForever,
     onRestore,
@@ -43,44 +59,67 @@ export function TableBulkActionMenu({
 
         return [
             ...otherActions,
-            ...(onDelete ?
+            ...(showView && canView && onView ?
                 [
                     {
-                        icon: <Icon icon={IconEnum.TRASH} />,
+                        icon: <Icon icon={IconEnum.Eye} />,
+                        title: 'View',
+                        onClick: onView,
+                    },
+                ] :
+                []),
+            ...(showEdit && canEdit && onEdit ?
+                [
+                    {
+                        icon: <Icon icon={IconEnum.Pencil} />,
+                        title: 'Edit',
+                        onClick: onEdit,
+                    },
+                ] :
+                []),
+            ...(onDelete && canDelete ?
+                [
+                    {
+                        icon: <Icon icon={IconEnum.Trash} />,
                         title: 'Delete',
-                        permission: `delete-${crudPermissionKey}`,
                         onClick: onDelete,
                     },
                 ] :
                 []),
-            ...(onRestore ?
+            ...(onRestore && canRestore ?
                 [
                     {
-                        icon: <Icon icon={IconEnum.CLOCK_ANTI_CLOCKWISE} />,
+                        icon: <Icon icon={IconEnum.RotateCcw} />,
                         title: 'Restore',
-                        permission: `update-${crudPermissionKey}`,
                         onClick: onRestore,
                     },
                 ] :
                 []),
-            ...(onDeleteForever ?
+            ...(onDeleteForever && canDeleteForever ?
                 [
                     {
-                        icon: <Icon icon={IconEnum.TRASH_X} />,
+                        icon: <Icon icon={IconEnum.Trash2} />,
                         title: 'Permanent delete',
-                        permission: `delete-${crudPermissionKey}`,
                         onClick: onDeleteForever,
                     },
                 ] :
                 []),
-        ].filter((item) => item.permission ? hasAnyPermission(item.permission) : true);
+        ].filter(Boolean);
     }, [
         actions,
-        crudPermissionKey,
+        canDelete,
+        canDeleteForever,
+        canEdit,
+        canRestore,
+        canView,
         hasAnyPermission,
         onDelete,
         onDeleteForever,
+        onEdit,
         onRestore,
+        onView,
+        showEdit,
+        showView,
     ]);
 
     if (crudActions.length <= 2) {
@@ -114,7 +153,7 @@ export function TableBulkActionMenu({
         <MenuDropdown
             anchor={(
                 <IconButton>
-                    <Icon icon={IconEnum.DOTS_THREE_VERTICAL} />
+                    <Icon icon={IconEnum.EllipsisVertical} />
                 </IconButton>
             )}
         >
