@@ -1,7 +1,8 @@
 import { Tree } from '@nx/devkit';
+import { prompt } from 'enquirer';
 import { existsSync } from 'fs';
 import { join } from 'path';
-import { prompt } from 'enquirer';
+
 
 export type ConflictAction = 'skip' | 'update' | 'rename' | 'ask';
 
@@ -35,6 +36,7 @@ export interface ConflictResolutionResult {
 }
 
 export class ConflictResolver {
+
     private tree: Tree;
     private options: ConflictResolutionOptions;
 
@@ -46,7 +48,7 @@ export class ConflictResolver {
             skipExisting: false,
             forceUpdate: false,
             createBackup: false,
-            ...options
+            ...options,
         };
     }
 
@@ -88,28 +90,28 @@ export class ConflictResolver {
             {
                 path: `apps/api/src/app/modules/${fileName}/${fileName}.entity.ts`,
                 type: 'entity' as const,
-                canOverwrite: true
+                canOverwrite: true,
             },
             {
                 path: `apps/api/src/app/modules/${fileName}/${fileName}.service.ts`,
                 type: 'service' as const,
-                canOverwrite: true
+                canOverwrite: true,
             },
             {
                 path: `apps/api/src/app/modules/${fileName}/${fileName}.controller.ts`,
                 type: 'controller' as const,
-                canOverwrite: true
+                canOverwrite: true,
             },
             {
                 path: `apps/api/src/app/modules/${fileName}/${fileName}.module.ts`,
                 type: 'module' as const,
-                canOverwrite: true
+                canOverwrite: true,
             },
             {
                 path: `apps/api/src/app/modules/${fileName}/dto/${fileName}.dto.ts`,
                 type: 'dto' as const,
-                canOverwrite: true
-            }
+                canOverwrite: true,
+            },
         ];
 
         // Types files
@@ -117,8 +119,8 @@ export class ConflictResolver {
             {
                 path: `libs/types/src/lib/${fileName}.ts`,
                 type: 'types' as const,
-                canOverwrite: true
-            }
+                canOverwrite: true,
+            },
         ];
 
         // React files
@@ -126,31 +128,35 @@ export class ConflictResolver {
             {
                 path: `apps/admin/src/app/pages/${fileName}/${fileName}-list-page.tsx`,
                 type: 'react-component' as const,
-                canOverwrite: true
+                canOverwrite: true,
             },
             {
                 path: `apps/admin/src/app/sections/${fileName}/${fileName}-list-table.tsx`,
                 type: 'react-component' as const,
-                canOverwrite: true
+                canOverwrite: true,
             },
             {
                 path: `apps/admin/src/app/sections/${fileName}/add-edit-${fileName}-dialog.tsx`,
                 type: 'react-component' as const,
-                canOverwrite: true
+                canOverwrite: true,
             },
             {
                 path: `libs/react-core/src/lib/query-hooks/use-${fileName}.ts`,
                 type: 'react-hook' as const,
-                canOverwrite: true
+                canOverwrite: true,
             },
             {
                 path: `libs/react-core/src/lib/services/${fileName}.service.ts`,
                 type: 'react-service' as const,
-                canOverwrite: true
-            }
+                canOverwrite: true,
+            },
         ];
 
-        const allPaths = [...apiPaths, ...typePaths, ...reactPaths];
+        const allPaths = [
+            ...apiPaths,
+            ...typePaths,
+            ...reactPaths,
+        ];
 
         for (const pathInfo of allPaths) {
             const exists = this.tree.exists(pathInfo.path) || existsSync(pathInfo.path);
@@ -160,7 +166,7 @@ export class ConflictResolver {
                     path: pathInfo.path,
                     type: pathInfo.type,
                     exists: true,
-                    canOverwrite: pathInfo.canOverwrite
+                    canOverwrite: pathInfo.canOverwrite,
                 });
             }
         }
@@ -180,7 +186,7 @@ export class ConflictResolver {
                 entityName: conflict.entityName,
                 action: 'skip',
                 skipGeneration: true,
-                createBackup: false
+                createBackup: false,
             };
         }
 
@@ -191,7 +197,7 @@ export class ConflictResolver {
                 action: 'update',
                 skipGeneration: false,
                 createBackup: this.options.createBackup,
-                backupSuffix: this.options.createBackup ? this.generateBackupSuffix() : undefined
+                backupSuffix: this.options.createBackup ? this.generateBackupSuffix() : undefined,
             };
         }
 
@@ -206,7 +212,7 @@ export class ConflictResolver {
                     entityName: conflict.entityName,
                     action: 'skip',
                     skipGeneration: true,
-                    createBackup: false
+                    createBackup: false,
                 };
             case 'update':
                 return {
@@ -214,7 +220,7 @@ export class ConflictResolver {
                     action: 'update',
                     skipGeneration: false,
                     createBackup: this.options.createBackup,
-                    backupSuffix: this.options.createBackup ? this.generateBackupSuffix() : undefined
+                    backupSuffix: this.options.createBackup ? this.generateBackupSuffix() : undefined,
                 };
             case 'rename':
                 return {
@@ -222,7 +228,7 @@ export class ConflictResolver {
                     action: 'rename',
                     skipGeneration: false,
                     createBackup: false,
-                    backupSuffix: this.generateBackupSuffix()
+                    backupSuffix: this.generateBackupSuffix(),
                 };
             default:
                 // Default to skip for safety
@@ -230,31 +236,43 @@ export class ConflictResolver {
                     entityName: conflict.entityName,
                     action: 'skip',
                     skipGeneration: true,
-                    createBackup: false
+                    createBackup: false,
                 };
         }
     }
 
     private async resolveInteractive(conflict: EntityConflict): Promise<ConflictResolutionResult> {
         console.log(`\n⚠️  Conflict detected for entity: ${conflict.entityName}`);
-        console.log(`   The following files already exist:`);
+        console.log('   The following files already exist:');
 
         conflict.conflictingFiles.forEach(file => {
             console.log(`   - ${file.path}`);
         });
 
         const choices = [
-            { name: 'update', message: 'Update (overwrite existing files)' },
-            { name: 'skip', message: 'Skip (keep existing files, don\'t generate)' },
-            { name: 'backup', message: 'Update with backup (create .backup files)' },
-            { name: 'rename', message: 'Rename (generate with .new suffix)' }
+            {
+                name: 'update',
+                message: 'Update (overwrite existing files)',
+            },
+            {
+                name: 'skip',
+                message: 'Skip (keep existing files, don\'t generate)',
+            },
+            {
+                name: 'backup',
+                message: 'Update with backup (create .backup files)',
+            },
+            {
+                name: 'rename',
+                message: 'Rename (generate with .new suffix)',
+            },
         ];
 
         const response = await prompt<{ action: string }>({
             type: 'select',
             name: 'action',
             message: `How would you like to handle the conflict for ${conflict.entityName}?`,
-            choices
+            choices,
         });
 
         switch (response.action) {
@@ -263,14 +281,14 @@ export class ConflictResolver {
                     entityName: conflict.entityName,
                     action: 'update',
                     skipGeneration: false,
-                    createBackup: false
+                    createBackup: false,
                 };
             case 'skip':
                 return {
                     entityName: conflict.entityName,
                     action: 'skip',
                     skipGeneration: true,
-                    createBackup: false
+                    createBackup: false,
                 };
             case 'backup':
                 return {
@@ -278,7 +296,7 @@ export class ConflictResolver {
                     action: 'update',
                     skipGeneration: false,
                     createBackup: true,
-                    backupSuffix: this.generateBackupSuffix()
+                    backupSuffix: this.generateBackupSuffix(),
                 };
             case 'rename':
                 return {
@@ -286,14 +304,14 @@ export class ConflictResolver {
                     action: 'rename',
                     skipGeneration: false,
                     createBackup: false,
-                    backupSuffix: '.new'
+                    backupSuffix: '.new',
                 };
             default:
                 return {
                     entityName: conflict.entityName,
                     action: 'skip',
                     skipGeneration: true,
-                    createBackup: false
+                    createBackup: false,
                 };
         }
     }
@@ -313,17 +331,29 @@ export class ConflictResolver {
         });
 
         const choices = [
-            { name: 'individual', message: 'Handle each entity individually' },
-            { name: 'update-all', message: 'Update all (overwrite all existing files)' },
-            { name: 'skip-all', message: 'Skip all (keep all existing files)' },
-            { name: 'backup-all', message: 'Update all with backup (create .backup files)' }
+            {
+                name: 'individual',
+                message: 'Handle each entity individually',
+            },
+            {
+                name: 'update-all',
+                message: 'Update all (overwrite all existing files)',
+            },
+            {
+                name: 'skip-all',
+                message: 'Skip all (keep all existing files)',
+            },
+            {
+                name: 'backup-all',
+                message: 'Update all with backup (create .backup files)',
+            },
         ];
 
         const response = await prompt<{ action: string }>({
             type: 'select',
             name: 'action',
             message: 'How would you like to handle all conflicts?',
-            choices
+            choices,
         });
 
         switch (response.action) {
@@ -340,7 +370,7 @@ export class ConflictResolver {
                     entityName: conflict.entityName,
                     action: 'update' as ConflictAction,
                     skipGeneration: false,
-                    createBackup: false
+                    createBackup: false,
                 }));
 
             case 'skip-all':
@@ -348,7 +378,7 @@ export class ConflictResolver {
                     entityName: conflict.entityName,
                     action: 'skip' as ConflictAction,
                     skipGeneration: true,
-                    createBackup: false
+                    createBackup: false,
                 }));
 
             case 'backup-all':
@@ -358,7 +388,7 @@ export class ConflictResolver {
                     action: 'update' as ConflictAction,
                     skipGeneration: false,
                     createBackup: true,
-                    backupSuffix
+                    backupSuffix,
                 }));
 
             default:
@@ -366,7 +396,7 @@ export class ConflictResolver {
                     entityName: conflict.entityName,
                     action: 'skip' as ConflictAction,
                     skipGeneration: true,
-                    createBackup: false
+                    createBackup: false,
                 }));
         }
     }
@@ -384,7 +414,7 @@ export class ConflictResolver {
             `apps/admin/src/app/sections/${fileName}/${fileName}-list-table.tsx`,
             `apps/admin/src/app/sections/${fileName}/add-edit-${fileName}-dialog.tsx`,
             `libs/react-core/src/lib/query-hooks/use-${fileName}.ts`,
-            `libs/react-core/src/lib/services/${fileName}.service.ts`
+            `libs/react-core/src/lib/services/${fileName}.service.ts`,
         ];
 
         filesToBackup.forEach(filePath => {
@@ -434,4 +464,5 @@ export class ConflictResolver {
             renamed.forEach(r => console.log(`      - ${r.entityName} (with ${r.backupSuffix} suffix)`));
         }
     }
+
 }

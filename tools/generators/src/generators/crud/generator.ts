@@ -1,11 +1,83 @@
 import { formatFiles, Tree, names } from '@nx/devkit';
 import { execSync } from 'child_process';
+import { prompt } from 'enquirer';
 
 import { ApiGenerator } from './api.generator';
 import { ReactGenerator } from './react.generator';
-import { PluginGeneratorSchema, ProcessedSchema, ProcessedColumn } from './schema';
+import { PluginGeneratorSchema, ProcessedSchema, ProcessedColumn, Column, ColumnType } from './schema';
 import { TypesGenerator } from './types.generator';
 
+
+async function takeEntityColumns(): Promise<Column[]> {
+    const columns: Column[] = [];
+    let addMoreColumns = true;
+
+    while (addMoreColumns) {
+        const columnPrompt = await prompt<{
+            columnName: string;
+            columnType: string;
+            enumValues: string[];
+            nullable: string;
+        }>([
+            {
+                type: 'input',
+                name: 'columnName',
+                message: 'Enter column name:',
+            },
+            {
+                type: 'select',
+                name: 'columnType',
+                message: 'Select column type:',
+                choices: [
+                    'string',
+                    'number',
+                    'boolean',
+                    'date',
+                    'enum',
+                    'text',
+                    'uuid',
+                    'file',
+                ],
+            },
+        ]);
+
+        if (columnPrompt.columnType === 'enum') {
+            columnPrompt.enumValues = await askForEnumValues();
+        }
+
+        if (columnPrompt.columnName && columnPrompt.columnName !== '') {
+            columns.push({
+                name: columnPrompt.columnName,
+                normalizeName: names(columnPrompt.columnName),
+                type: columnPrompt.columnType as ColumnType,
+                nullable: columnPrompt.nullable === 'yes',
+                enumValues: columnPrompt.enumValues,
+            });
+        }
+
+        // If the user selects 'no', stop asking for more columns
+        const { moreValues } = await prompt<{ moreValues: string }>({
+            type: 'select',
+            name: 'moreValues',
+            message: 'Do you want to add another column?',
+            choices: ['yes', 'no'],
+        });
+        addMoreColumns = moreValues === 'yes';
+    }
+
+    return columns;
+}
+
+async function askForEnumValues(): Promise<string[]> {
+    const { enumValues } = await prompt<{ enumValues: string }>({
+        type: 'input',
+        name: 'enumValues',
+        message: 'Enter enum values (comma-separated):',
+        validate: (input) => input ? true : 'Enum values cannot be empty.',
+    });
+
+    return `${enumValues}`.split(',').map((val) => val.trim());
+}
 
 function setDefaults(options: PluginGeneratorSchema): ProcessedSchema {
     const { className, propertyName, fileName } = names(options.name);
@@ -188,6 +260,13 @@ function toKebabCase(str: string): string {
 }
 
 export default async function (tree: Tree, options: PluginGeneratorSchema) {
+    // Handle interactive column input if needed
+    if (options.addColumns && (!options.columns || options.columns.length === 0)) {
+        console.log('📝 Setting up entity columns...');
+        const columns = await takeEntityColumns();
+        options.columns = columns;
+    }
+
     const processedOptions = setDefaults(options);
 
     // Always use ackplus now
@@ -197,6 +276,7 @@ export default async function (tree: Tree, options: PluginGeneratorSchema) {
     console.log(`📁 Entity: ${processedOptions.name}`);
     console.log('🔧 Type: @ackplus/nest-crud');
     console.log(`📊 Features: ${Object.entries(processedOptions.features).filter(([_, enabled]) => enabled).map(([key]) => key).join(', ')}`);
+    console.log(`📋 Columns: ${processedOptions.columns.map(col => `${col.name} (${col.type})`).join(', ')}`);
 
     // Generate API files
     if (processedOptions.generateApi) {
