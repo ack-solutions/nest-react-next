@@ -1,20 +1,39 @@
-import {  Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { <%= className %> } from './<%= fileName %>.entity';
-import { Repository } from 'typeorm';
-import { CrudService } from '@api/app/core/crud';
+<% const hasFileUploadColumns = columns.some(col => col.type === 'file'); %>
+<% if (hasFileUploadColumns) { %>
+import { UploadedFileStorage } from '@api/app/core/file-storage/uploaded-file-storage';
+<% } %>
 
+import { <%= className %> } from './<%= fileName %>.entity';
+import { Create<%= className %>DTO } from './dto/create-<%= fileName %>.dto';
+import { Update<%= className %>DTO } from './dto/update-<%= fileName %>.dto';
+import { BaseService } from '../../core/service/base-service';
+import { BaseRepository } from '../../core/typeorm/base-repository';
 
 @Injectable()
-export class <%= className %>Service extends CrudService<<%= className %>> {
+export class <%= className %>Service extends BaseService<<%= className %>> {
+
     constructor(
         @InjectRepository(<%= className %>)
-        private <%= propertyName %>Repo: Repository<<%= className %>>
+        repository: BaseRepository<<%= className %>>,
     ) {
-        super(<%= propertyName %>Repo)
-     }
+        super(repository);
+    }
 
-    find() {
-        return this.<%= propertyName %>Repo.find();
+    <% if (hasFileUploadColumns) { %>
+    async uploadFile(file: UploadedFileStorage, body: any) {
+        // Handle file upload logic
+        // You can access the file and additional body data here
+        // Example: Update entity with file path
+        return { message: 'File uploaded successfully', file: file.filename };
+    }
+    <% } %>
+
+    async search(query: string) {
+        return this.repository
+            .createQueryBuilder('<%= fileName %>')
+            .where('<%= fileName %>.name ILIKE :query', { query: `%${query}%` })
+            .getMany();
     }
 }

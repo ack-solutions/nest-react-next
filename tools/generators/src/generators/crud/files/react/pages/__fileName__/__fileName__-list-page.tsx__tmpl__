@@ -1,59 +1,177 @@
-import { useState, useCallback } from 'react';
-import { Container, Button } from '@mui/material';
-import Page from '../../components/page';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs/custom-breadcrumbs';
+import { QueryBuilder, WhereOperatorEnum } from '@ackplus/nest-crud-request';
+import { use<%= className %> } from '@libs/react-shared';
+import { I<%= className %>, PermissionsEnum } from '@libs/types';
+import { Card, Button } from '@mui/material';
+import { useCallback, useRef, useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import {
+    CrudTable,
+    CrudTableActions,
+    DataTableColumn,
+    IDataTableFilter,
+    Page,
+} from '../../components';
+import { useAccess } from '../../contexts/react-access-control';
+import { useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import AddEdit<%= className %>Dialog from '../../sections/<%= fileName %>/add-edit-<%= fileName %>-dialog';
-import { use<%= className %>, useToasty } from '@libs/react-core';
-import { useConfirm } from '../../contexts/confirm-dialog-context';
-import <%= className %>ListTable from '../../sections/<%= fileName %>/<%= fileName %>-list-table';
-import { I<%= className %> } from '@libs/types';
 
-export default function <%= className %>List() {
-    const [selectedItem, setSelectedItem] = useState(null);
+export interface I<%= className %>TableFilter {
+    // Add custom filters here
+}
+
+const defaultFilter: I<%= className %>TableFilter = {
+    // Initialize default filter values
+};
+
+function <%= className %>List() {
+    const datatableRef = useRef<CrudTableActions>(null);
     const { showToasty } = useToasty();
-    const confirmDialog = useConfirm();
+    const { hasPermission } = useAccess();
+    const navigate = useNavigate();
+    const [selected<%= className %>, setSelected<%= className %>] = useState<I<%= className %> | null>(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [tableFilter, setTableFilter] = useState(defaultFilter);
+    const [countFilter, setCountFilter] = useState({});
 
-    const { useDelete<%= className %> } = use<%= className %>();
-    const { mutateAsync: delete<%= className %> } = useDelete<%= className %>();
+    const canCreate = hasPermission(PermissionsEnum.CREATE_<%= fileName.toUpperCase() %>S);
+    const canEdit = hasPermission(PermissionsEnum.UPDATE_<%= fileName.toUpperCase() %>S);
+    const canDelete = hasPermission(PermissionsEnum.DELETE_<%= fileName.toUpperCase() %>S);
 
-    const handleAddEditClose = useCallback(() => {
-        setSelectedItem(null);
+    const {
+        useGetMany<%= className %>,
+        useDelete<%= className %>,
+        <% if (features.softDelete) { %>
+        useRestore<%= className %>,
+        useDeleteForever<%= className %>,
+        useBulkDelete<%= className %>,
+        useBulkRestore<%= className %>,
+        useBulkDeleteForever<%= className %>,
+        <% } %>
+    } = use<%= className %>();
+
+    const handleAddEdit = useCallback((<%= fileName %>?: I<%= className %>) => {
+        setSelected<%= className %>(<%= fileName %> || null);
+        setIsDialogOpen(true);
     }, []);
 
-    const handleAddEdit = useCallback((item: Partial<I<%= className %>> = {}) => {
-        setSelectedItem(item);
+    const handleCloseDialog = useCallback(() => {
+        setSelected<%= className %>(null);
+        setIsDialogOpen(false);
     }, []);
+
+    const handleRowClick = useCallback(
+        (row) => {
+            navigate(`${PATH_DASHBOARD.<%= fileName %>s.view}/${row?.id}`);
+        },
+        [navigate],
+    );
+
+    const handleTrashData = useCallback((checked) => {
+        setCountFilter((state) => {
+            const newState = new QueryBuilder(state);
+            newState.setOnlyDeleted(checked);
+            return newState.toObject();
+        });
+    }, []);
+
+    const handleDataTableApiRequestMap = useCallback(
+        (queryBuilder: QueryBuilder, request: IDataTableFilter) => {
+            if (request?.search) {
+                queryBuilder.orWhere('name', WhereOperatorEnum.ILIKE, `%${request?.search}%`);
+            }
+
+            return queryBuilder;
+        },
+        [],
+    );
+
+    const columns = useMemo<DataTableColumn<I<%= className %>>[]>(() => [
+        <% columns.forEach(column => { %>
+        {
+            field: '<%= column.name %>',
+            headerName: '<%= column.name.charAt(0).toUpperCase() + column.name.slice(1) %>',
+            <% if (column.type === 'enum') { %>
+            renderCell: (params) => (
+                <StatusChip
+                    variant="filled"
+                    color={getStatusConfig(params.value)?.color}
+                    label={params.value}
+                />
+            ),
+            <% } else if (column.type === 'date') { %>
+            renderCell: (params) => toDisplayDate(params.value),
+            <% } else if (column.type === 'boolean') { %>
+            renderCell: (params) => params.value ? 'Yes' : 'No',
+            <% } %>
+        },
+        <% }); %>
+    ], []);
 
     return (
-        <Page title="<%= className %>">
-            <Container>
-                <CustomBreadcrumbs
-                    heading="<%= className %> List"
-                    links={[
-                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: '<%= className %>' },
-                    ]}
-                    action={
+        <Page
+            title="<%= className %>s"
+            breadcrumbs={[
+                {
+                    name: 'Dashboard',
+                    href: PATH_DASHBOARD.root,
+                },
+                { name: '<%= className %>s' },
+            ]}
+        >
+            <Card>
+                <CrudTable
+                    crudName="<%= className %>"
+                    crudPermissionKey="<%= fileName %>s"
+                    columns={columns}
+                    ref={datatableRef}
+                    <% if (features.softDelete) { %>
+                    hasSoftDelete
+                    <% } %>
+                    // Permission props
+                    canEdit={canEdit}
+                    canDelete={canDelete}
+                    canRestore={canDelete} // Usually same as delete permission
+                    canDeleteForever={canDelete} // Usually same as delete permission
+                    onToggleTrashData={handleTrashData}
+                    dataTableApiRequestMap={handleDataTableApiRequestMap}
+                    crudOperationHooks={{
+                        useGetMany: useGetMany<%= className %>,
+                        useDelete: useDelete<%= className %>,
+                        <% if (features.softDelete) { %>
+                        useRestore: useRestore<%= className %>,
+                        useDeleteForever: useDeleteForever<%= className %>,
+                        useBulkDelete: useBulkDelete<%= className %>,
+                        useBulkRestore: useBulkRestore<%= className %>,
+                        useBulkDeleteForever: useBulkDeleteForever<%= className %>,
+                        <% } %>
+                    }}
+                    onEdit={canEdit ? handleAddEdit : undefined}
+                    onRowClick={canEdit ? handleRowClick : null}
+                    extraFilter={canCreate ? (
                         <Button
                             variant="contained"
                             onClick={() => handleAddEdit()}
                         >
                             Add <%= className %>
                         </Button>
-                    }
+                    ) : null}
                 />
-                <<%= className %>ListTable
-                    onEdit={handleAddEdit}
-                />
+            </Card>
 
-                {selectedItem && (
-                    <AddEdit<%= className %>Dialog
-                        initialValue={selectedItem}
-                        onClose={handleAddEditClose}
-                    />
-                )}
-            </Container>
+            {isDialogOpen && (
+                <AddEdit<%= className %>Dialog
+                    initialValue={selected<%= className %>}
+                    onClose={handleCloseDialog}
+                    onSubmit={() => {
+                        datatableRef.current?.datatable?.refresh();
+                        handleCloseDialog();
+                    }}
+                />
+            )}
         </Page>
     );
 }
+
+export default <%= className %>List;

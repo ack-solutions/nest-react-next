@@ -5,95 +5,89 @@ import {
 } from '../../components';
 import { I<%= className %> } from '@libs/types';
 import { use<%= className %> } from '@libs/react-core';
-import { Tabs, Tab, Card, Divider } from '@mui/material';
+import { Card } from '@mui/material';
 import { CrudTable, CrudTableActions } from '../../components/crud/crud-table';
+import { toDisplayDate } from '@libs/utils';
 
 export interface <%= className %>ListTableProps {
     datatableRef?: MutableRefObject<DataTableHandle>;
-    onEdit?: (row: I<%= className %>) => void
+    onEdit?: (row: I<%= className %>) => void;
+    hasSoftDelete?: boolean;
 }
-
-const filterTabs = [
-    {
-        label: 'All',
-        value: 'all'
-    },
-]
-
-export interface <%= className %>ListFilters {
-    status?: string;
-}
-
 
 export default function <%= className %>ListTable({
-    onEdit
+    onEdit,
+    hasSoftDelete = <%= features.softDelete ? 'true' : 'false' %>,
 }: <%= className %>ListTableProps) {
 
-    const [customFilters, setCustomFilters] = useState<<%= className %>ListFilters>({
-        status: 'all'
-    });
     const datatableRef = useRef<CrudTableActions>(null);
 
-    const { useGetMany<%= className %>, useDelete<%= className %>, useRestore<%= className %>, useDeleteForever<%= className %>, useBulkDelete<%= className %>, useBulkRestore<%= className %>, useBulkDeleteForever<%= className %> } = use<%= className %>();
+    const {
+        useGetMany<%= className %>,
+        useDelete<%= className %>,
+        <% if (features.softDelete) { %>
+        useRestore<%= className %>,
+        useDeleteForever<%= className %>,
+        useBulkDelete<%= className %>,
+        useBulkRestore<%= className %>,
+        useBulkDeleteForever<%= className %>
+        <% } %>
+    } = use<%= className %>();
 
-
-    const handleTabChange = useCallback(
-        (_event, value) => {
-            setCustomFilters((state) => ({
-                status: value,
-            }))
-            datatableRef.current.applyFilters((state) => ({
-                ...state,
-                status: value,
-            }))
+    const handleDataTableApiRequestMap = useCallback(
+        (filter) => {
+            filter = {
+                ...filter,
+                relations: [], // Add any relations you need
+            };
+            return filter;
         },
         [],
-    )
+    );
 
     const columns: DataTableColumn<I<%= className %>>[] = [
-       <% columns.forEach(column => { %>{
-            name: '<%= column.normalizeName.propertyName %>',
-            label: '<%= column.normalizeName.name %>',
-        },<% }) %>
+        <% columns.forEach((column, index) => { %>
+        {
+            name: '<%= column.name %>',
+            label: '<%= column.normalizeName.className %>',
+            isSearchable: <%= column.type === 'string' || column.type === 'text' ? 'true' : 'false' %>,
+            isSortable: true,
+            <% if (column.type === 'date' || column.type === 'date-time') { %>
+            render: (row) => toDisplayDate(row?.<%= column.normalizeName.propertyName %>),
+            <% } else if (column.type === 'enum') { %>
+            render: (row) => row?.<%= column.normalizeName.propertyName %>,
+            <% } else if (column.type === 'boolean') { %>
+            render: (row) => row?.<%= column.normalizeName.propertyName %> ? 'Yes' : 'No',
+            <% } else { %>
+            render: (row) => row?.<%= column.normalizeName.propertyName %>,
+            <% } %>
+        },
+        <% }); %>
+        {
+            name: 'createdAt',
+            label: 'Created Date',
+            isSearchable: false,
+            isSortable: true,
+            render: (row) => toDisplayDate(row?.createdAt),
+        },
     ];
 
     return (
         <Card>
-            <Tabs
-                value={customFilters?.status}
-                onChange={handleTabChange}
-                sx={{ px: 3 }}
-            >
-                {filterTabs.map((tab) => (
-                    <Tab
-                        key={tab.value}
-                        iconPosition="end"
-                        value={tab.value}
-                        label={tab.label}
-                        disableRipple
-                    // icon={
-                    //     <Label
-                    //         variant={tab.value === customFilters?.status ? 'filled' : 'soft'}
-                    //         color={'default'}
-                    //     >
-                    //         {data?.total}
-                    //     </Label>
-                    // }
-                    />
-                ))}
-            </Tabs>
-            <Divider />
             <CrudTable
-                hasSoftDelete
+                hasSoftDelete={hasSoftDelete}
                 crudName="<%= className %>"
+                dataTableApiRequestMap={handleDataTableApiRequestMap}
                 crudOperationHooks={{
                     useGetMany: useGetMany<%= className %>,
                     useDelete: useDelete<%= className %>,
+                    <% if (features.softDelete) { %>
                     useRestore: useRestore<%= className %>,
                     useDeleteForever: useDeleteForever<%= className %>,
                     useBulkDelete: useBulkDelete<%= className %>,
                     useBulkRestore: useBulkRestore<%= className %>,
-                    useBulkDeleteForever: useBulkDeleteForever<%= className %>
+                    useBulkDeleteForever: useBulkDeleteForever<%= className %>,
+                    <% } %>
                 }}
                 onEdit={onEdit}
                 ref={datatableRef}

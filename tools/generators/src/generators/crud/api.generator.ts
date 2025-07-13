@@ -40,6 +40,7 @@ export class ApiGenerator {
                 fileName,
                 propertyName,
                 columns: this.options.columns,
+                features: this.options.features,
             }, // Data to pass to the template (e.g., the library name)
         );
     }
@@ -49,13 +50,13 @@ export class ApiGenerator {
     }
 
     importModuleInAppModule() {
-        const apiModulePath = joinPathFragments(this.projects.get('api').root, 'src', 'app', 'api.module.ts');
-        if (!this.tree.exists(apiModulePath)) {
-            throw new Error(`api.module.ts not found at ${apiModulePath}`);
+        const appModulePath = joinPathFragments(this.projects.get('api').root, 'src', 'app', 'app.module.ts');
+        if (!this.tree.exists(appModulePath)) {
+            throw new Error(`app.module.ts not found at ${appModulePath}`);
         }
 
-        // Read the current content of `api.module.ts`
-        let content = this.tree.read(apiModulePath, 'utf-8');
+        // Read the current content of `app.module.ts`
+        let content = this.tree.read(appModulePath, 'utf-8');
 
         // Define module details
         const moduleName = `${this.names.className}Module`;
@@ -66,14 +67,14 @@ export class ApiGenerator {
         content = addImportStatement(content, importStatement);
 
         // Add the module to the imports array if not already present
-        content = appendArrayItem(content, 'Modules', moduleName);
+        content = appendArrayItem(content, 'imports', moduleName);
 
-        // Write the updated content back to `api.module.ts`
-        this.tree.write(apiModulePath, content);
+        // Write the updated content back to `app.module.ts`
+        this.tree.write(appModulePath, content);
     }
 
     addEntityInAllEntityArray() {
-        const allEntityFilePath = joinPathFragments(this.projects.get('api').root, 'src', 'app', 'core', 'entities.ts');
+        const allEntityFilePath = joinPathFragments(this.projects.get('api').root, 'src', 'app', 'entities.ts');
 
         if (!this.tree.exists(allEntityFilePath)) {
             throw new Error(`entities.ts not found at ${allEntityFilePath}`);
@@ -84,14 +85,14 @@ export class ApiGenerator {
 
         // Define entity details
         const entityName = `${this.names.className}`;
-        const entityPath = `../modules/${this.names.fileName}/${this.names.fileName}.entity`;
+        const entityPath = `./modules/${this.names.fileName}/${this.names.fileName}.entity`;
         const importStatement = `import { ${entityName} } from '${entityPath}';`;
 
         // Add the import statement if not already present
         content = addImportStatement(content, importStatement);
 
         // Add the entity to the array if not already present
-        content = appendArrayItem(content, 'AllEntities', entityName);
+        content = appendArrayItem(content, 'ALL_ENTITIES', entityName);
 
         // Write the updated content back to the file
         this.tree.write(allEntityFilePath, content);

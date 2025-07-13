@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { DefaultDialog } from '../../components';
 import { errorMessage, FormContainer, RHFTextField, use<%= className %>, useToasty } from '@libs/react-core';
-import { object, string } from 'yup';
+import { object, string, number, boolean } from 'yup';
 import { I<%= className %> } from '@libs/types';
 
 export interface AddEdit<%= className %>DialogProps {
@@ -15,11 +15,33 @@ export interface AddEdit<%= className %>DialogProps {
 }
 
 const validationSchema = yupResolver(object({
-    <% columns.forEach(column => { %><%= column.normalizeName.propertyName %>: string().label('<%= column.normalizeName.name %>'), <% }) %>
+    <% columns.forEach(column => { %>
+    <% if (column.type === 'string' || column.type === 'text' || column.type === 'file') { %>
+    <%= column.normalizeName.propertyName %>: string()<% if (!column.nullable) { %>.required()<% } %>.label('<%= column.normalizeName.className %>'),
+    <% } else if (column.type === 'number') { %>
+    <%= column.normalizeName.propertyName %>: number()<% if (!column.nullable) { %>.required()<% } %>.label('<%= column.normalizeName.className %>'),
+    <% } else if (column.type === 'boolean') { %>
+    <%= column.normalizeName.propertyName %>: boolean().label('<%= column.normalizeName.className %>'),
+    <% } else if (column.type === 'enum') { %>
+    <%= column.normalizeName.propertyName %>: string()<% if (!column.nullable) { %>.required()<% } %>.label('<%= column.normalizeName.className %>'),
+    <% } else { %>
+    <%= column.normalizeName.propertyName %>: string()<% if (!column.nullable) { %>.required()<% } %>.label('<%= column.normalizeName.className %>'),
+    <% } %>
+    <% }); %>
 }));
 
 const defaultValues: Partial<I<%= className %>> = {
-    <% columns.forEach(column => { %><%= column.normalizeName.propertyName %>: "", <% }) %>
+    <% columns.forEach(column => { %>
+    <% if (column.type === 'string' || column.type === 'text' || column.type === 'file' || column.type === 'enum') { %>
+    <%= column.normalizeName.propertyName %>: "",
+    <% } else if (column.type === 'number') { %>
+    <%= column.normalizeName.propertyName %>: 0,
+    <% } else if (column.type === 'boolean') { %>
+    <%= column.normalizeName.propertyName %>: false,
+    <% } else { %>
+    <%= column.normalizeName.propertyName %>: "",
+    <% } %>
+    <% }); %>
 }
 
 export default function AddEdit<%= className %>Dialog({
@@ -55,10 +77,10 @@ export default function AddEdit<%= className %>Dialog({
                 if (onSubmit) { onSubmit(resp) }
                 if (onClose) { onClose() }
 
-                showToasty('<%= title %> successfully saved')
+                showToasty('<%= className %> successfully saved')
                 return resp;
             } catch (error) {
-                showToasty(errorMessage(error, "Error while saving <%= title %>"), 'error');
+                showToasty(errorMessage(error, "Error while saving <%= className %>"), 'error');
                 throw error;
             }
         },
@@ -75,7 +97,7 @@ export default function AddEdit<%= className %>Dialog({
     return (
         <DefaultDialog
             onClose={onClose}
-            title={defaultValues?.id ? 'Edit <%= title %>' : 'Add <%= title %>'}
+            title={initialValue?.id ? 'Edit <%= className %>' : 'Add <%= className %>'}
             actions={
                 <>
                     <Button onClick={onClose}>Cancel</Button>
@@ -101,11 +123,49 @@ export default function AddEdit<%= className %>Dialog({
                 onSuccess={handleSubmit}
             >
                 <Stack spacing={2}>
-                 <% columns.forEach(column => { %><RHFTextField
-                    label="<%= column.normalizeName.name %>"
+                 <% columns.forEach(column => { %>
+                 <% if (column.type === 'boolean') { %>
+                 <RHFCheckbox
+                    label="<%= column.normalizeName.className %>"
                     name="<%= column.normalizeName.propertyName %>"
+                />
+                <% } else if (column.type === 'enum' && column.enum) { %>
+                <RHFSelect
+                    label="<%= column.normalizeName.className %>"
+                    name="<%= column.normalizeName.propertyName %>"
+                    options={[
+                        <% column.enum.forEach(enumValue => { %>
+                        { label: '<%= enumValue %>', value: '<%= enumValue %>' },
+                        <% }); %>
+                    ]}
                     fullWidth
-                /><% }) %>
+                />
+                <% } else if (column.type === 'text') { %>
+                <RHFTextField
+                    label="<%= column.normalizeName.className %>"
+                    name="<%= column.normalizeName.propertyName %>"
+                    multiline
+                    rows={4}
+                    fullWidth
+                />
+                <% } else if (column.type === 'file') { %>
+                <RHFUpload
+                    label="<%= column.normalizeName.className %>"
+                    name="<%= column.normalizeName.propertyName %>"
+                    accept="image/*"
+                    fullWidth
+                />
+                <% } else { %>
+                <RHFTextField
+                    label="<%= column.normalizeName.className %>"
+                    name="<%= column.normalizeName.propertyName %>"
+                    <% if (column.type === 'number') { %>
+                    type="number"
+                    <% } %>
+                    fullWidth
+                />
+                <% } %>
+                <% }); %>
                 </Stack>
 
             </FormContainer>

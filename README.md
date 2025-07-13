@@ -28,6 +28,92 @@ npx nx build web
 To see all available targets to run for a project, run:
 
 ```sh
+npx nx show project web --web
+```
+
+## 🚀 Bulk CRUD Generation
+
+This project includes a powerful bulk CRUD generation system that allows you to define multiple entities and generate full-stack CRUD operations from a single configuration file.
+
+### Quick Start
+
+1. **Copy the example configuration**:
+   ```bash
+   cp crud.config.example.json crud.config.json
+   ```
+
+2. **Edit the configuration** to define your entities, columns, and relationships
+
+3. **Generate all entities**:
+   ```bash
+   # Generate all entities from config
+   npm run g:crud-bulk
+
+   # Or generate specific entities
+   npm run g:crud-bulk -- --entities=product,category
+
+   # Preview what will be generated
+   npm run g:crud-bulk -- --dryRun=true
+
+   # Handle conflicts automatically
+   npm run g:crud-bulk -- --conflictResolution=skip    # Skip existing
+   npm run g:crud-bulk -- --conflictResolution=update  # Overwrite existing
+   npm run g:crud-bulk -- --conflictResolution=backup  # Update with backup
+   ```
+
+### Features
+
+- **📋 Configuration-driven**: Define all entities in a single JSON file
+- **🔄 Bulk generation**: Generate multiple CRUD operations at once
+- **🎯 Selective generation**: Generate specific entities only
+- **🔍 Validation**: Comprehensive config validation with helpful error messages
+- **⚡ Conflict resolution**: Smart handling of existing files with multiple options
+- **📊 Relationships**: Support for belongsTo, hasMany, and manyToMany relationships
+- **🎨 UI customization**: Configure table styles, forms, and interactions
+- **🔒 Permissions**: Role-based access control configuration
+- **📱 Responsive**: Mobile-friendly generated components
+- **🔧 Extensible**: Support for custom validators and features
+
+### Documentation
+
+For detailed documentation, see:
+- [BULK_CRUD_GENERATION.md](./BULK_CRUD_GENERATION.md) - Complete guide
+- [crud.config.example.json](./crud.config.example.json) - Example configuration
+
+### Example Usage
+
+```bash
+# Generate a simple task management system
+npm run g:crud-bulk
+
+# Generate e-commerce entities
+npm run g:crud-bulk -- --entities=product,category,order
+
+# Use custom config file
+npm run g:crud-bulk -- --configFile=my-project.config.json
+
+# Update existing entities with backup
+npm run g:crud-bulk -- --conflictResolution=backup --createBackup=true
+
+# Non-interactive mode
+npm run g:crud-bulk -- --interactive=false --conflictResolution=update
+```
+
+## 🛠️ Individual CRUD Generation
+
+For generating individual entities:
+
+```bash
+# Generate single CRUD entity
+npm run g:crud product
+
+# With custom options
+npm run g:crud product --features.softDelete=true --uiOptions.addEditMode=page
+```
+
+To see all available targets to run for a project, run:
+
+```sh
 npx nx show project web
 ```
 

@@ -53,7 +53,7 @@ function NotFound({
         if (errorCode === '404') {
             return `${entityType} Not Found`;
         }
-        return `Oops! Something went wrong`;
+        return 'Oops! Something went wrong';
     };
 
     return (

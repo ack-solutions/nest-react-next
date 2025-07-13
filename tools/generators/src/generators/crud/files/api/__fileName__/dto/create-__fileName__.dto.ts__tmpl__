@@ -1,0 +1,27 @@
+import { ApiProperty } from '@nestjs/swagger';
+import {
+    IsString, IsInt, IsBoolean, IsDate, IsUUID, IsEnum,
+    IsNumber, IsOptional
+} from 'class-validator';
+import { CrudValidationGroupsEnum } from '@ackplus/nest-crud';
+<% columns.forEach(column => {if (column.enumValues){ %>
+import { <%= column.tsType %> } from '@libs/types';
+<% }}) %>
+
+export class Create<%= className %>DTO {
+    <% columns.forEach(column => { %>
+    @ApiProperty({
+        type: <%= column.swaggerType %><% if (column.enumValues) { %>,
+        enum: <%= column.tsType %><% } %><% if (column.nullable) { %>,
+        required: false<% } %>
+    })
+    <% column.validationDecorators.forEach(decorator => { %>
+    <%= decorator %>({ groups: [CrudValidationGroupsEnum.CREATE] })
+    <% }); %>
+    <% if (column.nullable) { %>
+    @IsOptional({ groups: [CrudValidationGroupsEnum.CREATE] })
+    <% } %>
+    <%= column.normalizeName.propertyName %><% if (column.nullable) { %>?<% } %>: <%= column.tsType %>;
+
+    <% }); %>
+}

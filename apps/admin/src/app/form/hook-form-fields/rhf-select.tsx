@@ -4,9 +4,9 @@ import { get, isArray, startCase } from 'lodash';
 import { forwardRef, useEffect, useMemo } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
-import { TextFieldRaw, TextFieldRawProps } from '../fields/text-field-raw';
-import { useBoolean } from '../../hook';
 import { RHFTextField } from './rhf-text-field';
+import { useBoolean } from '../../hook';
+import { TextFieldRaw, TextFieldRawProps } from '../fields/text-field-raw';
 
 
 type RHFSelectProps = TextFieldRawProps & {

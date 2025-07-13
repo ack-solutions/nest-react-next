@@ -2,8 +2,8 @@
 // utils
 import { Box, Paper, Typography, alpha } from '@mui/material';
 import { FileRejection } from 'react-dropzone';
-import { fData, getFileData } from './utils';
 
+import { fData, getFileData } from './utils';
 
 
 type RejectionFilesProps = {

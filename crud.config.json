@@ -1,0 +1,95 @@
+{
+    "entities": [
+        {
+            "name": "product",
+            "columns": [
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "description",
+                    "type": "text",
+                    "nullable": true
+                },
+                {
+                    "name": "price",
+                    "type": "number"
+                },
+                {
+                    "name": "status",
+                    "type": "enum",
+                    "enum": [
+                        "active",
+                        "inactive",
+                        "discontinued"
+                    ]
+                },
+                {
+                    "name": "image",
+                    "type": "file",
+                    "nullable": true
+                },
+                {
+                    "name": "categoryId",
+                    "type": "uuid",
+                    "nullable": true
+                }
+            ]
+        },
+        {
+            "name": "category",
+            "columns": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "unique": true
+                },
+                {
+                    "name": "slug",
+                    "type": "string",
+                    "unique": true
+                },
+                {
+                    "name": "icon",
+                    "type": "file",
+                    "nullable": true
+                },
+                {
+                    "name": "parentId",
+                    "type": "uuid",
+                    "nullable": true
+                }
+            ]
+        },
+        {
+            "name": "order",
+            "columns": [
+                {
+                    "name": "orderNumber",
+                    "type": "string",
+                    "unique": true
+                },
+                {
+                    "name": "status",
+                    "type": "enum",
+                    "enum": [
+                        "pending",
+                        "processing",
+                        "shipped",
+                        "delivered",
+                        "cancelled"
+                    ]
+                },
+                {
+                    "name": "totalAmount",
+                    "type": "number"
+                },
+                {
+                    "name": "userId",
+                    "type": "uuid"
+                }
+            ]
+        }
+    ]
+}

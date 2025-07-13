@@ -1,40 +1,305 @@
 {
   "$schema": "https://json-schema.org/schema",
   "$id": "CRUD",
-  "title": "",
+  "title": "Enhanced CRUD Generator",
   "type": "object",
   "properties": {
     "name": {
       "type": "string",
-      "description": "",
+      "description": "Entity name (e.g., 'product', 'user')",
       "$default": {
         "$source": "argv",
         "index": 0
       },
-      "x-prompt": "What name would you like to use?"
+      "x-prompt": "What is the entity name?"
+    },
+    "crudType": {
+      "type": "string",
+      "enum": [
+        "custom",
+        "ackplus"
+      ],
+      "description": "Type of CRUD implementation",
+      "x-prompt": {
+        "message": "Which CRUD implementation do you want to use?",
+        "type": "list",
+        "items": [
+          {
+            "value": "custom",
+            "label": "Custom CRUD (current implementation)"
+          },
+          {
+            "value": "ackplus",
+            "label": "@ackplus/nest-crud (new implementation)"
+          }
+        ]
+      },
+      "default": "custom"
     },
     "generateApi": {
       "type": "boolean",
-      "description": "Would you like to generate an API (Nest.js) library?",
-      "x-prompt": "Do you want to generate a Nest.js library?",
+      "description": "Generate API (NestJS) module",
+      "x-prompt": "Generate API module?",
       "default": true
     },
     "generateReact": {
       "type": "boolean",
-      "description": "Would you like to generate a React library?",
-      "x-prompt": "Do you want to generate a React library?",
+      "description": "Generate React components and hooks",
+      "x-prompt": "Generate React components?",
+      "default": true
+    },
+    "generateTypes": {
+      "type": "boolean",
+      "description": "Generate TypeScript types",
       "default": true
     },
     "addColumns": {
       "type": "boolean",
-      "description": "Would you like to generate columns?",
-      "x-prompt": "Do you want to generate columns?",
+      "description": "Add custom columns to entity",
+      "x-prompt": "Do you want to add custom columns?",
       "default": true
+    },
+    "columns": {
+      "type": "array",
+      "description": "Entity columns configuration",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "nullable": {
+            "type": "boolean",
+            "default": false
+          },
+          "unique": {
+            "type": "boolean",
+            "default": false
+          },
+          "default": {
+            "type": "string"
+          },
+          "length": {
+            "type": "number"
+          },
+          "enum": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "type"
+        ]
+      },
+      "default": []
+    },
+    "features": {
+      "type": "object",
+      "description": "Feature toggles",
+      "properties": {
+        "softDelete": {
+          "type": "boolean",
+          "description": "Enable soft delete functionality",
+          "default": true
+        },
+        "bulkOperations": {
+          "type": "boolean",
+          "description": "Enable bulk operations (delete, restore)",
+          "default": true
+        },
+        "statusFilter": {
+          "type": "boolean",
+          "description": "Add status-based filtering",
+          "default": false
+        },
+        "fileUpload": {
+          "type": "boolean",
+          "description": "Enable file upload support",
+          "default": false
+        },
+        "audit": {
+          "type": "boolean",
+          "description": "Enable audit trail",
+          "default": true
+        },
+        "search": {
+          "type": "boolean",
+          "description": "Enable search functionality",
+          "default": true
+        },
+        "export": {
+          "type": "boolean",
+          "description": "Enable data export",
+          "default": false
+        }
+      },
+      "default": {}
+    },
+    "uiOptions": {
+      "type": "object",
+      "description": "UI customization options",
+      "properties": {
+        "tableStyle": {
+          "type": "string",
+          "enum": [
+            "table",
+            "card",
+            "grid"
+          ],
+          "description": "List display style",
+          "default": "table"
+        },
+        "addEditMode": {
+          "type": "string",
+          "enum": [
+            "dialog",
+            "page",
+            "drawer"
+          ],
+          "description": "Add/Edit form mode",
+          "default": "dialog"
+        },
+        "enableSearch": {
+          "type": "boolean",
+          "description": "Enable search in UI",
+          "default": true
+        },
+        "enableFilters": {
+          "type": "boolean",
+          "description": "Enable filters in UI",
+          "default": true
+        },
+        "enableExport": {
+          "type": "boolean",
+          "description": "Enable export button",
+          "default": false
+        },
+        "enableBulkActions": {
+          "type": "boolean",
+          "description": "Enable bulk actions in UI",
+          "default": true
+        }
+      },
+      "default": {}
+    },
+    "permissions": {
+      "type": "object",
+      "description": "Permission and security settings",
+      "properties": {
+        "requireAuth": {
+          "type": "boolean",
+          "description": "Require authentication",
+          "default": true
+        },
+        "roles": {
+          "type": "array",
+          "description": "Required roles",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "permissions": {
+          "type": "array",
+          "description": "Required permissions",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      },
+      "default": {}
+    },
+    "relationships": {
+      "type": "object",
+      "description": "Entity relationships",
+      "properties": {
+        "belongsTo": {
+          "type": "array",
+          "description": "Many-to-one relationships",
+          "items": {
+            "type": "object",
+            "properties": {
+              "entity": {
+                "type": "string"
+              },
+              "property": {
+                "type": "string"
+              },
+              "optional": {
+                "type": "boolean",
+                "default": false
+              }
+            }
+          },
+          "default": []
+        },
+        "hasMany": {
+          "type": "array",
+          "description": "One-to-many relationships",
+          "items": {
+            "type": "object",
+            "properties": {
+              "entity": {
+                "type": "string"
+              },
+              "property": {
+                "type": "string"
+              }
+            }
+          },
+          "default": []
+        },
+        "manyToMany": {
+          "type": "array",
+          "description": "Many-to-many relationships",
+          "items": {
+            "type": "object",
+            "properties": {
+              "entity": {
+                "type": "string"
+              },
+              "property": {
+                "type": "string"
+              },
+              "joinTable": {
+                "type": "string"
+              }
+            }
+          },
+          "default": []
+        }
+      },
+      "default": {}
+    },
+    "validation": {
+      "type": "object",
+      "description": "Validation settings",
+      "properties": {
+        "enableValidation": {
+          "type": "boolean",
+          "description": "Enable validation decorators",
+          "default": true
+        },
+        "customValidators": {
+          "type": "array",
+          "description": "Custom validation rules",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      },
+      "default": {}
     }
   },
   "required": [
-    "name",
-    "generateApi",
-    "generateReact"
+    "name"
   ]
 }

@@ -2,7 +2,7 @@ import { generateFiles, getProjects, names, ProjectConfiguration, Tree } from '@
 import { prompt } from 'enquirer';
 import { join } from 'path';
 
-import { Column, PluginGeneratorSchema } from './schema';
+import { Column, ColumnType, PluginGeneratorSchema } from './schema';
 
 
 export class TypesGenerator {
@@ -20,10 +20,10 @@ export class TypesGenerator {
     }
 
     async run() {
-        const { generateApi } = this.options;
-        if (generateApi) {
-            this.options.columns = [];
-            if (this.options.addColumns) {
+        const { generateTypes } = this.options;
+        if (generateTypes) {
+            // Only ask for columns if none are provided (for interactive mode)
+            if (this.options.addColumns && (!this.options.columns || this.options.columns.length === 0)) {
                 const columns = await this.takeEntityColumns();
                 this.options.columns = columns.map((value) => this.mapColumnData(value));
             }
@@ -78,12 +78,10 @@ export class TypesGenerator {
                         'number',
                         'boolean',
                         'date',
-                        'time',
-                        'date-time',
                         'enum',
                         'text',
-                        'json',
                         'uuid',
+                        'file',
                     ],
                 },
                 // {
@@ -98,11 +96,11 @@ export class TypesGenerator {
                 columnPrompt.enumValues = await this.askForEnumValues();
             }
 
-            if (columnPrompt.columnName && columnPrompt.columnName != '') {
+            if (columnPrompt.columnName && columnPrompt.columnName !== '') {
                 columns.push({
                     name: columnPrompt.columnName,
                     normalizeName: names(columnPrompt.columnName),
-                    type: columnPrompt.columnType,
+                    type: columnPrompt.columnType as ColumnType,
                     nullable: columnPrompt.nullable === 'yes',
                     enumValues: columnPrompt.enumValues,
                 });

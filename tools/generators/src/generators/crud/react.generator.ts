@@ -44,29 +44,41 @@ export class ReactGenerator {
                 tmpl: '',
                 ...this.names,
                 columns: this.options.columns,
+                features: this.options.features,
             }, // Data to pass to the template (e.g., the library name)
         );
 
-        // Generate files in react core lib
+        // Generate files in react-shared lib
         generateFiles(
             this.tree,
             join(__dirname, 'files', 'react-core'), // Path to your custom template files
-            'libs/react-core/src/lib', // Destination where the custom files should go
+            'libs/react-shared/src', // Destination where the custom files should go
             {
                 tmpl: '',
                 ...this.names,
                 columns: this.options.columns,
+                features: this.options.features,
             }, // Data to pass to the template (e.g., the library name)
         );
     }
 
     addExportStatement() {
         // Add Export in types
-        addExportStatement(this.tree, `${this.projects.get('types').root}/src/index.ts`, `export * from './lib/${this.names.fileName}';`);
+        const typesProject = this.projects.get('types');
+        if (typesProject) {
+            addExportStatement(this.tree, `${typesProject.root}/src/index.ts`, `export * from './lib/${this.names.fileName}';`);
+        } else {
+            console.warn('Types project not found, skipping export statement');
+        }
 
-        // Add Export in react core
-        addExportStatement(this.tree, `${this.projects.get('react-core').root}/src/lib/query-hooks/index.ts`, `export * from './use-${this.names.fileName}';`);
-        addExportStatement(this.tree, `${this.projects.get('react-core').root}/src/lib/services/index.ts`, `export * from './${this.names.fileName}.service';`);
+        // Add Export in react-shared
+        const reactSharedProject = this.projects.get('react-shared');
+        if (reactSharedProject) {
+            addExportStatement(this.tree, `${reactSharedProject.root}/src/query-hooks/index.ts`, `export * from './use-${this.names.fileName}';`);
+            addExportStatement(this.tree, `${reactSharedProject.root}/src/services/index.ts`, `export * from './${this.names.fileName}.service';`);
+        } else {
+            console.warn('React-shared project not found, skipping export statements');
+        }
     }
 
 }

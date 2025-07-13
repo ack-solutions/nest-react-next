@@ -5,6 +5,7 @@ import { alpha, styled } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { useCallback } from 'react';
 import { useDropzone, DropzoneOptions, FileRejection } from 'react-dropzone';
+
 import { fData } from './utils';
 
 

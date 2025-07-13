@@ -21,11 +21,11 @@
         "paths": {
             "@admin/*": ["apps/admin/src/*"],
             "@api/*": ["apps/api/src/*"],
-            "@web/*": ["apps/web/src/*"],
             "@libs/generators": ["tools/generators/src/index.ts"],
+            "@libs/react-shared": ["libs/react-shared/src/index.ts"],
             "@libs/types": ["libs/types/src/index.ts"],
             "@libs/utils": ["libs/utils/src/index.ts"],
-            "@libs/react-shared": ["libs/react-shared/src/index.ts"],
+            "@web/*": ["apps/web/src/*"]
         }
     },
     "exclude": ["node_modules", "tmp"]

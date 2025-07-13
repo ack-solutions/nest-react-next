@@ -4,8 +4,6 @@ import { Page } from '../../components';
 
 
 function Dashboard() {
-
-
     return (
         <Page title="Dashboard">
             <Typography variant="h1">Dashboard</Typography>

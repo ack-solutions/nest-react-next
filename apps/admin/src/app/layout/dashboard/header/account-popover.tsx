@@ -79,7 +79,7 @@ export default function AccountPopover() {
                     </Box>
 
                     <Divider sx={{ borderStyle: 'dashed' }} />
-                    
+
                     <Stack sx={{ p: 1 }}>
                         {OPTIONS.map((option) => (
                             <MenuItem

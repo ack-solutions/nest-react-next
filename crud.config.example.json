@@ -1,0 +1,90 @@
+{
+    "entities": [
+        {
+            "name": "task",
+            "columns": [
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "description",
+                    "type": "text",
+                    "nullable": true
+                },
+                {
+                    "name": "status",
+                    "type": "enum",
+                    "enum": [
+                        "pending",
+                        "in_progress",
+                        "completed"
+                    ]
+                },
+                {
+                    "name": "priority",
+                    "type": "enum",
+                    "enum": [
+                        "low",
+                        "medium",
+                        "high"
+                    ]
+                },
+                {
+                    "name": "dueDate",
+                    "type": "date",
+                    "nullable": true
+                },
+                {
+                    "name": "attachment",
+                    "type": "file",
+                    "nullable": true
+                }
+            ]
+        },
+        {
+            "name": "project",
+            "columns": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "unique": true
+                },
+                {
+                    "name": "description",
+                    "type": "text",
+                    "nullable": true
+                },
+                {
+                    "name": "logo",
+                    "type": "file",
+                    "nullable": true
+                }
+            ]
+        },
+        {
+            "name": "auditLog",
+            "columns": [
+                {
+                    "name": "action",
+                    "type": "string"
+                },
+                {
+                    "name": "entityType",
+                    "type": "string"
+                },
+                {
+                    "name": "entityId",
+                    "type": "uuid"
+                },
+                {
+                    "name": "timestamp",
+                    "type": "date"
+                }
+            ],
+            "features": {
+                "softDelete": false
+            }
+        }
+    ]
+}
