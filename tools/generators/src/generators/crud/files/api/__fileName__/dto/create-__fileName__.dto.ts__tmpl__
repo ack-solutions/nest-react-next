@@ -15,13 +15,8 @@ export class Create<%= className %>DTO {
         enum: <%= column.tsType %><% } %><% if (column.nullable) { %>,
         required: false<% } %>
     })
-    <% column.validationDecorators.forEach(decorator => { %>
-    <%= decorator %>({ groups: [CrudValidationGroupsEnum.CREATE] })
-    <% }); %>
-    <% if (column.nullable) { %>
-    @IsOptional({ groups: [CrudValidationGroupsEnum.CREATE] })
-    <% } %>
-    <%= column.normalizeName.propertyName %><% if (column.nullable) { %>?<% } %>: <%= column.tsType %>;
+<% column.validationDecorators.forEach(decorator => { %>    <%= decorator %>({ groups: [CrudValidationGroupsEnum.CREATE] })
+<% }); %><% if (column.nullable) { %>    @IsOptional({ groups: [CrudValidationGroupsEnum.CREATE] })
+<% } %>    <%= column.normalizeName.propertyName %><% if (column.nullable) { %>?<% } %>: <%= column.tsType %>;
 
-    <% }); %>
-}
+<% }); %>}

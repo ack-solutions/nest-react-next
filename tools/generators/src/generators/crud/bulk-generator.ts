@@ -110,6 +110,10 @@ export class BulkCrudGenerator {
         // Format all files
         await formatFiles(this.tree);
 
+        // Fix HTML entities in generated files (after formatting)
+        console.log('🔧 Fixing HTML entities in generated files...');
+        this.fixHtmlEntitiesInGeneratedFiles();
+
         // Run ESLint auto-fix to clean up imports and formatting
         console.log('🔧 Running ESLint auto-fix...');
         try {
@@ -410,7 +414,8 @@ export class BulkCrudGenerator {
             case 'date-time':
                 return 'Date';
             case 'enum':
-                return enumValues ? enumValues.map(val => `'${val}'`).join(' | ') : 'string';
+                // Use double quotes to prevent HTML encoding issues
+                return enumValues ? enumValues.map(val => `"${val}"`).join(' | ') : 'string';
             case 'json':
                 return 'any';
             case 'uuid':
@@ -476,7 +481,8 @@ export class BulkCrudGenerator {
                 break;
             case 'enum':
                 if (column.enum) {
-                    decorators.push(`@IsEnum([${column.enum.map(v => `'${v}'`).join(', ')}])`);
+                    // Use double quotes to prevent HTML encoding issues
+                    decorators.push(`@IsEnum([${column.enum.map(v => `"${v}"`).join(', ')}])`);
                 }
                 break;
             default:
@@ -499,16 +505,51 @@ export class BulkCrudGenerator {
 
         // Simple type-based options
         if (column.type === 'enum' && column.enum) {
-            options.push('type: \'enum\'');
-            options.push(`enum: [${column.enum.map(v => `'${v}'`).join(', ')}]`);
+            options.push('type: "enum"');
+            options.push(`enum: [${column.enum.map(v => `"${v}"`).join(', ')}]`);
         } else if (column.type === 'text') {
-            options.push('type: \'text\'');
+            options.push('type: "text"');
         } else if (column.type === 'file') {
-            options.push('type: \'varchar\'');
+            options.push('type: "varchar"');
             options.push('length: 500');
         }
 
         return options.length > 0 ? `{ ${options.join(', ')} }` : '{}';
+    }
+
+    private fixHtmlEntitiesInGeneratedFiles(): void {
+        // Get all generated files that might contain HTML entities
+        const filesToFix = this.tree.listChanges()
+            .filter(change => change.type === 'CREATE' || change.type === 'UPDATE')
+            .map(change => change.path)
+            .filter(path => path.endsWith('.ts') || path.endsWith('.tsx'));
+
+        console.log(`  📋 Checking ${filesToFix.length} files for HTML entities...`);
+
+        filesToFix.forEach(filePath => {
+            if (this.tree.exists(filePath)) {
+                const content = this.tree.read(filePath, 'utf-8');
+                if (content) {
+                    const fixedContent = this.decodeHtmlEntities(content);
+                    if (fixedContent !== content) {
+                        this.tree.write(filePath, fixedContent);
+                        console.log(`  ✅ Fixed HTML entities in ${filePath}`);
+                    } else {
+                        console.log(`  ⏭️  No HTML entities found in ${filePath}`);
+                    }
+                }
+            }
+        });
+    }
+
+    private decodeHtmlEntities(str: string): string {
+        return str
+            .replace(/&#34;/g, '"')
+            .replace(/&#39;/g, "'")
+            .replace(/&quot;/g, '"')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&amp;/g, '&');
     }
 
     static async generate(tree: Tree, options: BulkGenerationOptions = {}): Promise<void> {

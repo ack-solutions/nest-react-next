@@ -15,11 +15,8 @@ export class Update<%= className %>DTO {
         enum: <%= column.tsType %><% } %>,
         required: false
     })
-    <% column.validationDecorators.forEach(decorator => { %>
-    <%= decorator %>({ groups: [CrudValidationGroupsEnum.UPDATE] })
-    <% }); %>
-    @IsOptional({ groups: [CrudValidationGroupsEnum.UPDATE] })
+<% column.validationDecorators.forEach(decorator => { %>    <%= decorator %>({ groups: [CrudValidationGroupsEnum.UPDATE] })
+<% }); %>    @IsOptional({ groups: [CrudValidationGroupsEnum.UPDATE] })
     <%= column.normalizeName.propertyName %>?: <%= column.tsType %>;
 
-    <% }); %>
-}
+<% }); %>}

@@ -1,0 +1,62 @@
+import { useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Card, CardContent, CardHeader, Button, Stack } from '@mui/material';
+import { ArrowBack } from '@mui/icons-material';
+
+import { I<%= className %> } from '@libs/types';
+import { use<%= className %> } from '@libs/react-shared';
+import { Page } from '../../components';
+import { PATH_DASHBOARD } from '../../routes/paths';
+import <%= className %>Form from '../../sections/<%= fileName %>/<%= fileName %>-form';
+
+export default function AddEdit<%= className %>Page() {
+    const navigate = useNavigate();
+    const { id } = useParams<{ id: string }>();
+    const isEdit = Boolean(id);
+
+    const { useGet<%= className %> } = use<%= className %>();
+    const { data: <%= propertyName %> } = useGet<%= className %>(id || '', {
+        enabled: isEdit,
+    });
+
+    const handleSubmit = useCallback(
+        (values: I<%= className %>) => {
+            navigate(PATH_DASHBOARD.<%= propertyName %>.root);
+        },
+        [navigate]
+    );
+
+    const handleCancel = useCallback(() => {
+        navigate(PATH_DASHBOARD.<%= propertyName %>.root);
+    }, [navigate]);
+
+    return (
+        <Page title={isEdit ? `Edit <%= className %>` : `Add <%= className %>`}>
+            <Stack spacing={3}>
+                <Button
+                    startIcon={<ArrowBack />}
+                    onClick={handleCancel}
+                    sx={{ alignSelf: 'flex-start' }}
+                >
+                    Back to <%= className %> List
+                </Button>
+
+                <Card>
+                    <CardHeader
+                        title={isEdit ? `Edit <%= className %>` : `Add <%= className %>`}
+                    />
+                    <CardContent>
+                        <<%= className %>Form
+                            initialValue={<%= propertyName %>}
+                            onSubmit={handleSubmit}
+                            onCancel={handleCancel}
+                            showActions={true}
+                            submitLabel={isEdit ? 'Update' : 'Create'}
+                            cancelLabel="Cancel"
+                        />
+                    </CardContent>
+                </Card>
+            </Stack>
+        </Page>
+    );
+}

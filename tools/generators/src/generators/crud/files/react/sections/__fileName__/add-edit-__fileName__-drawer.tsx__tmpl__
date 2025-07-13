@@ -1,0 +1,75 @@
+import { useCallback } from 'react';
+import {
+    Drawer,
+    Box,
+    Typography,
+    IconButton,
+    Divider,
+    Stack
+} from '@mui/material';
+import { Close } from '@mui/icons-material';
+
+import { I<%= className %> } from '@libs/types';
+import <%= className %>Form from './<%= fileName %>-form';
+
+export interface AddEdit<%= className %>DrawerProps {
+    open: boolean;
+    onClose?: () => void;
+    onSubmit?: (values: I<%= className %>) => void;
+    initialValue?: Partial<I<%= className %>>;
+    anchor?: 'left' | 'right' | 'top' | 'bottom';
+}
+
+export default function AddEdit<%= className %>Drawer({
+    open,
+    onClose,
+    onSubmit,
+    initialValue,
+    anchor = 'right',
+}: AddEdit<%= className %>DrawerProps) {
+    const handleSubmit = useCallback(
+        (values: I<%= className %>) => {
+            if (onSubmit) {
+                onSubmit(values);
+            }
+            if (onClose) {
+                onClose();
+            }
+        },
+        [onSubmit, onClose]
+    );
+
+    return (
+        <Drawer
+            anchor={anchor}
+            open={open}
+            onClose={onClose}
+            PaperProps={{
+                sx: { width: { xs: '100%', sm: 480 } },
+            }}
+        >
+            <Box sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
+                    <Typography variant="h6">
+                        {initialValue?.id ? 'Edit <%= className %>' : 'Add <%= className %>'}
+                    </Typography>
+                    <IconButton onClick={onClose} size="small">
+                        <Close />
+                    </IconButton>
+                </Stack>
+
+                <Divider sx={{ mb: 3 }} />
+
+                <Box sx={{ flex: 1, overflow: 'auto' }}>
+                    <<%= className %>Form
+                        initialValue={initialValue}
+                        onSubmit={handleSubmit}
+                        onCancel={onClose}
+                        showActions={true}
+                        formId="add-edit-<%= fileName %>-drawer-form"
+                    />
+                </Box>
+            </Box>
+        </Drawer>
+    );
+}
