@@ -1,7 +1,7 @@
 import { IBaseEntity } from "./base-entity";
 
 export interface I<%= className %> extends IBaseEntity {<% columns.forEach(column => { %>
-    <%= column.normalizeName.propertyName %><% if (column.nullable) { %>?<% } %>?: <%= column.tsType %>;<% }); %>
+    <%= column.normalizeName.propertyName %><% if (column.nullable) { %>?<% } %>: <%= column.tsType %>;<% }); %>
 }
 <% columns.forEach(column => { %><% if (column.type === 'enum' && column.enumValues) { %>
 

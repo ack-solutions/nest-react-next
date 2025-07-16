@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
     IsString, IsInt, IsBoolean, IsDate, IsUUID, IsEnum,
     IsNumber, IsOptional
@@ -9,7 +9,7 @@ import { <%= column.tsType %> } from '@libs/types';
 
 export class Create<%= className %>DTO {
     <% columns.forEach(column => { %>
-    @ApiProperty({
+    @ApiPropertyOptional({
         type: '<%= column.swaggerType.toLowerCase() %>'<% if (column.enumValues) { %>,
         enum: <%= column.tsType %><% } %><% if (column.nullable) { %>,
         required: false<% } %>

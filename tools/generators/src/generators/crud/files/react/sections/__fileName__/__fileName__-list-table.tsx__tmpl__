@@ -8,12 +8,10 @@ import {
 } from '../../components';
 import { I<%= className %>, PermissionsEnum } from '@libs/types';
 import { use<%= className %> } from '@libs/react-shared';
-import { Card } from '@mui/material';
+import { Card, Button } from '@mui/material';
 import { CrudTable, CrudTableActions } from '../../components/crud/crud-table';
 import { toDisplayDate } from '@libs/utils';
 import { useAccess } from '../../contexts/react-access-control';
-import { useNavigate } from 'react-router-dom';
-import { PATH_DASHBOARD } from '../../routes/paths';
 
 export interface I<%= className %>TableFilter {
     // Add custom filters here
@@ -27,6 +25,7 @@ export interface <%= className %>ListTableProps {
     onEdit?: (row: I<%= className %>) => void;
     onRowClick?: (row: I<%= className %>) => void;
     hasSoftDelete?: boolean;
+    onAdd?: () => void;
 }
 
 export interface <%= className %>ListTableRef {
@@ -34,15 +33,15 @@ export interface <%= className %>ListTableRef {
 }
 
 const <%= className %>ListTable = forwardRef<<%= className %>ListTableRef, <%= className %>ListTableProps>(
-    ({ onEdit, onRowClick, hasSoftDelete = <%= features.softDelete ? 'true' : 'false' %> }, ref) => {
+    ({ onEdit, onAdd, onRowClick, hasSoftDelete = <%= features.softDelete ? 'true' : 'false' %> }, ref) => {
         const datatableRef = useRef<CrudTableActions>(null);
         const { hasPermission } = useAccess();
-        const navigate = useNavigate();
         const [tableFilter, setTableFilter] = useState(defaultFilter);
         const [countFilter, setCountFilter] = useState({});
 
-        const canEdit = hasPermission(PermissionsEnum.UPDATE_<%= fileName.toUpperCase() %>S);
-        const canDelete = hasPermission(PermissionsEnum.DELETE_<%= fileName.toUpperCase() %>S);
+        const canCreate = hasPermission(PermissionsEnum.CREATE_<%= fileName.toUpperCase() %>);
+        const canEdit = hasPermission(PermissionsEnum.UPDATE_<%= fileName.toUpperCase() %>);
+        const canDelete = hasPermission(PermissionsEnum.DELETE_<%= fileName.toUpperCase() %>);
 
         // Expose refresh method through ref
         useImperativeHandle(ref, () => ({
@@ -65,13 +64,9 @@ const <%= className %>ListTable = forwardRef<<%= className %>ListTableRef, <%= c
 
         const handleRowClick = useCallback(
             (row: I<%= className %>) => {
-                if (onRowClick) {
-                    onRowClick(row);
-                } else {
-                    navigate(`${PATH_DASHBOARD.<%= fileName %>.view}/${row?.id}`);
-                }
+                onRowClick(row);
             },
-            [navigate, onRowClick],
+            [onRowClick],
         );
 
         const handleTrashData = useCallback((checked: boolean) => {
@@ -120,7 +115,7 @@ const <%= className %>ListTable = forwardRef<<%= className %>ListTableRef, <%= c
             <Card>
                 <CrudTable
                     crudName="<%= className %>"
-                    crudPermissionKey="<%= fileName %>s"
+                    crudPermissionKey="<%= fileName %>"
                     columns={columns}
                     ref={datatableRef}
                     <% if (features.softDelete) { %>
@@ -146,6 +141,17 @@ const <%= className %>ListTable = forwardRef<<%= className %>ListTableRef, <%= c
                     }}
                     onEdit={canEdit ? onEdit : undefined}
                     onRowClick={canEdit ? handleRowClick : null}
+                    extraFilter={(
+                        canCreate ? (
+                            <Button
+                                variant="contained"
+                                onClick={() => onAdd?.()}
+                                sx={{ mb: 2 }}
+                            >
+                                Add <%= className %>
+                            </Button>
+                        ) : null
+                    )}
                 />
             </Card>
         );

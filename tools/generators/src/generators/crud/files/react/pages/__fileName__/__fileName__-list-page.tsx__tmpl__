@@ -1,21 +1,15 @@
-import { I<%= className %>, PermissionsEnum } from '@libs/types';
-import { Button } from '@mui/material';
+import { I<%= className %> } from '@libs/types';
 import { useCallback, useRef, useState } from 'react';
 
 import { Page } from '../../components';
-import { useAccess } from '../../contexts/react-access-control';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import AddEdit<%= className %>Dialog from '../../sections/<%= fileName %>/add-edit-<%= fileName %>-dialog';
 import <%= className %>ListTable, { <%= className %>ListTableRef } from '../../sections/<%= fileName %>/<%= fileName %>-list-table';
 
 function <%= className %>List() {
-    const { hasPermission } = useAccess();
     const tableRef = useRef<<%= className %>ListTableRef>(null);
     const [selected<%= className %>, setSelected<%= className %>] = useState<I<%= className %> | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-    const canCreate = hasPermission(PermissionsEnum.CREATE_<%= fileName.toUpperCase() %>S);
-    const canEdit = hasPermission(PermissionsEnum.UPDATE_<%= fileName.toUpperCase() %>S);
 
     const handleAddEdit = useCallback((item?: I<%= className %>) => {
         setSelected<%= className %>(item || null);
@@ -34,28 +28,20 @@ function <%= className %>List() {
 
     return (
         <Page
-            title="<%= className %>s"
+            title="<%= className %>"
             breadcrumbs={[
                 {
                     name: 'Dashboard',
                     href: PATH_DASHBOARD.root,
                 },
-                { name: '<%= className %>s' },
+                { name: '<%= className %>' },
             ]}
         >
-            {canCreate && (
-                <Button
-                    variant="contained"
-                    onClick={() => handleAddEdit()}
-                    sx={{ mb: 2 }}
-                >
-                    Add <%= className %>
-                </Button>
-            )}
-
             <<%= className %>ListTable
                 ref={tableRef}
-                onEdit={canEdit ? handleAddEdit : undefined}
+                onEdit={handleAddEdit}
+                onAdd={handleAddEdit}
+                onRowClick={handleAddEdit}
             />
 
             {isDialogOpen && (

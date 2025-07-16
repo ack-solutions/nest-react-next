@@ -99,6 +99,7 @@ function setDefaults(options: PluginGeneratorSchema): ProcessedSchema {
 
 function processColumns(columns: any[]): ProcessedColumn[] {
     return columns.map((column) => {
+        column.nullable = true;
         const normalizeName = {
             className: toPascalCase(column.name),
             propertyName: toCamelCase(column.name),

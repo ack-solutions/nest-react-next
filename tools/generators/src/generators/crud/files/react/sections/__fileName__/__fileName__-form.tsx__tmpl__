@@ -19,17 +19,17 @@ import { errorMessage } from '@libs/utils';
 const validationSchema = object().shape({
         <% columns.forEach(column => { %>
         <% if (column.type === 'string' || column.type === 'text') { %>
-        <%= column.normalizeName.propertyName %>: string()<% if (!column.nullable) { %>.required('<%= column.normalizeName.className %> is required')<% } %>,
+        <%= column.normalizeName.propertyName %>: string()<% if (!column.nullable) { %>.nullable()<% } %>,
         <% } else if (column.type === 'number') { %>
-        <%= column.normalizeName.propertyName %>: number()<% if (!column.nullable) { %>.required('<%= column.normalizeName.className %> is required')<% } %>,
+        <%= column.normalizeName.propertyName %>: number()<% if (!column.nullable) { %>.nullable()<% } %>,
         <% } else if (column.type === 'boolean') { %>
         <%= column.normalizeName.propertyName %>: boolean(),
         <% } else if (column.type === 'enum') { %>
-        <%= column.normalizeName.propertyName %>: string()<% if (!column.nullable) { %>.required('<%= column.normalizeName.className %> is required')<% } %>,
+        <%= column.normalizeName.propertyName %>: string()<% if (!column.nullable) { %>.nullable()<% } %>,
         <% } else if (column.type === 'file') { %>
-        <%= column.normalizeName.propertyName %>: string()<% if (!column.nullable) { %>.required('<%= column.normalizeName.className %> is required')<% } %>,
+        <%= column.normalizeName.propertyName %>: string()<% if (!column.nullable) { %>.nullable()<% } %>,
         <% } else { %>
-        <%= column.normalizeName.propertyName %>: string()<% if (!column.nullable) { %>.required('<%= column.normalizeName.className %> is required')<% } %>,
+        <%= column.normalizeName.propertyName %>: string()<% if (!column.nullable) { %>.nullable()<% } %>,
         <% } %>
         <% }); %>
     });
