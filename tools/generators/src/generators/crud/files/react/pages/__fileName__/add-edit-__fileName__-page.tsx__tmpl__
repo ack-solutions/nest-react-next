@@ -14,7 +14,7 @@ export default function AddEdit<%= className %>Page() {
     const { id } = useParams<{ id: string }>();
     const isEdit = Boolean(id);
 
-    const { useGet<%= className %> } = use<%= className %>();
+    const { useGetOne<%= className %> } = use<%= className %>();
     const { data: <%= propertyName %> } = useGet<%= className %>(id || '', {
         enabled: isEdit,
     });

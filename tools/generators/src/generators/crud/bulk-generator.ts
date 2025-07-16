@@ -432,28 +432,27 @@ export class BulkCrudGenerator {
             case 'string':
             case 'text':
             case 'uuid':
-                return 'string';
+                return 'String';
             case 'number':
             case 'integer':
             case 'bigint':
-                return 'integer';
             case 'float':
             case 'decimal':
-                return 'number';
+                return 'Number';
             case 'boolean':
-                return 'boolean';
+                return 'Boolean';
             case 'date':
-                return 'string';
+                return 'String';
             case 'time':
-                return 'string';
+                return 'String';
             case 'date-time':
-                return 'string';
+                return 'String';
             case 'enum':
-                return 'string';
+                return 'enum';
             case 'json':
-                return 'object';
+                return 'Object';
             default:
-                return 'string';
+                return 'String';
         }
     }
 

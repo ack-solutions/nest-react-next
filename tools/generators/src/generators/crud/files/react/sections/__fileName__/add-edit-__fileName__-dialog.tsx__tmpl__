@@ -1,6 +1,4 @@
 import { useCallback } from 'react';
-import { Button } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 
 import { I<%= className %> } from '@libs/types';
 import { DefaultDialog } from '../../components';

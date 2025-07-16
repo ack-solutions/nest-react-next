@@ -1,9 +1,8 @@
 import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Stack, Button } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import { object, string, number, boolean } from 'yup';
 
 import { I<%= className %> } from '@libs/types';
 import { use<%= className %> } from '@libs/react-shared';
@@ -13,29 +12,27 @@ import {
     RHFSelect,
     RHFCheckbox,
     RHFUpload
-} from '@libs/react-shared';
+} from '@admin/app/form';
 import { useToasty } from '../../hook';
 import { errorMessage } from '@libs/utils';
 
-const validationSchema = yupResolver(
-    yup.object({
+const validationSchema = object().shape({
         <% columns.forEach(column => { %>
         <% if (column.type === 'string' || column.type === 'text') { %>
-        <%= column.normalizeName.propertyName %>: yup.string()<% if (!column.nullable) { %>.required('<%= column.normalizeName.className %> is required')<% } %>,
+        <%= column.normalizeName.propertyName %>: string()<% if (!column.nullable) { %>.required('<%= column.normalizeName.className %> is required')<% } %>,
         <% } else if (column.type === 'number') { %>
-        <%= column.normalizeName.propertyName %>: yup.number()<% if (!column.nullable) { %>.required('<%= column.normalizeName.className %> is required')<% } %>,
+        <%= column.normalizeName.propertyName %>: number()<% if (!column.nullable) { %>.required('<%= column.normalizeName.className %> is required')<% } %>,
         <% } else if (column.type === 'boolean') { %>
-        <%= column.normalizeName.propertyName %>: yup.boolean(),
+        <%= column.normalizeName.propertyName %>: boolean(),
         <% } else if (column.type === 'enum') { %>
-        <%= column.normalizeName.propertyName %>: yup.string()<% if (!column.nullable) { %>.required('<%= column.normalizeName.className %> is required')<% } %>,
+        <%= column.normalizeName.propertyName %>: string()<% if (!column.nullable) { %>.required('<%= column.normalizeName.className %> is required')<% } %>,
         <% } else if (column.type === 'file') { %>
-        <%= column.normalizeName.propertyName %>: yup.string()<% if (!column.nullable) { %>.required('<%= column.normalizeName.className %> is required')<% } %>,
+        <%= column.normalizeName.propertyName %>: string()<% if (!column.nullable) { %>.required('<%= column.normalizeName.className %> is required')<% } %>,
         <% } else { %>
-        <%= column.normalizeName.propertyName %>: yup.string()<% if (!column.nullable) { %>.required('<%= column.normalizeName.className %> is required')<% } %>,
+        <%= column.normalizeName.propertyName %>: string()<% if (!column.nullable) { %>.required('<%= column.normalizeName.className %> is required')<% } %>,
         <% } %>
         <% }); %>
-    })
-);
+    });
 
 const defaultValues: Partial<I<%= className %>> = {
     <% columns.forEach(column => { %>
@@ -79,7 +76,7 @@ export default function <%= className %>Form({
 
     const formContext = useForm({
         defaultValues,
-        resolver: validationSchema,
+        resolver: yupResolver(validationSchema) as any,
     });
     const { reset } = formContext;
 
@@ -122,11 +119,8 @@ export default function <%= className %>Form({
 
     return (
         <FormContainer
-            FormProps={{
-                id: formId,
-            }}
+            formProps={{ id: formId }}
             formContext={formContext}
-            validationSchema={validationSchema}
             onSuccess={handleSubmit}
         >
             <Stack spacing={2}>
@@ -181,7 +175,7 @@ export default function <%= className %>Form({
                                 {cancelLabel}
                             </Button>
                         )}
-                        <LoadingButton
+                        <Button
                             type="submit"
                             variant="contained"
                             color="primary"
@@ -189,7 +183,7 @@ export default function <%= className %>Form({
                             loading={formContext?.formState?.isSubmitting}
                         >
                             {submitLabel}
-                        </LoadingButton>
+                        </Button>
                     </Stack>
                 )}
             </Stack>

@@ -46,6 +46,7 @@ const EditTemplate = Loadable(lazy(() => import('../pages/template/edit-template
 const TemplateLayoutList = Loadable(lazy(() => import('../pages/template-layout/template-layout-list')));
 const EditTemplateLayout = Loadable(lazy(() => import('../pages/template-layout/edit-template-layout')));
 
+// const Test = Loadable(lazy(() => import('../pages/test/test-list-page')));
 export default function Router() {
     // const routes = useMemo(() => getPluginRoutes(), []);
 
@@ -177,6 +178,10 @@ export default function Router() {
                     path: 'settings',
                     element: <Settings />,
                 },
+                // {
+                //     path: 'test',
+                //     element: <Test />,
+                // },
                 //  ...routes.app,
                 {
                     path: '*',

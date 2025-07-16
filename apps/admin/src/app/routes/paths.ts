@@ -132,4 +132,9 @@ export const PATH_DASHBOARD = {
     inquiry: {
         root: path(ROOTS_DASHBOARD, '/inquiry'),
     },
+    // test: {
+    //     root: path(ROOTS_DASHBOARD, '/test'),
+    //     edit: (id: string) => path(ROOTS_DASHBOARD, `/test/edit/${id}`),
+    //     create: path(ROOTS_DASHBOARD, '/test/create'),
+    // },
 };

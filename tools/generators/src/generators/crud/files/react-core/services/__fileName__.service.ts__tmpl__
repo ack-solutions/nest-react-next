@@ -2,7 +2,6 @@ import { I<%= className %> } from '@libs/types';
 import { CRUDService } from './crud-service';
 <% const hasFileUploadColumns = columns.some(col => col.type === 'file'); %>
 <% if (hasFileUploadColumns) { %>
-import { toFormData } from '../utils/form';
 <% } %>
 
 export class <%= className %>Service extends CRUDService<I<%= className %>> {
@@ -10,48 +9,5 @@ export class <%= className %>Service extends CRUDService<I<%= className %>> {
     protected apiPath = '<%= fileName %>';
     <% if (hasFileUploadColumns) { %>
     protected override hasFileUpload = true;
-    protected fillable = [<% columns.forEach((column, index) => { %>'<%= column.normalizeName.propertyName %>'<% if (index < columns.length - 1) { %>, <% } %><% }); %>];
-    <% } %>
-
-    <% if (hasFileUploadColumns) { %>
-    override create(request: Partial<I<%= className %>>) {
-        request = this.mapRequest(request);
-
-        if (this.fillable.length > 0) {
-            request = pick(request, this.fillable);
-        }
-
-        return this.instanceApi
-            .post<I<%= className %>>(
-                `${this.apiPath}`,
-                this.hasFileUpload ? toFormData(request) : request,
-                {
-                    headers: this.hasFileUpload ? { 'Content-Type': 'multipart/form-data' } : {}
-                }
-            )
-            .then((resp) => {
-                return this.mapResponse(resp.data);
-            });
-    }
-
-    override update(id: string | number, request: Partial<I<%= className %>>) {
-        request = this.mapRequest(request);
-
-        if (this.fillable.length > 0) {
-            request = pick(request, this.fillable);
-        }
-
-        return this.instanceApi
-            .put<I<%= className %>>(
-                `${this.apiPath}/${id}`,
-                this.hasFileUpload ? toFormData(request) : request,
-                {
-                    headers: this.hasFileUpload ? { 'Content-Type': 'multipart/form-data' } : {}
-                }
-            )
-            .then((resp) => {
-                return this.mapResponse(resp.data);
-            });
-    }
     <% } %>
 }

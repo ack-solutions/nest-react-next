@@ -49,7 +49,7 @@ function UserChangePhone() {
             })
                 .then(() => {
                     reFetchCurrentUser();
-                    showToasty(`Phone Number Changed successfully`);
+                    showToasty('Phone Number Changed successfully');
                 })
                 .catch((error) => {
                     showToasty(error, 'error');

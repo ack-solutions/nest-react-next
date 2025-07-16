@@ -42,7 +42,7 @@ function UserChangeEmail() {
             changeEmail({ email: values.email })
                 .then(() => {
                     reFetchCurrentUser();
-                    showToasty(`Email Changed successfully`);
+                    showToasty('Email Changed successfully');
                 })
                 .catch((error) => {
                     showToasty(error, 'error');

@@ -1,20 +1,6 @@
 import { NestAuthAuthGuard } from '@ackplus/nest-auth';
 import { Crud } from '@ackplus/nest-crud';
 import { ApiTags } from '@nestjs/swagger';
-<% const hasFileUploadColumns = columns.some(col => col.type === 'file'); %>
-<% if (hasFileUploadColumns) { %>
-import {
-    UseInterceptors,
-    UploadedFile,
-    Post,
-    Body,
-    Param,
-    Put
-} from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadedFileStorage } from '@api/app/core/file-storage/uploaded-file-storage';
-<% } %>
-
 import { Create<%= className %>DTO } from './dto/create-<%= fileName %>.dto';
 import { Update<%= className %>DTO } from './dto/update-<%= fileName %>.dto';
 import { <%= className %> } from './<%= fileName %>.entity';
@@ -39,14 +25,6 @@ import { RequestDataTypeInterceptor } from '../../core/interceptors/request-data
             enabled: true,
             interceptors: [new RequestDataTypeInterceptor()],
         },
-        <% if (hasFileUploadColumns) { %>
-        create: {
-            interceptors: [FileInterceptor('file')],
-        },
-        update: {
-            interceptors: [FileInterceptor('file')],
-        },
-        <% } %>
     },
 })
 export class <%= className %>Controller {
@@ -54,15 +32,4 @@ export class <%= className %>Controller {
     constructor(
         private service: <%= className %>Service,
     ) {}
-
-    <% if (hasFileUploadColumns) { %>
-    @Post('upload')
-    @UseInterceptors(FileInterceptor('file'))
-    async uploadFile(
-        @UploadedFile() file: UploadedFileStorage,
-        @Body() body: any,
-    ) {
-        return this.service.uploadFile(file, body);
-    }
-    <% } %>
 }

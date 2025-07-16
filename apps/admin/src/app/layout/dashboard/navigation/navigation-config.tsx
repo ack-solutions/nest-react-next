@@ -63,6 +63,14 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
         permissions: [PermissionsEnum.ACCESS_ROLES],
         activePaths: [PATH_DASHBOARD.users.roles.root],
     },
+    // {
+    //     id: 'test',
+    //     title: 'Test',
+    //     path: PATH_DASHBOARD.test.root,
+    //     icon: <Icon icon={IconEnum.File} />,
+    //     group: 'Test',
+    //     activePaths: [PATH_DASHBOARD.test.root],
+    // },
 
     // Content Management
     {

@@ -3,20 +3,19 @@ import {
     IsString, IsInt, IsBoolean, IsDate, IsUUID, IsEnum,
     IsNumber, IsOptional
 } from 'class-validator';
-import { CrudValidationGroupsEnum } from '@ackplus/nest-crud';
-<% columns.forEach(column => {if (column.enumValues){ %>
+<% columns.forEach(column => { if (column.enumValues) { %>
 import { <%= column.tsType %> } from '@libs/types';
 <% }}) %>
 
 export class Update<%= className %>DTO {
     <% columns.forEach(column => { %>
     @ApiProperty({
-        type: <%= column.swaggerType %><% if (column.enumValues) { %>,
+        type: '<%= column.swaggerType.toLowerCase() %>'<% if (column.enumValues) { %>,
         enum: <%= column.tsType %><% } %>,
         required: false
     })
-<% column.validationDecorators.forEach(decorator => { %>    <%= decorator %>({ groups: [CrudValidationGroupsEnum.UPDATE] })
-<% }); %>    @IsOptional({ groups: [CrudValidationGroupsEnum.UPDATE] })
+<% column.validationDecorators.forEach(decorator => { %>    <%= decorator %>()
+<% }); %>    @IsOptional()
     <%= column.normalizeName.propertyName %>?: <%= column.tsType %>;
 
 <% }); %>}

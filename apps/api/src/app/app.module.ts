@@ -31,10 +31,8 @@ import { templateFilters } from './utils/template-filter';
             imports: [ConfigModule],
             inject: [ConfigService],
             useClass: TypeOrmConfigService,
-            dataSourceFactory: async (options) => {
-                const dataSource = await new DataSource(
-                    options,
-                ).initialize();
+            dataSourceFactory: async options => {
+                const dataSource = await new DataSource(options).initialize();
                 global.dataSource = dataSource;
                 return dataSource;
             },

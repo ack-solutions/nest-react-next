@@ -105,10 +105,15 @@ function processColumns(columns: any[]): ProcessedColumn[] {
             fileName: toKebabCase(column.name),
         };
 
-        const tsType = mapTypeToTypeScript(column.type, column.enum);
+        let tsType = mapTypeToTypeScript(column.type, column.enum);
         const swaggerType = mapTypeToSwagger(column.type);
         const validationDecorators = generateValidationDecorators(column);
         const columnOptionsString = generateColumnOptions(column);
+
+        // Override tsType for enum to use proper enum type reference
+        if (column.type === 'enum' && column.enum) {
+            tsType = `${toPascalCase(options.name)}${toPascalCase(column.name)}Enum`;
+        }
 
         return {
             ...column,
@@ -140,7 +145,7 @@ function mapTypeToTypeScript(type: string, enumValues?: string[]): string {
         case 'date-time':
             return 'Date';
         case 'enum':
-            return enumValues ? enumValues.map(val => `'${val}'`).join(' | ') : 'string';
+            return 'string'; // Will be overridden in processColumns for proper enum type
         case 'json':
             return 'any';
         case 'uuid':
@@ -157,30 +162,26 @@ function mapTypeToSwagger(type: string): string {
         case 'string':
         case 'text':
         case 'uuid':
-            return 'string';
+        case 'file':
+            return 'String';
         case 'number':
         case 'integer':
         case 'bigint':
-            return 'integer';
         case 'float':
         case 'decimal':
-            return 'number';
+            return 'Number';
         case 'boolean':
-            return 'boolean';
+            return 'Boolean';
         case 'date':
-            return 'string';
         case 'time':
-            return 'string';
         case 'date-time':
-            return 'string';
+            return 'String';
         case 'enum':
-            return 'string';
+            return 'enum'; // Return "enum" for proper enum handling
         case 'json':
-            return 'object';
-        case 'file':
-            return 'string';
+            return 'Object';
         default:
-            return 'string';
+            return 'String';
     }
 }
 
@@ -208,7 +209,7 @@ function generateValidationDecorators(column: any): string[] {
             break;
         case 'enum':
             if (column.enum) {
-                decorators.push(`@IsEnum([${column.enum.map(v => `'${v}'`).join(', ')}])`);
+                decorators.push(`@IsEnum([${column.enum.map(v => `"${v}"`).join(', ')}])`);
             }
             break;
         default:
@@ -231,12 +232,12 @@ function generateColumnOptions(column: any): string {
 
     // Simple type-based options
     if (column.type === 'enum' && column.enum) {
-        options.push('type: \'enum\'');
-        options.push(`enum: ${toPascalCase(column.name)}Enum`);
+        options.push('type: "enum"');
+        options.push(`enum: [${column.enum.map(v => `"${v}"`).join(', ')}]`);
     } else if (column.type === 'text') {
-        options.push('type: \'text\'');
+        options.push('type: "text"');
     } else if (column.type === 'file') {
-        options.push('type: \'varchar\'');
+        options.push('type: "varchar"');
         options.push('length: 500'); // Default length for file paths
     }
 

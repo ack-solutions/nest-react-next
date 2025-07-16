@@ -1,5 +1,14 @@
 {
     "eslint.validate": ["json"],
+    "cSpell.words": [
+        "datatable",
+        "hookform",
+        "notistack",
+        "ackplus",
+        "datatable",
+        "tmpl",
+        "typeorm"
+    ],
     "editor.codeActionsOnSave": {
         "source.fixAll": "explicit",
         "source.fixAll.eslint": "explicit"
@@ -11,14 +20,14 @@
     "eslint.format.enable": true,
     "editor.tabSize": 4,
     "files.insertFinalNewline": true,
+    "files.eol": "\n",
     "files.trimFinalNewlines": true,
     "files.trimTrailingWhitespace": true,
     "deepscan.enable": true,
     "files.exclude": {
         "**/.git": true,
         "**/.DS_Store": true,
-        "**/node_modules": false,
-        "**/public/**/": true
+        "**/node_modules": false
     },
     "editor.defaultFormatter": "vscode.typescript-language-features",
     "[jsonc]": {
@@ -35,5 +44,8 @@
     },
     "[typescript]": {
         "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "[handlebars]": {
+        "editor.defaultFormatter": "vscode.html-language-features"
     }
 }
