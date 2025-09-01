@@ -42,8 +42,8 @@ declare module '@mui/material' {
 }
 
 export const typography = {
-    fontFamily: 'Barlow',
-    fontSecondaryFamily: 'Barlow',
+    fontFamily: "Public Sans",
+    fontSecondaryFamily: 'Public Sans',
     fontWeightRegular: 400,
     fontWeightMedium: 500,
     fontWeightSemiBold: 600,

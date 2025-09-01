@@ -60,10 +60,30 @@ export function useNavigation() {
     // Check if a navigation item is active
     const isItemActive = useMemo(() => {
         return (item: NavigationItem): boolean => {
-            if (item.activePaths?.length) {
-                return item.activePaths.some(path => pathname.includes(path));
+            // Check exact path match
+            if (item.path && pathname === item.path) {
+                return true;
             }
-            return pathname.includes(item.path);
+
+            // Check active paths
+            if (item.activePaths?.length) {
+                return item.activePaths.some(path => pathname.startsWith(path));
+            }
+
+            // Check if any child items are active (for parent highlighting)
+            if (item.children?.length) {
+                return item.children.some(child => {
+                    if (child.path && pathname === child.path) {
+                        return true;
+                    }
+                    if (child.activePaths?.length) {
+                        return child.activePaths.some(path => pathname.startsWith(path));
+                    }
+                    return false;
+                });
+            }
+
+            return false;
         };
     }, [pathname]);
 

@@ -9,15 +9,11 @@ import { IconEnum } from '../icons/icons';
 
 export function Maintenance() {
     const navigate = useNavigate();
-    const { isAuthenticated } = useAuth();
     const theme = useTheme();
 
     const handleRefresh = () => {
-        if (isAuthenticated) {
-            navigate('/');
-        } else {
-            window.location.reload();
-        }
+        navigate('/');
+        window.location.reload();
     };
 
     return (

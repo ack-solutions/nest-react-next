@@ -108,6 +108,7 @@ export default function Navigation({ openNav = false, onCloseNav }: NavigationPr
             <Stack
                 sx={{
                     flex: 1,
+                    flexShrink: 0,
                     overflow: 'auto',
                     '&::-webkit-scrollbar': {
                         display: 'none',
@@ -124,6 +125,7 @@ export default function Navigation({ openNav = false, onCloseNav }: NavigationPr
                     />
                 ))}
             </Stack>
+
 
             {!isCompactMode && (
                 <Box

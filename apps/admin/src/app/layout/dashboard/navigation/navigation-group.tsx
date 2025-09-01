@@ -55,6 +55,7 @@ export default function NavigationGroupComponent({
                         isActive={isItemActive(item)}
                         isCompact={isCompact}
                         onClose={onClose}
+                        isItemActive={isItemActive}
                     />
                 ))}
             </>
@@ -75,6 +76,7 @@ export default function NavigationGroupComponent({
                     isActive={isItemActive(item)}
                     isCompact={isCompact}
                     onClose={onClose}
+                    isItemActive={isItemActive}
                 />
             ))}
         </StyledList>

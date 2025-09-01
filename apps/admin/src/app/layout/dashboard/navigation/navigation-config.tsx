@@ -9,14 +9,18 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 export interface NavigationItem {
     id: string;
     title: string;
-    path: string;
-    icon: ReactElement;
+    path?: string;
+    icon?: ReactElement;
     group: string;
     permissions?: PermissionsEnum[];
     roles?: RoleNameEnum[];
     activePaths?: string[];
-    children?: NavigationItem[];
+    children?: NavigationItemChildItem[];
 }
+
+export type NavigationItemChildItem = Omit<NavigationItem, 'icon' | 'group'> & {
+    path: string;
+};
 
 export interface NavigationGroup {
     label: string;
@@ -34,15 +38,15 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
         group: 'Overview',
         activePaths: [PATH_DASHBOARD.root],
     },
-    {
-        id: 'reports',
-        title: 'Reports',
-        path: PATH_DASHBOARD.reports.root,
-        icon: <Icon icon={IconEnum.FileText} />,
-        group: 'Overview',
-        permissions: [PermissionsEnum.ACCESS_REPORTS],
-        activePaths: [PATH_DASHBOARD.reports.root],
-    },
+    // {
+    //     id: 'reports',
+    //     title: 'Reports',
+    //     path: PATH_DASHBOARD.reports.root,
+    //     icon: <Icon icon={IconEnum.FileText} />,
+    //     group: 'Overview',
+    //     permissions: [PermissionsEnum.ACCESS_REPORTS],
+    //     activePaths: [PATH_DASHBOARD.reports.root],
+    // },
 
     // User Management
     {
@@ -104,11 +108,16 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     {
         id: 'settings',
         title: 'Settings',
-        path: PATH_DASHBOARD.settings.root,
         icon: <Icon icon={IconEnum.Settings} />,
         group: 'System',
         permissions: [PermissionsEnum.ACCESS_SETTINGS],
-        activePaths: [PATH_DASHBOARD.settings.root],
+        children: [
+            {
+                id: 'general-settings',
+                title: 'General Settings',
+                path: PATH_DASHBOARD.settings.root,
+            },
+        ],
     },
 ];
 
