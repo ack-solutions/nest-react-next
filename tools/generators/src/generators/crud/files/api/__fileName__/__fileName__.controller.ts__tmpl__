@@ -6,8 +6,10 @@ import { Update<%= className %>DTO } from './dto/update-<%= fileName %>.dto';
 import { <%= className %> } from './<%= fileName %>.entity';
 import { <%= className %>Service } from './<%= fileName %>.service';
 import { RequestDataTypeInterceptor } from '../../core/interceptors/request-data-type.interceptor';
+import { UseGuards } from '@nestjs/common';
 
 @ApiTags('<%= className %>')
+@UseGuards(NestAuthAuthGuard)
 @Crud({
     entity: <%= className %>,
     name: '<%= className %>',
@@ -15,7 +17,6 @@ import { RequestDataTypeInterceptor } from '../../core/interceptors/request-data
     <% if (features.softDelete) { %>
     softDelete: true,
     <% } %>
-    guards: [NestAuthAuthGuard],
     dto: {
         create: Create<%= className %>DTO,
         update: Update<%= className %>DTO,

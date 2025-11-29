@@ -7,7 +7,7 @@ import { keyBy } from 'lodash';
 
 import { IAppConfig } from '../config/app';
 import { BaseRepository } from '../core/typeorm/base-repository';
-import { Seeder } from '../libs/nest-seeder';
+import { Seeder } from '@ackplus/nest-seeder';
 import { User } from '../modules/user/user.entity';
 
 

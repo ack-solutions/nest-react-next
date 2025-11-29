@@ -2,7 +2,6 @@ import { AuthModuleOptions, AuthModuleOptionsFactory } from '@ackplus/nest-auth'
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-
 @Injectable()
 export class AuthConfigService implements AuthModuleOptionsFactory {
 
@@ -12,6 +11,7 @@ export class AuthConfigService implements AuthModuleOptionsFactory {
 
     createAuthModuleOptions(): Promise<AuthModuleOptions> | AuthModuleOptions {
         return {
+            appName: 'API',
             accessTokenType: 'header',
             jwt: {
                 secret: this.configService.get('jwt.secret'),

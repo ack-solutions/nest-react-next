@@ -7,7 +7,7 @@ import {
     BaseEntity,
 } from 'typeorm';
 
-import { Factory } from '../../libs/nest-seeder';
+import { Factory } from '@ackplus/nest-seeder';
 
 
 export abstract class CoreEntity extends BaseEntity {

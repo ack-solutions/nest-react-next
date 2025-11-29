@@ -56,6 +56,7 @@ import { templateFilters } from './utils/template-filter';
             imports: [ConfigModule],
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => ({
+                appName: 'API',
                 accessTokenType: 'header',
                 jwt: {
                     secret: configService.get('jwt.secret'),

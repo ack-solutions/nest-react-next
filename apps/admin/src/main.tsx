@@ -6,7 +6,7 @@ import { HashRouter } from 'react-router-dom';
 
 import App from './app/app';
 
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 
 
 const root = ReactDOM.createRoot(

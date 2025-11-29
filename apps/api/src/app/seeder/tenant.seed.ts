@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { startCase } from 'lodash';
 
 import { IAppConfig } from '../config/app';
-import { Seeder } from '../libs/nest-seeder';
+import { Seeder } from '@ackplus/nest-seeder';
 
 
 @Injectable()

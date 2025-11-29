@@ -11,7 +11,7 @@ import {
 import { Column, Entity, AfterLoad, ManyToOne } from 'typeorm';
 
 import { CoreEntity } from '../../core/typeorm/core.entity';
-import { Factory } from '../../libs/nest-seeder';
+import { Factory } from '@ackplus/nest-seeder';
 
 
 @Entity()

@@ -1,5 +1,5 @@
 import { UserService as NestAuthUserService, TenantService } from '@ackplus/nest-auth';
-import { ID, PaginationResponse } from '@ackplus/nest-crud';
+import { ID, PaginationResponse, IFindOneOptions } from '@ackplus/nest-crud';
 import { IAppConfig } from '@api/app/config/app';
 import {
     IChangeEmailInput,
@@ -19,7 +19,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { has, omit } from 'lodash';
-import { SaveOptions, In, FindOneOptions } from 'typeorm';
+import { SaveOptions, In } from 'typeorm';
 
 import { ChangePhoneInputDTO } from './dto/change-phone-input.dto';
 import { CreateUserDTO } from './dto/create-user.dto';
@@ -160,8 +160,8 @@ export class UserService extends BaseService<User> {
         return response;
     }
 
-    override async findOne(id: ID, options?: FindOneOptions<User>) {
-        const user = await super.findOne(id, options);
+    override async findOne(id: ID, query?: IFindOneOptions, ..._others: any[]) {
+        const user = await super.findOne(id, query, ..._others);
         return user;
     }
 
