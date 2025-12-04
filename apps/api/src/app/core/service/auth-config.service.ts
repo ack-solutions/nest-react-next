@@ -11,13 +11,14 @@ export class AuthConfigService implements AuthModuleOptionsFactory {
 
     createAuthModuleOptions(): Promise<AuthModuleOptions> | AuthModuleOptions {
         return {
-            appName: 'API',
+            appName: this.configService.get('app').appName,
             accessTokenType: 'header',
             jwt: {
                 secret: this.configService.get('jwt.secret'),
             },
-            emailAuth: {
-                enabled: true,
+            defaultTenant: {
+                name: this.configService.get('app').defaultTenantName,
+                slug: this.configService.get('app').defaultTenantName,
             },
             cookieOptions: {
                 secure: process.env.APP_ENV === 'prod',

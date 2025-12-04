@@ -18,7 +18,7 @@ function Login() {
         async (values, setError) => {
             await nestAuthService
                 .login({
-                    providerId: 'email',
+                    providerName: 'email',
                     credentials: values,
                 })
                 .then(({ data }) => {

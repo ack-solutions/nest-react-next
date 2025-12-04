@@ -2,7 +2,7 @@ export interface ILoginInput {
   email?: string;
   password?: string;
   otp?: number;
-  providerId?: string;
+  providerName?: string;
   credentials?: any;
 }
 

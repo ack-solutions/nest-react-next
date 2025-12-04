@@ -10,6 +10,7 @@ import { TypeOrmConfigService } from './app/core/service/typeorm-config.service'
 import { ALL_ENTITIES } from './app/entities';
 import { seeder } from '@ackplus/nest-seeder';
 import { ALL_SEEDERS } from './app/seeders';
+import { AuthConfigService } from './app/core/service/auth-config.service';
 
 
 dotenv.config();
@@ -31,14 +32,9 @@ seeder({
         }),
         EventEmitterModule.forRoot(),
         NestAuthModule.forRootAsync({
+            isGlobal: true,
             imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: (configService: ConfigService) => ({
-                appName: 'API Seeder',
-                jwt: {
-                    secret: configService.get('jwt.secret'),
-                },
-            }),
+            useClass: AuthConfigService,
         }),
         TypeOrmModule.forFeature(ALL_ENTITIES),
     ],

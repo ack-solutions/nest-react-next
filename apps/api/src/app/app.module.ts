@@ -20,6 +20,7 @@ import { SettingModule } from './modules/setting/setting.module';
 import { TemplateModule } from './modules/template/template.module';
 import { UsersModule } from './modules/user/users.module';
 import { templateFilters } from './utils/template-filter';
+import { AuthConfigService } from './core/service/auth-config.service';
 
 
 @Module({
@@ -54,14 +55,7 @@ import { templateFilters } from './utils/template-filter';
         NestAuthModule.forRootAsync({
             isGlobal: true,
             imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: (configService: ConfigService) => ({
-                appName: 'API',
-                accessTokenType: 'header',
-                jwt: {
-                    secret: configService.get('jwt.secret'),
-                },
-            }),
+            useClass: AuthConfigService,
         }),
 
         NestDynamicTemplatesModule.forRoot({
