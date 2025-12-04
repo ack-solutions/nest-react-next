@@ -17,15 +17,6 @@ export class RoleSeeder implements Seeder {
     ) { }
 
     async seed() {
-        const defaultTenantName = this.configService.get<IAppConfig>('app').defaultTenantName;
-
-        const tenant = await this.tenantService.getTenantByDomain(defaultTenantName);
-
-        if (!tenant) {
-            throw new Error('Tenant not found');
-        }
-
-
         const adminPermissions = [
             // Users
             PermissionsEnum.ACCESS_USERS,
@@ -85,7 +76,7 @@ export class RoleSeeder implements Seeder {
 
         for (const role of organizationRoles) {
             try {
-                await this.nestAuthRoleService.createRole(role.name, role.guardName, tenant.id, role.isSystemRole, role.permissions);
+                await this.nestAuthRoleService.createRole(role.name, role.guardName, null, role.isSystemRole, role.permissions);
             } catch (_error) {
                 // do nothing
             }

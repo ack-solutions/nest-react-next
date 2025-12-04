@@ -16,6 +16,9 @@ export class AuthConfigService implements AuthModuleOptionsFactory {
             jwt: {
                 secret: this.configService.get('jwt.secret'),
             },
+            debug: {
+                enabled: true,
+            },
             defaultTenant: {
                 name: this.configService.get('app').defaultTenantName,
                 slug: this.configService.get('app').defaultTenantName,
