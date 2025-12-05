@@ -21,7 +21,7 @@ import { TemplateModule } from './modules/template/template.module';
 import { UsersModule } from './modules/user/users.module';
 import { templateFilters } from './utils/template-filter';
 import { AuthConfigService } from './core/service/auth-config.service';
-import { EventsModule } from './seeder/events/events.module';
+import { EventsModule } from './events/events.module';
 
 
 @Module({

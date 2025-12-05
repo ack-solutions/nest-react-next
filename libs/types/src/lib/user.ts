@@ -66,6 +66,25 @@ export interface IVerifyOtpInput {
   otp: string;
 }
 
+export interface IVerifyForgotPasswordOtpInput {
+  email?: string;
+  phone?: string;
+  otp: string;
+}
+
+export interface IVerifyResetPasswordWithTokenResponse {
+  resetToken: string;
+}
+
+export interface IResetPasswordWithTokenInput {
+  token: string;
+  newPassword: string;
+}
+
+export interface IResetPasswordWithTokenResponse {
+  resetToken: string;
+}
+
 export interface IVerifyTokenInput {
   token: string;
 }

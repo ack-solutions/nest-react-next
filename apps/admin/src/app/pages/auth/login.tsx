@@ -1,4 +1,3 @@
-import { PATH_AUTH } from '@admin/app/routes/paths';
 import { NestAuthService } from '@libs/react-shared';
 import { errorMessage } from '@libs/utils';
 import { Box, Link, Stack, Typography } from '@mui/material';
@@ -7,6 +6,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 import { useAuth } from '../../contexts/auth-context';
 import LoginForm from '../../sections/auth/login-form';
+import { PATH_AUTH } from '@admin/app/routes/paths';
 
 
 const nestAuthService = NestAuthService.getInstance<NestAuthService>();
@@ -35,7 +35,6 @@ function Login() {
 
     return (
         <Box>
-            {/* {!verifyData ? ( */}
             <Box>
                 <Stack
                     direction="row"
@@ -55,7 +54,7 @@ function Login() {
                     </Box>
                 </Stack>
                 <LoginForm onSubmit={handleLogin} />
-                {/* <Stack
+                <Stack
                     direction="row"
                     spacing={0.5}
                     justifyContent="center"
@@ -72,16 +71,8 @@ function Login() {
                     >
                         Sign up
                     </Link>
-                </Stack> */}
+                </Stack>
             </Box>
-            {/*  ) : (
-                <LoginOtpVerification
-                    onSubmit={handleLogin}
-                    onResent={handleResentOtp}
-                    onGoBack={() => setVerifyData(null)}
-                    values={verifyData}
-                />
-            )} */}
         </Box>
     );
 }

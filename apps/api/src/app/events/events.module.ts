@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { UserRegisteredListener } from './listeners';
-import { User } from '@api/app/modules/user/user.entity';
+import { UserRegisteredListener, PasswordResetRequestedListener } from './listeners';
+import { User } from '../modules/user/user.entity';
+import { NotificationModule } from '../libs/notification/notification.module';
 
 /**
  * Events Module
@@ -12,13 +13,16 @@ import { User } from '@api/app/modules/user/user.entity';
 @Module({
     imports: [
         TypeOrmModule.forFeature([User]),
+        NotificationModule,
     ],
     providers: [
         UserRegisteredListener,
+        PasswordResetRequestedListener,
         // Add more event listeners here as needed
     ],
     exports: [
         UserRegisteredListener,
+        PasswordResetRequestedListener,
         // Export listeners that other modules might need
     ],
 })

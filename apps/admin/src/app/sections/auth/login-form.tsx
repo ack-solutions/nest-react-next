@@ -1,11 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ILoginSendOtpInput } from '@libs/types';
-import { Stack, Alert, Button } from '@mui/material';
+import { Stack, Alert, Button, Link } from '@mui/material';
 import { useCallback } from 'react';
 import { useForm, UseFormSetError } from 'react-hook-form';
 import { object, string } from 'yup';
 
 import { FormContainer, RHFPassword, RHFTextField } from '../../form';
+import { PATH_AUTH } from '@admin/app/routes/paths';
+import { Link as RouterLink } from 'react-router-dom';
 
 
 export type LoginFormProps = {
@@ -76,22 +78,21 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
             <Stack
                 direction="row"
                 alignItems="center"
-                justifyContent="space-between"
+                justifyContent="end"
                 sx={{
                     my: 2,
                     marginLeft: '4px',
                 }}
             >
-                {/* <Link
+                <Link
                     component={RouterLink}
                     to={PATH_AUTH.forgotPassword}
                     sx={{
-                        color: (theme) => theme.palette.common.white,
                         textDecoration: 'none',
                     }}
                 >
                     Forgot password?
-                </Link> */}
+                </Link>
             </Stack>
 
             <Button

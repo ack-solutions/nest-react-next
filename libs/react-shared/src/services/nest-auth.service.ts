@@ -1,4 +1,4 @@
-import { ILoginInput, ILoginSuccess, IRegisterInput, IVerifyOtpInput } from '@libs/types';
+import { IForgotPasswordInput, ILoginInput, ILoginSuccess, IRegisterInput, IResetPasswordWithTokenInput, IResetPasswordWithTokenResponse, IVerifyForgotPasswordOtpInput, IVerifyOtpInput } from '@libs/types';
 
 import { Service } from './service';
 
@@ -7,13 +7,9 @@ export class NestAuthService extends Service {
 
     apiPath = '';
 
-    public tenantId = '1';
-
-
     login(request: ILoginInput) {
         return this.instanceApi.post<ILoginSuccess>('auth/login', {
             ...request,
-            // tenantId: this.tenantId,
         });
     }
 
@@ -21,6 +17,10 @@ export class NestAuthService extends Service {
         return this.instanceApi.post<ILoginSuccess>('auth/signup', request).then((resp) => {
             return resp.data;
         });
+    }
+
+    forgotPassword(request: IForgotPasswordInput) {
+        return this.instanceApi.post('auth/forgot-password', request);
     }
 
     logout() {
@@ -32,8 +32,16 @@ export class NestAuthService extends Service {
         return this.instanceApi.post('auth/verify-otp', request);
     }
 
+    verifyForgotPasswordOtp(request: IVerifyForgotPasswordOtpInput) {
+        return this.instanceApi.post('auth/verify-forgot-password-otp', request);
+    }
+
     resetPassword(request?: any) {
         return this.instanceApi.post('auth/reset-password', request);
+    }
+
+    resetPasswordWithToken(request?: IResetPasswordWithTokenInput) {
+        return this.instanceApi.post<IResetPasswordWithTokenResponse>('auth/reset-password-with-token', request);
     }
 
 }

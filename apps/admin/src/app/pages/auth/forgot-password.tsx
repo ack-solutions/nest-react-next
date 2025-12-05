@@ -1,47 +1,38 @@
-import { AuthService } from '@libs/react-shared';
-import { IForgotPasswordInput, OtpSendActionEnum } from '@libs/types';
+import { NestAuthService } from '@libs/react-shared';
+import { IForgotPasswordInput } from '@libs/types';
+import { errorMessage } from '@libs/utils';
 import { Box } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useToasty } from '../../hook';
+import { PATH_AUTH } from '../../routes/paths';
 import ForgotPasswordForm from '../../sections/auth/forgot-password-form';
-import ResetPasswordForm from '../../sections/auth/reset-password-form';
 
 
-const authService = AuthService.getInstance<AuthService>();
+const authService = NestAuthService.getInstance<NestAuthService>();
 
 function ForgotPassword() {
-    const [verifyData, setVerifyData] = useState(false);
     const { showToasty } = useToasty();
-    const [formValue, setFormValue] = useState<any>({});
+    const navigate = useNavigate();
 
     const handleSubmit = useCallback(
         async (value: IForgotPasswordInput, reset) => {
-            setFormValue(value);
-            await authService.sendOtp({
-                ...value,
-                action: OtpSendActionEnum.FORGOT_PASSWORD,
+            await authService.forgotPassword({
+                email: value.email,
             }).then(() => {
-                showToasty('OTP has been sent to your email, please verify');
-                setVerifyData(true);
+                showToasty('Password reset email has been sent to your email, please check your email');
+                navigate(`${PATH_AUTH.resetPassword}?email=${encodeURIComponent(value.email)}`);
                 reset();
             }).catch((error) => {
-                showToasty(error, 'error');
+                showToasty(errorMessage(error), 'error');
             });
         },
-        [showToasty],
+        [navigate, showToasty],
     );
 
     return (
-        <Box>
-            {!verifyData ? (
-                <ForgotPasswordForm onSubmit={handleSubmit} />
-            ) : (
-                <ResetPasswordForm
-                    values={formValue}
-                />
-            )}
-        </Box>
+        <ForgotPasswordForm onSubmit={handleSubmit} />
     );
 }
 

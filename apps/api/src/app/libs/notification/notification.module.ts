@@ -42,7 +42,7 @@ import { EmailNotificationService } from './providers/email-notification.service
     ],
     controllers: [],
     providers: [NotificationService, EmailNotificationService],
-    exports: [NotificationService],
+    exports: [NotificationService, EmailNotificationService],
 })
 
 export class NotificationModule {

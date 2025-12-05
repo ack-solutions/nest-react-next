@@ -1,4 +1,4 @@
-import { AuthModuleOptions, AuthModuleOptionsFactory } from '@ackplus/nest-auth';
+import { AuthModuleOptions, AuthModuleOptionsFactory, DebugLogLevel } from '@ackplus/nest-auth';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
@@ -18,6 +18,14 @@ export class AuthConfigService implements AuthModuleOptionsFactory {
             },
             debug: {
                 enabled: true,
+                level: DebugLogLevel.VERBOSE,
+            },
+            emailAuth: {
+                enabled: true,
+            },
+            registration: {
+                enabled: false,
+                requireInvitation: false,
             },
             defaultTenant: {
                 name: this.configService.get('app').defaultTenantName,

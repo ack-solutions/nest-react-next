@@ -18,6 +18,7 @@ const Maintenance = Loadable(lazy(() => import('../pages/maintenance')));
 const Login = Loadable(lazy(() => import('../pages/auth/login')));
 const Register = Loadable(lazy(() => import('../pages/auth/register')));
 const ForgotPassword = Loadable(lazy(() => import('../pages/auth/forgot-password')));
+const ResetPassword = Loadable(lazy(() => import('../pages/auth/reset-password')));
 
 // Dashboard
 const Dashboard = Loadable(lazy(() => import('../pages/dashboard/dashboard')));
@@ -78,6 +79,14 @@ export default function Router() {
                     element: (
                         <GuestGuard>
                             <ForgotPassword />
+                        </GuestGuard>
+                    ),
+                },
+                {
+                    path: 'reset-password',
+                    element: (
+                        <GuestGuard>
+                            <ResetPassword />
                         </GuestGuard>
                     ),
                 },

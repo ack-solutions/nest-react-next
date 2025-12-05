@@ -1,4 +1,4 @@
-import { FormHelperText, useTheme } from '@mui/material';
+import { Box, FormHelperText, useTheme } from '@mui/material';
 import { Control, useController } from 'react-hook-form';
 
 import { useResponsive } from '../../hook';
@@ -24,7 +24,7 @@ export function RHFOtpInput({ name, control, inputStyleProps, ...props }: RHFOtp
     });
 
     return (
-        <>
+        <Box>
             <OTPInput
                 containerStyle={{
                     margin: '0 auto',
@@ -36,8 +36,11 @@ export function RHFOtpInput({ name, control, inputStyleProps, ...props }: RHFOtp
                     margin: theme.spacing(0, 1),
                     border: '1px solid',
                     borderRadius: theme.shape.borderRadius,
-                    background: 'rgba(0, 0, 0, 0.01)',
-                    color: theme.palette.common.white,
+                    background: 'transparent',
+                    color: theme.palette.text.primary,
+                    textAlign: 'center',
+                    fontSize: theme.typography.h6.fontSize,
+                    fontWeight: theme.typography.fontWeightBold,
                     ...theme.typography.body1,
                     ...(error?.message ?
                         { borderColor: theme.palette.error.main } :
@@ -56,11 +59,9 @@ export function RHFOtpInput({ name, control, inputStyleProps, ...props }: RHFOtp
                     error
                     sx={{ ml: 1.5 }}
                 >
-                    {' '}
                     {error?.message}
-                    {' '}
                 </FormHelperText>
             ) : null}
-        </>
+        </Box>
     );
 }
