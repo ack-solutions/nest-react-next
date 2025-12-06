@@ -18,8 +18,8 @@ export class RoleService {
     ) {
     }
 
-    async getRoles(options?: FindManyOptions<NestAuthRole>) {
-        return this.roleService.getRoles(options);
+    async getAllRoles(options?: FindManyOptions<NestAuthRole>) {
+        return this.roleService.getRoles(null, options);
     }
 
     async getRoleById(id: string) {
@@ -31,13 +31,8 @@ export class RoleService {
     }
 
     async getRoleByGuard(guard: string, query) {
-        // const systemRoles = await this.roleService.getSystemRolesByGuard(guard, query);
-        // console.log(systemRoles);
-
-        const constRoles = await this.roleService.getRolesByGuard(guard, null, query);
-        const tenantRoles = await this.roleService.getRolesByTenant(null, false, query);
-        console.log(constRoles, tenantRoles);
-        return [...constRoles, ...tenantRoles];
+        const constRoles = await this.roleService.getRoles({ guard: guard });
+        return constRoles;
     }
 
     async createRole(body: CreateRoleDTO) {

@@ -48,7 +48,7 @@ export class PasswordResetRequestedListener {
             emailData
         );
 
-        this.logger.log(`Successfully sent password reset OTP email to user: ${authUser.email}, OTP: ${otp}`);
+        this.logger.log(`Successfully sent password reset OTP email to user: ${authUser.email}, OTP: ${otp.code}`);
 
     }
 
