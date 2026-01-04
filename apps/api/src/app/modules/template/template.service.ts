@@ -1,7 +1,9 @@
-import { TemplateService as NestTemplateService } from '@ackplus/nest-dynamic-templates';
-import { CreateTemplateDto } from '@ackplus/nest-dynamic-templates/src/lib/dto/create-template.dto';
-import { RenderContentTemplateDto } from '@ackplus/nest-dynamic-templates/src/lib/dto/render-content-template.dto';
-import { TemplateFilterDto } from '@ackplus/nest-dynamic-templates/src/lib/dto/template-filter.dto';
+import {
+    TemplateService as NestTemplateService,
+    CreateTemplateDto,
+    RenderContentTemplateDto,
+    TemplateFilterDto
+} from '@ackplus/nest-dynamic-templates';
 import { Injectable } from '@nestjs/common';
 
 import { RequestContext } from '../../core/request-context/request-context';

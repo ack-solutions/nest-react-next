@@ -87,7 +87,7 @@ export class RoleSeeder implements Seeder {
         const roles = await this.nestAuthRoleService.getRoles();
         for (const role of roles) {
             if (role.isSystem) {
-                await this.nestAuthRoleService.deleteSystemRole(role.id);
+                // await this.nestAuthRoleService.deleteSystemRole(role.id);
             } else {
                 await this.nestAuthRoleService.deleteRole(role.id);
             }

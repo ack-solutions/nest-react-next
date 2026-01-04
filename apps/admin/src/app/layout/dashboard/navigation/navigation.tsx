@@ -73,7 +73,9 @@ const MiniToggleButton = styled(IconButton)(({ theme }) => ({
     },
 }));
 
-const version = process.env.NX_PUBLIC_REACT_APP_VERSION || '0.0.0';
+import { config } from '@libs/react-shared';
+
+const version = config.version;
 
 export default function Navigation({ openNav = false, onCloseNav }: NavigationProps) {
     const { navigation, isItemActive } = useNavigation();

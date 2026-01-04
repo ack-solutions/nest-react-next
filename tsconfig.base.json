@@ -22,9 +22,9 @@
             "@admin/*": ["apps/admin/src/*"],
             "@api/*": ["apps/api/src/*"],
             "@libs/generators": ["tools/generators/src/index.ts"],
-            "@libs/react-shared": ["libs/react-shared/src/index.ts"],
-            "@libs/types": ["libs/types/src/index.ts"],
-            "@libs/utils": ["libs/utils/src/index.ts"],
+            "@libs/react-shared": ["packages/react-shared/src/index.ts"],
+            "@libs/types": ["packages/types/src/index.ts"],
+            "@libs/utils": ["packages/utils/src/index.ts"],
             "@web/*": ["apps/web/src/*"]
         }
     },

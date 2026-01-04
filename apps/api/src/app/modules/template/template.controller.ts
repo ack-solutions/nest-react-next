@@ -1,6 +1,5 @@
 import { NestAuthAuthGuard } from '@ackplus/nest-auth';
-import { RenderContentTemplateDto } from '@ackplus/nest-dynamic-templates/src/lib/dto/render-content-template.dto';
-import { NestDynamicTemplate } from '@ackplus/nest-dynamic-templates/src/lib/entities/template.entity';
+import { RenderContentTemplateDto, NestDynamicTemplate } from '@ackplus/nest-dynamic-templates';
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';

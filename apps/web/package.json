@@ -1,0 +1,33 @@
+{
+    "name": "@app/web",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@emotion/react": "^11.13.3",
+        "@emotion/styled": "^11.13.0",
+        "@libs/react-shared": "workspace:*",
+        "@libs/types": "workspace:*",
+        "@mui/icons-material": "^7.3.5",
+        "@mui/material": "^7.3.5",
+        "@mui/styled-engine-sc": "^7.3.5",
+        "@mui/system": "^7.3.5",
+        "@mui/utils": "^7.3.5",
+        "axios": "^1.10.0",
+        "framer-motion": "^12.19.2",
+        "lodash": "^4.17.21",
+        "next": "^15.3.4",
+        "nprogress": "^0.2.0",
+        "react": "^19.1.0",
+        "react-dom": "^19.1.0",
+        "tslib": "^2.8.1"
+    },
+    "devDependencies": {
+        "@types/jest": "^30.0.0"
+    }
+}

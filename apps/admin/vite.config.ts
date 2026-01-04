@@ -1,30 +1,30 @@
-import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
-import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
-import react from '@vitejs/plugin-react';
+/// <reference types="vitest" />
 import { defineConfig } from 'vite';
-
+import react from '@vitejs/plugin-react';
+import { fileURLToPath } from 'url';
 
 export default defineConfig({
-    root: __dirname,
-    cacheDir: '../../node_modules/.vite/apps/admin',
-    plugins: [
-        react(),
-        nxViteTsPaths(),
-        nxCopyAssetsPlugin(['*.md']),
-    ],
-    // Uncomment this if you are using workers.
-    // worker: {
-    //  plugins: [ nxViteTsPaths() ],
-    // },
-    test: {
-        watch: false,
-        globals: true,
-        environment: 'jsdom',
-        include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-        reporters: ['default'],
-        coverage: {
-            reportsDirectory: '../../coverage/apps/admin',
-            provider: 'v8',
+    plugins: [react()],
+    resolve: {
+        dedupe: ['react', 'react-dom'],
+        alias: {
+            '@repo/react-shared': fileURLToPath(new URL('../../packages/react-shared/src/index.ts', import.meta.url)),
+            '@repo/utils': fileURLToPath(new URL('../../packages/utils/src/index.ts', import.meta.url)),
+            '@repo/types': fileURLToPath(new URL('../../packages/types/src/index.ts', import.meta.url)),
+            '@admin': fileURLToPath(new URL('./src', import.meta.url)),
         },
+    },
+    server: {
+        port: 4200,
+        host: 'localhost',
+        fs: { allow: ['..'] },
+    },
+    build: {
+        outDir: '../../dist/apps/admin',
+        emptyOutDir: true,
+    },
+    envPrefix: ['VITE_'],
+    define: {
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV ?? 'development'),
     },
 });

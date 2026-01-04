@@ -1,4 +1,4 @@
-import { CreateTemplateLayoutDto as NestCreateTemplateLayoutDto } from '@ackplus/nest-dynamic-templates/src/lib/dto/create-template-layout.dto';
+import { CreateTemplateLayoutDto as NestCreateTemplateLayoutDto } from '@ackplus/nest-dynamic-templates';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsUUID } from 'class-validator';
 

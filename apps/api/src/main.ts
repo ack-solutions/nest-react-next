@@ -3,6 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { apiReference } from '@scalar/nestjs-api-reference';
 import * as bodyParser from 'body-parser';
 import { join } from 'path';
 
@@ -63,7 +64,7 @@ async function bootstrap() {
     const document = SwaggerModule.createDocument(app, config);
 
     // Custom swagger UI options
-    SwaggerModule.setup('api', app, document, {
+    SwaggerModule.setup('api/swagger', app, document, {
         swaggerOptions: {
             persistAuthorization: true,
             tagsSorter: 'alpha',
@@ -78,6 +79,17 @@ async function bootstrap() {
             .swagger-ui .topbar { display: none }
         `,
     });
+
+    app.use(
+        'api/docs',
+        apiReference({
+            content: document,
+            defaultHttpClient: {
+                targetKey: 'js',
+                clientKey: 'axios',
+            },
+        }),
+    );
 
     const port = process.env.PORT || 3333;
     await app.listen(port);
