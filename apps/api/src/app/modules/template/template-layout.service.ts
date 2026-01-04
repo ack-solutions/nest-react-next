@@ -3,11 +3,11 @@ import {
     RenderContentTemplateLayoutDto,
     TemplateLayoutFilterDto
 } from '@ackplus/nest-dynamic-templates';
-import { RequestContext } from '@api/app/core/request-context/request-context';
 import { Injectable } from '@nestjs/common';
 
 import { CreateTemplateLayoutDto } from './dto/create-template-layout.dto';
 import { UpdateTemplateLayoutDto } from './dto/update-template-layout.dto';
+import { RequestContext } from '../../core/request-context/request-context';
 
 
 @Injectable()

@@ -1,6 +1,5 @@
 import { UserService as NestAuthUserService, TenantService } from '@ackplus/nest-auth';
 import { ID, PaginationResponse, IFindOneOptions } from '@ackplus/nest-crud';
-import { IAppConfig } from '@api/app/config/app';
 import {
     IChangeEmailInput,
     IChangePasswordInput,
@@ -29,6 +28,7 @@ import { SuccessDTO } from '../../core/dto/success.dto';
 import { RequestContext } from '../../core/request-context/request-context';
 import { BaseService } from '../../core/service/base-service';
 import { BaseRepository } from '../../core/typeorm/base-repository';
+import { IAppConfig } from '../../config/app';
 
 
 @Injectable()

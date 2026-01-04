@@ -20,8 +20,8 @@ import { SettingModule } from './modules/setting/setting.module';
 import { TemplateModule } from './modules/template/template.module';
 import { UsersModule } from './modules/user/users.module';
 import { templateFilters } from './utils/template-filter';
-import { AuthConfigService } from './core/service/auth-config.service';
 import { EventsModule } from './events/events.module';
+import { NestAuthConfigService } from './core/service/nest-auth-config.service';
 
 
 @Module({
@@ -56,7 +56,7 @@ import { EventsModule } from './events/events.module';
         NestAuthModule.forRootAsync({
             isGlobal: true,
             imports: [ConfigModule],
-            useClass: AuthConfigService,
+            useClass: NestAuthConfigService,
         }),
 
         NestDynamicTemplatesModule.forRoot({

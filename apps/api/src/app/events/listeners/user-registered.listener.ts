@@ -3,8 +3,8 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { NestAuthEvents, UserRegisteredEvent } from '@ackplus/nest-auth';
-import { User } from '@api/app/modules/user/user.entity';
-import { BaseRepository } from '@api/app/core/typeorm/base-repository';
+import { User } from './../../modules/user/user.entity';
+import { BaseRepository } from '../../core/typeorm/base-repository';
 
 /**
  * Handles user registration events

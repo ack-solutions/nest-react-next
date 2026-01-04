@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../modules/user/user.entity';
 import { BaseRepository } from '../../core/typeorm/base-repository';
 import { NestAuthEvents, PasswordResetRequestedEvent } from '@ackplus/nest-auth';
-import { EmailNotificationService } from '@api/app/libs/notification/providers/email-notification.service';
+import { EmailNotificationService } from '../../libs/notification/providers/email-notification.service';
 
 /**
  * Handles password reset requested events

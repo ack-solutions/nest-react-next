@@ -4,13 +4,13 @@
     "private": true,
     "description": "Monorepo for nest-react-next",
     "scripts": {
-        "web": "pnpm -C apps/web dev",
-        "admin": "pnpm -C apps/admin dev",
-        "api": "pnpm -C apps/api dev",
+        "web": "pnpm -C apps/web",
+        "admin": "pnpm -C apps/admin",
+        "api": "pnpm -C apps/api",
         "build": "pnpm -C apps/api build && pnpm -C apps/web build && pnpm -C apps/admin build",
         "test": "pnpm -r test",
         "lint": "pnpm -r run lint",
-        "update-ackplus": "pnpm add @ackplus/nest-auth@latest @ackplus/nest-crud@latest @ackplus/nest-crud-request@latest @ackplus/nest-dynamic-templates@latest @ackplus/react-tanstack-data-table@latest @ackplus/nest-file-storage@latest @ackplus/nest-seeder@latest"
+        "update-ackplus": "pnpm -r up --latest @ackplus/nest-auth @ackplus/nest-auth-client @ackplus/nest-auth-react @ackplus/nest-crud @ackplus/nest-crud-request @ackplus/nest-dynamic-templates @ackplus/react-tanstack-data-table @ackplus/nest-file-storage @ackplus/nest-seeder"
     },
     "keywords": [],
     "author": "",

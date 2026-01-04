@@ -4,7 +4,7 @@
     "main": "./src/index.ts",
     "types": "./src/index.ts",
     "dependencies": {
-        "@ackplus/nest-auth": "1.1.18",
+        "@ackplus/nest-auth": "1.1.46",
         "@libs/types": "workspace:*",
         "@libs/utils": "workspace:*",
         "@mui/icons-material": "^7.3.5",

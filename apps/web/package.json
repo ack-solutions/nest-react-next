@@ -3,10 +3,13 @@
     "version": "0.0.1",
     "private": true,
     "scripts": {
-        "dev": "next dev",
         "build": "next build",
+        "dev": "next dev --port 3000",
         "start": "next start",
-        "lint": "next lint"
+        "serve": "next dev --port 3000",
+        "lint": "eslint .",
+        "test": "jest",
+        "sitemap": "next-sitemap --config next-sitemap.config.js"
     },
     "dependencies": {
         "@emotion/react": "^11.13.3",
