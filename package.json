@@ -19,7 +19,7 @@
     },
     "private": true,
     "dependencies": {
-        "@ackplus/nest-auth": "^1.1.15",
+        "@ackplus/nest-auth": "^1.1.18",
         "@ackplus/nest-crud": "^1.1.15",
         "@ackplus/nest-crud-request": "^1.1.9",
         "@ackplus/nest-dynamic-templates": "^1.1.9",

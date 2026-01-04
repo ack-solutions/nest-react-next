@@ -1,4 +1,4 @@
-import { IForgotPasswordInput, ILoginInput, ILoginSuccess, IRegisterInput, IResetPasswordWithTokenInput, IResetPasswordWithTokenResponse, IVerifyForgotPasswordOtpInput, IVerifyOtpInput } from '@libs/types';
+import { IForgotPasswordInput, ILoginInput, ILoginSuccess, IMfaStatus, IRegisterInput, IResetPasswordWithTokenInput, IResetPasswordWithTokenResponse, IVerifyForgotPasswordOtpInput, IVerifyOtpInput } from '@libs/types';
 
 import { Service } from './service';
 
@@ -42,6 +42,10 @@ export class NestAuthService extends Service {
 
     resetPasswordWithToken(request?: IResetPasswordWithTokenInput) {
         return this.instanceApi.post<IResetPasswordWithTokenResponse>('auth/reset-password-with-token', request);
+    }
+
+    getMfaStatus() {
+        return this.instanceApi.get<IMfaStatus>('auth/mfa/status');
     }
 
 }

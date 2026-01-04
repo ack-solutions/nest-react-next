@@ -1,4 +1,4 @@
-import { AuthModuleOptions, AuthModuleOptionsFactory, DebugLogLevel } from '@ackplus/nest-auth';
+import { AuthModuleOptions, AuthModuleOptionsFactory, DebugLogLevel, MFAMethodEnum } from '@ackplus/nest-auth';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
@@ -27,6 +27,12 @@ export class AuthConfigService implements AuthModuleOptionsFactory {
                 enabled: false,
                 requireInvitation: false,
             },
+            mfa: {
+                enabled: true,
+                required: true,
+                allowMethodSelection: true,
+                methods: [MFAMethodEnum.EMAIL, MFAMethodEnum.SMS],
+            },
             defaultTenant: {
                 name: this.configService.get('app').defaultTenantName,
                 slug: this.configService.get('app').defaultTenantName,
@@ -35,6 +41,10 @@ export class AuthConfigService implements AuthModuleOptionsFactory {
                 secure: process.env.APP_ENV === 'prod',
                 // httpOnly: true,
             },
+            adminConsole: {
+                enabled: true,
+                secretKey: this.configService.get('app.adminSecretKey'),
+            }
         };
     }
 

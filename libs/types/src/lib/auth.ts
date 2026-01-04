@@ -4,6 +4,8 @@ export interface ILoginInput {
   otp?: number;
   providerName?: string;
   credentials?: any;
+  mfaMethod?: 'email' | 'phone' | 'totp';
+  resend?: boolean;
 }
 
 export interface ILoginSendOtpInput {
@@ -18,6 +20,8 @@ export interface IRegisterSendOtpInput {
 export interface ILoginSuccess {
   accessToken: string;
   otpSecurity?: boolean;
+  isRequiresMfa?: boolean;
+  requiresMfa?: boolean;
   user: any;
 }
 
@@ -66,4 +70,10 @@ export interface AuthState {
       fileUrl?: string;
     };
   };
+}
+
+export interface IMfaStatus {
+  isEnabled: boolean;
+  enabledMethods: string[];
+  availableMethods: string[];
 }

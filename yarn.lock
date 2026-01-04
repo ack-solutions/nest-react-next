@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@ackplus/nest-auth@^1.1.15":
-  version "1.1.15"
-  resolved "https://registry.yarnpkg.com/@ackplus/nest-auth/-/nest-auth-1.1.15.tgz#6cdbf1575b3e90499dc27a8830aeb80db61cb7a9"
-  integrity sha512-VfB0IVlWb2GMItI6YDZB5giNyjueP6xEQ5r5A4lQqof9cvl8BjGIRGULP0rEWUPV6D4UHn9H7+dM6kQvH/95vQ==
+"@ackplus/nest-auth@^1.1.18":
+  version "1.1.18"
+  resolved "https://registry.yarnpkg.com/@ackplus/nest-auth/-/nest-auth-1.1.18.tgz#b64a1b58a1ffebf758b44924cbd42b10eedb9533"
+  integrity sha512-QgGRRhDRxGbADSj3F+9RZwfhFLr/XQeNDZX7p1z0bhF5Bp538puIqT1X0wBRFqWM1HaEApQkekHjR4JyJ+XKXw==
   dependencies:
     apple-auth "^1.0.9"
     argon2 "^0.44.0"
