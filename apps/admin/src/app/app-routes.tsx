@@ -1,5 +1,5 @@
 import LoadingScreen from './components/loading-screen';
-import { useAuth } from './contexts/auth-context';
+import { useAuth } from '@libs/react-shared';
 import Routes from './routes';
 
 

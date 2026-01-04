@@ -18,7 +18,7 @@ import { useState } from 'react';
 
 import { Avatar, Icon, InfoCard, Page } from '../../components';
 import { IconEnum } from '../../components/icons/icons';
-import { useAuth } from '../../contexts/auth-context';
+import { useAuth } from '@libs/react-shared';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import BasicInfoEditDialog from '../../sections/profile/basic-info-edit-dialog';
 import UserChangeEmail from '../../sections/profile/user-change-email';

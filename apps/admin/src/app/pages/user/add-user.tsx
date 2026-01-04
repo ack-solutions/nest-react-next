@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Page } from '../../components';
-import { withPermission } from '../../contexts/react-access-control';
+import { withRequirePermission } from '@ackplus/nest-auth-react';
 import { useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import AddEditUserForm from '../../sections/user/add-edit-user-form';
@@ -52,6 +52,6 @@ function AddUser() {
     );
 }
 
-export default withPermission({
-    permissions: [PermissionsEnum.CREATE_USERS],
-})(AddUser);
+export default withRequirePermission(AddUser, {
+    permission: PermissionsEnum.CREATE_USERS,
+});

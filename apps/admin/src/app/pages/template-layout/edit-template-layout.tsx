@@ -9,7 +9,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Button, Card, CardContent, Grid, Typography, Stack, Accordion, AccordionSummary, AccordionDetails, styled, Box } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
+import { Group, Panel, Separator } from 'react-resizable-panels';
 import { useNavigate, useParams } from 'react-router-dom';
 import { object, string } from 'yup';
 
@@ -17,7 +17,7 @@ import AddEditTemplateLayoutDialog from './add-edit-template-layout-dialog';
 import { PATH_DASHBOARD } from '../../routes/paths';
 
 
-const ResizeHandle = styled(PanelResizeHandle)(({ theme }) => ({
+const ResizeHandle = styled(Separator)(({ theme }) => ({
     width: '8px',
     cursor: 'col-resize',
     backgroundColor: 'transparent',
@@ -324,8 +324,8 @@ function EditTemplateLayout() {
                             <Box>
                                 {/* Editor Container */}
                                 <Box>
-                                    <PanelGroup
-                                        direction="horizontal"
+                                    <Group
+                                        orientation="horizontal"
                                     >
                                         {/* Left Panel - Editor */}
                                         <Panel
@@ -439,7 +439,7 @@ function EditTemplateLayout() {
                                                 </Box>
                                             </Box>
                                         </Panel>
-                                    </PanelGroup>
+                                    </Group>
                                 </Box>
 
                                 {/* Action Buttons */}

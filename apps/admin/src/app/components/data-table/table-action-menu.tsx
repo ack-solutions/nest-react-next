@@ -7,8 +7,8 @@ import {
     Tooltip,
 } from '@mui/material';
 import { ReactNode, useMemo } from 'react';
+import { RequirePermission } from '@ackplus/nest-auth-react';
 
-import { useAccess } from '../../contexts';
 import { Icon } from '../icons/icon';
 import { IconEnum } from '../icons/icons';
 import { MenuDropdown } from '../menu-dropdown/menu-drop-down';
@@ -44,15 +44,15 @@ export function TableActionMenu({
     row,
     actions,
 }: TableActionMenuProps) {
-    const { hasAnyPermission } = useAccess();
+
 
     const crudActions: TableAction[] = useMemo(() => {
-        const otherActions = (actions || [])?.filter(
-            (action) => !action.permission || hasAnyPermission(action.permission),
-        );
+        // const otherActions = (actions || [])?.filter(
+        //     (action) => !action.permission || hasAnyPermission(action.permission),
+        // );
 
         return [
-            ...otherActions,
+            ...(actions || []),
             ...(onView ?
                 [
                     {
@@ -112,7 +112,6 @@ export function TableActionMenu({
         onDelete,
         onRestore,
         onDeleteForever,
-        hasAnyPermission,
     ]);
 
     if (crudActions.length <= 2) {
@@ -122,21 +121,23 @@ export function TableActionMenu({
                 direction="row"
             >
                 {crudActions.map((action) => (
-                    <Tooltip
-                        key={`${action?.title}-${row?.id}`}
-                        title={action?.title}
-                    >
-                        <IconButton
-                            onClick={(event) => {
-                                event.stopPropagation();
-                                if (action.onClick) {
-                                    action.onClick(event);
-                                }
-                            }}
+                    <RequirePermission permission={action.permission!} key={`${action?.title}-${row?.id}`}>
+                        <Tooltip
+                            key={`${action?.title}-${row?.id}`}
+                            title={action?.title}
                         >
-                            {action?.icon}
-                        </IconButton>
-                    </Tooltip>
+                            <IconButton
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    if (action.onClick) {
+                                        action.onClick(event);
+                                    }
+                                }}
+                            >
+                                {action?.icon}
+                            </IconButton>
+                        </Tooltip>
+                    </RequirePermission>
                 ))}
             </Stack>
         );
@@ -153,30 +154,32 @@ export function TableActionMenu({
             {({ handleClose }) => (
                 <>
                     {crudActions.map((action) => (
-                        <MenuItem
-                            onClick={(event) => {
-                                event.stopPropagation();
-                                if (action.onClick) {
-                                    action.onClick(event);
-                                }
-                                handleClose();
-                            }}
-                            key={`${action?.title}-${row?.id}`}
-                        >
-                            {action?.icon ? (
-                                <ListItemIcon sx={{ mr: 0 }}>
-                                    {action?.icon}
-                                </ListItemIcon>
-                            ) : null}
-                            <ListItemText
-                                primary={action?.title}
-                                slotProps={{
-                                    primary: {
-                                        variant: 'body2',
-                                    },
+                        <RequirePermission permission={action.permission!} key={`${action?.title}-${row?.id}`}>
+                            <MenuItem
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    if (action.onClick) {
+                                        action.onClick(event);
+                                    }
+                                    handleClose();
                                 }}
-                            />
-                        </MenuItem>
+                                key={`${action?.title}-${row?.id}`}
+                            >
+                                {action?.icon ? (
+                                    <ListItemIcon sx={{ mr: 0 }}>
+                                        {action?.icon}
+                                    </ListItemIcon>
+                                ) : null}
+                                <ListItemText
+                                    primary={action?.title}
+                                    slotProps={{
+                                        primary: {
+                                            variant: 'body2',
+                                        },
+                                    }}
+                                />
+                            </MenuItem>
+                        </RequirePermission>
                     ))}
                     {children}
                 </>

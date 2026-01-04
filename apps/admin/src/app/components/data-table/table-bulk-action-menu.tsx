@@ -9,10 +9,10 @@ import {
 import { useMemo } from 'react';
 
 import { TableAction } from './table-action-menu';
-import { useAccess } from '../../contexts';
 import { Icon } from '../icons/icon';
 import { IconEnum } from '../icons/icons';
 import { MenuDropdown } from '../menu-dropdown/menu-drop-down';
+import { RequirePermission } from '@ackplus/nest-auth-react';
 
 
 type TableBulkActionMenuProps = {
@@ -50,15 +50,10 @@ export function TableBulkActionMenu({
     row,
     actions,
 }: TableBulkActionMenuProps) {
-    const { hasAnyPermission } = useAccess();
 
     const crudActions: TableAction[] = useMemo(() => {
-        const otherActions = (actions || [])?.filter(
-            (action) => !action.permission || hasAnyPermission(action.permission),
-        );
-
         return [
-            ...otherActions,
+            ...(actions || []),
             ...(showView && canView && onView ?
                 [
                     {
@@ -112,7 +107,6 @@ export function TableBulkActionMenu({
         canEdit,
         canRestore,
         canView,
-        hasAnyPermission,
         onDelete,
         onDeleteForever,
         onEdit,
@@ -129,21 +123,23 @@ export function TableBulkActionMenu({
                 direction="row"
             >
                 {crudActions.map((action) => (
-                    <Tooltip
-                        key={`${action?.title}-${row?.id}`}
-                        title={action?.title}
-                    >
-                        <IconButton
-                            onClick={(event) => {
-                                event.stopPropagation();
-                                if (action.onClick) {
-                                    action.onClick(event);
-                                }
-                            }}
+                    <RequirePermission permission={action.permission!} key={`${action?.title}-${row?.id}`}>
+                        <Tooltip
+                            key={`${action?.title}-${row?.id}`}
+                            title={action?.title}
                         >
-                            {action?.icon}
-                        </IconButton>
-                    </Tooltip>
+                            <IconButton
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    if (action.onClick) {
+                                        action.onClick(event);
+                                    }
+                                }}
+                            >
+                                {action?.icon}
+                            </IconButton>
+                        </Tooltip>
+                    </RequirePermission>
                 ))}
             </Stack>
         );
@@ -160,26 +156,28 @@ export function TableBulkActionMenu({
             {({ handleClose }) => (
                 <>
                     {crudActions.map((action, _index) => (
-                        <MenuItem
-                            onClick={(event) => {
-                                event.stopPropagation();
-                                if (action.onClick) {
-                                    action.onClick(event);
-                                }
-                                handleClose();
-                            }}
-                            key={`${action?.title}-${row?.id}`}
-                        >
-                            {action?.icon ? (
-                                <ListItemIcon sx={{ mr: 0 }}>
-                                    {action?.icon}
-                                </ListItemIcon>
-                            ) : null}
-                            <ListItemText
-                                primary={action?.title}
-                                primaryTypographyProps={{ variant: 'body2' }}
-                            />
-                        </MenuItem>
+                        <RequirePermission permission={action.permission!} key={`${action?.title}-${row?.id}`}>
+                            <MenuItem
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    if (action.onClick) {
+                                        action.onClick(event);
+                                    }
+                                    handleClose();
+                                }}
+                                key={`${action?.title}-${row?.id}`}
+                            >
+                                {action?.icon ? (
+                                    <ListItemIcon sx={{ mr: 0 }}>
+                                        {action?.icon}
+                                    </ListItemIcon>
+                                ) : null}
+                                <ListItemText
+                                    primary={action?.title}
+                                    primaryTypographyProps={{ variant: 'body2' }}
+                                />
+                            </MenuItem>
+                        </RequirePermission>
                     ))}
                     {children}
                 </>

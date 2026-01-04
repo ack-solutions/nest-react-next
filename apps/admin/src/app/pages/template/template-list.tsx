@@ -1,5 +1,4 @@
 import { Page } from '@admin/app/components/page';
-import { useAccess, withPermission } from '@admin/app/contexts';
 import { useBoolean, useToasty } from '@admin/app/hook';
 import { useTemplate } from '@libs/react-shared';
 import { ITemplate, PermissionsEnum } from '@libs/types';
@@ -13,7 +12,7 @@ import { StatusChip, getStatusConfig } from '../../components';
 import { DataTable, TableActionMenu } from '../../components/data-table';
 import { useConfirm } from '../../contexts/confirm-dialog-context';
 import { PATH_DASHBOARD } from '../../routes/paths';
-
+import { useHasPermission, withRequirePermission } from '@ackplus/nest-auth-react';
 
 interface TemplateListProps {
     organizationId?: string;
@@ -27,12 +26,10 @@ function TemplateList({ organizationId }: TemplateListProps) {
     const { mutateAsync: deleteTemplate } = useDeleteTemplate();
     const datatableRef = useRef<any>(null);
     const isAddDialogOpen = useBoolean(false);
-    const { hasPermission } = useAccess();
 
-    // Permission checks
-    const canCreate = hasPermission(PermissionsEnum.CREATE_TEMPLATES);
-    const canUpdate = hasPermission(PermissionsEnum.UPDATE_TEMPLATES);
-    const canDelete = hasPermission(PermissionsEnum.DELETE_TEMPLATES);
+    const canCreate = useHasPermission(PermissionsEnum.CREATE_TEMPLATES);
+    const canUpdate = useHasPermission(PermissionsEnum.UPDATE_TEMPLATES);
+    const canDelete = useHasPermission(PermissionsEnum.DELETE_TEMPLATES);
 
     const { data, isLoading } = useGetTemplate({
         scopeId: organizationId,
@@ -152,6 +149,6 @@ function TemplateList({ organizationId }: TemplateListProps) {
     );
 }
 
-export default withPermission({
-    permissions: [PermissionsEnum.ACCESS_TEMPLATES],
-})(TemplateList);
+export default withRequirePermission(TemplateList, {
+    permission: PermissionsEnum.ACCESS_TEMPLATES,
+});

@@ -26,9 +26,9 @@
             "@web/*": ["./src/*"],
             "@ui/*": ["./src/components/ui/*"],
             "@sections/*": ["./src/sections/*"],
-            "@repo/utils": ["../../packages/utils/src"],
-            "@repo/types": ["../../packages/types/src"],
-            "@repo/react-shared": ["../../packages/react-shared/src"]
+            "@libs/utils": ["../../packages/utils/src"],
+            "@libs/types": ["../../packages/types/src"],
+            "@libs/react-shared": ["../../packages/react-shared/src"]
         }
     },
     "include": [

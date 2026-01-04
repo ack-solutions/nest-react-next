@@ -19,8 +19,8 @@
         "experimentalDecorators": true,
         "resolveJsonModule": true,
         "paths": {
-            "@repo/types": ["packages/types/src"],
-            "@repo/utils": ["packages/utils/src"]
+            "@libs/types": ["packages/types/src"],
+            "@libs/utils": ["packages/utils/src"]
         }
     },
     "exclude": ["node_modules", "dist", "build"]

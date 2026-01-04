@@ -8,9 +8,9 @@ export default defineConfig({
     resolve: {
         dedupe: ['react', 'react-dom'],
         alias: {
-            '@repo/react-shared': fileURLToPath(new URL('../../packages/react-shared/src/index.ts', import.meta.url)),
-            '@repo/utils': fileURLToPath(new URL('../../packages/utils/src/index.ts', import.meta.url)),
-            '@repo/types': fileURLToPath(new URL('../../packages/types/src/index.ts', import.meta.url)),
+            '@libs/react-shared': fileURLToPath(new URL('../../packages/react-shared/src/index.ts', import.meta.url)),
+            '@libs/utils': fileURLToPath(new URL('../../packages/utils/src/index.ts', import.meta.url)),
+            '@libs/types': fileURLToPath(new URL('../../packages/types/src/index.ts', import.meta.url)),
             '@admin': fileURLToPath(new URL('./src', import.meta.url)),
         },
     },

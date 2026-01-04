@@ -11,7 +11,7 @@ import { use<%= className %> } from '@libs/react-shared';
 import { Card, Button } from '@mui/material';
 import { CrudTable, CrudTableActions } from '../../components/crud/crud-table';
 import { toDisplayDate } from '@libs/utils';
-import { useAccess } from '../../contexts/react-access-control';
+import { useHasPermission } from '@ackplus/nest-auth-react';
 
 export interface I<%= className %>TableFilter {
     // Add custom filters here
@@ -35,13 +35,12 @@ export interface <%= className %>ListTableRef {
 const <%= className %>ListTable = forwardRef<<%= className %>ListTableRef, <%= className %>ListTableProps>(
     ({ onEdit, onAdd, onRowClick, hasSoftDelete = <%= features.softDelete ? 'true' : 'false' %> }, ref) => {
         const datatableRef = useRef<CrudTableActions>(null);
-        const { hasPermission } = useAccess();
         const [tableFilter, setTableFilter] = useState(defaultFilter);
         const [countFilter, setCountFilter] = useState({});
 
-        const canCreate = hasPermission(PermissionsEnum.CREATE_<%= fileName.toUpperCase() %>);
-        const canEdit = hasPermission(PermissionsEnum.UPDATE_<%= fileName.toUpperCase() %>);
-        const canDelete = hasPermission(PermissionsEnum.DELETE_<%= fileName.toUpperCase() %>);
+        const canCreate = useHasPermission(PermissionsEnum.CREATE_<%= fileName.toUpperCase() %>);
+        const canEdit = useHasPermission(PermissionsEnum.UPDATE_<%= fileName.toUpperCase() %>);
+        const canDelete = useHasPermission(PermissionsEnum.DELETE_<%= fileName.toUpperCase() %>);
 
         // Expose refresh method through ref
         useImperativeHandle(ref, () => ({

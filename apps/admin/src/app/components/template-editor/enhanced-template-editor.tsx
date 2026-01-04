@@ -2,8 +2,7 @@ import { Refresh } from '@mui/icons-material';
 import { Box, Typography, Alert, Divider, Stack, Switch, FormControlLabel, IconButton, Tooltip, CircularProgress, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
-
+import { Group, Panel, Separator } from "react-resizable-panels";
 import { TemplateEditorViewModes, ViewMode } from './template-editor-view-modes';
 import useDebounce from '../../hook/use-debounce';
 import MJMLSplitEditor, { MJMLSplitEditorProps } from '../email-editor/layout-editor';
@@ -22,7 +21,7 @@ export interface EnhancedTemplateEditorProps extends Omit<MJMLSplitEditorProps, 
     htmlContent?: string;
 }
 
-const ResizeHandle = styled(PanelResizeHandle)(({ theme }) => ({
+const ResizeHandle = styled(Separator)(({ theme }) => ({
     width: '8px',
     cursor: 'col-resize',
     backgroundColor: 'transparent',
@@ -269,7 +268,7 @@ export function EnhancedTemplateEditor({
                 return renderPreview();
             case 'split':
                 return (
-                    <PanelGroup direction="horizontal">
+                    <Group orientation="horizontal">
                         <Panel defaultSize={50} minSize={30}>
                             {renderEditor()}
                         </Panel>
@@ -277,7 +276,7 @@ export function EnhancedTemplateEditor({
                         <Panel defaultSize={50} minSize={30}>
                             {renderPreview()}
                         </Panel>
-                    </PanelGroup>
+                    </Group>
                 );
             default:
                 return renderEditor();

@@ -1,8 +1,6 @@
 import { Box, Button, Typography, Paper, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-
-import { useAuth } from '../../contexts/auth-context';
 import { Icon } from '../icons/icon';
 import { IconEnum } from '../icons/icons';
 

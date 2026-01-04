@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { MenuDropdown } from '../../../components/menu-dropdown/menu-drop-down';
 import UserWithAvatar from '../../../components/user/user-with-avatar';
-import { useAuth } from '../../../contexts/auth-context';
+import { useAuth } from '@libs/react-shared';
 import { useResponsive } from '../../../hook';
 import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
 

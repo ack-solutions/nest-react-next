@@ -1,18 +1,16 @@
-import { NestAuthService } from '@libs/react-shared';
 import { errorMessage } from '@libs/utils';
 import { Box } from '@mui/material';
 import { useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-
 import { useToasty } from '../../hook';
 import { PATH_AUTH } from '../../routes/paths';
 import OtpVerification from '../../sections/auth/otp-verification';
 import ResetPasswordForm from '../../sections/auth/reset-password-form';
+import { useAuth } from '@libs/react-shared';
 
-
-const nestAuthService = NestAuthService.getInstance<NestAuthService>();
 
 function ResetPassword() {
+    const { verifyForgotPasswordOtp, forgotPassword } = useAuth();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const resetToken = searchParams.get('resetToken');
@@ -20,49 +18,49 @@ function ResetPassword() {
     const { showToasty } = useToasty();
 
     const handleOTPVerify = useCallback(
-        async (value, setError) => {
-            await nestAuthService.verifyForgotPasswordOtp({
-                ...value,
-                ...(email && { email }),
-            }).then((response) => {
-                const token = response?.data?.resetToken;
+        async (value: { otp: string }, setError: any) => {
+            try {
+                const response = await verifyForgotPasswordOtp({
+                    otp: value.otp,
+                    ...(email && { email }),
+                });
+                const token = response?.resetToken || response?.token;
                 if (token) {
                     navigate(`${PATH_AUTH.resetPassword}?resetToken=${token}`);
                 } else {
                     showToasty('Token not received, please try again.', 'error');
                 }
-            }).catch((error) => {
+            } catch (error) {
                 showToasty(errorMessage(error), 'error');
                 setError('afterSubmit', {
                     type: 'manual',
                     message: errorMessage(error),
                 });
-            });
+            }
         },
-        [email, navigate, showToasty],
+        [email, navigate, showToasty, verifyForgotPasswordOtp],
     );
 
     const handleReSentOtp = useCallback(
-        (setError?: any) => {
+        async (setError?: any) => {
             if (!email) {
-                setError('afterSubmit', {
+                setError?.('afterSubmit', {
                     type: 'manual',
                     message: 'Email is required to resend OTP',
                 });
                 return;
             }
-            nestAuthService.forgotPassword({
-                email: email,
-            }).then(() => {
+            try {
+                await forgotPassword({ email });
                 showToasty('Successfully Resend OTP');
-            }).catch((error) => {
-                setError('afterSubmit', {
+            } catch (error) {
+                setError?.('afterSubmit', {
                     type: 'manual',
                     message: errorMessage(error),
                 });
-            });
+            }
         },
-        [email, showToasty],
+        [email, forgotPassword, showToasty],
     );
 
     const handleBackLogin = useCallback(

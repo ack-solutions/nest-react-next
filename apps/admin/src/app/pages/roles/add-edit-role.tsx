@@ -11,12 +11,12 @@ import { object, string } from 'yup';
 
 import { Page } from '../../components';
 import PageLoading from '../../components/loading/page-loading';
-import { withPermission } from '../../contexts/react-access-control';
 import { FormContainer, RHFTextField } from '../../form';
 import { useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import PermissionSelector from '../../sections/permission/permission-selector';
 import NotFound from '../error/not-found';
+import { withRequirePermission } from '@ackplus/nest-auth-react';
 
 
 const defaultValues: any = {
@@ -191,6 +191,6 @@ function AddEditRole() {
     );
 }
 
-export default withPermission({
-    permissions: [PermissionsEnum.CREATE_ROLES, PermissionsEnum.UPDATE_ROLES],
-})(AddEditRole);
+export default withRequirePermission(AddEditRole, {
+    permission: [PermissionsEnum.CREATE_ROLES, PermissionsEnum.UPDATE_ROLES],
+});

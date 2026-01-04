@@ -30,6 +30,7 @@ import { User } from './user.entity';
 import { UserService } from './user.service';
 import { SuccessDTO } from '../../core/dto/success.dto';
 import { RequestDataTypeInterceptor } from '../../core/interceptors/request-data-type.interceptor';
+import { RequestContext } from '../../core/request-context/request-context';
 
 
 @ApiTags('User')
@@ -65,8 +66,8 @@ export class UsersController {
             ttl: 60000,
         },
     })
-    findCurrentUser(): Promise<IUser> {
-        return this.service.findCurrentUser();
+    currentUser(): Promise<IUser | null> {
+        return RequestContext.currentUser();
     }
 
     @HttpCode(HttpStatus.ACCEPTED)

@@ -1,8 +1,8 @@
-import { UploadedFile } from '@libs/utils';
 import axios from 'axios';
 import moment from 'moment';
 
 import { config } from './config';
+import { UploadedFile } from '@libs/utils';
 
 
 const instance = axios.create();
@@ -72,9 +72,66 @@ function convertMomentToISO(obj: any): any {
 
     return obj;
 }
+const isBrowser = typeof window !== 'undefined';
+const getApiBaseUrl = () => {
+    let url = '';
+    const publicApiUrl = config.apiUrl;
+
+    if (isBrowser && publicApiUrl) {
+        url = publicApiUrl;
+    } else if (!isBrowser) {
+        // Safe access to process.env for server-side (Node.js)
+        const serverApiUrl = typeof process !== 'undefined' ? process.env['SERVER_APP_API_URL'] : undefined;
+        if (serverApiUrl) {
+            url = serverApiUrl;
+        }
+    }
+
+    if (!url && config.apiUrl) {
+        url = config.apiUrl;
+    }
+
+    if (!url) {
+        url = isBrowser ? 'http://localhost:3333' : 'http://api:3333';
+        console.warn('[axios] API base URL is not set, using default:', url);
+    }
+
+    // Ensure URL ends with /api/
+    if (url.endsWith('/api/')) return url;
+    if (url.endsWith('/api')) return url + '/';
+    return url + '/api/';
+};
+
+// Helper function to get token from localStorage
+const getTokenFromStorage = (): string | null => {
+    if (!isBrowser) return null;
+
+    try {
+        // Check for nest auth token first (newer format)
+        const nestAuthToken = localStorage.getItem('nest_auth_access_token');
+        if (nestAuthToken) return nestAuthToken;
+
+        return null;
+    } catch (error) {
+        return null;
+    }
+};
 
 // Axios request interceptor
-axiosInstance.interceptors.request.use(config => {
+axiosInstance.interceptors.request.use((config: any) => {
+    // Dynamic base URL selection (from your existing code)
+    config.baseURL = getApiBaseUrl();
+
+    if (isBrowser) {
+        const token = getTokenFromStorage();
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        } else {
+            delete config.headers.Authorization;
+        }
+    } else {
+    }
+
     if (config.params) {
         config.params = convertMomentToISO(config.params);
     }

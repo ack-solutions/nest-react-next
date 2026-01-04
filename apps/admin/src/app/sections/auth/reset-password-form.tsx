@@ -1,5 +1,4 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { NestAuthService } from '@libs/react-shared';
 import { errorMessage, patterns } from '@libs/utils';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { useCallback } from 'react';
@@ -7,17 +6,15 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { object, ref, string } from 'yup';
 
+import { useAuth } from '@libs/react-shared';
 import { FormContainer, RHFPassword } from '../../form';
 import { useToasty } from '../../hook';
 import { PATH_AUTH } from '../../routes/paths';
-import OtpVerification from './otp-verification';
 
 
 export interface ResetPasswordFormProps {
     token: string;
 }
-
-const nestAuthService = NestAuthService.getInstance<NestAuthService>();
 
 const validationSchema = object().shape({
     password: string()
@@ -32,6 +29,7 @@ const validationSchema = object().shape({
 });
 
 function ResetPasswordForm({ token }: ResetPasswordFormProps) {
+    const { resetPassword } = useAuth();
     const { showToasty } = useToasty();
     const navigate = useNavigate();
 
@@ -42,26 +40,23 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     const { formState: { isSubmitting } } = formContext;
 
     const handleSubmitForm = useCallback(
-        async (value) => {
+        async (value: { password: string; confirmPassword: string }) => {
             if (!token) {
                 showToasty('Something went wrong, please try again later.', 'error');
                 return;
             }
-            await nestAuthService.resetPasswordWithToken({
-                token: token,
-                newPassword: value.password,
-            }).then(() => {
+            try {
+                await resetPassword({
+                    token: token,
+                    newPassword: value.password,
+                });
                 showToasty('Your password has been updated successfully.');
                 navigate(PATH_AUTH.login);
-            }).catch((error) => {
+            } catch (error) {
                 showToasty(errorMessage(error), 'error');
-            });
+            }
         },
-        [
-            token,
-            navigate,
-            showToasty,
-        ],
+        [token, navigate, showToasty, resetPassword],
     );
 
     return (

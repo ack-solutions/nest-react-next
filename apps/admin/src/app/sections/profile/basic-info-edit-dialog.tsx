@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { object, string } from 'yup';
 
 import { DefaultDialog } from '../../components';
-import { useAuth } from '../../contexts/auth-context';
+import { useAuth } from '@libs/react-shared';
 import { FormContainer, RHFTextField, RHFUploadAvatar } from '../../form';
 import { useToasty } from '../../hook';
 
@@ -31,7 +31,7 @@ export default function BasicInfoEditDialog({ open, onClose, user }: BasicInfoEd
     const { showToasty } = useToasty();
     const { useUpdateProfile } = useUser();
     const { mutateAsync: updateProfile } = useUpdateProfile();
-    const { reFetchCurrentUser } = useAuth();
+    const { refetchUser } = useAuth();
 
     const formContext = useForm({
         resolver: validationSchema,
@@ -55,7 +55,7 @@ export default function BasicInfoEditDialog({ open, onClose, user }: BasicInfoEd
                 updateProfile(request)
                     .then(() => {
                         showToasty('User profile successfully updated');
-                        reFetchCurrentUser();
+                        refetchUser();
                         onClose();
                     })
                     .catch((error) => {
@@ -66,7 +66,7 @@ export default function BasicInfoEditDialog({ open, onClose, user }: BasicInfoEd
             }
         },
         [
-            reFetchCurrentUser,
+            refetchUser,
             showToasty,
             updateProfile,
             onClose,

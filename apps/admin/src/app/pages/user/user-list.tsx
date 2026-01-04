@@ -1,6 +1,6 @@
 import { WhereOperatorEnum } from '@ackplus/nest-crud-request';
 import { QueryBuilder } from '@ackplus/nest-crud-request';
-import { useUser } from '@libs/react-shared';
+import { useAuth, useUser } from '@libs/react-shared';
 import { IUser, PermissionsEnum, RoleNameEnum, UserStatusEnum } from '@libs/types';
 import { toDisplayDate, toDisplayPhone } from '@libs/utils';
 import { Button, Card } from '@mui/material';
@@ -15,7 +15,7 @@ import { IconEnum } from '../../components/icons/icons';
 import UserStatusDropdown from '../../components/user/user-status-dropdown';
 import UserStatusLabel from '../../components/user/user-status-label';
 import UserWithAvatar from '../../components/user/user-with-avatar';
-import { useAccess, useAuth, withPermission } from '../../contexts';
+import { useHasPermission, withRequirePermission } from '@ackplus/nest-auth-react';
 import { useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import ResetPasswordDialog from '../../sections/user/reset-password-dialog';
@@ -34,7 +34,6 @@ const defaultFilter: IUserTableFilter = {
 function UsersList() {
     const { currentUser } = useAuth();
     const { showToasty } = useToasty();
-    const { hasPermission } = useAccess();
     const navigate = useNavigate();
     const datatableRef = useRef<CrudTableActions>(null);
     const [tableFilter, setTableFilter] = useState(defaultFilter);
@@ -42,10 +41,10 @@ function UsersList() {
     const [resetPasswordUser, setResetPasswordUser] = useState<IUser | null>(null);
 
     // Permission checks
-    const canCreate = hasPermission(PermissionsEnum.CREATE_USERS);
-    const canUpdate = hasPermission(PermissionsEnum.UPDATE_USERS);
-    const canDelete = hasPermission(PermissionsEnum.DELETE_USERS);
-    const canResetPassword = hasPermission(PermissionsEnum.RESET_PASSWORD_USERS);
+    const canCreate = useHasPermission(PermissionsEnum.CREATE_USERS);
+    const canUpdate = useHasPermission(PermissionsEnum.UPDATE_USERS);
+    const canDelete = useHasPermission(PermissionsEnum.DELETE_USERS);
+    const canResetPassword = useHasPermission(PermissionsEnum.RESET_PASSWORD_USERS);
 
     const {
         useGetManyUser,
@@ -346,6 +345,6 @@ function UsersList() {
     );
 }
 
-export default withPermission({
-    permissions: [PermissionsEnum.ACCESS_USERS],
-})(UsersList);
+export default withRequirePermission(UsersList, {
+    permission: PermissionsEnum.ACCESS_USERS,
+});

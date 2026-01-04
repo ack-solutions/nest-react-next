@@ -1,59 +1,69 @@
-import { RoleNameEnum } from '@libs/types';
+import { PermissionsEnum, RoleNameEnum } from '@libs/types';
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { NAVIGATION_ITEMS, NavigationGroup, NavigationItem } from './navigation-config';
-import { useAccess } from '../../../contexts';
+import { hasPermission } from '@ackplus/nest-auth-client';
+import { useHasPermission, useHasRole } from '@ackplus/nest-auth-react';
 
 
 export function useNavigation() {
-    const { hasAnyPermission, hasAnyRole, hasRole } = useAccess();
     const { pathname } = useLocation();
 
     // Filter items based on permissions and roles
     const visibleItems = useMemo(() => {
-        return NAVIGATION_ITEMS.filter((item) => {
-            // Super Admin has access to everything
-            const isSuperAdmin = hasRole([RoleNameEnum.SUPER_ADMIN]);
-            if (isSuperAdmin) {
-                return true;
-            }
+        return NAVIGATION_ITEMS
+        // .filter((item) => {
+        //     // Super Admin has access to everything
+        //     const isSuperAdmin = useHasRole([RoleNameEnum.SUPER_ADMIN]);
+        //     if (isSuperAdmin) {
+        //         return true;
+        //     }
 
-            // If no permissions or roles are specified, item is visible
-            if (!item.permissions?.length && !item.roles?.length) {
-                return true;
-            }
+        //     // If no permissions or roles are specified, item is visible
+        //     if (!item.permissions?.length && !item.roles?.length) {
+        //         return true;
+        //     }
 
-            // Check permissions and roles
-            const hasPermission = item.permissions?.length
-                ? hasAnyPermission(item.permissions)
-                : true;
-            const hasRequiredRole = item.roles?.length
-                ? hasAnyRole(item.roles)
-                : true;
+        //     // Check permissions and roles
+        //     const hasPermission = item.permissions?.length
+        //         ? useHasPermission(item.permissions)
+        //         : true;
+        //     const hasRequiredRole = item.roles?.length
+        //         ? useHasRole(item.roles)
+        //         : true;
 
-            return hasPermission || hasRequiredRole;
-        });
-    }, [
-        hasAnyPermission,
-        hasAnyRole,
-        hasRole,
-    ]);
+        //     return hasPermission || hasRequiredRole;
+        // });
+    }, []);
 
     // Group items by their group property
     const groupedNavigation = useMemo(() => {
-        const groups: Record<string, NavigationItem[]> = {};
+        const groups: Record<string, { permissions: PermissionsEnum[], roles: RoleNameEnum[], items: NavigationItem[] }> = {};
 
         visibleItems.forEach((item) => {
             if (!groups[item.group]) {
-                groups[item.group] = [];
+                groups[item.group] = { permissions: [], items: [], roles: [] };
             }
-            groups[item.group].push(item);
+            groups[item.group].items.push(item);
+            // Aggregate permissions and roles from all items in the group
+            if (Array.isArray(item.permissions)) {
+                groups[item.group].permissions = [
+                    ...new Set([...groups[item.group].permissions, ...item.permissions])
+                ];
+            }
+            if (Array.isArray(item.roles)) {
+                groups[item.group].roles = [
+                    ...new Set([...groups[item.group].roles, ...item.roles])
+                ];
+            }
         });
 
-        return Object.entries(groups).map(([label, items]): NavigationGroup => ({
+        return Object.entries(groups).map(([label, data]): NavigationGroup => ({
             label,
-            items,
+            items: data.items,
+            permissions: data.permissions,
+            roles: data.roles,
         }));
     }, [visibleItems]);
 

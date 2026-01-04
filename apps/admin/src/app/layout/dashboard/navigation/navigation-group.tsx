@@ -6,6 +6,7 @@ import {
 
 import { NavigationGroup } from './navigation-config';
 import NavigationItemComponent from './navigation-item';
+import { RequirePermission, RequireRole } from '@ackplus/nest-auth-react';
 
 
 interface NavigationGroupProps {
@@ -49,36 +50,46 @@ export default function NavigationGroupComponent({
         return (
             <>
                 {group.items.map((item) => (
-                    <NavigationItemComponent
-                        key={item.id}
-                        item={item}
-                        isActive={isItemActive(item)}
-                        isCompact={isCompact}
-                        onClose={onClose}
-                        isItemActive={isItemActive}
-                    />
+                    <RequireRole key={item.id} role={item.roles}>
+                        <RequirePermission permission={item.permissions}>
+                            <NavigationItemComponent
+                                item={item}
+                                isActive={isItemActive(item)}
+                                isCompact={isCompact}
+                                onClose={onClose}
+                                isItemActive={isItemActive}
+                            />
+                        </RequirePermission>
+                    </RequireRole>
                 ))}
             </>
         );
     }
 
     return (
-        <StyledList disablePadding>
-            {showHeader && (
-                <StyledListSubheader disableGutters disableSticky>
-                    {group.label.toUpperCase()}
-                </StyledListSubheader>
-            )}
-            {group.items.map((item) => (
-                <NavigationItemComponent
-                    key={item.id}
-                    item={item}
-                    isActive={isItemActive(item)}
-                    isCompact={isCompact}
-                    onClose={onClose}
-                    isItemActive={isItemActive}
-                />
-            ))}
-        </StyledList>
+        <RequireRole role={group.roles}>
+            <RequirePermission permission={group.permissions}>
+                <StyledList disablePadding>
+                    {showHeader && (
+                        <StyledListSubheader disableGutters disableSticky>
+                            {group.label.toUpperCase()}
+                        </StyledListSubheader>
+                    )}
+                    {group.items.map((item) => (
+                        <RequireRole key={item.id} role={item.roles}>
+                            <RequirePermission permission={item.permissions}>
+                                <NavigationItemComponent
+                                    item={item}
+                                    isActive={isItemActive(item)}
+                                    isCompact={isCompact}
+                                    onClose={onClose}
+                                    isItemActive={isItemActive}
+                                />
+                            </RequirePermission>
+                        </RequireRole>
+                    ))}
+                </StyledList>
+            </RequirePermission>
+        </RequireRole>
     );
 }

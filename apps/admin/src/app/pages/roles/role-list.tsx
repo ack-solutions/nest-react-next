@@ -13,10 +13,10 @@ import {
     Page,
     TableActionMenu,
 } from '../../components';
-import { useAccess, withPermission } from '../../contexts';
 import { useConfirm } from '../../contexts/confirm-dialog-context';
 import { useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
+import { useHasPermission, withRequirePermission } from '@ackplus/nest-auth-react';
 
 
 function RoleList() {
@@ -24,9 +24,12 @@ function RoleList() {
     const navigate = useNavigate();
     const confirmDialog = useConfirm();
     const { showToasty } = useToasty();
-    const { hasPermission } = useAccess();
 
-    const canCreate = hasPermission(PermissionsEnum.CREATE_ROLES);
+    const canCreate = useHasPermission(PermissionsEnum.CREATE_ROLES);
+    const canEdit = useHasPermission(PermissionsEnum.UPDATE_ROLES);
+    const canDelete = useHasPermission(PermissionsEnum.DELETE_ROLES);
+
+    console.log(canCreate, canEdit, canDelete);
     const {
         useGetRoleByGuard,
         useDeleteRole,
@@ -78,10 +81,8 @@ function RoleList() {
             render: (row: IRole) => (
                 <TableActionMenu
                     row={row}
-                    {...!row?.isSystem ? {
-                        ...(hasPermission(PermissionsEnum.UPDATE_ROLES) && { onEdit: () => navigate(PATH_DASHBOARD.users.roles.edit(row.id)) }),
-                        ...(hasPermission(PermissionsEnum.DELETE_ROLES) && { onDelete: handleDelete(row) }),
-                    } : {}}
+                    onEdit={!row?.isSystem && canEdit ? () => navigate(PATH_DASHBOARD.users.roles.edit(row.id)) : undefined}
+                    onDelete={!row?.isSystem && canDelete ? handleDelete(row) : undefined}
                 />
             ),
         },
@@ -128,6 +129,6 @@ function RoleList() {
     );
 }
 
-export default withPermission({
-    permissions: [PermissionsEnum.ACCESS_ROLES],
-})(RoleList);
+export default withRequirePermission(RoleList, {
+    permission: PermissionsEnum.ACCESS_ROLES,
+});

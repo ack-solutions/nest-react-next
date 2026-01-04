@@ -7,7 +7,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Page, Icon } from '../../components';
 import { IconEnum } from '../../components/icons/icons';
 import PageLoading from '../../components/loading/page-loading';
-import { withPermission } from '../../contexts/react-access-control';
+import { withRequirePermission } from '@ackplus/nest-auth-react';
 import { useTabs, useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import AddEditUserForm from '../../sections/user/add-edit-user-form';
@@ -124,6 +124,6 @@ function EditUser() {
     );
 }
 
-export default withPermission({
-    permissions: [PermissionsEnum.UPDATE_USERS],
-})(EditUser);
+export default withRequirePermission(EditUser, {
+    permission: PermissionsEnum.UPDATE_USERS,
+});

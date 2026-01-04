@@ -16,10 +16,10 @@ import {
     StatusChip,
     getStatusConfig,
 } from '../../components';
-import { useAccess, withPermission } from '../../contexts/react-access-control';
 import { useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import AddEditPageDialog from '../../sections/pages/add-edit-page-dialog';
+import { useHasPermission, withRequirePermission } from '@ackplus/nest-auth-react';
 
 
 export interface IPageTableFilter {
@@ -33,15 +33,14 @@ const defaultFilter: IPageTableFilter = {
 function PageList() {
     const datatableRef = useRef<CrudTableActions>(null);
     const { showToasty } = useToasty();
-    const { hasPermission } = useAccess();
     const [selectedPage, setSelectedPage] = useState<IPage | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [tableFilter, setTableFilter] = useState(defaultFilter);
     const [countFilter, setCountFilter] = useState({});
 
-    const canCreate = hasPermission(PermissionsEnum.CREATE_PAGES);
-    const canEdit = hasPermission(PermissionsEnum.UPDATE_PAGES);
-    const canDelete = hasPermission(PermissionsEnum.DELETE_PAGES);
+    const canCreate = useHasPermission(PermissionsEnum.CREATE_PAGES);
+    const canEdit = useHasPermission(PermissionsEnum.UPDATE_PAGES);
+    const canDelete = useHasPermission(PermissionsEnum.DELETE_PAGES);
 
     const {
         useGetManyPage,
@@ -243,6 +242,6 @@ function PageList() {
     );
 }
 
-export default withPermission({
-    permissions: [PermissionsEnum.ACCESS_PAGES],
-})(PageList);
+export default withRequirePermission(PageList, {
+    permission: PermissionsEnum.ACCESS_PAGES,
+});

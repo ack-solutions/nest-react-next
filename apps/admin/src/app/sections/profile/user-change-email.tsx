@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useUser } from '@libs/react-shared';
+import { useAuth, useUser } from '@libs/react-shared';
 import {
     Box,
     Stack,
@@ -11,14 +11,13 @@ import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { object } from 'yup';
 
-import { useAuth } from '../../contexts';
 import { FormContainer, RHFTextField } from '../../form';
 import { schemaHelper } from '../../form/hook-form-fields/schema-helper';
 import { useToasty } from '../../hook';
 
 
 function UserChangeEmail() {
-    const { currentUser, reFetchCurrentUser } = useAuth();
+    const { currentUser, refetchUser } = useAuth();
     const { useChangeEmail } = useUser();
     const { mutateAsync: changeEmail } = useChangeEmail();
     const { showToasty } = useToasty();
@@ -41,7 +40,7 @@ function UserChangeEmail() {
         (values) => {
             changeEmail({ email: values.email })
                 .then(() => {
-                    reFetchCurrentUser();
+                    refetchUser();
                     showToasty('Email Changed successfully');
                 })
                 .catch((error) => {
@@ -50,7 +49,7 @@ function UserChangeEmail() {
         },
         [
             changeEmail,
-            reFetchCurrentUser,
+            refetchUser,
             showToasty,
         ],
     );

@@ -20,6 +20,7 @@ import { Link } from 'react-router-dom';
 import { NavigationItem } from './navigation-config';
 import { Icon } from '../../../components/icons/icon';
 import { IconEnum } from '../../../components/icons/icons';
+import { RequirePermission } from '@ackplus/nest-auth-react';
 
 
 interface NavigationItemProps {
@@ -213,16 +214,18 @@ export default function NavigationItemComponent({
     return (
         <>
             {hasPath ? (
-                <Link
-                    to={item.path!}
-                    style={{
-                        textDecoration: 'none',
-                        color: 'inherit',
-                    }}
-                    onClick={handleClick}
-                >
-                    {renderContent()}
-                </Link>
+                <RequirePermission permission={item.permissions}>
+                    <Link
+                        to={item.path!}
+                        style={{
+                            textDecoration: 'none',
+                            color: 'inherit',
+                        }}
+                        onClick={handleClick}
+                    >
+                        {renderContent()}
+                    </Link>
+                </RequirePermission>
             ) : (
                 renderContent()
             )}
@@ -239,15 +242,16 @@ export default function NavigationItemComponent({
                             const childIsActive = isItemActive ? isItemActive(childItem) : false;
 
                             return (
-                                <NavigationItemComponent
-                                    key={child.id}
-                                    item={childItem}
-                                    isActive={childIsActive}
-                                    isCompact={isCompact}
-                                    onClose={onClose}
-                                    isItemActive={isItemActive}
-                                    depth={depth + 1}
-                                />
+                                <RequirePermission key={child.id} permission={child.permissions}>
+                                    <NavigationItemComponent
+                                        item={childItem}
+                                        isActive={childIsActive}
+                                        isCompact={isCompact}
+                                        onClose={onClose}
+                                        isItemActive={isItemActive}
+                                        depth={depth + 1}
+                                    />
+                                </RequirePermission>
                             );
                         })}
                     </List>
@@ -301,26 +305,27 @@ export default function NavigationItemComponent({
                                 const childIsActive = isItemActive ? isItemActive(childItem) : false;
 
                                 return (
-                                    <MenuItem
-                                        key={child.id}
-                                        component={Link}
-                                        to={child.path!}
-                                        onClick={handleChildClick}
-                                        sx={{
-                                            color: childIsActive ? 'primary.main' : 'text.primary',
-                                            fontWeight: childIsActive ? 600 : 400,
-                                            backgroundColor: childIsActive ? alpha(theme.palette.primary.main, 0.08) : 'transparent',
-                                            '&:hover': {
-                                                backgroundColor: childIsActive
-                                                    ? alpha(theme.palette.primary.main, 0.12)
-                                                    : alpha(theme.palette.action.hover, 0.04),
-                                            },
-                                        }}
-                                    >
-                                        <Typography variant="body2">
-                                            {child.title}
-                                        </Typography>
-                                    </MenuItem>
+                                    <RequirePermission key={child.id} permission={child.permissions}>
+                                        <MenuItem
+                                            component={Link}
+                                            to={child.path!}
+                                            onClick={handleChildClick}
+                                            sx={{
+                                                color: childIsActive ? 'primary.main' : 'text.primary',
+                                                fontWeight: childIsActive ? 600 : 400,
+                                                backgroundColor: childIsActive ? alpha(theme.palette.primary.main, 0.08) : 'transparent',
+                                                '&:hover': {
+                                                    backgroundColor: childIsActive
+                                                        ? alpha(theme.palette.primary.main, 0.12)
+                                                        : alpha(theme.palette.action.hover, 0.04),
+                                                },
+                                            }}
+                                        >
+                                            <Typography variant="body2">
+                                                {child.title}
+                                            </Typography>
+                                        </MenuItem>
+                                    </RequirePermission>
                                 );
                             })}
                         </MenuList>

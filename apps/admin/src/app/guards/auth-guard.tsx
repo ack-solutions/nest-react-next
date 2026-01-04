@@ -1,28 +1,37 @@
-import { useState, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
 import Error500 from '../components/error/error-500';
 import { Maintenance } from '../components/error/maintenance';
-import { useAuth } from '../contexts/auth-context';
+import { useAuth } from '@libs/react-shared';
 import { PATH_AUTH, PATH_DASHBOARD } from '../routes/paths';
 
+const REDIRECT_STORAGE_KEY = 'auth_redirect_path';
+
+const saveRedirectPath = (path: string) => {
+    try {
+        localStorage.setItem(REDIRECT_STORAGE_KEY, path);
+    } catch (error) {
+        console.error('Failed to save redirect path:', error);
+    }
+};
 
 type AuthGuardProps = {
     children: ReactNode;
 };
 
 export default function AuthGuard({ children }: AuthGuardProps) {
-    const { isAuthenticated, currentUser, authErrorStatus } = useAuth();
-    const { pathname } = useLocation();
-    const [requestedLocation, setRequestedLocation] = useState<string | null>(
-        null,
-    );
+    const { isLoading, isAuthenticated, currentUser, authErrorStatus } = useAuth();
+    const { pathname, search } = useLocation();
 
+    if (isLoading) {
+        return null;
+    }
     if (!isAuthenticated) {
-        if (pathname !== requestedLocation) {
-            setRequestedLocation(pathname);
-        }
-        return <Navigate to={PATH_AUTH.login} />;
+        // Store the requested location in localStorage so it persists across navigation
+        const redirectPath = pathname + search;
+        saveRedirectPath(redirectPath);
+        return <Navigate to={PATH_AUTH.login} replace />;
     }
 
     if (authErrorStatus === 500) {
@@ -34,12 +43,8 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     }
 
     if (currentUser) {
-        if (requestedLocation && pathname !== requestedLocation) {
-            setRequestedLocation(null);
-            return <Navigate to={requestedLocation} />;
-        }
         if (pathname === PATH_AUTH.onboarding) {
-            return <Navigate to={PATH_DASHBOARD.root} />;
+            return <Navigate to={PATH_DASHBOARD.root} replace />;
         }
     }
 

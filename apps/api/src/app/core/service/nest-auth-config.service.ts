@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestAuthUser, IAuthModuleOptions, IAuthModuleOptionsFactory } from '@ackplus/nest-auth';
+import { NestAuthUser, IAuthModuleOptions, IAuthModuleOptionsFactory, NestAuthMFAMethodEnum } from '@ackplus/nest-auth';
 import { IAppConfig } from "../../config/app";
 import { DebugLogLevel } from '@ackplus/nest-auth';
 import { RoleGuardEnum, RoleNameEnum } from '@libs/types';
@@ -104,7 +104,7 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
             mfa: {
                 enabled: this.configService.get('nest_auth.mfaEnabled'),
                 required: false,
-                methods: ['email', 'sms', 'totp'] as any,
+                methods: [NestAuthMFAMethodEnum.EMAIL, NestAuthMFAMethodEnum.SMS, NestAuthMFAMethodEnum.TOTP],
                 otpLength: 4,
                 otpExpiresIn: '15m',
                 defaultOtp: this.configService.get('env') !== 'prod' ? '1234' : undefined,

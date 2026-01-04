@@ -24,10 +24,8 @@
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-react-hooks": "^7.0.1",
-        "nx": "20.3.0",
         "prettier": "^2.6.2",
         "ts-loader": "^9.5.4",
-        "turbo": "^2.6.3",
         "typescript": "5.9.3"
     }
 }

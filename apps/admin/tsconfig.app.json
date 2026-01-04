@@ -7,9 +7,9 @@
         "types": ["vite/client"],
         "paths": {
             "@admin/*": ["apps/admin/src/*"],
-            "@repo/types": ["packages/types/src"],
-            "@repo/utils": ["packages/utils/src"],
-            "@repo/react-shared": ["packages/react-shared/src"]
+            "@libs/types": ["packages/types/src"],
+            "@libs/utils": ["packages/utils/src"],
+            "@libs/react-shared": ["packages/react-shared/src"]
         }
     },
     "exclude": [

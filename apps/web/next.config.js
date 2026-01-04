@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    transpilePackages: ['@repo/react-shared', '@repo/common', '@repo/utils', '@repo/types'],
+    transpilePackages: ['@libs/react-shared', '@libs/utils', '@libs/types'],
     typescript: {
         ignoreBuildErrors: true,
     },

@@ -1,5 +1,4 @@
 import { Page } from '@admin/app/components/page';
-import { useAccess, withPermission } from '@admin/app/contexts';
 import { useBoolean, useToasty } from '@admin/app/hook';
 import { useTemplateLayout } from '@libs/react-shared';
 import { ITemplateLayout, PermissionsEnum } from '@libs/types';
@@ -13,6 +12,7 @@ import { StatusChip, getStatusConfig } from '../../components';
 import { DataTable, TableActionMenu } from '../../components/data-table';
 import { useConfirm } from '../../contexts/confirm-dialog-context';
 import { PATH_DASHBOARD } from '../../routes/paths';
+import { useHasPermission, withRequirePermission } from '@ackplus/nest-auth-react';
 
 
 function TemplateLayoutList() {
@@ -23,13 +23,10 @@ function TemplateLayoutList() {
     const { mutateAsync: deleteTemplateLayout } = useDeleteTemplateLayout();
     const datatableRef = useRef<any>(null);
     const isDialogOpen = useBoolean();
-    const { hasPermission } = useAccess();
-    const { data, isLoading } = useGetTemplateLayout({});
 
-    // Permission checks
-    const canCreate = hasPermission(PermissionsEnum.CREATE_TEMPLATE_LAYOUTS);
-    const canUpdate = hasPermission(PermissionsEnum.UPDATE_TEMPLATE_LAYOUTS);
-    const canDelete = hasPermission(PermissionsEnum.DELETE_TEMPLATE_LAYOUTS);
+    const canCreate = useHasPermission(PermissionsEnum.CREATE_TEMPLATE_LAYOUTS);
+    const canUpdate = useHasPermission(PermissionsEnum.UPDATE_TEMPLATE_LAYOUTS);
+    const canDelete = useHasPermission(PermissionsEnum.DELETE_TEMPLATE_LAYOUTS);
 
     const handleEditTemplateLayout = (templateLayout: ITemplateLayout) => {
         navigate(PATH_DASHBOARD.templateLayouts.edit(templateLayout.id));
@@ -149,6 +146,6 @@ function TemplateLayoutList() {
     );
 }
 
-export default withPermission({
-    permissions: [PermissionsEnum.ACCESS_TEMPLATE_LAYOUTS],
-})(TemplateLayoutList);
+export default withRequirePermission(TemplateLayoutList, {
+    permission: PermissionsEnum.ACCESS_TEMPLATE_LAYOUTS,
+});

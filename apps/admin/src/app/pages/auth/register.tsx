@@ -1,40 +1,37 @@
-import { NestAuthService } from '@libs/react-shared';
 import { errorMessage } from '@libs/utils';
 import { Box, Link, Stack, Typography } from '@mui/material';
 import { useCallback } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { useAuth } from '../../contexts';
 import { PATH_AUTH } from '../../routes/paths';
 import RegisterForm from '../../sections/auth/register-form';
+import { useAuth } from '@libs/react-shared';
 
-
-const nestAuthService = NestAuthService.getInstance<NestAuthService>();
 
 function Register() {
-    const { login } = useAuth();
+    const { signup } = useAuth();
 
     const handleRegister = useCallback(
         async (values: any, setError: any) => {
-            const request = {
-                ...values,
-            };
-            await nestAuthService.register(request).then((data) => {
-                login(data?.accessToken, data?.user);
-                // setVerifyData(null);
-            }).catch((error) => {
+            try {
+                await signup({
+                    email: values.email,
+                    password: values.password,
+                    ...values,
+                });
+                // Success - the auth context handles the authenticated state
+            } catch (error) {
                 setError('afterSubmit', {
                     type: 'manual',
                     message: errorMessage(error),
                 });
-            });
+            }
         },
-        [login],
+        [signup],
     );
 
     return (
         <Box>
-            {/* {!verifyData ? ( */}
             <Typography
                 variant="h4"
                 gutterBottom

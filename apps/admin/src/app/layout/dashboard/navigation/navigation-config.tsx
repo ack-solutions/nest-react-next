@@ -25,6 +25,8 @@ export type NavigationItemChildItem = Omit<NavigationItem, 'icon' | 'group'> & {
 export interface NavigationGroup {
     label: string;
     items: NavigationItem[];
+    permissions: PermissionsEnum[];
+    roles: RoleNameEnum[];
 }
 
 // Navigation items configuration

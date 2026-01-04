@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useUser } from '@libs/react-shared';
+import { useAuth, useUser } from '@libs/react-shared';
 import {
     Box,
     Stack,
@@ -11,14 +11,13 @@ import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { object } from 'yup';
 
-import { useAuth } from '../../contexts';
 import { FormContainer, RHFPhoneNumber } from '../../form';
 import { schemaHelper } from '../../form/hook-form-fields/schema-helper';
 import { useToasty } from '../../hook';
 
 
 function UserChangePhone() {
-    const { currentUser, reFetchCurrentUser } = useAuth();
+    const { currentUser, refetchUser } = useAuth();
     const { useChangePhone } = useUser();
     const { mutateAsync: changePhone } = useChangePhone();
     const { showToasty } = useToasty();
@@ -48,7 +47,7 @@ function UserChangePhone() {
                 ...values,
             })
                 .then(() => {
-                    reFetchCurrentUser();
+                    refetchUser();
                     showToasty('Phone Number Changed successfully');
                 })
                 .catch((error) => {
@@ -57,7 +56,7 @@ function UserChangePhone() {
         },
         [
             changePhone,
-            reFetchCurrentUser,
+            refetchUser,
             showToasty,
         ],
     );
