@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { IAppConfig } from '../config/app';
-import { Seeder } from '../libs/nest-seeder';
+import { Seeder } from '@ackplus/nest-seeder';
 
 
 @Injectable()
@@ -17,15 +17,6 @@ export class RoleSeeder implements Seeder {
     ) { }
 
     async seed() {
-        const defaultTenantName = this.configService.get<IAppConfig>('app').defaultTenantName;
-
-        const tenant = await this.tenantService.getTenantByDomain(defaultTenantName);
-
-        if (!tenant) {
-            throw new Error('Tenant not found');
-        }
-
-
         const adminPermissions = [
             // Users
             PermissionsEnum.ACCESS_USERS,
@@ -85,7 +76,7 @@ export class RoleSeeder implements Seeder {
 
         for (const role of organizationRoles) {
             try {
-                await this.nestAuthRoleService.createRole(role.name, role.guardName, tenant.id, role.isSystemRole, role.permissions);
+                await this.nestAuthRoleService.createRole(role.name, role.guardName, null, role.isSystemRole, role.permissions);
             } catch (_error) {
                 // do nothing
             }
@@ -96,7 +87,7 @@ export class RoleSeeder implements Seeder {
         const roles = await this.nestAuthRoleService.getRoles();
         for (const role of roles) {
             if (role.isSystem) {
-                await this.nestAuthRoleService.deleteSystemRole(role.id);
+                // await this.nestAuthRoleService.deleteSystemRole(role.id);
             } else {
                 await this.nestAuthRoleService.deleteRole(role.id);
             }

@@ -1,11 +1,11 @@
 import { NestAuthAuthGuard } from '@ackplus/nest-auth';
-import { RenderContentTemplateLayoutDto } from '@ackplus/nest-dynamic-templates/src/lib/dto/render-content-template-layout.dto';
-import { NestDynamicTemplateLayout } from '@ackplus/nest-dynamic-templates/src/lib/entities/template-layout.entity';
+import { RenderContentTemplateLayoutDto } from '@ackplus/nest-dynamic-templates';
+import { NestDynamicTemplateLayout } from '@ackplus/nest-dynamic-templates';
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 
-import { CreateTemplateLayoutDto } from './dto/create-template-layout.dto ';
+import { CreateTemplateLayoutDto } from './dto/create-template-layout.dto';
 import { UpdateTemplateLayoutDto } from './dto/update-template-layout.dto';
 import { TemplateLayoutService } from './template-layout.service';
 import { SuccessDTO } from '../../core/dto/success.dto';

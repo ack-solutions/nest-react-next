@@ -1,15 +1,18 @@
-import { BadGatewayException, Injectable } from '@nestjs/common';
+import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import * as nunjucks from 'nunjucks';
+import { TemplateService as NestTemplateService, RenderTemplateOutputDTO } from '@ackplus/nest-dynamic-templates';
 
 
 @Injectable()
 export class EmailNotificationService {
+    private readonly logger = new Logger(EmailNotificationService.name);
 
     public constructor(
         private readonly configService: ConfigService,
         private readonly mailerService: MailerService,
+        private readonly nestTemplateService: NestTemplateService,
 
     ) { }
 
@@ -52,36 +55,15 @@ export class EmailNotificationService {
     }
 
 
-    getTemplate(slug, data = {}): Promise<any> {
-        return new Promise((resolve, reject) => {
-            // TODO: Implement EmailTemplate functionality
-            reject('Email template functionality not implemented');
-            // if (slug) {
-            //     const dataSource = getDataSource();
-            //     const query = dataSource.getRepository(EmailTemplate).createQueryBuilder('emailTemplate');
-            //     query.where({
-            //         slug: slug,
-            //     });
-            //     query.getOne().then((template: EmailTemplate) => {
-            //         if (template) {
-            //             const replaceData = this.getReplaceData(data);
-            //             nunjucks.configure({ autoescape: false });
-            //             const subject = nunjucks.renderString(template?.emailSubject, replaceData);
-            //             nunjucks.configure({ autoescape: false });
-            //             const body = nunjucks.renderString(template?.emailBody, replaceData);
-            //             resolve({
-            //                 subject,
-            //                 body,
-            //             });
-            //         } else {
-            //             reject('Template not found');
-            //         }
-            //     }).catch(() => {
-            //         reject('Template not found');
-            //     });
-            // } else {
-            //     reject('Slug not found');
-            // }
+    async getTemplate(slug, data = {}): Promise<RenderTemplateOutputDTO> {
+        const globalValues = {
+            now: new Date(),
+            curruntYear: new Date().getFullYear()
+        }
+
+        return this.nestTemplateService.render({
+            name: slug,
+            context: { ...(data || {}), ...globalValues },
         });
     }
 
@@ -90,8 +72,8 @@ export class EmailNotificationService {
         return this.getTemplate('welcome-email', {
             ...notifiable,
             ...data,
-        }).then(({ subject, body }) => {
-            return this.send(to, subject, body);
+        }).then(({ subject, content }) => {
+            return this.send(to, subject, content);
         });
     }
 
@@ -100,8 +82,8 @@ export class EmailNotificationService {
         return this.getTemplate('sent-otp', {
             ...notifiable,
             ...data,
-        }).then(({ subject, body }) => {
-            return this.send(to, subject, body);
+        }).then(({ subject, content }) => {
+            return this.send(to, subject, content);
         });
     }
 
@@ -110,8 +92,8 @@ export class EmailNotificationService {
         return this.getTemplate('otp-verification', {
             ...notifiable,
             ...data,
-        }).then(({ subject, body }) => {
-            return this.send(to, subject, body);
+        }).then(({ subject, content }) => {
+            return this.send(to, subject, content);
         });
     }
 
@@ -120,19 +102,22 @@ export class EmailNotificationService {
         return this.getTemplate('login-otp', {
             ...notifiable,
             ...data,
-        }).then(({ subject, body }) => {
-            return this.send(to, subject, body);
+        }).then(({ subject, content }) => {
+            return this.send(to, subject, content);
         });
     }
 
     async forgotPasswordVerification(notifiable, data) {
         const to = notifiable?.email;
-        return this.getTemplate('forgot-password-otp-verification', {
+        const template = await this.getTemplate('forgot-password-otp-verification', {
             ...notifiable,
             ...data,
-        }).then(({ subject, body }) => {
-            return this.send(to, subject, body);
+        }).then(({ subject, content }) => {
+            return this.send(to, subject, content);
+        }).catch((error) => {
+            throw error;
         });
+        return template;
     }
 
     async sendInvoiceToCustomer(notifiable, data) {
@@ -140,8 +125,8 @@ export class EmailNotificationService {
         return this.getTemplate('send-invoice-to-customer', {
             ...notifiable,
             ...data,
-        }).then(({ subject, body }) => {
-            return this.send(to, subject, body, { attachments: data.attachments });
+        }).then(({ subject, content }) => {
+            return this.send(to, subject, content, { attachments: data.attachments });
         });
     }
 

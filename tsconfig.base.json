@@ -1,32 +1,27 @@
 {
-    "compileOnSave": false,
     "compilerOptions": {
-        "rootDir": ".",
+        "baseUrl": ".",
+        "target": "ESNext",
+        "module": "commonjs",
+        "lib": ["esnext", "dom"],
+        "declaration": true,
+        "declarationMap": true,
         "sourceMap": true,
-        "declaration": false,
-        "moduleResolution": "node",
+        "composite": true,
+        "strict": true,
+        "strictPropertyInitialization": false,
+        "strictNullChecks": false,
+        "useUnknownInCatchVariables": false,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "importHelpers": true,
-        "target": "es2018",
-        "module": "esnext",
-        "lib": ["es2020", "dom"],
-        "skipLibCheck": true,
-        "skipDefaultLibCheck": true,
         "resolveJsonModule": true,
-        "noImplicitAny": false,
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "baseUrl": ".",
         "paths": {
-            "@admin/*": ["apps/admin/src/*"],
-            "@api/*": ["apps/api/src/*"],
-            "@libs/generators": ["tools/generators/src/index.ts"],
-            "@libs/react-shared": ["libs/react-shared/src/index.ts"],
-            "@libs/types": ["libs/types/src/index.ts"],
-            "@libs/utils": ["libs/utils/src/index.ts"],
-            "@web/*": ["apps/web/src/*"]
+            "@repo/types": ["packages/types/src"],
+            "@repo/utils": ["packages/utils/src"]
         }
     },
-    "exclude": ["node_modules", "tmp"]
+    "exclude": ["node_modules", "dist", "build"]
 }

@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { BaseRepository } from '../core/typeorm/base-repository';
-import { Seeder } from '../libs/nest-seeder';
+import { Seeder } from '@ackplus/nest-seeder';
 import { Country } from '../modules/country/country.entity';
 
 

@@ -7,7 +7,7 @@ import { keyBy } from 'lodash';
 
 import { IAppConfig } from '../config/app';
 import { BaseRepository } from '../core/typeorm/base-repository';
-import { Seeder } from '../libs/nest-seeder';
+import { Seeder } from '@ackplus/nest-seeder';
 import { User } from '../modules/user/user.entity';
 
 
@@ -32,13 +32,6 @@ export class UserSeeder implements Seeder {
         });
         this.existingUserByEmail = keyBy(existingUser, 'authUser.email');
 
-        const defaultTenantName = this.configService.get<IAppConfig>('app').defaultTenantName;
-
-        const tenant = await this.tenantService.getTenantByDomain(defaultTenantName);
-        if (!tenant) {
-            throw new Error('Tenant not found');
-        }
-
         const portalUsers = [
             {
                 firstName: 'Chetan',
@@ -47,7 +40,6 @@ export class UserSeeder implements Seeder {
                 password: 'Admin@123',
                 isSuperUser: true,
                 roles: [RoleNameEnum.SUPER_ADMIN],
-                tenantId: tenant.id,
             },
             {
                 firstName: 'Ajay',
@@ -56,7 +48,6 @@ export class UserSeeder implements Seeder {
                 password: 'Admin@123',
                 isSuperUser: true,
                 roles: [RoleNameEnum.ADMIN],
-                tenantId: tenant.id,
             },
             {
                 firstName: 'Kishan',
@@ -64,7 +55,6 @@ export class UserSeeder implements Seeder {
                 email: 'kishan.ackplus@gmail.com',
                 password: 'Admin@123',
                 roles: [RoleNameEnum.ADMIN],
-                tenantId: tenant.id,
             },
             {
                 firstName: 'Manager',
@@ -72,7 +62,6 @@ export class UserSeeder implements Seeder {
                 email: 'manager@gmail.com',
                 password: 'Admin@123',
                 roles: [RoleNameEnum.MANAGER],
-                tenantId: tenant.id,
             },
         ];
 

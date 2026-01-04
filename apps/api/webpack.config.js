@@ -1,21 +1,20 @@
-const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
-const { join } = require('path');
+const nodeExternals = require('webpack-node-externals');
 
-
-module.exports = {
-    output: {
-        path: join(__dirname, '../../dist/apps/api'),
+module.exports = function (options, webpack) {
+  return {
+    ...options,
+    resolve: {
+      ...options.resolve,
+      modules: [
+        'node_modules',
+        '../../node_modules',
+      ],
+      extensions: ['.ts', '.tsx', '.js', '.jsx'],
     },
-    plugins: [
-        new NxAppWebpackPlugin({
-            target: 'node',
-            compiler: 'tsc',
-            main: './src/main.ts',
-            tsConfig: './tsconfig.app.json',
-            assets: ['./src/assets'],
-            optimization: false,
-            outputHashing: 'none',
-            generatePackageJson: true,
-        }),
+    externals: [
+      nodeExternals({
+        allowlist: ['webpack/hot/poll?100', /^@libs\/.*/],
+      }),
     ],
+  };
 };

@@ -21,8 +21,8 @@ export class RoleController {
         description: 'The list of roles has been successfully retrieved.',
     })
     @Get()
-    async getRoles(@Query() query: any) {
-        return this.service.getRoles(query);
+    async getAllRoles(@Query() query: any) {
+        return this.service.getAllRoles(query);
     }
 
     @ApiOperation({ summary: 'Get a role by id' })

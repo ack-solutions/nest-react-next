@@ -9,6 +9,7 @@ export interface IAppConfig {
     appKey: string;
     port: number;
     defaultTenantName: string;
+    adminSecretKey: string;
 }
 
 
@@ -18,6 +19,7 @@ export default registerAs('app', () => ({
     frontUrl: process.env.APP_FRONT_URL || '',
     appKey: process.env.APP_KEY || '',
     port: parseInt(process.env.PORT, 10) || 3333,
+    adminSecretKey: process.env.NEST_APP_CONSOLE_SECRET_KEY || '',
     defaultTenantName: process.env.DEFAULT_TENANT_NAME || 'default',
 }));
 

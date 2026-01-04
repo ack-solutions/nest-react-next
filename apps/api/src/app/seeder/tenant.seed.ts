@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { startCase } from 'lodash';
 
 import { IAppConfig } from '../config/app';
-import { Seeder } from '../libs/nest-seeder';
+import { Seeder } from '@ackplus/nest-seeder';
 
 
 @Injectable()
@@ -18,7 +18,8 @@ export class TenantSeeder implements Seeder {
     async seed() {
         const defaultTenantName = this.configService.get<IAppConfig>('app').defaultTenantName;
 
-        const tenant = await this.tenantService.getTenantByDomain(defaultTenantName);
+        const tenant = await this.tenantService.getTenantBySlug(defaultTenantName);
+        console.log('tenant', tenant);
         if (!tenant) {
             await this.tenantService.createTenant({
                 name: startCase(defaultTenantName),

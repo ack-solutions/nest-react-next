@@ -1,6 +1,6 @@
 import { NestAuthAuthGuard } from '@ackplus/nest-auth';
 import { Crud } from '@ackplus/nest-crud';
-import { Get, HttpStatus, Param } from '@nestjs/common';
+import { Get, HttpStatus, Param, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 
@@ -10,12 +10,12 @@ import { PageService } from './page.service';
 
 
 @ApiTags('Page')
+@UseGuards(NestAuthAuthGuard)
 @Crud({
     entity: Page,
     name: 'Page',
     path: 'page',
     softDelete: true,
-    guards: [NestAuthAuthGuard],
     dto: {
         create: PageDTO,
         update: PageDTO,

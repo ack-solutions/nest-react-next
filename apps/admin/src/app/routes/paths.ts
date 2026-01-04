@@ -12,6 +12,7 @@ export const PATH_AUTH = {
     onboarding: path(ROOTS_AUTH, '/onboarding'),
     verify: path(ROOTS_AUTH, '/verify'),
     forgotPassword: path(ROOTS_AUTH, '/forgot-password'),
+    resetPassword: path(ROOTS_AUTH, '/reset-password'),
 };
 
 export const PATH_PAGE = {

@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { BaseRepository } from '../core/typeorm/base-repository';
-import { Seeder } from '../libs/nest-seeder';
+import { Seeder } from '@ackplus/nest-seeder';
 import { Page } from '../modules/page/page.entity';
 
 

@@ -1,24 +1,23 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { AuthService } from '@libs/react-shared';
-import { OtpSendActionEnum } from '@libs/types';
+import { NestAuthService } from '@libs/react-shared';
 import { errorMessage, patterns } from '@libs/utils';
 import { Box, Button, Stack, Typography } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { object, ref, string } from 'yup';
 
-import LoginOtpVerification from './login-otp-verification';
 import { FormContainer, RHFPassword } from '../../form';
 import { useToasty } from '../../hook';
 import { PATH_AUTH } from '../../routes/paths';
+import OtpVerification from './otp-verification';
 
 
 export interface ResetPasswordFormProps {
-    values?: any
+    token: string;
 }
 
-const authService = AuthService.getInstance<AuthService>();
+const nestAuthService = NestAuthService.getInstance<NestAuthService>();
 
 const validationSchema = object().shape({
     password: string()
@@ -32,145 +31,88 @@ const validationSchema = object().shape({
         .required(),
 });
 
-function ResetPasswordForm({ values }: ResetPasswordFormProps) {
-    const [verifyData, setVerifyData] = useState(false);
-    const [formValue, setFormValue] = useState<any>(values);
+function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     const { showToasty } = useToasty();
     const navigate = useNavigate();
 
     const formContext = useForm({
-        defaultValues: formValue,
         resolver: yupResolver(validationSchema),
     });
 
     const { formState: { isSubmitting } } = formContext;
 
-    const handleBackLogin = useCallback(
-        () => {
-            navigate(PATH_AUTH.login);
-        },
-        [navigate],
-    );
-
     const handleSubmitForm = useCallback(
         async (value) => {
-            await authService.resetPassword({
-                ...value,
-                ...formValue,
+            if (!token) {
+                showToasty('Something went wrong, please try again later.', 'error');
+                return;
+            }
+            await nestAuthService.resetPasswordWithToken({
+                token: token,
+                newPassword: value.password,
             }).then(() => {
                 showToasty('Your password has been updated successfully.');
                 navigate(PATH_AUTH.login);
             }).catch((error) => {
-                showToasty(error, 'error');
+                showToasty(errorMessage(error), 'error');
             });
         },
         [
-            formValue,
+            token,
             navigate,
             showToasty,
         ],
     );
 
-
-    const handleOTPVerify = useCallback(
-        async (value, setError) => {
-            await authService.verifyOtp({
-                ...value,
-                ...formValue,
-            }).then(() => {
-                setVerifyData(true);
-                setFormValue((state) => {
-                    return {
-                        ...state,
-                        ...value,
-                    };
-                });
-            }).catch((error) => {
-                setError('afterSubmit', {
-                    type: 'manual',
-                    message: errorMessage(error),
-                });
-            });
-        },
-        [formValue],
-    );
-
-    const handleReSentOtp = useCallback(
-        (setError?: any) => {
-            authService.sendOtp({
-                ...formValue,
-                action: OtpSendActionEnum.FORGOT_PASSWORD,
-            }).then(() => {
-                showToasty('Successfully Resend OTP');
-            }).catch((error) => {
-                setError('afterSubmit', {
-                    type: 'manual',
-                    message: errorMessage(error),
-                });
-            });
-        },
-        [formValue, showToasty],
-    );
-
     return (
         <Box>
-            {verifyData ? (
-                <>
-                    <Stack
-                        direction="row"
-                        alignItems="center"
-                        sx={{ mb: 4 }}
+            <Stack
+                direction="row"
+                alignItems="center"
+                sx={{ mb: 4 }}
+            >
+                <Box>
+                    <Typography
+                        variant="h4"
+                        gutterBottom
                     >
-                        <Box>
-                            <Typography
-                                variant="h4"
-                                gutterBottom
-                            >
-                                Set new password
-                            </Typography>
-                            <Typography variant="subtitle1">
-                                Your new password must be different to previously used passwords.
-                            </Typography>
-                        </Box>
-                    </Stack>
-                    <FormContainer
-                        formProps={{
-                            id: 'reset-password',
-                        }}
-                        formContext={formContext}
-                        validationSchema={validationSchema}
-                        onSuccess={handleSubmitForm}
+                        Set new password
+                    </Typography>
+                    <Typography>
+                        Your new password must be different to previously used passwords.
+                    </Typography>
+                </Box>
+            </Stack>
+            <FormContainer
+                formProps={{
+                    id: 'reset-password',
+                }}
+                formContext={formContext}
+                validationSchema={validationSchema}
+                onSuccess={handleSubmitForm}
+            >
+                <Stack spacing={2}>
+                    <RHFPassword
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        required
+                    />
+                    <RHFPassword
+                        fullWidth
+                        name="confirmPassword"
+                        label="Confirm Password"
+                        required
+                    />
+                    <Button
+                        variant="contained"
+                        type="submit"
+                        loading={isSubmitting}
                     >
-                        <Stack spacing={2}>
-                            <RHFPassword
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                required
-                            />
-                            <RHFPassword
-                                fullWidth
-                                name="confirmPassword"
-                                label="Confirm Password"
-                                required
-                            />
-                            <Button
-                                variant="contained"
-                                type="submit"
-                                loading={isSubmitting}
-                            >
-                                Reset Password
-                            </Button>
-                        </Stack>
-                    </FormContainer>
-                </>
-            ) : (
-                <LoginOtpVerification
-                    onSubmit={handleOTPVerify}
-                    onResent={handleReSentOtp}
-                    onGoBack={handleBackLogin}
-                />
-            )}
+                        Reset Password
+                    </Button>
+                </Stack>
+            </FormContainer>
         </Box>
     );
 }

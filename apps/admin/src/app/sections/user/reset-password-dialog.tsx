@@ -43,7 +43,7 @@ export default function ResetPasswordDialog({
     const { mutateAsync: setPassword, isPending } = useSetPassword();
 
     const formContext = useForm<FormValues>({
-        resolver: yupResolver(validationSchema),
+        resolver: yupResolver(validationSchema) as any,
         defaultValues: {
             password: '',
             confirmPassword: '',

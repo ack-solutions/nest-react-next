@@ -37,81 +37,66 @@ function ForgotPasswordForm({ onSubmit }: ForgotPasswordFormProps) {
     );
 
     return (
-        <Stack spacing={2}>
-            <Stack
-                direction="row"
-                alignItems="center"
-                sx={{ mb: 4 }}
-            >
-                <Box>
-                    <Typography
-                        variant="h5"
-                    >
-                        Forgot Password
-                    </Typography>
-                    <Typography
-                        variant="subtitle1"
-                    >
-                        Enter your email for password recovery.
-                    </Typography>
-                </Box>
-            </Stack>
+        <Stack spacing={3}>
             <Box>
-                <FormContainer
-                    formProps={{
-                        id: 'forgot-password-form',
-                    }}
-                    formContext={formContext}
-                    validationSchema={validationSchema}
-                    onSuccess={handleSubmitForm}
+                <Typography
+                    variant="h4"
+                    gutterBottom
                 >
-                    <Stack
-                        spacing={2}
-                        justifyContent="center"
-                    >
-                        {(errors as any)?.afterSubmit ? (
-                            <Box
-                                pb={2}
-                                pt={0}
-                            >
-                                <Alert severity="error">
-                                    {(errors as any)?.afterSubmit.message}
-                                </Alert>
-                            </Box>
-                        ) : null}
-
-                        <RHFTextField
-                            fullWidth
-                            type="email"
-                            name="email"
-                            label="Email address"
-                            required
-                        />
-
-                        <Button
-                            sx={{ mt: 4 }}
-                            fullWidth
-                            type="submit"
-                            variant="contained"
-                            loading={isSubmitting}
-                        >
-                            Submit
-                        </Button>
-                    </Stack>
-                </FormContainer>
+                    Forgot Password
+                </Typography>
+                <Typography>
+                    Enter your email for password recovery.
+                </Typography>
             </Box>
+
+            <FormContainer
+                formProps={{
+                    id: 'forgot-password-form',
+                }}
+                formContext={formContext}
+                validationSchema={validationSchema}
+                onSuccess={handleSubmitForm}
+            >
+                <Stack spacing={2}>
+                    {(errors as any)?.afterSubmit ? (
+                        <Alert severity="error">
+                            {(errors as any)?.afterSubmit.message}
+                        </Alert>
+                    ) : null}
+
+                    <RHFTextField
+                        fullWidth
+                        type="email"
+                        name="email"
+                        label="Email address"
+                        required
+                    />
+
+                    <Button
+                        fullWidth
+                        type="submit"
+                        variant="contained"
+                        loading={isSubmitting}
+                    >
+                        Submit
+                    </Button>
+                </Stack>
+            </FormContainer>
+
             <Stack
                 direction="row"
                 spacing={0.5}
                 justifyContent="center"
+                mt={2}
             >
-                <Typography>Back to </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>Back to</Typography>
                 <Link
                     component={RouterLink}
                     to={PATH_AUTH.login}
                     sx={{
                         textDecoration: 'underline',
-                        color: 'common.white',
+                        color: 'primary.main',
                     }}
                 >
                     Login

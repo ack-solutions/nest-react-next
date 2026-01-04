@@ -38,7 +38,6 @@ import { RequestDataTypeInterceptor } from '../../core/interceptors/request-data
     entity: User,
     name: 'User',
     path: 'user',
-    // guards: [NestAuthAuthGuard],
     softDelete: true,
     dto: {
         create: CreateUserDTO,

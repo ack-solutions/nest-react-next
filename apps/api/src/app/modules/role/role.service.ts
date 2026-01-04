@@ -1,6 +1,5 @@
-import { RoleService as NestAuthRoleService, TenantService as NestAuthTenantService } from '@ackplus/nest-auth';
+import { RoleService as NestAuthRoleService } from '@ackplus/nest-auth';
 import { NestAuthRole } from '@ackplus/nest-auth';
-import { IAppConfig } from '@api/app/config/app';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { FindManyOptions } from 'typeorm';
@@ -16,12 +15,11 @@ export class RoleService {
     constructor(
         private readonly roleService: NestAuthRoleService,
         private readonly configService: ConfigService,
-        private readonly tenantService: NestAuthTenantService,
     ) {
     }
 
-    async getRoles(options?: FindManyOptions<NestAuthRole>) {
-        return this.roleService.getRoles(options);
+    async getAllRoles(options?: FindManyOptions<NestAuthRole>) {
+        return this.roleService.getRoles(null, options);
     }
 
     async getRoleById(id: string) {
@@ -33,21 +31,13 @@ export class RoleService {
     }
 
     async getRoleByGuard(guard: string, query) {
-        const defaultTenantName = this.configService.get<IAppConfig>('app').defaultTenantName;
-        const tenant = await this.tenantService.getTenantByDomain(defaultTenantName);
-
-        const systemRoles = await this.roleService.getSystemRolesByGuard(guard, query);
-
-        const constRoles = await this.roleService.getRolesByGuard(guard, tenant.id, query);
-
-        return [...systemRoles, ...constRoles];
+        const constRoles = await this.roleService.getRoles({ guard: guard });
+        return constRoles;
     }
 
     async createRole(body: CreateRoleDTO) {
-        const defaultTenantName = this.configService.get<IAppConfig>('app').defaultTenantName;
-        const tenant = await this.tenantService.getTenantByDomain(defaultTenantName);
-
-        return this.roleService.createRole(body.name, body.guard, tenant.id, false, body.permissions);
+        console.log(body);
+        return this.roleService.createRole(body.name, body.guard, null, false, body.permissions);
     }
 
     async updateRole(id: string, body: UpdateRoleDTO) {
