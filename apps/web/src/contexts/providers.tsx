@@ -2,6 +2,7 @@
 
 import { ReactNode } from 'react';
 import { LayoutProvider } from '@web/contexts/layout-context';
+import { ThemeProvider } from '@web/contexts/theme-provider';
 import { createInitialState } from '@web/lib/auth.server';
 import { AuthClient, type ServerAuthState } from '@ackplus/nest-auth-react';
 import { Toaster } from 'sonner';
@@ -21,14 +22,16 @@ export const authClient = new AuthClient({
 export function AppProviders({ children, initialAuthState }: AppProvidersProps) {
     return (
         <>
-            <LayoutProvider>
-                <AuthProvider
-                    client={authClient}
-                    initialAuthState={initialAuthState ? createInitialState(initialAuthState) : undefined}
-                >
-                    {children}
-                </AuthProvider>
-            </LayoutProvider>
+            <ThemeProvider>
+                <LayoutProvider>
+                    <AuthProvider
+                        client={authClient}
+                        initialAuthState={initialAuthState ? createInitialState(initialAuthState) : undefined}
+                    >
+                        {children}
+                    </AuthProvider>
+                </LayoutProvider>
+            </ThemeProvider>
             <Toaster richColors position="top-right" />
         </>
     );

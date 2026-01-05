@@ -10,7 +10,7 @@
         "seed:refresh": "node -r ts-node/register -r tsconfig-paths/register ./node_modules/@ackplus/nest-seeder/dist/cli.js -c ./src/seeder.config.ts -r"
     },
     "dependencies": {
-        "@ackplus/nest-auth": "1.1.50",
+        "@ackplus/nest-auth": "1.1.53",
         "@ackplus/nest-crud": "^1.1.18",
         "@ackplus/nest-crud-request": "^1.1.18",
         "@ackplus/nest-dynamic-templates": "^1.1.15",

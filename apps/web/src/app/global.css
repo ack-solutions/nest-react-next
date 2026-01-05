@@ -1,327 +1,211 @@
-/* ============================================
-   TAILWIND CSS 4
-   ============================================ */
 @import 'tailwindcss';
 
 /* ============================================
-   THEME CONFIGURATION - CSS CUSTOM PROPERTIES
+   TAILWIND 4 THEME CONFIGURATION
+   These reference CSS variables that are injected by ThemeProvider
    ============================================ */
 @theme {
     /* ---------- Primary Colors ---------- */
-    --color-primary-50: oklch(0.97 0.02 240);
-    --color-primary-100: oklch(0.93 0.04 240);
-    --color-primary-200: oklch(0.87 0.07 240);
-    --color-primary-300: oklch(0.79 0.12 240);
-    --color-primary-400: oklch(0.7 0.16 240);
-    --color-primary-500: oklch(0.6 0.18 240);
-    --color-primary-600: oklch(0.52 0.17 240);
-    --color-primary-700: oklch(0.45 0.15 240);
-    --color-primary-800: oklch(0.38 0.13 240);
-    --color-primary-900: oklch(0.32 0.1 240);
-    --color-primary-950: oklch(0.25 0.08 240);
-
-    /* Primary Aliases */
-    --color-primary: var(--color-primary-500);
-    --color-primary-light: var(--color-primary-400);
-    --color-primary-dark: var(--color-primary-700);
-    --color-primary-contrast: oklch(1 0 0);
+    --color-primary-lighter: var(--color-primary-lighter);
+    --color-primary-light: var(--color-primary-light);
+    --color-primary: var(--color-primary);
+    --color-primary-dark: var(--color-primary-dark);
+    --color-primary-darker: var(--color-primary-darker);
 
     /* ---------- Secondary Colors ---------- */
-    --color-secondary-50: oklch(0.97 0.02 300);
-    --color-secondary-100: oklch(0.93 0.05 300);
-    --color-secondary-200: oklch(0.87 0.09 300);
-    --color-secondary-300: oklch(0.79 0.14 300);
-    --color-secondary-400: oklch(0.7 0.18 300);
-    --color-secondary-500: oklch(0.6 0.2 300);
-    --color-secondary-600: oklch(0.52 0.18 300);
-    --color-secondary-700: oklch(0.45 0.16 300);
-    --color-secondary-800: oklch(0.38 0.13 300);
-    --color-secondary-900: oklch(0.32 0.1 300);
-    --color-secondary-950: oklch(0.25 0.08 300);
+    --color-secondary-lighter: var(--color-secondary-lighter);
+    --color-secondary-light: var(--color-secondary-light);
+    --color-secondary: var(--color-secondary);
+    --color-secondary-dark: var(--color-secondary-dark);
+    --color-secondary-darker: var(--color-secondary-darker);
 
-    /* Secondary Aliases */
-    --color-secondary: var(--color-secondary-500);
-    --color-secondary-light: var(--color-secondary-400);
-    --color-secondary-dark: var(--color-secondary-700);
-    --color-secondary-contrast: oklch(1 0 0);
-
-    /* ---------- Neutral/Gray Colors ---------- */
-    --color-neutral-50: oklch(0.98 0 0);
-    --color-neutral-100: oklch(0.96 0 0);
-    --color-neutral-200: oklch(0.91 0 0);
-    --color-neutral-300: oklch(0.85 0 0);
-    --color-neutral-400: oklch(0.65 0 0);
-    --color-neutral-500: oklch(0.5 0 0);
-    --color-neutral-600: oklch(0.4 0 0);
-    --color-neutral-700: oklch(0.33 0 0);
-    --color-neutral-800: oklch(0.22 0 0);
-    --color-neutral-900: oklch(0.15 0 0);
-    --color-neutral-950: oklch(0.1 0 0);
+    /* ---------- Ternary/Accent Colors ---------- */
+    --color-ternary-lighter: var(--color-ternary-lighter);
+    --color-ternary-light: var(--color-ternary-light);
+    --color-ternary: var(--color-ternary);
+    --color-ternary-dark: var(--color-ternary-dark);
+    --color-ternary-darker: var(--color-ternary-darker);
 
     /* ---------- Status Colors ---------- */
     /* Success */
-    --color-success-50: oklch(0.97 0.05 160);
-    --color-success-100: oklch(0.93 0.1 160);
-    --color-success-200: oklch(0.85 0.15 160);
-    --color-success-300: oklch(0.75 0.18 160);
-    --color-success-400: oklch(0.65 0.18 160);
-    --color-success-500: oklch(0.55 0.15 160);
-    --color-success: var(--color-success-500);
-    --color-success-light: var(--color-success-400);
-    --color-success-dark: var(--color-success-600);
-    --color-success-600: oklch(0.48 0.13 160);
-    --color-success-700: oklch(0.42 0.11 160);
-    --color-success-contrast: oklch(1 0 0);
-
-    /* Warning */
-    --color-warning-50: oklch(0.98 0.05 85);
-    --color-warning-100: oklch(0.94 0.1 85);
-    --color-warning-200: oklch(0.88 0.15 85);
-    --color-warning-300: oklch(0.8 0.18 85);
-    --color-warning-400: oklch(0.75 0.18 85);
-    --color-warning-500: oklch(0.7 0.16 85);
-    --color-warning: var(--color-warning-500);
-    --color-warning-light: var(--color-warning-400);
-    --color-warning-dark: var(--color-warning-600);
-    --color-warning-600: oklch(0.62 0.14 85);
-    --color-warning-700: oklch(0.55 0.12 85);
-    --color-warning-contrast: oklch(0.15 0 0);
+    --color-success-lighter: var(--color-success-lighter);
+    --color-success-light: var(--color-success-light);
+    --color-success: var(--color-success);
+    --color-success-dark: var(--color-success-dark);
+    --color-success-darker: var(--color-success-darker);
 
     /* Error */
-    --color-error-50: oklch(0.97 0.02 25);
-    --color-error-100: oklch(0.93 0.06 25);
-    --color-error-200: oklch(0.87 0.12 25);
-    --color-error-300: oklch(0.78 0.18 25);
-    --color-error-400: oklch(0.68 0.2 25);
-    --color-error-500: oklch(0.58 0.2 25);
-    --color-error: var(--color-error-500);
-    --color-error-light: var(--color-error-400);
-    --color-error-dark: var(--color-error-600);
-    --color-error-600: oklch(0.5 0.18 25);
-    --color-error-700: oklch(0.44 0.15 25);
-    --color-error-contrast: oklch(1 0 0);
+    --color-error-lighter: var(--color-error-lighter);
+    --color-error-light: var(--color-error-light);
+    --color-error: var(--color-error);
+    --color-error-dark: var(--color-error-dark);
+    --color-error-darker: var(--color-error-darker);
+
+    /* Warning */
+    --color-warning-lighter: var(--color-warning-lighter);
+    --color-warning-light: var(--color-warning-light);
+    --color-warning: var(--color-warning);
+    --color-warning-dark: var(--color-warning-dark);
+    --color-warning-darker: var(--color-warning-darker);
 
     /* Info */
-    --color-info-50: oklch(0.97 0.02 250);
-    --color-info-100: oklch(0.93 0.05 250);
-    --color-info-200: oklch(0.87 0.1 250);
-    --color-info-300: oklch(0.78 0.14 250);
-    --color-info-400: oklch(0.68 0.16 250);
-    --color-info-500: oklch(0.58 0.16 250);
-    --color-info: var(--color-info-500);
-    --color-info-light: var(--color-info-400);
-    --color-info-dark: var(--color-info-600);
-    --color-info-600: oklch(0.5 0.14 250);
-    --color-info-700: oklch(0.44 0.12 250);
-    --color-info-contrast: oklch(1 0 0);
+    --color-info-lighter: var(--color-info-lighter);
+    --color-info-light: var(--color-info-light);
+    --color-info: var(--color-info);
+    --color-info-dark: var(--color-info-dark);
+    --color-info-darker: var(--color-info-darker);
 
     /* ---------- Semantic Colors ---------- */
-    --color-background: oklch(1 0 0);
-    --color-background-subtle: oklch(0.98 0 0);
-    --color-foreground: oklch(0.15 0 0);
-    --color-text-primary: oklch(0.15 0 0);
-    --color-text-secondary: oklch(0.45 0 0);
-    --color-text-disabled: oklch(0.65 0 0);
-    --color-divider: oklch(0.9 0 0);
-    --color-border: oklch(0.88 0 0);
-    --color-border-subtle: oklch(0.92 0 0);
-    --color-grey: oklch(0.6 0 0);
-    --color-grey-light: oklch(0.8 0 0);
-    --color-grey-dark: oklch(0.4 0 0);
+    --color-black: var(--color-black);
+    --color-pure-black: var(--color-pure-black);
 
-    /* ---------- Gradients ---------- */
-    --gradient: linear-gradient(
-        135deg,
-        var(--color-primary-500) 0%,
-        var(--color-secondary-500) 100%
-    );
-    --gradient-subtle: linear-gradient(
-        135deg,
-        var(--color-primary-100) 0%,
-        var(--color-secondary-100) 100%
-    );
-    --gradient-dark: linear-gradient(
-        135deg,
-        var(--color-primary-700) 0%,
-        var(--color-secondary-700) 100%
-    );
+    --color-text-primary: var(--color-text-primary);
+    --color-text-secondary: var(--color-text-secondary);
+    --color-text-disabled: var(--color-text-disabled);
 
-    /* ---------- Typography ---------- */
-    --font-family-sans: 'Inter', ui-sans-serif, system-ui, -apple-system,
-        BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-        sans-serif;
-    --font-family-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo,
-        Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    --color-background: var(--color-background);
+    --color-background-secondary: var(--color-background-secondary);
+    --color-background-elevated: var(--color-background-elevated);
+
+    --color-foreground: var(--color-foreground);
+    --color-foreground-muted: var(--color-foreground-muted);
+
+    --color-border: var(--color-border);
+    --color-border-subtle: var(--color-border-subtle);
+    --color-divider: var(--color-divider);
+    --color-divider-strong: var(--color-divider-strong);
+
+    /* ---------- Gray Scale ---------- */
+    --color-grey-50: var(--color-grey-50);
+    --color-grey-100: var(--color-grey-100);
+    --color-grey-200: var(--color-grey-200);
+    --color-grey-300: var(--color-grey-300);
+    --color-grey-400: var(--color-grey-400);
+    --color-grey-500: var(--color-grey-500);
+    --color-grey-600: var(--color-grey-600);
+    --color-grey-700: var(--color-grey-700);
+    --color-grey-800: var(--color-grey-800);
+    --color-grey-900: var(--color-grey-900);
 
     /* ---------- Shadows ---------- */
-    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
-        0 1px 2px -1px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-        0 2px 4px -2px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -4px rgba(0, 0, 0, 0.1);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-        0 8px 10px -6px rgba(0, 0, 0, 0.1);
-    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    --shadow-glow: 0 0 20px rgba(14, 165, 233, 0.35);
-    --shadow-glow-lg: 0 0 40px rgba(14, 165, 233, 0.4);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+        0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+        0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+        0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+    --shadow-glow: 0 0 20px rgba(14, 165, 233, 0.3);
 
-    /* ---------- Animation ---------- */
-    --animate-fade-in: fadeIn 0.3s ease-out;
-    --animate-slide-up: slideUp 0.3s ease-out;
-    --animate-slide-down: slideDown 0.3s ease-out;
-    --animate-scale: scale 0.2s ease-out;
-    --animate-spin-slow: spin 3s linear infinite;
+    /* ---------- Border Radius ---------- */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --radius-2xl: 1.5rem;
+    --radius-3xl: 2rem;
+    --radius-full: 9999px;
+
+    /* ---------- Container ---------- */
+    --container-7xl: 80rem;
+
+    /* ---------- Transitions ---------- */
+    --transition-duration-fast: 150ms;
+    --transition-duration-default: 200ms;
+    --transition-duration-slow: 300ms;
+
+    /* ---------- Animations ---------- */
+    --animate-fade-in: fade-in 0.3s ease-out forwards;
+    --animate-slide-up: slide-up 0.3s ease-out forwards;
+    --animate-slide-down: slide-down 0.2s ease-out forwards;
+    --animate-shimmer: shimmer 2s infinite;
+    --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+    --animate-spin: spin 1s linear infinite;
+
+    /* ---------- Keyframes ---------- */
+    @keyframes fade-in {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slide-up {
+        0% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slide-down {
+        0% {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: -100% 0;
+        }
+        100% {
+            background-position: 100% 0;
+        }
+    }
+
+    @keyframes pulse-glow {
+        0%,
+        100% {
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
+        }
+        50% {
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.5);
+        }
+    }
 }
 
 /* ============================================
    BASE STYLES
+   Note: Color values are injected by ThemeProvider from tokens.ts
    ============================================ */
-*,
-::before,
-::after {
-    box-sizing: border-box;
-    border-width: 0;
-    border-style: solid;
-    border-color: currentColor;
-}
-
-html {
-    -webkit-text-size-adjust: 100%;
-    font-family: var(--font-family-sans);
-    line-height: 1.5;
-    tab-size: 4;
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-    font-family: inherit;
-    line-height: inherit;
-    margin: 0;
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    min-height: 100vh;
-}
-
-/* Reset margins */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-pre {
-    margin: 0;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-size: inherit;
-    font-weight: inherit;
-}
-
-a {
-    color: inherit;
-    text-decoration: inherit;
-}
-
-img,
-svg,
-video,
-canvas,
-audio,
-iframe,
-embed,
-object {
-    display: block;
-    vertical-align: middle;
-}
-
-img,
-video {
-    max-width: 100%;
-    height: auto;
-}
-
-/* ============================================
-   KEYFRAME ANIMATIONS
-   ============================================ */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-grey-200, currentcolor);
     }
-    to {
-        opacity: 1;
-    }
-}
 
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
+    html {
+        scroll-behavior: smooth;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes scale {
-    from {
-        transform: scale(0.95);
-        opacity: 0;
-    }
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-@keyframes shimmer {
-    0% {
-        background-position: -200% 0;
-    }
-    100% {
-        background-position: 200% 0;
-    }
-}
-
-@keyframes pulse-glow {
-    0%,
-    100% {
-        box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
-    }
-    50% {
-        box-shadow: 0 0 40px rgba(14, 165, 233, 0.5);
-    }
-}
-
-@keyframes float {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
+    body {
+        font-family: var(
+            --font-sans,
+            'Inter',
+            ui-sans-serif,
+            system-ui,
+            sans-serif
+        );
+        background-color: var(--color-background);
+        color: var(--color-foreground);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 }
 
@@ -329,52 +213,37 @@ video {
    UTILITY CLASSES
    ============================================ */
 
-/* Gradient Text */
+/* Gradient text */
 .gradient-text {
-    background: var(--gradient);
-    background-clip: text;
+    background: var(--gradient-primary);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-/* Glass Effect */
+/* Glass effect */
 .glass {
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .glass-dark {
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Shimmer Effect */
-.shimmer {
-    background: linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.2) 20%,
-        rgba(255, 255, 255, 0.5) 60%,
-        rgba(255, 255, 255, 0)
-    );
-    background-size: 200% 100%;
-    animation: shimmer 2s infinite;
-}
-
-/* Focus Ring */
+/* Focus ring */
 .focus-ring {
     outline: none;
 }
+
 .focus-ring:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.3);
 }
 
-/* Section Spacing */
+/* Section padding */
 .section-py {
     padding-top: 4rem;
     padding-bottom: 4rem;
@@ -387,11 +256,17 @@ video {
     }
 }
 
-@media (min-width: 1024px) {
-    .section-py {
-        padding-top: 8rem;
-        padding-bottom: 8rem;
-    }
+/* Background gradient */
+.bg-gradient {
+    background: var(--gradient-primary);
+}
+
+/* Radial gradient */
+.bg-gradient-radial {
+    background: radial-gradient(
+        circle,
+        var(--tw-gradient-stops, var(--color-primary-light) 0%, transparent 70%)
+    );
 }
 
 /* ============================================
@@ -403,151 +278,23 @@ video {
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--color-neutral-100);
+    background: var(--color-grey-100);
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--color-neutral-300);
+    background: var(--color-grey-300);
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-neutral-400);
+    background: var(--color-grey-400);
 }
 
 /* ============================================
    SELECTION STYLES
    ============================================ */
 ::selection {
-    background-color: var(--color-primary-200);
-    color: var(--color-primary-900);
-}
-
-/* ============================================
-   CMS CONTENT STYLES
-   ============================================ */
-.cms-content {
-    line-height: 1.75;
-    color: var(--color-text-primary);
-}
-
-.cms-content h1 {
-    font-size: 2.25rem;
-    font-weight: 700;
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
-    line-height: 1.2;
-}
-
-.cms-content h2 {
-    font-size: 1.875rem;
-    font-weight: 600;
-    margin-top: 2rem;
-    margin-bottom: 0.875rem;
-    line-height: 1.3;
-}
-
-.cms-content h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-top: 1.75rem;
-    margin-bottom: 0.75rem;
-    line-height: 1.35;
-}
-
-.cms-content h4 {
-    font-size: 1.25rem;
-    font-weight: 500;
-    margin-top: 1.5rem;
-    margin-bottom: 0.625rem;
-    line-height: 1.4;
-}
-
-.cms-content p {
-    margin-bottom: 1.25rem;
-}
-
-.cms-content ul,
-.cms-content ol {
-    margin-bottom: 1.25rem;
-    padding-left: 1.5rem;
-}
-
-.cms-content li {
-    margin-bottom: 0.5rem;
-}
-
-.cms-content a {
-    color: var(--color-primary);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    transition: color 0.2s ease;
-}
-
-.cms-content a:hover {
-    color: var(--color-primary-dark);
-}
-
-.cms-content blockquote {
-    border-left: 4px solid var(--color-primary);
-    padding-left: 1rem;
-    margin: 1.5rem 0;
-    font-style: italic;
-    color: var(--color-text-secondary);
-}
-
-.cms-content pre {
-    background-color: var(--color-neutral-900);
-    color: var(--color-neutral-100);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    overflow-x: auto;
-    margin: 1.5rem 0;
-    font-family: var(--font-family-mono);
-    font-size: 0.875rem;
-}
-
-.cms-content code {
-    background-color: var(--color-neutral-100);
-    color: var(--color-primary-700);
-    padding: 0.125rem 0.375rem;
-    border-radius: 0.25rem;
-    font-family: var(--font-family-mono);
-    font-size: 0.875em;
-}
-
-.cms-content pre code {
-    background-color: transparent;
-    color: inherit;
-    padding: 0;
-}
-
-.cms-content img {
-    border-radius: 0.75rem;
-    margin: 1.5rem 0;
-}
-
-.cms-content hr {
-    border: none;
-    border-top: 1px solid var(--color-divider);
-    margin: 2rem 0;
-}
-
-.cms-content table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1.5rem 0;
-}
-
-.cms-content th,
-.cms-content td {
-    padding: 0.75rem;
-    border: 1px solid var(--color-divider);
-    text-align: left;
-}
-
-.cms-content th {
-    background-color: var(--color-neutral-50);
-    font-weight: 600;
+    background-color: var(--color-primary-light);
+    color: var(--color-primary-darker);
 }

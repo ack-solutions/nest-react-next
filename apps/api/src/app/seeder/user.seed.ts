@@ -1,4 +1,4 @@
-import { TenantService, UserService } from '@ackplus/nest-auth';
+import { NestAuthUser, TenantService, UserService } from '@ackplus/nest-auth';
 import { RoleGuardEnum, RoleNameEnum } from '@libs/types';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -99,9 +99,12 @@ export class UserSeeder implements Seeder {
         }
     }
 
-    drop() {
-        return this.userRepository.query(
-            `TRUNCATE TABLE "${this.userRepository.metadata.tableName}" CASCADE`,
+    async drop() {
+        await User.getRepository().query(
+            `TRUNCATE TABLE "${User.getRepository().metadata.tableName}" CASCADE`,
+        );
+        await NestAuthUser.getRepository().query(
+            `TRUNCATE TABLE "${NestAuthUser.getRepository().metadata.tableName}" CASCADE`,
         );
     }
 

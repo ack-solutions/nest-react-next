@@ -12,8 +12,8 @@
         "sitemap": "next-sitemap --config next-sitemap.config.js"
     },
     "dependencies": {
-        "@ackplus/nest-auth-client": "^1.1.50",
-        "@ackplus/nest-auth-react": "^1.1.50",
+        "@ackplus/nest-auth-client": "^1.1.53",
+        "@ackplus/nest-auth-react": "^1.1.53",
         "@libs/react-shared": "workspace:*",
         "@libs/types": "workspace:*",
         "@libs/utils": "workspace:*",

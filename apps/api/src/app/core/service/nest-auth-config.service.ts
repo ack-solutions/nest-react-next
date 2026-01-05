@@ -179,7 +179,7 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
                     }
 
                     // Assign role with the determined guard
-                    await latestAuthUser.assignRoles([RoleNameEnum.ADMIN], RoleGuardEnum.ADMIN);
+                    await latestAuthUser.assignRoles([RoleNameEnum.USER], input?.guard || RoleGuardEnum.WEB);
                     await latestAuthUser.save();
                 }
             },

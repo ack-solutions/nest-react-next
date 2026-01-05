@@ -35,7 +35,7 @@ import { IAppConfig } from '../../config/app';
 export class UserService extends BaseService<User> {
 
     constructor(
-        private readonly userService: NestAuthUserService,
+        private readonly nestAuthUserService: NestAuthUserService,
 
         @InjectRepository(User)
         public readonly userRepository: BaseRepository<User>,
@@ -55,22 +55,22 @@ export class UserService extends BaseService<User> {
     protected override async afterSave(newValue: any, oldValue: any, request?: any) {
         if (has(newValue, 'status')) {
             if (newValue.status === UserStatusEnum.ACTIVE) {
-                this.userService.updateUserStatus(newValue.authUserId, true);
+                this.nestAuthUserService.updateUserStatus(newValue.authUserId, true);
             } else {
-                this.userService.updateUserStatus(newValue.authUserId, false);
+                this.nestAuthUserService.updateUserStatus(newValue.authUserId, false);
             }
         }
 
         // Update email if it has changed
         if (request?.email && request?.email !== oldValue?.email) {
-            await this.userService.updateUser(newValue?.authUserId, { email: request?.email });
+            await this.nestAuthUserService.updateUser(newValue?.authUserId, { email: request?.email });
         }
 
         // Update phone number if it has changed
         const newPhoneNumber = newValue?.phoneNumber ? `${newValue?.phoneCountryCode}${newValue?.phoneNumber}` : null;
         const oldPhoneNumber = oldValue?.phoneNumber ? `${oldValue?.phoneCountryCode}${oldValue?.phoneNumber}` : null;
         if (newValue?.phoneNumber && newPhoneNumber !== oldPhoneNumber) {
-            await this.userService.updateUser(newValue?.authUserId, { phone: newPhoneNumber });
+            await this.nestAuthUserService.updateUser(newValue?.authUserId, { phone: newPhoneNumber });
         }
         return newValue;
     }
@@ -79,7 +79,7 @@ export class UserService extends BaseService<User> {
         // Check if the roles are valid for the user
         if (has(entity, 'roles')) {
             const { authUserId } = entity;
-            const authUser = await this.userService.getUserById(authUserId);
+            const authUser = await this.nestAuthUserService.getUserById(authUserId);
             await authUser.assignRoles(entity.roles, RoleGuardEnum.ADMIN) as any; // TODO: change to the correct guard
             await authUser.save();
         }
@@ -95,7 +95,7 @@ export class UserService extends BaseService<User> {
     }
 
     protected override async afterDelete(entity: User) {
-        await this.userService.updateUserStatus(entity.authUserId, false);
+        await this.nestAuthUserService.updateUserStatus(entity.authUserId, false);
         return entity;
     }
 
@@ -107,13 +107,13 @@ export class UserService extends BaseService<User> {
             },
         });
         for (const user of users) {
-            await this.userService.updateUserStatus(user.authUserId, false);
+            await this.nestAuthUserService.updateUserStatus(user.authUserId, false);
         }
         return ids;
     }
 
     protected override async afterRestore(entity: User) {
-        await this.userService.updateUserStatus(entity.authUserId, true);
+        await this.nestAuthUserService.updateUserStatus(entity.authUserId, true);
         return entity;
     }
 
@@ -125,13 +125,13 @@ export class UserService extends BaseService<User> {
             },
         });
         for (const user of users) {
-            await this.userService.updateUserStatus(user.authUserId, true);
+            await this.nestAuthUserService.updateUserStatus(user.authUserId, true);
         }
         return ids;
     }
 
     protected override async afterDeleteFromTrash(oldData: any): Promise<any> {
-        await this.userService.deleteUser(oldData.authUserId);
+        await this.nestAuthUserService.deleteUser(oldData.authUserId);
         return oldData;
     }
 
@@ -143,7 +143,7 @@ export class UserService extends BaseService<User> {
             },
         });
         for (const user of users) {
-            await this.userService.deleteUser(user.authUserId);
+            await this.nestAuthUserService.deleteUser(user.authUserId);
         }
         return ids;
     }
@@ -166,13 +166,9 @@ export class UserService extends BaseService<User> {
     }
 
     override async create(entity: CreateUserDTO, options?: SaveOptions) {
-        const defaultTenantName = this.configService.get<IAppConfig>('app').defaultTenantName;
-
-        const tenant = await this.tenantService.getTenantByDomain(defaultTenantName);
-        const authUser = await this.userService.createUser({
+        const authUser = await this.nestAuthUserService.createUser({
             phone: entity.phoneNumber,
             email: entity.email,
-            tenantId: tenant.id,
         });
 
         await authUser.setPassword(entity.password);
@@ -211,14 +207,14 @@ export class UserService extends BaseService<User> {
     async changeEmail(entity: IChangeEmailInput): Promise<SuccessDTO> {
         const authUser = await RequestContext.getTokenPayload();
 
-        await this.userService.updateUser(authUser?.sub, { email: entity?.email });
+        await this.nestAuthUserService.updateUser(authUser?.sub, { email: entity?.email });
         return new SuccessDTO({ message: 'Email updated successfully' });
     }
 
     async changePhone(entity: ChangePhoneInputDTO): Promise<SuccessDTO> {
         const user = await RequestContext.currentUser();
 
-        await this.userService.updateUser(user.authUserId, { phone: `${entity?.phoneCountryCode}${entity?.phoneNumber}` });
+        await this.nestAuthUserService.updateUser(user.authUserId, { phone: `${entity?.phoneCountryCode}${entity?.phoneNumber}` });
 
         await this.userRepository.update(user.id, {
             phoneNumber: entity?.phoneNumber,
@@ -232,7 +228,7 @@ export class UserService extends BaseService<User> {
     async changePassword(entity: IChangePasswordInput) {
         const authUser = await RequestContext.getTokenPayload();
 
-        const user = await this.userService.getUserById(authUser.sub);
+        const user = await this.nestAuthUserService.getUserById(authUser.sub);
 
         const isPasswordMatch = await user.validatePassword(entity.oldPassword);
         if (!isPasswordMatch) {
@@ -251,7 +247,7 @@ export class UserService extends BaseService<User> {
             where: { id: userId },
             select: ['authUserId'],
         });
-        const authUser = await this.userService.getUserById(authUserId);
+        const authUser = await this.nestAuthUserService.getUserById(authUserId);
         if (!authUser) {
             throw new BadRequestException('User not found');
         }
@@ -263,13 +259,13 @@ export class UserService extends BaseService<User> {
     async deleteAccount(request: IDeleteAccountInput) {
         const user = await RequestContext.currentUser();
 
-        const authUser = await this.userService.getUserById(user.authUserId);
+        const authUser = await this.nestAuthUserService.getUserById(user.authUserId);
         const isPasswordMatch = await authUser.validatePassword(request.password);
         if (!isPasswordMatch) {
             throw new BadRequestException('Invalid old password. Please re-enter your old password correctly.');
         }
 
-        await this.userService.updateUserStatus(authUser.id, false);
+        await this.nestAuthUserService.updateUserStatus(authUser.id, false);
         await this.userRepository.softDelete(user.id);
 
         return new SuccessDTO({ message: 'Your account has been successfully deleted. If this was a mistake, please contact support.' });

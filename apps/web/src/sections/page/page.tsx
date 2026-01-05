@@ -5,6 +5,7 @@ import { Container } from '@web/components/ui/container';
 import { Typography } from '@web/components/ui/typography';
 import { IPage } from '@libs/types';
 import { cn } from '@web/utils/cn';
+import styles from './page.module.css';
 
 interface DynamicPageClientProps {
     page: IPage;

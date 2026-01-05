@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
-import { DynamicPageClient } from './dynamic-page.client';
 import { PageService } from '@libs/react-shared';
+import { DynamicPageClient } from '@web/sections/page/page';
 
 type DynamicPageProps = {
     params: Promise<{
@@ -12,8 +12,12 @@ const pageService = PageService.getInstance<PageService>();
 
 export default async function DynamicPage({ params }: DynamicPageProps) {
     const { slug } = await params;
-
-    const page = await pageService.getPageBySlug(slug);
+    let page;
+    try {
+        page = await pageService.getPageBySlug(slug);
+    } catch (e) {
+        console.log(e);
+    }
 
     if (!page) {
         notFound();
