@@ -2,16 +2,15 @@
 
 import React, { ReactNode } from 'react';
 import { Header } from './header';
+import { Footer } from './footer';
 import { useLayout } from '@web/contexts/layout-context';
 import { useRouteLayout } from '@web/hooks/use-route-layout';
-import { Footer } from './footer';
 import { cn } from '@web/utils/cn';
 
 interface LayoutWrapperProps {
     children: ReactNode;
     className?: string;
 }
-
 
 export function LayoutWrapper({ children, className }: LayoutWrapperProps) {
     const { settings } = useLayout();
@@ -20,12 +19,12 @@ export function LayoutWrapper({ children, className }: LayoutWrapperProps) {
     useRouteLayout();
 
     return (
-        <>
-            <Header />
-            <main className={cn('flex-1', className)}>
+        <div className="min-h-screen flex flex-col">
+            {settings.showHeader && <Header />}
+            <main className={cn('flex-1', settings.layoutClass, className)}>
                 {children}
             </main>
-            <Footer />
-        </>
+            {settings.showFooter && <Footer />}
+        </div>
     );
 }

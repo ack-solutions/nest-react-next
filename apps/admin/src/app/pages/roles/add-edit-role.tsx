@@ -7,26 +7,34 @@ import { omit } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import { object, string } from 'yup';
+import { object, string, mixed } from 'yup';
 
 import { Page } from '../../components';
 import PageLoading from '../../components/loading/page-loading';
-import { FormContainer, RHFTextField } from '../../form';
+import { FormContainer, RHFSelect, RHFTextField } from '../../form';
 import { useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import PermissionSelector from '../../sections/permission/permission-selector';
 import NotFound from '../error/not-found';
 import { withRequirePermission } from '@ackplus/nest-auth-react';
 
+type RoleFormValues = {
+    name: string;
+    guard: RoleGuardEnum;
+    permissions?: string[];
+    id?: string;
+};
 
-const defaultValues: any = {
+const defaultValues: RoleFormValues = {
     name: '',
+    guard: RoleGuardEnum.ADMIN,
     permissions: [],
 };
 
 const validationSchema = yupResolver(
     object({
         name: string().trim().label('Name').required(),
+        guard: mixed<RoleGuardEnum>().oneOf(Object.values(RoleGuardEnum)).label('Guard').required(),
     }),
 );
 
@@ -41,17 +49,21 @@ function AddEditRole() {
     const { mutateAsync: createRole } = useCreateRole();
 
     const permissionData = useMemo(() => Object.values(PermissionsEnum), []);
+    const guardOptions = useMemo(() => Object.values(RoleGuardEnum).map((value) => ({
+        label: value,
+        value,
+    })), []);
 
     const { data: roleValues, isLoading: isRoleLoading, error } = useGetRoleById(roleId || '');
 
-    const formContext = useForm({
+    const formContext = useForm<RoleFormValues>({
         defaultValues,
-        resolver: validationSchema,
+        resolver: validationSchema as any,
     });
     const { reset, formState: { isSubmitting } } = formContext;
 
     const handleSubmitForm = useCallback(
-        async (value: IRole) => {
+        async (value: RoleFormValues) => {
             const request: any = {
                 ...omit(value, [
                     'id',
@@ -60,7 +72,7 @@ function AddEditRole() {
                     'deletedAt',
                 ]),
                 permissions: selectedPermissions,
-                guard: RoleGuardEnum.ADMIN,
+                guard: value.guard || RoleGuardEnum.ADMIN,
             };
             try {
                 if (value.id) {
@@ -89,7 +101,10 @@ function AddEditRole() {
     useEffect(() => {
         if (roleValues) {
             reset({
-                ...roleValues,
+                id: roleValues.id,
+                name: roleValues.name || '',
+                guard: (roleValues.guard as RoleGuardEnum) || RoleGuardEnum.ADMIN,
+                permissions: roleValues.permissions || [],
             });
             setSelectedPermissions(roleValues?.permissions || []);
         }
@@ -134,7 +149,7 @@ function AddEditRole() {
                         formProps={{
                             id: 'add-edit-form-role',
                         }}
-                        formContext={formContext}
+                        formContext={formContext as any}
                         validationSchema={validationSchema}
                         onSuccess={handleSubmitForm}
                     >
@@ -145,6 +160,15 @@ function AddEditRole() {
                             <RHFTextField
                                 label="Name"
                                 name="name"
+                                fullWidth
+                            />
+
+                            <RHFSelect
+                                label="Guard"
+                                name="guard"
+                                options={guardOptions}
+                                valueKey="value"
+                                labelKey="label"
                                 fullWidth
                             />
 

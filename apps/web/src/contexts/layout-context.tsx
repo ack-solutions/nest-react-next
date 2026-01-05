@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useCallback, useMemo } from 'react';
 
 export interface LayoutSettings {
     showFooter: boolean;
@@ -39,39 +39,49 @@ export function LayoutProvider({ children, initialSettings }: LayoutProviderProp
         ...initialSettings,
     });
 
-    const updateSettings = (newSettings: Partial<LayoutSettings>) => {
+    const toggleFooter = useCallback(() => {
         setSettings(prev => ({
             ...prev,
-            ...newSettings,
+            showFooter: !prev.showFooter,
         }));
-    };
+    }, []);
 
-    const toggleFooter = () => {
-        updateSettings({ showFooter: !settings.showFooter });
-    };
+    const toggleHeader = useCallback(() => {
+        setSettings(prev => ({
+            ...prev,
+            showHeader: !prev.showHeader,
+        }));
+    }, []);
 
-    const toggleHeader = () => {
-        updateSettings({ showHeader: !settings.showHeader });
-    };
+    const setFooterVisibility = useCallback((isVisible: boolean) => {
+        setSettings(prev => ({
+            ...prev,
+            showFooter: isVisible,
+        }));
+    }, []);
 
-    const setFooterVisibility = (isVisible: boolean) => {
-        updateSettings({ showFooter: isVisible });
-    };
+    const setHeaderVisibility = useCallback((isVisible: boolean) => {
+        setSettings(prev => ({
+            ...prev,
+            showHeader: isVisible,
+        }));
+    }, []);
 
-    const setHeaderVisibility = (isVisible: boolean) => {
-        updateSettings({ showHeader: isVisible });
-    };
+    const setContainerMaxWidth = useCallback((width: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full') => {
+        setSettings(prev => ({
+            ...prev,
+            containerMaxWidth: width,
+        }));
+    }, []);
 
-    const setContainerMaxWidth = (width: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full') => {
-        updateSettings({ containerMaxWidth: width });
-    };
+    const setLayoutClass = useCallback((layoutClass: string) => {
+        setSettings(prev => ({
+            ...prev,
+            layoutClass,
+        }));
+    }, []);
 
-    const setLayoutClass = (layoutClass: string) => {
-        updateSettings({ layoutClass });
-    };
-
-
-    const value: LayoutContextType = {
+    const value = useMemo<LayoutContextType>(() => ({
         settings,
         toggleFooter,
         toggleHeader,
@@ -79,7 +89,15 @@ export function LayoutProvider({ children, initialSettings }: LayoutProviderProp
         setFooterVisibility,
         setHeaderVisibility,
         setLayoutClass,
-    };
+    }), [
+        settings,
+        toggleFooter,
+        toggleHeader,
+        setContainerMaxWidth,
+        setFooterVisibility,
+        setHeaderVisibility,
+        setLayoutClass,
+    ]);
 
     return (
         <LayoutContext.Provider value={value}>

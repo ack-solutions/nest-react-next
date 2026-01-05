@@ -10,7 +10,7 @@ export class RoleService extends Service {
     protected apiPath = 'role';
 
     getRoles(request: IRoleGetInput) {
-        return instanceApi.get<IPaginationResult<IRole>>(`${this.apiPath}`, { params: request }).then((res) => res.data);
+        return instanceApi.get<IRole[]>(`${this.apiPath}`, { params: request }).then((res) => res.data);
     }
 
     getRoleByGuard(guard: string, request?: IRoleGetInput) {

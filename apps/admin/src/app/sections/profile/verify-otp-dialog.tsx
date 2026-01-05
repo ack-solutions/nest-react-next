@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { object, string } from 'yup';
 
 import { DefaultDialog } from '../../components';
-import { useAuth } from '../../contexts';
+import { useAuth } from '@libs/react-shared';
 import { FormContainer, RHFOtpInput } from '../../form';
 
 
@@ -22,7 +22,7 @@ export interface VerifyOtpDialogProps {
 }
 
 function VerifyOtpDialog({ onClose, onSubmit, fromValue, type }: VerifyOtpDialogProps) {
-    const { currentUser } = useAuth();
+    const { currentUser, authUser } = useAuth();
     const formContext = useForm({
         defaultValues: { ...fromValue },
         resolver: yupResolver(VerifySchema),
@@ -91,7 +91,7 @@ function VerifyOtpDialog({ onClose, onSubmit, fromValue, type }: VerifyOtpDialog
                     variant="body2"
                     mb={2}
                 >
-                    {type === 'phone' ? currentUser?.phoneNumber : currentUser?.authUser?.email}
+                    {type === 'phone' ? currentUser?.phoneNumber : authUser?.email}
                 </Typography>
                 <RHFOtpInput
                     name="otp"

@@ -151,8 +151,8 @@ const normalizeAxiosError = (err: any): ApiError => {
  */
 export const instanceApi: AxiosInstance = axios.create({
     baseURL: getApiBaseUrl(),
-    withCredentials: false, // set true only if you use cookie-based auth
-    timeout: 10000,
+    withCredentials: true, // set true only if you use cookie-based auth
+    timeout: 30000,
 });
 
 /**

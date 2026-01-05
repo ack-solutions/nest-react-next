@@ -14,6 +14,7 @@ import { IUser } from '@libs/types';
 import { AuthProvider as NestAuthClientProvider, useNestAuth } from '@ackplus/nest-auth-react';
 import type { AuthClient } from '@ackplus/nest-auth-react';
 import { UserService } from '../services';
+import { IAuthUser } from '@ackplus/nest-auth-client';
 
 const userService = UserService.getInstance<UserService>();
 
@@ -104,7 +105,7 @@ function BridgeAuthProvider({
     onUnauthorized?: () => void;
 }) {
     const auth = useNestAuth();
-
+    const [authUser, setAuthUser] = useState<IAuthUser | null>(null);
     const [isInitialized, setIsInitialized] = useState(false);
     const [currentUser, setCurrentUser] = useState<IUser | null>(null);
     const [isLoadingUser, setIsLoadingUser] = useState(false);
@@ -136,6 +137,9 @@ function BridgeAuthProvider({
             const user = await userService.getMe();
             setCurrentUser(user);
             setAuthErrorStatus(null);
+            if (user.authUser) {
+                setAuthUser(user.authUser);
+            }
             return user;
         } catch (err: any) {
             const status = err?.status ?? err?.response?.status;
@@ -207,7 +211,7 @@ function BridgeAuthProvider({
     const value = useMemo<AuthContextValue>(
         () => ({
             status: auth.status,
-            authUser: auth.user,
+            authUser: authUser,
             session: auth.session,
             isLoading: auth.isLoading || isLoadingUser,
             isAuthenticated: auth.status === 'authenticated',

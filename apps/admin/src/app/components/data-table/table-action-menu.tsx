@@ -58,7 +58,7 @@ export function TableActionMenu({
                     {
                         icon: <Icon icon={IconEnum.Eye} />,
                         title: 'Preview',
-                        permission: `show-${crudPermissionKey}`,
+                        permission: crudPermissionKey ? `show-${crudPermissionKey}` : undefined,
                         onClick: onView,
                     },
                 ] :
@@ -68,7 +68,7 @@ export function TableActionMenu({
                     {
                         icon: <Icon icon={IconEnum.Pencil} />,
                         title: 'Edit',
-                        permission: `update-${crudPermissionKey}`,
+                        permission: crudPermissionKey ? `update-${crudPermissionKey}` : undefined,
                         onClick: onEdit,
                     },
                 ] :
@@ -78,7 +78,7 @@ export function TableActionMenu({
                     {
                         icon: <Icon icon={IconEnum.Trash} />,
                         title: 'Delete',
-                        permission: `delete-${crudPermissionKey}`,
+                        permission: crudPermissionKey ? `delete-${crudPermissionKey}` : undefined,
                         onClick: onDelete,
                     },
                 ] :
@@ -88,7 +88,7 @@ export function TableActionMenu({
                     {
                         icon: <Icon icon={IconEnum.RotateCcw} />,
                         title: 'Restore',
-                        permission: `restore-${crudPermissionKey}`,
+                        permission: crudPermissionKey ? `restore-${crudPermissionKey}` : undefined,
                         onClick: onRestore,
                     },
                 ] :
@@ -98,7 +98,7 @@ export function TableActionMenu({
                     {
                         icon: <Icon icon={IconEnum.Trash2} />,
                         title: 'Delete Forever',
-                        permission: `trash-delete-${crudPermissionKey}`,
+                        permission: crudPermissionKey ? `trash-delete-${crudPermissionKey}` : undefined,
                         onClick: onDeleteForever,
                     },
                 ] :

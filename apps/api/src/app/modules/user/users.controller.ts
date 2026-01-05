@@ -67,7 +67,7 @@ export class UsersController {
         },
     })
     currentUser(): Promise<IUser | null> {
-        return RequestContext.currentUser();
+        return RequestContext.currentUser({ relations: ['authUser'] });
     }
 
     @HttpCode(HttpStatus.ACCEPTED)

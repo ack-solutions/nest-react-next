@@ -9,6 +9,8 @@ export enum RoleNameEnum {
     ADMIN = 'admin',
     MANAGER = 'manager',
     SUPER_ADMIN = 'super_admin',
+    // not a system role
+    USER = 'user',
 }
 export enum RoleGuardEnum {
     ADMIN = 'admin',
@@ -17,5 +19,8 @@ export enum RoleGuardEnum {
 
 
 export interface IRoleGetInput {
-    withPermissions?: boolean;
+    guard?: string;
+    tenantId?: string;
+    onlyTenantRoles?: boolean;
+    onlySystemRoles?: boolean;
 }

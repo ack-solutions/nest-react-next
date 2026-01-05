@@ -31,11 +31,11 @@ function RoleList() {
 
     console.log(canCreate, canEdit, canDelete);
     const {
-        useGetRoleByGuard,
+        useGetRoles,
         useDeleteRole,
     } = useRole();
 
-    const { data, isLoading } = useGetRoleByGuard(RoleGuardEnum.ADMIN);
+    const { data, isLoading } = useGetRoles({});
     const { mutateAsync: deleteRole } = useDeleteRole();
 
     const handleDelete = useCallback((row: IRole) => () => {
@@ -81,8 +81,8 @@ function RoleList() {
             render: (row: IRole) => (
                 <TableActionMenu
                     row={row}
-                    onEdit={!row?.isSystem && canEdit ? () => navigate(PATH_DASHBOARD.users.roles.edit(row.id)) : undefined}
-                    onDelete={!row?.isSystem && canDelete ? handleDelete(row) : undefined}
+                    {...(canEdit && { onEdit: () => navigate(PATH_DASHBOARD.users.roles.edit(row.id)) })}
+                    {...(!row?.isSystem && canDelete && { onDelete: handleDelete(row) })}
                 />
             ),
         },

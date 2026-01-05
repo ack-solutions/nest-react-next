@@ -28,11 +28,11 @@ export default function AccountPopover() {
         },
     ];
     const navigate = useNavigate();
-    const { currentUser, logout } = useAuth();
+    const { currentUser, logout, authUser } = useAuth();
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         try {
-            logout();
+            await logout();
             navigate(PATH_AUTH.login, { replace: true });
         } catch (error) {
             console.error(error);
@@ -74,7 +74,7 @@ export default function AccountPopover() {
                             sx={{ color: 'text.secondary' }}
                             noWrap
                         >
-                            {currentUser?.authUser?.email}
+                            {authUser?.email}
                         </Typography>
                     </Box>
 

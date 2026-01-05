@@ -62,7 +62,7 @@ const profileSections = [
 
 function UserProfile() {
     const [activeSection, setActiveSection] = useState('contact');
-    const { currentUser } = useAuth();
+    const { currentUser, authUser } = useAuth();
     const [openEditDialog, setOpenEditDialog] = useState(false);
 
     const handleOpenEditDialog = () => {
@@ -119,7 +119,7 @@ function UserProfile() {
                             variant="body2"
                             color="text.secondary"
                         >
-                            {currentUser?.authUser?.email}
+                            {authUser?.email}
                         </Typography>
                     </Box>
                 </Stack>

@@ -70,6 +70,7 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(
         {
             crudOperationHooks,
             crudName,
+            crudPermissionKey,
             canEdit,
             canView,
             canCreate,
@@ -371,6 +372,7 @@ export const CrudTable = forwardRef<CrudTableActions, CrudTableProps<any>>(
                     },
                     render: (row: IBaseEntity) => (
                         <TableActionMenu
+                            crudPermissionKey={crudPermissionKey}
                             row={row}
                             {...(row.deletedAt ?
                                 {

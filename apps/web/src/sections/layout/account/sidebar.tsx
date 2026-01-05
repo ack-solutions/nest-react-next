@@ -62,7 +62,7 @@ export default function AccountSidebar({
     defaultSelectedKey = "profile",
     onChange,
 }: AccountSidebarProps) {
-    const { currentUser, logout } = useAuth();
+    const { currentUser, authUser } = useAuth();
     const pathname = usePathname();
     const router = useRouter();
     const [internalKey, setInternalKey] = React.useState<AccountTabKey>(defaultSelectedKey);
@@ -102,12 +102,12 @@ export default function AccountSidebar({
                             {currentUser?.name}
                         </Typography>
                         <Typography variant="body2" color="text-secondary">
-                            {currentUser?.authUser?.email}
+                            {authUser?.email}
                         </Typography>
                         <div className="flex items-center justify-center gap-1 mt-2">
                             <Icon icon={Calendar} size="xs" color="grey" />
                             <Typography variant="caption" color="text-secondary">
-                                Member since {toDisplayDate(currentUser?.authUser?.createdAt)}
+                                Member since {toDisplayDate(currentUser?.createdAt)}
                             </Typography>
                         </div>
                     </div>

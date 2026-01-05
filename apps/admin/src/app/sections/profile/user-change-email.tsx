@@ -17,7 +17,7 @@ import { useToasty } from '../../hook';
 
 
 function UserChangeEmail() {
-    const { currentUser, refetchUser } = useAuth();
+    const { currentUser, refetchUser, authUser } = useAuth();
     const { useChangeEmail } = useUser();
     const { mutateAsync: changeEmail } = useChangeEmail();
     const { showToasty } = useToasty();
@@ -56,7 +56,7 @@ function UserChangeEmail() {
 
     useEffect(() => {
         reset({
-            email: currentUser?.authUser?.email,
+            email: authUser?.email,
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentUser]);

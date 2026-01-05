@@ -1,27 +1,28 @@
 import { IPaginationResult, IRole, IRoleGetInput, ISuccessResponse } from '@libs/types';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { DefinedInitialDataOptions } from '@tanstack/react-query';
 
 import { RoleService, UserService } from '../services';
-import { UpdateQueryOptions, useCrudOperations } from './use-crud-operations';
+import { CreateQueryOptions, invalidUpdateOrCreateQueryCache, UpdateQueryOptions, useCrudOperations } from './use-crud-operations';
 
 
 const roleService = RoleService.getInstance<RoleService>();
 const userService = UserService.getInstance<UserService>();
 
 export const useRole = () => {
-    const {
-        useCreate,
-        useUpdate,
-        useDelete,
-    } = useCrudOperations(roleService);
+    const queryClient = useQueryClient();
+    // const {
+    //     useCreate,
+    //     useUpdate,
+    //     useDelete,
+    // } = useCrudOperations(roleService);
 
-
-    const useGetRoles = (request: IRoleGetInput, options?: Partial<DefinedInitialDataOptions<IPaginationResult<IRole>>>) => useQuery({
+    const useGetRoles = (request?: IRoleGetInput, options?: Partial<DefinedInitialDataOptions<IRole[]>>) => useQuery({
         queryKey: [roleService.getQueryKey('get-all'), request],
         queryFn: () => roleService.getRoles(request),
         ...options,
     });
+
 
     const useGetRoleByGuard = (guard: string, request?: IRoleGetInput, options?: Partial<DefinedInitialDataOptions<IRole[]>>) => useQuery({
         queryKey: [
@@ -39,31 +40,45 @@ export const useRole = () => {
         ...options,
     });
 
-    const useCreateRole = (options?: UpdateQueryOptions<IRole, Error, Partial<IRole>>) => useCreate({
+    const useCreateRole = (options?: CreateQueryOptions<IRole, Error, Partial<IRole>>) => useMutation({
+        mutationFn: (input: Partial<IRole>) => roleService.create(input),
+        onSuccess: (data, variables, _context) => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === roleService.getQueryKey('get-all') ||
+                        query.queryKey[0] === roleService.getQueryKey('get-role-by-guard');
+                },
+            });
+        },
         ...options,
-        invalidateQueryKeys: [roleService.getQueryKey('get-role-by-guard')],
+    });
+    const useUpdateRole = (options?: UpdateQueryOptions<IRole, Error, Partial<IRole>>) => useMutation({
+        mutationFn: (input: Partial<IRole>) => roleService.update(input?.id as any, input),
+        onSuccess: (data, variables, _context) => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === roleService.getQueryKey('get-all') ||
+                        query.queryKey[0] === roleService.getQueryKey('get-role-by-guard') ||
+                        (query.queryKey[0] === roleService.getQueryKey('get-role-by-id') && query.queryKey[1] === data?.id);
+                },
+            });
+        },
+        ...options,
+    });
+    const useDeleteRole = (options?: UpdateQueryOptions<ISuccessResponse, Error, string>) => useMutation({
+        mutationFn: (id: string) => roleService.delete(id),
+        onSuccess: (_data, variable) => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === roleService.getQueryKey('get-all') ||
+                        query.queryKey[0] === roleService.getQueryKey('get-role-by-guard') ||
+                        (query.queryKey[0] === roleService.getQueryKey('get-role-by-id') && query.queryKey[1] === variable);
+                },
+            });
+        },
+        ...options,
     });
 
-    const useUpdateRole = (options?: UpdateQueryOptions<IRole, Error, Partial<IRole>>) => useUpdate({
-        ...options,
-        invalidateQueryKeys: (variables) => [
-            roleService.getQueryKey('get-role-by-guard'),
-            [roleService.getQueryKey('get-role-by-id'), variables?.id],
-            userService.getQueryKey('get-many'),
-            [userService.getQueryKey('get')],
-        ],
-
-    });
-
-    const useDeleteRole = (options?: UpdateQueryOptions<ISuccessResponse, Error, string>) => useDelete({
-        ...options,
-        invalidateQueryKeys: (variables) => [
-            roleService.getQueryKey('get-role-by-guard'),
-            [roleService.getQueryKey('get-role-by-id'), variables],
-            userService.getQueryKey('get-many'),
-            [userService.getQueryKey('get')],
-        ],
-    });
 
     return {
         useGetRoleByGuard,
