@@ -1,0 +1,39 @@
+@reference "../../../app/global.css";
+
+.nav {
+    @apply flex flex-col gap-1 p-4;
+}
+
+.item {
+    @apply flex items-center gap-3 rounded-md px-3 py-2 cursor-pointer transition-colors text-foreground border-none bg-transparent;
+}
+
+.item:not(.itemActive):hover {
+    @apply bg-primary text-white;
+}
+
+/* Make icon look active on hover for non-active items */
+.item:not(.itemActive):hover .iconWrap {
+    @apply bg-white text-primary;
+}
+
+.itemActive {
+    @apply bg-primary text-white;
+}
+
+/* Ensure active state keeps its styles even on hover */
+.itemActive:hover {
+    @apply bg-primary text-white opacity-100;
+}
+
+.iconWrap {
+    @apply inline-flex items-center justify-center w-7 h-7 rounded-full;
+}
+
+.iconActive {
+    @apply bg-white text-primary;
+}
+
+.iconDefault {
+    @apply bg-transparent text-foreground;
+}

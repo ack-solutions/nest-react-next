@@ -1,0 +1,440 @@
+/* Typography Module CSS - Based on configuration image */
+/* Desktop (1440px+), Tablet (1080px), Mobile (320px+) */
+
+/* Base typography class */
+.typography {
+    font-family: var(--font);
+}
+
+/* Display variants - largest headings (default: bold) - Mobile base */
+.display1 {
+    font-size: 50px;
+    font-weight: bold;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+}
+
+.display2 {
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+}
+
+/* Headline variants - section headings with default weights - Mobile base */
+.headline1 {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+}
+
+.headline2 {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+}
+
+.headline3 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+}
+
+.headline4 {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.35;
+}
+
+.headline5 {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.headline6 {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.45;
+}
+
+/* Body text variants - Mobile base */
+.bodyText {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.bodyLarge {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.bodySmall {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* Utility variants */
+.caption {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.overline {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.subtitle1 {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.subtitle2 {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.body1 {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.body2 {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.body3 {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* Color variants */
+.colorInherit {
+    color: inherit;
+}
+
+.colorPrimary {
+    color: var(--color-primary);
+}
+
+.colorTextPrimary {
+    color: var(--color-text-primary);
+}
+
+.colorSecondary {
+    color: var(--color-secondary);
+}
+
+.colorTextSecondary {
+    color: var(--color-text-secondary);
+}
+
+.colorForegroundMuted {
+    color: var(--color-text-secondary);
+}
+
+.colorTernary {
+    color: var(--color-ternary);
+}
+
+.colorSuccess {
+    color: var(--color-success);
+}
+
+.colorError {
+    color: var(--color-error);
+}
+
+.colorWarning {
+    color: var(--color-warning);
+}
+
+.colorInfo {
+    color: var(--color-info);
+}
+
+.colorGrey {
+    color: var(--color-grey);
+}
+
+.colorForeground {
+    color: var(--color-foreground);
+}
+
+.colorBackground {
+    color: var(--color-background);
+}
+
+/* Font weight overrides */
+.weightThin {
+    font-weight: 100;
+}
+
+.weightLight {
+    font-weight: 300;
+}
+
+.weightNormal {
+    font-weight: 400;
+}
+
+.weightMedium {
+    font-weight: 500;
+}
+
+.weightSemibold {
+    font-weight: 600;
+}
+
+.weightBold {
+    font-weight: 700;
+}
+
+.weightExtrabold {
+    font-weight: 800;
+}
+
+.weightBlack {
+    font-weight: 900;
+}
+
+/* Mobile base sizes are already set above */
+
+/* Tablet responsive styles */
+@media (min-width: 768px) {
+    .display1 {
+        font-size: 48px;
+    }
+
+    .display2 {
+        font-size: 42px;
+    }
+
+    .headline1 {
+        font-size: 36px;
+    }
+
+    .headline2 {
+        font-size: 30px;
+    }
+
+    .headline3 {
+        font-size: 28px;
+    }
+
+    .headline4 {
+        font-size: 22px;
+    }
+
+    .headline5 {
+        font-size: 18px;
+    }
+
+    .headline6 {
+        font-size: 16px;
+    }
+
+    .bodyText {
+        font-size: 18px;
+    }
+
+    .bodyLarge {
+        font-size: 22px;
+    }
+
+    .bodySmall {
+        font-size: 16px;
+    }
+
+    .caption {
+        font-size: 12px;
+    }
+
+    .overline {
+        font-size: 12px;
+    }
+
+    .subtitle1 {
+        font-size: 22px;
+    }
+
+    .subtitle2 {
+        font-size: 18px;
+    }
+
+    .body1 {
+        font-size: 16px;
+    }
+
+    .body2 {
+        font-size: 14px;
+    }
+}
+
+/* Desktop responsive styles */
+@media (min-width: 1024px) {
+    .display1 {
+        font-size: 56px;
+    }
+
+    .display2 {
+        font-size: 36px;
+    }
+
+    .headline1 {
+        font-size: 48px;
+    }
+
+    .headline2 {
+        font-size: 36px;
+    }
+
+    .headline3 {
+        font-size: 24px;
+    }
+
+    .headline4 {
+        font-size: 20px;
+    }
+
+    .headline5 {
+        font-size: 18px;
+    }
+
+    .headline6 {
+        font-size: 16px;
+    }
+
+    .caption {
+        font-size: 14px;
+    }
+
+    .overline {
+        font-size: 12px;
+    }
+
+    .subtitle1 {
+        font-size: 22px;
+    }
+
+    .subtitle2 {
+        font-size: 18px;
+    }
+
+    .body1 {
+        font-size: 18px;
+    }
+
+    .body2 {
+        font-size: 16px;
+    }
+
+    .body3 {
+        font-size: 14px;
+    }
+
+    .bodyText {
+        font-size: 18px;
+    }
+
+    .bodyLarge {
+        font-size: 22px;
+    }
+
+    .bodySmall {
+        font-size: 16px;
+    }
+}
+
+@media (min-width: 1440px) {
+    .display1 {
+        font-size: 96px;
+    }
+
+    .display2 {
+        font-size: 40px;
+    }
+
+    .headline1 {
+        font-size: 54px;
+    }
+
+    .headline2 {
+        font-size: 40px;
+    }
+
+    .headline3 {
+        font-size: 24px;
+    }
+
+    .headline4 {
+        font-size: 20px;
+    }
+
+    .headline5 {
+        font-size: 18px;
+    }
+
+    .headline6 {
+        font-size: 16px;
+    }
+
+    .caption {
+        font-size: 14px;
+    }
+
+    .overline {
+        font-size: 12px;
+    }
+
+    .subtitle1 {
+        font-size: 22px;
+    }
+
+    .subtitle2 {
+        font-size: 18px;
+    }
+
+    .body1 {
+        font-size: 18px;
+    }
+
+    .body2 {
+        font-size: 16px;
+    }
+
+    .body3 {
+        font-size: 14px;
+    }
+
+    .bodyText {
+        font-size: 18px;
+    }
+
+    .bodyLarge {
+        font-size: 22px;
+    }
+
+    .bodySmall {
+        font-size: 16px;
+    }
+}

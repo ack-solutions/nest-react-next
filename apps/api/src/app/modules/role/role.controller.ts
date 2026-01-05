@@ -45,8 +45,8 @@ export class RoleController {
         description: 'The roles has been successfully retrieved.',
     })
     @Get(':guard')
-    async getRoleByGuard(@Param('guard') guard: string, @Query() query: any) {
-        return this.service.getRoleByGuard(guard, query);
+    async getRoleByGuard(@Param('guard') guard: string) {
+        return this.service.getRoleByGuard(guard);
     }
 
     @ApiOperation({ summary: 'Create a new role' })

@@ -18,8 +18,10 @@ export class RoleService {
     ) {
     }
 
-    async getAllRoles(options?: FindManyOptions<NestAuthRole>) {
-        return this.roleService.getRoles(null, options);
+    async getAllRoles(options?: {
+        guard?: string; tenantId?: string; onlyTenantRoles?: boolean; onlySystemRoles?: boolean;
+    }) {
+        return this.roleService.getRoles(options);
     }
 
     async getRoleById(id: string) {
@@ -30,7 +32,7 @@ export class RoleService {
         return role;
     }
 
-    async getRoleByGuard(guard: string, query) {
+    async getRoleByGuard(guard: string) {
         const constRoles = await this.roleService.getRoles({ guard: guard });
         return constRoles;
     }

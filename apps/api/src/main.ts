@@ -12,9 +12,16 @@ import { DatabaseErrorFilter } from './app/core/filters/database-error.filter';
 
 
 async function bootstrap() {
-    const app = await NestFactory.create<NestExpressApplication>(AppModule, { cors: true });
+    const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-    app.enableCors();
+    app.enableCors({
+        origin: [
+            process.env.FRONT_URL,
+            process.env.ADMIN_URL,
+            process.env.API_URL,
+        ].filter(Boolean),
+        credentials: true,
+    });
 
     const globalPrefix = 'api';
     app.setGlobalPrefix(globalPrefix);

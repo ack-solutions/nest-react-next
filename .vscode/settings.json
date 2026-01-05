@@ -47,5 +47,6 @@
     },
     "[handlebars]": {
         "editor.defaultFormatter": "vscode.html-language-features"
-    }
+    },
+    "typescript.tsdk": "node_modules/typescript/lib"
 }

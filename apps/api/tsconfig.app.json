@@ -1,22 +1,21 @@
 {
-    "extends": "../../tsconfig.base.json",
-    "files": [],
-    "include": [],
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./dist",
+        "module": "commonjs",
+        "types": ["node"],
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "target": "es2021"
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"],
     "references": [
-        {
-            "path": "./tsconfig.app.json"
-        },
-        {
-            "path": "./tsconfig.spec.json"
-        },
         {
             "path": "../../packages/types/tsconfig.lib.json"
         },
         {
             "path": "../../packages/utils/tsconfig.lib.json"
         }
-    ],
-    "compilerOptions": {
-        "esModuleInterop": true
-    }
+    ]
 }
