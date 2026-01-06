@@ -1,5 +1,5 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsOptional, IsString } from 'class-validator';
 
 import { User } from '../user.entity';
 
@@ -26,5 +26,13 @@ export class UpdateUserDTO extends PartialType(User) {
     @IsArray()
     @IsOptional()
     roles?: string[];
+
+    @ApiProperty({
+        type: Boolean,
+        description: 'Enable or disable MFA for the user',
+    })
+    @IsBoolean()
+    @IsOptional()
+    isMfaEnabled?: boolean;
 
 }

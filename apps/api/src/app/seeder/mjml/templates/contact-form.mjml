@@ -1,0 +1,39 @@
+<mj-section padding="20px">
+  <mj-column>
+    <mj-text align="center" font-size="20px" font-weight="bold" padding="0 0 15px 0">
+      New Contact Enquiry
+    </mj-text>
+    <mj-text font-size="14px" padding="0 0 20px 0">
+      Hello,<br><br>
+          You have received a new contact enquiry. Below are the details:
+    </mj-text>
+  </mj-column>
+</mj-section>
+
+<mj-section padding="20px">
+  <mj-column>
+    <mj-text font-size="14px" padding="0 0 8px 0">
+      <strong>Name:</strong> {{name}}
+    </mj-text>
+    <mj-text font-size="14px" padding="0 0 8px 0">
+      <strong>Email:</strong> {{email}}
+    </mj-text>
+    <mj-text font-size="14px" padding="0 0 8px 0">
+      <strong>Phone:</strong> {{phone}}
+    </mj-text>
+    <mj-text font-size="14px" padding="0 0 8px 0">
+      <strong>Subject:</strong> {{subject}}
+    </mj-text>
+    <mj-text font-size="14px" padding="0 0 8px 0">
+      <strong>Message:</strong><br>{{message}}
+    </mj-text>
+  </mj-column>
+</mj-section>
+
+<mj-section padding="20px">
+  <mj-column>
+    <mj-text align="center" font-size="14px">
+      Thank you
+    </mj-text>
+  </mj-column>
+</mj-section>

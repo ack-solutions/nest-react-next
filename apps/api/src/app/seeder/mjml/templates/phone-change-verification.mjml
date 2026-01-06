@@ -1,0 +1,46 @@
+<mj-section>
+  <mj-column>
+    <mj-text>
+      <div class="text-center font-2xl text-primary mb-3">Verify Your Phone Number</div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-medium mb-2">Hi {{ firstName }}{% if lastName %} {{ lastName }}{% endif %},</div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-medium mb-3">
+        We received a request to {% if isChange %}change{% else %}verify{% endif %}
+        the phone number associated with your {{ appName }} account to <strong>{{ phoneNumber }}</strong>.
+      </div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-medium mb-3">
+        Please use the verification code below to confirm.
+      </div>
+    </mj-text>
+
+    <!-- OTP Code Section -->
+    <mj-text>
+      <div class="text-center mb-1">
+        <div class="otp-code">{{ otp }}</div>
+      </div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-small text-muted text-center mb-3">
+        This verification code will expire in {{ expiryMinutes | default('10') }} minutes.
+      </div>
+    </mj-text>
+
+    <mj-divider border-color="#dee2e6" border-width="1px" padding="20px 0" />
+
+    <mj-text>
+      <div class="font-small text-muted">
+        If you didn't request this verification, please ignore this email or contact support
+        if you have concerns about your account security.
+      </div>
+    </mj-text>
+  </mj-column>
+</mj-section>

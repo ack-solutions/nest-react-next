@@ -90,23 +90,23 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
 
     createAuthModuleOptions(): IAuthModuleOptions {
         const config: IAuthModuleOptions = {
-            appName: 'Badacup',
+            appName: process.env.APP_NAME || 'Template',
             jwt: {
                 secret: this.configService.getOrThrow<string>('jwt.secret'),
                 accessTokenExpiresIn: this.configService.get<string>('jwt.expiresIn'),
                 refreshTokenExpiresIn: this.configService.get<string>('jwt.expiresIn'),
             },
             defaultTenant: {
-                name: 'Badacup',
+                name: process.env.APP_NAME || 'Template',
                 slug: this.configService.get<IAppConfig>('app')?.defaultTenantName,
             },
             mfa: {
-                enabled: this.configService.get('nest_auth.mfaEnabled'),
+                enabled: true,
                 required: false,
                 methods: [NestAuthMFAMethodEnum.EMAIL, NestAuthMFAMethodEnum.SMS, NestAuthMFAMethodEnum.TOTP],
-                otpLength: 4,
+                otpLength: 6,
                 otpExpiresIn: '15m',
-                defaultOtp: this.configService.get('env') !== 'prod' ? '1234' : undefined,
+                defaultOtp: this.configService.get('env') !== 'prod' ? '123456' : undefined,
             },
             // google: {
             //     clientId: this.configService.getOrThrow<string>('sso.google.clientId'),

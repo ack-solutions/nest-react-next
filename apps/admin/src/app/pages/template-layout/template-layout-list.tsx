@@ -20,6 +20,7 @@ function TemplateLayoutList() {
     const confirmDialog = useConfirm();
     const { showToasty } = useToasty();
     const { useGetTemplateLayout, useDeleteTemplateLayout } = useTemplateLayout();
+    const { data, isLoading } = useGetTemplateLayout({});
     const { mutateAsync: deleteTemplateLayout } = useDeleteTemplateLayout();
     const datatableRef = useRef<any>(null);
     const isDialogOpen = useBoolean();

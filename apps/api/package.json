@@ -10,7 +10,7 @@
         "seed:refresh": "node -r ts-node/register -r tsconfig-paths/register ./node_modules/@ackplus/nest-seeder/dist/cli.js -c ./src/seeder.config.ts -r"
     },
     "dependencies": {
-        "@ackplus/nest-auth": "1.1.53",
+        "@ackplus/nest-auth": "1.1.58",
         "@ackplus/nest-crud": "^1.1.18",
         "@ackplus/nest-crud-request": "^1.1.18",
         "@ackplus/nest-dynamic-templates": "^1.1.15",
@@ -69,6 +69,7 @@
         "@types/nodemailer": "^7.0.4",
         "@types/request": "^2.48.13",
         "@types/yargs": "^17.0.35",
+        "copy-webpack-plugin": "^13.0.1",
         "ts-loader": "^9.5.4",
         "ts-node": "^10.9.2",
         "tsconfig-paths": "^4.2.0",

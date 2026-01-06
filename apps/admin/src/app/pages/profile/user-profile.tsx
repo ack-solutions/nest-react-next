@@ -18,12 +18,14 @@ import { useState } from 'react';
 
 import { Avatar, Icon, InfoCard, Page } from '../../components';
 import { IconEnum } from '../../components/icons/icons';
-import { useAuth } from '@libs/react-shared';
+import { useAuth, useUser } from '@libs/react-shared';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import BasicInfoEditDialog from '../../sections/profile/basic-info-edit-dialog';
 import UserChangeEmail from '../../sections/profile/user-change-email';
 import UserChangePassword from '../../sections/profile/user-change-password';
 import UserChangePhone from '../../sections/profile/user-change-phone';
+import TotpManagement from '../../sections/profile/totp-management';
+import { useToasty } from '../../hook';
 
 
 const ListItemButtonStyle = styled(ListItemButton)(({ theme }) => ({
@@ -54,16 +56,25 @@ const profileSections = [
     },
     {
         id: 'password',
-        label: 'Security & Password',
+        label: 'Password',
         icon: IconEnum.Key,
-        description: 'Update your password and security settings',
+        description: 'Update your account password',
+    },
+    {
+        id: 'security',
+        label: 'Security & 2FA',
+        icon: IconEnum.Shield,
+        description: 'Manage two-factor authentication',
     },
 ];
 
 function UserProfile() {
     const [activeSection, setActiveSection] = useState('contact');
-    const { currentUser, authUser } = useAuth();
+    const { currentUser, authUser, refetchUser } = useAuth();
+    const { showToasty } = useToasty();
     const [openEditDialog, setOpenEditDialog] = useState(false);
+    const { useUpdateProfile } = useUser();
+    const { mutateAsync: updateProfile } = useUpdateProfile();
 
     const handleOpenEditDialog = () => {
         setOpenEditDialog(true);
@@ -185,7 +196,12 @@ function UserProfile() {
                                         <UserChangePhone />
                                     </>
                                 )}
-                                {activeSection === 'password' && <UserChangePassword />}
+                                {activeSection === 'password' && (
+                                    <UserChangePassword />
+                                )}
+                                {activeSection === 'security' && (
+                                    <TotpManagement />
+                                )}
                             </Box>
 
                         </InfoCard>

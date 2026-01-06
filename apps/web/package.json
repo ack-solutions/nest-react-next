@@ -12,8 +12,9 @@
         "sitemap": "next-sitemap --config next-sitemap.config.js"
     },
     "dependencies": {
-        "@ackplus/nest-auth-client": "^1.1.53",
-        "@ackplus/nest-auth-react": "^1.1.53",
+        "@ackplus/nest-auth-client": "^1.1.58",
+        "@ackplus/nest-auth-react": "^1.1.58",
+        "@hookform/resolvers": "^5.0.1",
         "@libs/react-shared": "workspace:*",
         "@libs/types": "workspace:*",
         "@libs/utils": "workspace:*",
@@ -30,7 +31,6 @@
         "react-stickynode": "^5.0.2",
         "sonner": "^2.0.7",
         "swiper": "^12.0.3",
-        "@hookform/resolvers": "^5.0.1",
         "tailwind-merge": "^3.4.0",
         "tailwind-variants": "^3.2.2",
         "tslib": "^2.8.1",

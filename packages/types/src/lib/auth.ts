@@ -77,3 +77,55 @@ export interface IMfaStatus {
   enabledMethods: string[];
   availableMethods: string[];
 }
+
+// -------- MFA / TOTP Types --------
+export enum NestAuthMFAMethodEnum {
+  EMAIL = 'email',
+  SMS = 'sms',
+  TOTP = 'totp',
+}
+
+export interface ITotpSetupResponse {
+  secret: string;
+  qrCode: string;
+  otpAuthUrl: string;
+}
+
+export interface IVerifyTotpSetupRequest {
+  otp: string;
+  secret: string;
+}
+
+export interface IMfaDevice {
+  id: string;
+  deviceName: string;
+  method: NestAuthMFAMethodEnum;
+  lastUsedAt?: Date | string | null;
+  verified: boolean;
+  createdAt?: Date | string | null;
+}
+
+export interface IMfaStatusResponse {
+  isEnabled: boolean;
+  verifiedMethods: NestAuthMFAMethodEnum[];
+  configuredMethods: NestAuthMFAMethodEnum[];
+  allowUserToggle: boolean;
+  allowMethodSelection: boolean;
+  totpDevices: IMfaDevice[];
+  hasRecoveryCode: boolean;
+}
+
+export interface IMfaCodeResponse {
+  code: string;
+  expiresAt: Date | string;
+  used: boolean;
+  warning?: string;
+}
+
+export interface IToggleMfaRequest {
+  enabled: boolean;
+}
+
+export interface IMessageResponse {
+  message: string;
+}

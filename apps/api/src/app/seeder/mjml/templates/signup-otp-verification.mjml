@@ -1,0 +1,50 @@
+<mj-section>
+  <mj-column>
+    <mj-text>
+      <div class="text-center font-2xl text-primary mb-3">Verify Your Email Address</div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-medium mb-2">Hi {{ firstName }}{% if lastName %} {{ lastName }}{% endif %},</div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-medium mb-3">
+        Thank you for signing up with {{ appName }}! To complete your registration and
+        activate your account, please verify your email address using the code below.
+      </div>
+    </mj-text>
+
+    <!-- OTP Code Section -->
+    <mj-text>
+      <div class="text-center mb-1">
+        <div class="otp-code">{{ otp }}</div>
+      </div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-small text-muted text-center mb-3">
+        This verification code will expire in {{ expiryMinutes | default('15') }} minutes.
+      </div>
+    </mj-text>
+
+    <mj-divider border-color="#dee2e6" border-width="1px" padding="20px 0" />
+
+    <mj-text>
+      <div class="font-normal mb-3">
+        <strong>Why verify your email?</strong>
+        <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+          <li style="margin-bottom: 4px;">Secure your account</li>
+          <li style="margin-bottom: 4px;">Receive important updates</li>
+          <li style="margin-bottom: 4px;">Enable password recovery</li>
+        </ul>
+      </div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-small text-muted">
+        If you didn't create an account with {{ appName }}, please ignore this email.
+      </div>
+    </mj-text>
+  </mj-column>
+</mj-section>

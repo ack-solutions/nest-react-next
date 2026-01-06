@@ -43,7 +43,7 @@ const mapToApiMfaMethod = (method: MfaMethod): 'email' | 'phone' => {
 };
 
 function Login() {
-    const { login, client } = useAuth();
+    const { login, client, send2fa, verify2fa } = useAuth();
     const [step, setStep] = useState<LoginStep>('login');
     const [selectedMfaMethod, setSelectedMfaMethod] = useState<MfaMethod | null>(null);
     const [availableMfaMethods, setAvailableMfaMethods] = useState<MfaMethod[]>([]);
@@ -125,7 +125,7 @@ function Login() {
                 // For TOTP, skip sending code - user has their authenticator app
                 if (method !== 'totp') {
                     // Send 2FA code via selected method
-                    await client.send2fa(mapToApiMfaMethod(method));
+                    await send2fa(mapToApiMfaMethod(method));
                 }
                 setStep('mfa-otp');
             } catch (error) {

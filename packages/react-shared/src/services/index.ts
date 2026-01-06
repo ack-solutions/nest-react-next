@@ -10,3 +10,4 @@ export * from './page.service';
 export * from './template.service';
 export * from './template-layout.service';
 export * from './setting.service';
+export * from './seeder.service';

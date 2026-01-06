@@ -1,0 +1,49 @@
+<mj-section>
+  <mj-column>
+    <mj-text>
+      <div class="text-center font-2xl text-primary mb-3">Login Verification</div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-medium mb-2">Hi {{ firstName }}{% if lastName %} {{ lastName }}{% endif %},</div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-medium mb-3">
+        We received a login request for your {{ appName }} account.
+        Please use the verification code below to complete your login.
+      </div>
+    </mj-text>
+
+    <!-- OTP Code Section -->
+    <mj-text>
+      <div class="text-center mb-1">
+        <div class="otp-code">{{ otp }}</div>
+      </div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-small text-muted text-center mb-3">
+        This verification code will expire in {{ expiryMinutes | default('10') }} minutes.
+      </div>
+    </mj-text>
+
+    <mj-divider border-color="#dee2e6" border-width="1px" padding="20px 0" />
+
+    <mj-text>
+      <div class="font-small text-muted mb-2">
+        <strong>Security Notice:</strong> If you didn't attempt to log in, please ignore this email
+        and consider changing your password immediately.
+      </div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-small text-muted">
+        <strong>Login Details:</strong><br/>
+        • Email: {{ email }}<br/>
+        • Time: {{ timestamp | default('Just now') }}<br/>
+        {% if ipAddress %}• IP Address: {{ ipAddress }}{% endif %}
+      </div>
+    </mj-text>
+  </mj-column>
+</mj-section>

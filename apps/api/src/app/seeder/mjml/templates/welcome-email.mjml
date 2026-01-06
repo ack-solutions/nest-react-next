@@ -1,0 +1,43 @@
+<mj-section>
+  <mj-column>
+    <mj-text>
+      <div class="text-center font-2xl text-primary mb-3">Welcome to {{ appName }}!</div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-medium mb-2">Hi {{ firstName }}{% if lastName %} {{ lastName }}{% endif %},</div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-medium mb-3">
+        Welcome aboard! We're thrilled to have you join the {{ appName }} community.
+        Your account has been successfully created and you're all set to explore everything we have to offer.
+      </div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-medium mb-2">Here's what you can do next:</div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-normal mb-3">
+        <ul style="margin: 0; padding-left: 20px;">
+          <li style="margin-bottom: 8px;">Complete your profile to personalize your experience</li>
+          <li style="margin-bottom: 8px;">Browse our latest deals and offers</li>
+          <li style="margin-bottom: 8px;">Connect with your favorite stores</li>
+        </ul>
+      </div>
+    </mj-text>
+
+    <!-- CTA Button -->
+    <mj-button background-color="#1a1a1a" color="#ffffff" border-radius="4px" href="{{ loginUrl | default('#') }}">
+      Get Started
+    </mj-button>
+
+    <mj-text>
+      <div class="font-small text-muted text-center mt-3">
+        If you have any questions, feel free to reach out to our support team.
+      </div>
+    </mj-text>
+  </mj-column>
+</mj-section>

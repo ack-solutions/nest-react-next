@@ -66,21 +66,21 @@ function UsersList() {
     });
 
     const handleEditUser = useCallback(
-        (user) => {
+        (user: IUser) => {
             navigate(PATH_DASHBOARD.users.edit(user.id));
         },
         [navigate],
     );
 
     const handleRowClick = useCallback(
-        (row) => {
+        (row: IUser) => {
             navigate(`${PATH_DASHBOARD.users.view}/${row?.id}`);
         },
         [navigate],
     );
 
     const handleResetPassword = useCallback(
-        (user) => {
+        (user: IUser) => {
             setResetPasswordUser(user);
         },
         [],
@@ -91,7 +91,7 @@ function UsersList() {
     }, []);
 
     const handleUpdateStatus = useCallback(
-        (value: UserStatusEnum, row) => {
+        (value: UserStatusEnum, row: IUser) => {
             const request: any = {
                 id: row.id,
                 status: value,
@@ -105,7 +105,24 @@ function UsersList() {
         [showToasty, updateUser],
     );
 
-    const handleOnChangeTableFilter = useCallback((value, key) => {
+    const handleUpdateUserMfa = useCallback(
+        (checked: boolean, row: IUser) => {
+            const request: any = {
+                id: row.id,
+                authUserId: row?.authUser?.id,
+                isMfaEnabled: checked,
+            };
+            updateUser(request).then(() => {
+                showToasty('MFA status updated successfully');
+                datatableRef.current?.datatable.refresh();
+            }).catch((error) => {
+                showToasty(error, 'error');
+            });
+        },
+        [showToasty, updateUser],
+    );
+
+    const handleOnChangeTableFilter = useCallback((value: any, key: string) => {
         setTableFilter((state) => {
             const newState = {
                 ...state,
@@ -115,7 +132,7 @@ function UsersList() {
         });
     }, []);
 
-    const handleTrashData = useCallback((checked) => {
+    const handleTrashData = useCallback((checked: boolean) => {
         setCountFilter((state) => {
             const newState = new QueryBuilder(state);
             newState.setOnlyDeleted(checked);
@@ -303,6 +320,15 @@ function UsersList() {
                                             onClick: () => handleResetPassword(row),
                                         },
                                     ],
+                                    ...(isSuperAdmin ? {
+                                        actions: [
+                                            {
+                                                icon: <Icon icon={IconEnum.Key} />,
+                                                title: row?.authUser.isMfaEnabled ? 'Disable MFA' : 'Enable MFA',
+                                                onClick: () => handleUpdateUserMfa(!row?.authUser.isMfaEnabled, row),
+                                            },
+                                        ],
+                                    } : {}),
                                 } : {}),
                             };
                         }

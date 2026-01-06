@@ -1,0 +1,71 @@
+<mj-section>
+  <mj-column>
+    <mj-text>
+      <div class="text-center font-2xl text-primary mb-3">Your Order Confirmation</div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-medium mb-2">Hi {{ firstName }}{% if lastName %} {{ lastName }}{% endif %},</div>
+    </mj-text>
+
+    <mj-text>
+      <div class="font-medium mb-3">
+        Thank you for your order! We've received your order and it's being processed.
+        Here are your order details:
+      </div>
+    </mj-text>
+
+    <!-- Order Details Box -->
+    <mj-text>
+      <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <div style="margin-bottom: 12px;">
+          <strong>Order Number:</strong> #{{ orderNumber }}
+        </div>
+        <div style="margin-bottom: 12px;">
+          <strong>Order Date:</strong> {{ orderDate }}
+        </div>
+        <div style="margin-bottom: 12px;">
+          <strong>Payment Method:</strong> {{ paymentMethod }}
+        </div>
+        <div>
+          <strong>Total Amount:</strong> <span style="color: #8d135e; font-weight: bold;">{{ currency | default('₹') }}{{ totalAmount }}</span>
+        </div>
+      </div>
+    </mj-text>
+
+    <!-- Order Items Table -->
+    <mj-text>
+      <div class="font-medium mb-2"><strong>Order Items:</strong></div>
+      <table class="table" style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="text-align: left; padding: 12px 8px; background-color: #f8f9fa; border-bottom: 2px solid #dee2e6;">Item</th>
+            <th style="text-align: center; padding: 12px 8px; background-color: #f8f9fa; border-bottom: 2px solid #dee2e6;">Qty</th>
+            <th style="text-align: right; padding: 12px 8px; background-color: #f8f9fa; border-bottom: 2px solid #dee2e6;">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td style="padding: 12px 8px; border-bottom: 1px solid #dee2e6;">{{ item.name }}</td>
+            <td style="text-align: center; padding: 12px 8px; border-bottom: 1px solid #dee2e6;">{{ item.quantity }}</td>
+            <td style="text-align: right; padding: 12px 8px; border-bottom: 1px solid #dee2e6;">{{ currency | default('₹') }}{{ item.price }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </mj-text>
+
+    <mj-button background-color="#1a1a1a" color="#ffffff" border-radius="4px" href="{{ orderUrl | default('#') }}">
+      View Order Details
+    </mj-button>
+
+    <mj-divider border-color="#dee2e6" border-width="1px" padding="20px 0" />
+
+    <mj-text>
+      <div class="font-small text-muted text-center">
+        If you have any questions about your order, please contact our support team.
+      </div>
+    </mj-text>
+  </mj-column>
+</mj-section>

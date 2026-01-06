@@ -2,10 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { NestAuthEvents, PasswordResetRequestedEvent } from '@ackplus/nest-auth';
 import { User } from '../../modules/user/user.entity';
 import { BaseRepository } from '../../core/typeorm/base-repository';
-import { NestAuthEvents, PasswordResetRequestedEvent } from '@ackplus/nest-auth';
-import { EmailNotificationService } from '../../libs/notification/providers/email-notification.service';
+import { NotificationService } from '../../libs/notification/notification.service';
 
 /**
  * Handles password reset requested events
@@ -18,7 +18,7 @@ export class PasswordResetRequestedListener {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: BaseRepository<User>,
-        private readonly emailNotificationService: EmailNotificationService
+        private readonly notificationService: NotificationService,
     ) { }
 
     /**
@@ -27,29 +27,37 @@ export class PasswordResetRequestedListener {
      */
     @OnEvent(NestAuthEvents.PASSWORD_RESET_REQUESTED)
     async handlePasswordResetRequested(event: PasswordResetRequestedEvent): Promise<void> {
-        const { user: authUser, otp } = event.payload;
+        try {
+            const { user: authUser, otp } = event.payload;
 
-        // Get the app user record to get additional information if needed
-        const user = await this.userRepository.findOne({
-            where: { authUserId: authUser.id },
-        });
-        // Prepare email data for OTP verification
-        const emailData = {
-            firstName: user?.firstName || 'User',
-            lastName: user?.lastName || '',
-            email: authUser.email,
-            otp: otp.code,
-            expiryMinutes: 10, // OTP typically expires faster than reset links
-        };
+            if (!authUser?.email || !otp?.code) {
+                this.logger.warn('Missing required data for password reset email', {
+                    hasEmail: !!authUser?.email,
+                    hasOtp: !!otp?.code,
+                });
+                return;
+            }
 
-        // Send forgot password OTP email using the existing service method
-        await this.emailNotificationService.forgotPasswordVerification(
-            { email: authUser.email, firstName: emailData.firstName, lastName: emailData.lastName },
-            emailData
-        );
+            // Get the app user record to get additional information if needed
+            const user = await this.userRepository.findOne({
+                where: { authUserId: authUser.id },
+            });
 
-        this.logger.log(`Successfully sent password reset OTP email to user: ${authUser.email}, OTP: ${otp.code}`);
+            // Send forgot password OTP email using the notification service
 
+            const options = {
+                loginUrl: `${process.env.FORN_URL}/auth/login`,
+                firstName: user?.firstName || '',
+                lastName: user?.lastName || '',
+                otp: otp.code,
+                expiryMinutes: 15,
+            }
+            await this.notificationService.sendEmail('forgot-password-otp-verification', { email: authUser.email, }, options,);
+
+            this.logger.log(`Successfully sent password reset OTP email to user: ${authUser.email}`);
+        } catch (error) {
+            this.logger.error('Failed to send password reset OTP email', error.stack);
+            throw error;
+        }
     }
-
 }

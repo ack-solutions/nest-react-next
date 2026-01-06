@@ -76,8 +76,16 @@ export class UserService extends BaseService<User> {
     }
 
     protected override async beforeUpdate(entity: Partial<UpdateUserDTO>) {
+        // Enable or disable MFA for the user
+        if (has(entity, 'isMfaEnabled')) {
+            const { authUserId } = entity;
+            if (authUserId) {
+                await this.nestAuthUserService.updateUser(authUserId, { isMfaEnabled: entity.isMfaEnabled });
+            }
+        }
+
         // Check if the roles are valid for the user
-        if (has(entity, 'roles')) {
+        if (has(entity, 'roles') && entity.roles) {
             const { authUserId } = entity;
             const authUser = await this.nestAuthUserService.getUserById(authUserId);
             await authUser.assignRoles(entity.roles, RoleGuardEnum.ADMIN) as any; // TODO: change to the correct guard
@@ -189,7 +197,6 @@ export class UserService extends BaseService<User> {
 
     async updateProfile(entity: IUpdateProfileInput): Promise<IUser> {
         const user = await RequestContext.currentUser();
-
         const userEntity = omit(entity, [
             'roles',
             'phoneNumber',

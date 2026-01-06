@@ -20,6 +20,7 @@ export interface IUser extends IBaseEntity {
   razorpayCustomerId?: string
   // read only
   formattedPhone?: string;
+  isMfaEnabled?: boolean;
 }
 
 export interface ICreateUserInput {

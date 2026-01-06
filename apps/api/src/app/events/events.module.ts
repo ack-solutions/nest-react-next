@@ -1,9 +1,12 @@
-import { Module } from '@nestjs/common';
+import { NestAuthModule } from '@ackplus/nest-auth';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { UserRegisteredListener, PasswordResetRequestedListener } from './listeners';
+import { UserRegisteredListener, PasswordResetRequestedListener, SendMfaCodeListener } from './listeners';
 import { User } from '../modules/user/user.entity';
 import { NotificationModule } from '../libs/notification/notification.module';
+import { UserLoginListener } from './listeners/user-login.listener';
+import { ConfigModule } from '@nestjs/config';
 
 /**
  * Events Module
@@ -14,16 +17,20 @@ import { NotificationModule } from '../libs/notification/notification.module';
     imports: [
         TypeOrmModule.forFeature([User]),
         NotificationModule,
+        NestAuthModule,
+        ConfigModule,
     ],
     providers: [
         UserRegisteredListener,
         PasswordResetRequestedListener,
-        // Add more event listeners here as needed
+        SendMfaCodeListener,
+        UserLoginListener,
     ],
     exports: [
         UserRegisteredListener,
         PasswordResetRequestedListener,
-        // Export listeners that other modules might need
+        UserLoginListener,
+        SendMfaCodeListener,
     ],
 })
 export class EventsModule { }
