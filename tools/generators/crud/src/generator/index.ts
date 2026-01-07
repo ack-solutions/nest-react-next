@@ -21,6 +21,7 @@ import {
 } from './utils.js';
 import { renderTemplate } from './template-engine.js';
 import { writeFile, appendLineIfMissing } from './file-writer.js';
+import { injectAppModule, injectTypesExport, injectAdminNavigation } from './injector.js';
 
 /**
  * Column presets for quick-add functionality
@@ -167,6 +168,16 @@ export async function generateCrud(
 
         const listContent = await renderTemplate('react/list-page.tsx.ejs', meta);
         results.push(writeFile(rootDir, `apps/admin/src/app/pages/${meta.pluralKebab}/${meta.entityFile}-list.tsx`, listContent, options));
+    }
+
+    // Injections
+    if (outputApps.api) {
+        results.push(...await injectAppModule(rootDir, meta, options));
+        results.push(...await injectTypesExport(rootDir, meta, options));
+    }
+
+    if (outputApps.admin) {
+        results.push(...await injectAdminNavigation(rootDir, meta, options));
     }
 
     return results;
