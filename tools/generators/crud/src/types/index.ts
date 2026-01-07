@@ -11,6 +11,7 @@ export interface ColumnConfig {
     length?: number;
     default?: string;
     enumValues?: string[];
+    label?: string;
 }
 
 export type ColumnType =
@@ -32,6 +33,7 @@ export interface NormalizedColumn extends ColumnConfig {
     enumTypeName?: string;
     decoratorArgs: string;
     swaggerDecorator?: string;
+    label?: string;
 }
 
 export interface GeneratorConfig {
@@ -45,6 +47,7 @@ export interface GeneratorConfig {
         web?: boolean;
     };
     implementationType?: 'nest-crud' | 'custom';
+    viewType?: 'page' | 'dialog' | 'drawer';
     swagger?: boolean;
 }
 
@@ -58,6 +61,7 @@ export interface GeneratorMeta {
     columns: NormalizedColumn[];
     enumColumns: NormalizedColumn[];
     implementationType: 'nest-crud' | 'custom';
+    viewType: 'page' | 'dialog' | 'drawer';
     swagger: boolean;
 }
 

@@ -1,77 +1,162 @@
-import React, { useState } from 'react';
+import { QueryBuilder, WhereOperatorEnum } from '@ackplus/nest-crud-request';
 import { use<%= entityPascal %>List, useDelete<%= entityPascal %> } from '@libs/react-shared';
 import { I<%= entityPascal %> } from '@libs/types';
-import { AddEdit<%= entityPascal %>Dialog } from '../../sections/<%= pluralKebab %>/add-edit-<%= entityFile %>-dialog';
+import { toDisplayDate } from '@libs/utils';
+import { Button, Card } from '@mui/material';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+
+import { Page, Icon } from '../../components';
+import { CrudTable, CrudTableActions } from '../../components/crud/crud-table';
+import { DataTableColumn, DataTableTab, DataTableTabItem, IDataTableFilter } from '../../components/data-table';
+import { IconEnum } from '../../components/icons/icons';
+import { PATH_DASHBOARD } from '../../routes/paths';
+
+<%_ if (viewType !== 'page') { -%>
+import AddEdit<%= entityPascal %>Form from '../../sections/<%= pluralKebab %>/add-edit-<%= entityFile %>-form';
+<%_ } -%>
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface I<%= entityPascal %>TableFilter {
+}
+
+const defaultFilter: I<%= entityPascal %>TableFilter = {
+};
 
 export default function <%= entityPascal %>ListPage() {
-    const [dialogOpen, setDialogOpen] = useState(false);
-    const [editId, setEditId] = useState<string | undefined>();
-    const { data, isLoading, error } = use<%= entityPascal %>List();
-    const deleteMutation = useDelete<%= entityPascal %>();
+    const navigate = useNavigate();
+    const datatableRef = useRef<CrudTableActions>(null);
+    const [tableFilter, setTableFilter] = useState(defaultFilter);
 
-    const handleAdd = () => {
-        setEditId(undefined);
-        setDialogOpen(true);
-    };
+<%_ if (viewType !== 'page') { -%>
+    const [openForm, setOpenForm] = useState(false);
+    const [selectedId, setSelectedId] = useState<string | null>(null);
 
-    const handleEdit = (id: string) => {
-        setEditId(id);
-        setDialogOpen(true);
-    };
+    const handleCloseForm = useCallback(() => {
+        setOpenForm(false);
+        setSelectedId(null);
+        datatableRef.current?.refresh();
+    }, []);
+<%_ } -%>
 
-    const handleDelete = async (id: string) => {
-        if (confirm('Are you sure you want to delete this item?')) {
-            await deleteMutation.mutateAsync(id);
-        }
-    };
+    const handleEdit = useCallback(
+        (row: I<%= entityPascal %>) => {
+<%_ if (viewType === 'page') { -%>
+            navigate(PATH_DASHBOARD.<%= entityCamel %>.edit(row.id));
+<%_ } else { -%>
+            setSelectedId(row.id);
+            setOpenForm(true);
+<%_ } -%>
+        },
+        [navigate],
+    );
 
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error.message}</div>;
+    const handleView = useCallback(
+        (row: I<%= entityPascal %>) => {
+<%_ if (viewType === 'page') { -%>
+            navigate(PATH_DASHBOARD.<%= entityCamel %>.view(row.id));
+<%_ } else { -%>
+            setSelectedId(row.id);
+            setOpenForm(true);
+<%_ } -%>
+        },
+        [navigate],
+    );
 
-    const items = data?.data || [];
+    const handleDataTableApiRequestMap = useCallback(
+        (queryBuilder: QueryBuilder, request: IDataTableFilter) => {
+            if (request?.search) {
+                queryBuilder.orWhere('name', WhereOperatorEnum.ILIKE, `%${request?.search}%`);
+            }
+            return queryBuilder;
+        },
+        [],
+    );
+
+    const tabs: DataTableTabItem[] = useMemo(() => {
+        return [
+            {
+                value: 'all',
+                label: 'All',
+                count: 0,
+            },
+        ];
+    }, []);
+
+    const columns: DataTableColumn<I<%= entityPascal %>>[] = [
+<%_ for (const col of columns.slice(0, 6)) { -%>
+        {
+            name: '<%= col.propertyName %>',
+            label: '<%= col.label %>',
+            isSortable: true,
+            isSearchable: true,
+<%_ if (col.dbType === 'date' || col.dbType === 'datetime') { -%>
+            render: (row) => toDisplayDate(row?.<%= col.propertyName %>),
+<%_ } else if (col.dbType === 'boolean') { -%>
+            render: (row) => (row?.<%= col.propertyName %> ? 'Yes' : 'No'),
+<%_ } else { -%>
+            render: (row) => row?.<%= col.propertyName %>,
+<%_ } -%>
+        },
+<%_ } -%>
+        {
+            name: 'createdAt',
+            label: 'Created Date',
+            isSortable: true,
+            render: (row) => toDisplayDate(row?.createdAt),
+        },
+    ];
 
     return (
-        <div className="page">
-            <div className="page-header">
-                <h1><%= entityPascal %> List</h1>
-                <button onClick={handleAdd}>Add <%= entityPascal %></button>
-            </div>
-
-            <table className="data-table">
-                <thead>
-                    <tr>
-<% for (const col of columns.slice(0, 5)) { -%>
-                        <th><%= col.propertyName %></th>
-<% } -%>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {items.map((item: I<%= entityPascal %>) => (
-                        <tr key={item.id}>
-<% for (const col of columns.slice(0, 5)) { -%>
-<%_ if (col.dbType === 'boolean') { -%>
-                            <td>{item.<%= col.propertyName %> ? 'Yes' : 'No'}</td>
-<%_ } else if (col.dbType === 'date' || col.dbType === 'datetime') { -%>
-                            <td>{item.<%= col.propertyName %> ? new Date(item.<%= col.propertyName %>).toLocaleDateString() : '-'}</td>
+        <Page
+            title="<%= entityPascal %> List"
+            breadcrumbs={[
+                { name: 'Dashboard', href: PATH_DASHBOARD.root },
+                { name: '<%= entityPascal %>', href: PATH_DASHBOARD.<%= entityCamel %>.root },
+                { name: 'List' },
+            ]}
+        >
+            <Card>
+                <DataTableTab tabs={tabs} value="all" onChange={() => {}} />
+                <CrudTable
+                    crudName="<%= entityPascal %>"
+                    columns={columns}
+                    ref={datatableRef}
+                    canEdit={true}
+                    canDelete={true}
+                    dataTableApiRequestMap={handleDataTableApiRequestMap}
+                    crudOperationHooks={{
+                        useGetMany: use<%= entityPascal %>List,
+                        useDelete: useDelete<%= entityPascal %>,
+                    }}
+                    onEdit={handleEdit}
+                    onRowClick={handleView}
+                    extraFilter={(
+                        <Button
+<%_ if (viewType === 'page') { -%>
+                            component={Link}
+                            to={PATH_DASHBOARD.<%= entityCamel %>.add}
 <%_ } else { -%>
-                            <td>{item.<%= col.propertyName %>}</td>
+                            onClick={() => { setSelectedId(null); setOpenForm(true); }}
 <%_ } -%>
-<% } -%>
-                            <td>
-                                <button onClick={() => handleEdit(item.id)}>Edit</button>
-                                <button onClick={() => handleDelete(item.id)}>Delete</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+                            variant="contained"
+                            startIcon={<Icon icon={IconEnum.Add} />}
+                        >
+                            New <%= entityPascal %>
+                        </Button>
+                    )}
+                />
+            </Card>
 
-            <AddEdit<%= entityPascal %>Dialog
-                open={dialogOpen}
-                onClose={() => setDialogOpen(false)}
-                editId={editId}
-            />
-        </div>
+<%_ if (viewType !== 'page') { -%>
+            {openForm && (
+                <AddEdit<%= entityPascal %>Form
+                    open={openForm}
+                    onClose={handleCloseForm}
+                    id={selectedId}
+                />
+            )}
+<%_ } -%>
+        </Page>
     );
 }

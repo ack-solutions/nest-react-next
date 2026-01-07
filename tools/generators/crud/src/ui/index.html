@@ -18,67 +18,74 @@
             --warning: #f59e0b;
             --error: #ef4444;
             --border: #333;
-            --radius: 8px;
+            --radius: 6px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg);
             color: var(--text);
-            line-height: 1.6;
+            line-height: 1.4;
             min-height: 100vh;
+            font-size: 14px;
         }
-        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
-        h1 { font-size: 1.75rem; margin-bottom: 0.5rem; }
-        h2 { font-size: 1.25rem; margin-bottom: 1rem; }
-        .subtitle { color: var(--muted); margin-bottom: 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+        h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+        h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .subtitle { color: var(--muted); margin-bottom: 1rem; font-size: 0.9rem; }
 
         .card {
             background: var(--bg2);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
         }
         .card-header {
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
             border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
+        .card-header h2 { margin: 0; }
 
-        .form-group { margin-bottom: 1rem; }
-        .form-label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-group { margin-bottom: 0.75rem; }
+        .form-label { display: block; margin-bottom: 0.25rem; font-weight: 500; font-size: 0.85rem; }
         .form-label.required::after { content: ' *'; color: var(--error); }
         .form-input, .form-select {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.5rem;
             background: var(--bg3);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             color: var(--text);
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
         .form-input:focus, .form-select:focus {
             outline: none;
             border-color: var(--primary);
         }
-        .form-hint { font-size: 0.8rem; color: var(--muted); margin-top: 0.25rem; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
 
-        .checkbox-group { display: flex; gap: 2rem; flex-wrap: wrap; }
+        .checkbox-group { display: flex; gap: 1.5rem; flex-wrap: wrap; }
         .checkbox-label {
             display: flex;
             align-items: center;
             gap: 0.5rem;
             cursor: pointer;
+            font-size: 0.9rem;
         }
-        .checkbox-label input { width: 18px; height: 18px; accent-color: var(--primary); }
+        .checkbox-label input { width: 16px; height: 16px; accent-color: var(--primary); }
+        .checkbox-label small { display: block; font-size: 0.75rem; }
 
         .btn {
-            padding: 0.75rem 1.5rem;
+            padding: 0.5rem 1rem;
             border: none;
             border-radius: var(--radius);
-            font-size: 1rem;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.2s;
             font-weight: 500;
@@ -91,74 +98,76 @@
         .btn-warning { background: var(--warning); color: black; }
         .btn-danger { background: var(--error); color: white; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.875rem; }
-        .btn-group { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.5rem; }
+        .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.8rem; }
+        .btn-group { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; }
 
-        .presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+        .presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; }
         .preset-btn {
-            padding: 0.5rem 0.75rem;
+            padding: 0.25rem 0.5rem;
             background: var(--bg3);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             color: var(--text);
             cursor: pointer;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             transition: all 0.2s;
         }
         .preset-btn:hover { border-color: var(--primary); }
         .preset-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
-        th { font-weight: 600; color: var(--muted); font-size: 0.875rem; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th, td { padding: 0.5rem; text-align: left; border-bottom: 1px solid var(--border); }
+        th { font-weight: 600; color: var(--muted); font-size: 0.8rem; }
         td input, td select {
-            padding: 0.5rem;
+            padding: 0.25rem 0.5rem;
             background: var(--bg3);
             border: 1px solid var(--border);
             border-radius: 4px;
             color: var(--text);
             width: 100%;
+            font-size: 0.85rem;
         }
         td input[type="checkbox"] { width: auto; }
 
-        .empty-state { text-align: center; padding: 2rem; color: var(--muted); }
+        .empty-state { text-align: center; padding: 1.5rem; color: var(--muted); font-size: 0.9rem; }
 
         .log-viewer {
             background: #0a0a0a;
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 1rem;
+            padding: 0.75rem;
             font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 0.875rem;
-            max-height: 300px;
+            font-size: 0.8rem;
+            max-height: 200px;
             overflow-y: auto;
         }
-        .log-entry { padding: 0.25rem 0; }
+        .log-entry { padding: 0.15rem 0; }
         .log-success { color: var(--success); }
         .log-error { color: var(--error); }
         .log-warning { color: var(--warning); }
 
-        .step-nav { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; }
+        .step-nav { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; }
         .step-btn {
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem;
             background: var(--bg3);
             border: 2px solid var(--border);
             border-radius: var(--radius);
             color: var(--muted);
             cursor: pointer;
             transition: all 0.2s;
+            font-size: 0.9rem;
         }
         .step-btn.active { border-color: var(--primary); color: var(--text); background: rgba(100, 108, 255, 0.1); }
         .step-btn.completed { border-color: var(--success); color: var(--success); }
 
         .hidden { display: none !important; }
 
-        .file-list { display: flex; flex-direction: column; gap: 0.25rem; max-height: 400px; overflow-y: auto; }
+        .file-list { display: flex; flex-direction: column; gap: 0.1rem; max-height: 500px; overflow-y: auto; }
         .file-item {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.5rem 0.75rem;
+            padding: 0.4rem 0.75rem;
             background: var(--bg3);
             border-radius: 4px;
             cursor: pointer;
@@ -168,36 +177,34 @@
         }
         .file-item:hover { background: #2a2a2a; }
         .file-item.active { border-color: var(--primary); background: rgba(100, 108, 255, 0.1); }
-        .file-item .action { color: var(--success); font-weight: bold; }
+        .file-item .action { color: var(--success); font-weight: bold; width: 15px; }
 
-        .preview-container { display: grid; grid-template-columns: 350px 1fr; gap: 1rem; }
-        #monacoContainer { height: 450px; border: 1px solid var(--border); border-radius: var(--radius); }
+        .preview-container { display: grid; grid-template-columns: 300px 1fr; gap: 1rem; }
+        #monacoContainer { height: 500px; border: 1px solid var(--border); border-radius: var(--radius); }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>CRUD Generator</h1>
-        <p class="subtitle">Generate NestJS + React scaffolding with EJS templates</p>
 
         <div class="step-nav">
-            <button class="step-btn active" data-step="1">1. Basic Info</button>
+            <button class="step-btn active" data-step="1">1. Configuration</button>
             <button class="step-btn" data-step="2">2. Columns</button>
-            <button class="step-btn" data-step="3">3. Preview & Generate</button>
+            <button class="step-btn" data-step="3">3. Preview</button>
         </div>
 
         <!-- Step 1: Basic Info -->
         <div id="step-1" class="step">
             <div class="card">
                 <div class="card-header"><h2>Entity Details</h2></div>
-                <div class="form-group">
-                    <label class="form-label required">Entity Name</label>
-                    <input type="text" id="entityName" class="form-input" placeholder="e.g., Product, BlogPost, UserProfile">
-                    <p class="form-hint">Use PascalCase or camelCase. Will be converted automatically.</p>
-                </div>
-                <div class="form-row">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label required">Entity Name</label>
+                        <input type="text" id="entityName" class="form-input" placeholder="e.g. Product, BlogPost">
+                    </div>
                     <div class="form-group">
                         <label class="form-label">API Route</label>
-                        <input type="text" id="route" class="form-input" placeholder="Auto-generated from entity name">
+                        <input type="text" id="route" class="form-input" placeholder="Auto-generated">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Module Name</label>
@@ -207,38 +214,47 @@
             </div>
 
             <div class="card">
-                <div class="card-header"><h2>Output Targets</h2></div>
-                <div class="checkbox-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="outputApi" checked>
-                        <span><strong>API (NestJS)</strong><br><small style="color:var(--muted)">Entity, Service, Controller, DTOs</small></span>
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="outputAdmin" checked>
-                        <span><strong>Admin (React)</strong><br><small style="color:var(--muted)">List page, Dialog, Hooks</small></span>
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="outputWeb">
-                        <span><strong>Web (Next.js)</strong><br><small style="color:var(--muted)">Public pages</small></span>
-                    </label>
+                <div class="card-header">
+                    <h2>Options</h2>
                 </div>
-            </div>
+                <div class="form-grid">
+                     <div class="form-group">
+                        <label class="form-label">View Type (Admin)</label>
+                        <select id="viewType" class="form-select">
+                            <option value="page">Full Page (Form)</option>
+                            <option value="dialog">Dialog (Modal)</option>
+                            <option value="drawer">Drawer (Side Panel)</option>
+                        </select>
+                        <p class="form-hint">How the Add/Edit form should be presented.</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Backend Strategy</label>
+                        <select id="implementationType" class="form-select">
+                            <option value="nest-crud">Use @ackplus/nest-crud</option>
+                            <option value="custom">Custom Service</option>
+                        </select>
+                    </div>
+                </div>
 
-            <div class="card">
-                <div class="card-header"><h2>Implementation Options</h2></div>
-                <div class="form-group">
-                    <label class="form-label">Backend Strategy</label>
-                    <select id="implementationType" class="form-select">
-                        <option value="nest-crud">Use @ackplus/nest-crud (Recommended)</option>
-                        <option value="custom">Custom Service & Controller</option>
-                    </select>
-                    <p class="form-hint">Choose between the rapid development library or standard boilerplate.</p>
-                </div>
-                <div class="checkbox-group">
-                     <label class="checkbox-label">
-                        <input type="checkbox" id="optSwagger">
-                        <span><strong>Enable Swagger</strong><br><small style="color:var(--muted)">Add @ApiProperty decorators</small></span>
-                    </label>
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="outputApi" checked>
+                            <span>API (NestJS)</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="outputAdmin" checked>
+                            <span>Admin (React)</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="outputWeb">
+                            <span>Web (Next)</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="optSwagger">
+                            <span>Swagger</span>
+                        </label>
+                    </div>
                 </div>
             </div>
 
@@ -250,17 +266,19 @@
         <!-- Step 2: Columns -->
         <div id="step-2" class="step hidden">
             <div class="card">
-                <div class="card-header"><h2>Quick Add Presets</h2></div>
-                <div class="presets" id="presets"></div>
+                <div class="card-header" style="justify-content: flex-start; gap: 1rem; padding-bottom: 0.5rem;">
+                     <h2>Presets:</h2>
+                     <div class="presets" id="presets"></div>
+                </div>
             </div>
 
-            <div class="card">
-                <div class="card-header"><h2>Columns</h2></div>
-                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-                    <input type="text" id="newColumnName" class="form-input" placeholder="Enter column name and press Enter..." style="flex:1">
-                    <button class="btn btn-secondary" onclick="addColumn()">Add Column</button>
+            <div class="card" style="padding: 0;">
+                <div style="padding: 0.75rem; border-bottom: 1px solid var(--border); display: flex; gap: 0.5rem; align-items: center;">
+                    <strong style="margin-right: 0.5rem;">New Column:</strong>
+                    <input type="text" id="newColumnName" class="form-input" placeholder="Column name..." style="width: 250px">
+                    <button class="btn btn-secondary btn-sm" onclick="addColumn()">Add</button>
                 </div>
-                <div id="columnsTable"></div>
+                <div id="columnsTable" style="margin: 0; border: none; border-radius: 0;"></div>
             </div>
 
             <div class="btn-group">
@@ -271,24 +289,21 @@
 
         <!-- Step 3: Preview & Generate -->
         <div id="step-3" class="step hidden">
-            <div class="card">
-                <div class="card-header"><h2>Code Preview</h2></div>
-                <div class="preview-container">
+            <div class="card" style="height: calc(100vh - 150px); display: flex; flex-direction: column;">
+                <div class="card-header">
+                     <h2>Code Preview</h2>
+                     <div class="btn-group" style="margin: 0;">
+                        <button class="btn btn-success btn-sm" onclick="generate(false)">Generate</button>
+                        <button class="btn btn-warning btn-sm" onclick="generate(true)">Force Overwrite</button>
+                    </div>
+                </div>
+                <div class="preview-container" style="flex: 1; min-height: 0;">
                     <div class="file-list" id="fileList"></div>
-                    <div id="monacoContainer"></div>
+                    <div id="monacoContainer" style="height: 100%;"></div>
                 </div>
-            </div>
-
-            <div class="card">
-                <div class="btn-group" style="justify-content: center; margin: 0;">
-                    <button class="btn btn-success" onclick="generate(false)">Generate Files</button>
-                    <button class="btn btn-warning" onclick="generate(true)">Force Generate (Overwrite)</button>
+                 <div id="logCard" class="hidden" style="margin-top: 1rem;">
+                    <div id="logViewer" class="log-viewer"></div>
                 </div>
-            </div>
-
-            <div id="logCard" class="card hidden">
-                <div class="card-header"><h2>Generation Log</h2></div>
-                <div id="logViewer" class="log-viewer"></div>
             </div>
 
             <div class="btn-group">
@@ -305,6 +320,7 @@
             moduleName: '',
             outputApps: { api: true, admin: true, web: false },
             implementationType: 'nest-crud',
+            viewType: 'page',
             swagger: false,
             columns: [],
             previewFiles: [],
@@ -320,12 +336,15 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', async () => {
             // Load metadata from server
-            const meta = await fetch('/api/meta').then(r => r.json());
-            state.presets = meta.presets;
-            state.columnTypes = meta.columnTypes;
-
-            renderPresets();
-            renderColumns();
+            try {
+                const meta = await fetch('/api/meta').then(r => r.json());
+                state.presets = meta.presets;
+                state.columnTypes = meta.columnTypes;
+                renderPresets();
+                renderColumns();
+            } catch (e) {
+                console.error('Failed to load meta', e);
+            }
 
             // Event listeners
             $('#entityName').addEventListener('input', e => state.entityName = e.target.value);
@@ -335,6 +354,7 @@
             $('#outputAdmin').addEventListener('change', e => state.outputApps.admin = e.target.checked);
             $('#outputWeb').addEventListener('change', e => state.outputApps.web = e.target.checked);
             $('#implementationType').addEventListener('change', e => state.implementationType = e.target.value);
+            $('#viewType').addEventListener('change', e => state.viewType = e.target.value);
             $('#optSwagger').addEventListener('change', e => state.swagger = e.target.checked);
             $('#newColumnName').addEventListener('keydown', e => { if (e.key === 'Enter') addColumn(); });
             $$('.step-btn').forEach(btn => btn.addEventListener('click', () => goToStep(parseInt(btn.dataset.step))));
@@ -348,7 +368,8 @@
                     theme: 'vs-dark',
                     readOnly: true,
                     minimap: { enabled: false },
-                    fontSize: 13,
+                    fontSize: 12,
+                    lineNumbers: 'off',
                     wordWrap: 'on'
                 });
             });
@@ -448,13 +469,13 @@
             let html = `<table>
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th style="width:30px">#</th>
                         <th>Name</th>
                         <th>Type</th>
                         <th>Extra</th>
-                        <th style="width:60px">Null</th>
-                        <th style="width:60px">Unique</th>
-                        <th style="width:50px"></th>
+                        <th style="width:40px; text-align:center">Null</th>
+                        <th style="width:40px; text-align:center">Uniq</th>
+                        <th style="width:30px"></th>
                     </tr>
                 </thead>
                 <tbody>`;
@@ -462,9 +483,9 @@
             state.columns.forEach((col, i) => {
                 let extra = '<span style="color:var(--muted)">-</span>';
                 if (col.dbType === 'enum') {
-                    extra = `<input type="text" placeholder="val1,val2,val3" value="${(col.enumValues || []).join(',')}" onchange="updateEnumValues(${i}, this.value)" title="Comma-separated enum values">`;
+                    extra = `<input type="text" placeholder="val1,val2" value="${(col.enumValues || []).join(',')}" onchange="updateEnumValues(${i}, this.value)">`;
                 } else if (col.dbType === 'string') {
-                    extra = `<input type="number" placeholder="length" style="width:80px" value="${col.length || ''}" onchange="updateColumn(${i}, 'length', parseInt(this.value) || undefined)">`;
+                    extra = `<input type="number" placeholder="len" style="width:60px" value="${col.length || ''}" onchange="updateColumn(${i}, 'length', parseInt(this.value) || undefined)">`;
                 }
 
                 html += `<tr>
@@ -494,6 +515,7 @@
                 outputApps: state.outputApps,
                 columns: state.columns,
                 implementationType: state.implementationType,
+                viewType: state.viewType,
                 swagger: state.swagger
             };
 
@@ -514,7 +536,7 @@
         function renderFileList() {
             const container = $('#fileList');
             container.innerHTML = state.previewFiles.map((f, i) =>
-                `<div class="file-item" onclick="showFile(${i})"><span class="action">+</span> ${f.path}</div>`
+                `<div class="file-item" onclick="showFile(${i})"><span class="action">${f.action === 'skipped' ? '!' : '+'}</span> ${f.path.split('/').pop()} <small style="color:var(--muted); margin-left:auto">${f.path.includes('apps/') ? 'app' : 'lib'}</small></div>`
             ).join('');
         }
 
@@ -536,6 +558,7 @@
                 outputApps: state.outputApps,
                 columns: state.columns,
                 implementationType: state.implementationType,
+                viewType: state.viewType,
                 swagger: state.swagger
             };
 

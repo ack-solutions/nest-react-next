@@ -74,6 +74,7 @@ function normalizeColumns(columns: ColumnConfig[], swagger = false): NormalizedC
                 enumTypeName,
             }),
             swaggerDecorator,
+            label: col.label || toPascalCase(col.name).replace(/([A-Z])/g, ' $1').trim(),
         };
     });
 }
@@ -98,6 +99,7 @@ function buildMeta(config: GeneratorConfig): GeneratorMeta {
         columns,
         enumColumns: columns.filter((c) => c.dbType === 'enum' && c.enumValues?.length),
         implementationType: config.implementationType || 'nest-crud',
+        viewType: config.viewType || 'page',
         swagger: config.swagger || false,
     };
 }
@@ -120,7 +122,7 @@ export async function generateCrud(
 
         // Type interface
         const typeContent = await renderTemplate('types/interface.ts.ejs', meta);
-        results.push(writeFile(rootDir, `libs/types/src/lib/${meta.entityFile}.ts`, typeContent, options));
+        results.push(writeFile(rootDir, `packages/types/src/lib/${meta.entityFile}.ts`, typeContent, options));
 
         // Entity
         const entityContent = await renderTemplate('api/entity.ts.ejs', meta);
@@ -146,25 +148,29 @@ export async function generateCrud(
         results.push(writeFile(rootDir, `${apiBaseDir}/dto/update-${meta.entityFile}.dto.ts`, updateDtoContent, options));
 
         // Update exports
-        results.push(appendLineIfMissing(rootDir, 'libs/types/src/index.ts', `export * from './lib/${meta.entityFile}';`, options));
+        results.push(appendLineIfMissing(rootDir, 'packages/types/src/index.ts', `export * from './lib/${meta.entityFile}';`, options));
     }
 
     // React Files
     if (outputApps.admin || outputApps.web) {
         const reactServiceContent = await renderTemplate('react/service.ts.ejs', meta);
-        results.push(writeFile(rootDir, `libs/react-shared/src/services/${meta.entityFile}.service.ts`, reactServiceContent, options));
+        results.push(writeFile(rootDir, `packages/react-shared/src/services/${meta.entityFile}.service.ts`, reactServiceContent, options));
 
         const hooksContent = await renderTemplate('react/hooks.ts.ejs', meta);
-        results.push(writeFile(rootDir, `libs/react-shared/src/query-hooks/use-${meta.entityFile}.ts`, hooksContent, options));
+        results.push(writeFile(rootDir, `packages/react-shared/src/query-hooks/use-${meta.entityFile}.ts`, hooksContent, options));
 
-        results.push(appendLineIfMissing(rootDir, 'libs/react-shared/src/services/index.ts', `export * from './${meta.entityFile}.service';`, options));
-        results.push(appendLineIfMissing(rootDir, 'libs/react-shared/src/query-hooks/index.ts', `export * from './use-${meta.entityFile}';`, options));
+        results.push(appendLineIfMissing(rootDir, 'packages/react-shared/src/services/index.ts', `export * from './${meta.entityFile}.service';`, options));
+        results.push(appendLineIfMissing(rootDir, 'packages/react-shared/src/query-hooks/index.ts', `export * from './use-${meta.entityFile}';`, options));
     }
 
     // Admin Files
     if (outputApps.admin) {
-        const dialogContent = await renderTemplate('react/dialog.tsx.ejs', meta);
-        results.push(writeFile(rootDir, `apps/admin/src/app/sections/${meta.pluralKebab}/add-edit-${meta.entityFile}-dialog.tsx`, dialogContent, options));
+        const formTemplate = meta.viewType === 'drawer' ? 'react/form-drawer.tsx.ejs' :
+            meta.viewType === 'dialog' ? 'react/form-dialog.tsx.ejs' :
+                'react/form-page.tsx.ejs';
+
+        const dialogContent = await renderTemplate(formTemplate, meta);
+        results.push(writeFile(rootDir, `apps/admin/src/app/sections/${meta.pluralKebab}/add-edit-${meta.entityFile}-form.tsx`, dialogContent, options));
 
         const listContent = await renderTemplate('react/list-page.tsx.ejs', meta);
         results.push(writeFile(rootDir, `apps/admin/src/app/pages/${meta.pluralKebab}/${meta.entityFile}-list.tsx`, listContent, options));

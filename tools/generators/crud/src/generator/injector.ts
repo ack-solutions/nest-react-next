@@ -79,17 +79,7 @@ export async function injectAppModule(rootDir: string, meta: GeneratorMeta, opti
  * Inject Export into packages/types/src/index.ts
  */
 export async function injectTypesExport(rootDir: string, meta: GeneratorMeta, options: GeneratorOptions): Promise<GeneratedFile[]> {
-    let basePath = 'packages/types/src';
-    try {
-        await fs.access(path.join(rootDir, basePath));
-    } catch {
-        try {
-            await fs.access(path.join(rootDir, 'libs/types/src'));
-            basePath = 'libs/types/src';
-        } catch {
-            basePath = 'packages/types/src';
-        }
-    }
+    const basePath = 'packages/types/src';
 
     const filePath = path.join(rootDir, basePath, 'index.ts');
     try {
@@ -99,7 +89,6 @@ export async function injectTypesExport(rootDir: string, meta: GeneratorMeta, op
         } catch {
             content = '';
         }
-        const originalContent = content;
 
         const exportLine = `export * from './lib/${meta.entityFile}';`;
 
