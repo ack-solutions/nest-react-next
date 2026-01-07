@@ -40,24 +40,24 @@ export default function <%= entityPascal %>ListPage() {
             <table className="data-table">
                 <thead>
                     <tr>
-<% for (const col of columns.slice(0, 5)) { %>
+<% for (const col of columns.slice(0, 5)) { -%>
                         <th><%= col.propertyName %></th>
-<% } %>
+<% } -%>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {items.map((item: I<%= entityPascal %>) => (
                         <tr key={item.id}>
-<% for (const col of columns.slice(0, 5)) { %>
-<% if (col.dbType === 'boolean') { %>
+<% for (const col of columns.slice(0, 5)) { -%>
+<%_ if (col.dbType === 'boolean') { -%>
                             <td>{item.<%= col.propertyName %> ? 'Yes' : 'No'}</td>
-<% } else if (col.dbType === 'date' || col.dbType === 'datetime') { %>
+<%_ } else if (col.dbType === 'date' || col.dbType === 'datetime') { -%>
                             <td>{item.<%= col.propertyName %> ? new Date(item.<%= col.propertyName %>).toLocaleDateString() : '-'}</td>
-<% } else { %>
+<%_ } else { -%>
                             <td>{item.<%= col.propertyName %>}</td>
-<% } %>
-<% } %>
+<%_ } -%>
+<% } -%>
                             <td>
                                 <button onClick={() => handleEdit(item.id)}>Edit</button>
                                 <button onClick={() => handleDelete(item.id)}>Delete</button>

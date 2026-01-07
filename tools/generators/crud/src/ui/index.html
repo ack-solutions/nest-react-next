@@ -224,6 +224,24 @@
                 </div>
             </div>
 
+            <div class="card">
+                <div class="card-header"><h2>Implementation Options</h2></div>
+                <div class="form-group">
+                    <label class="form-label">Backend Strategy</label>
+                    <select id="implementationType" class="form-select">
+                        <option value="nest-crud">Use @ackplus/nest-crud (Recommended)</option>
+                        <option value="custom">Custom Service & Controller</option>
+                    </select>
+                    <p class="form-hint">Choose between the rapid development library or standard boilerplate.</p>
+                </div>
+                <div class="checkbox-group">
+                     <label class="checkbox-label">
+                        <input type="checkbox" id="optSwagger">
+                        <span><strong>Enable Swagger</strong><br><small style="color:var(--muted)">Add @ApiProperty decorators</small></span>
+                    </label>
+                </div>
+            </div>
+
             <div class="btn-group">
                 <button class="btn btn-primary" onclick="goToStep(2)">Next: Columns</button>
             </div>
@@ -286,6 +304,8 @@
             route: '',
             moduleName: '',
             outputApps: { api: true, admin: true, web: false },
+            implementationType: 'nest-crud',
+            swagger: false,
             columns: [],
             previewFiles: [],
             presets: [],
@@ -314,6 +334,8 @@
             $('#outputApi').addEventListener('change', e => state.outputApps.api = e.target.checked);
             $('#outputAdmin').addEventListener('change', e => state.outputApps.admin = e.target.checked);
             $('#outputWeb').addEventListener('change', e => state.outputApps.web = e.target.checked);
+            $('#implementationType').addEventListener('change', e => state.implementationType = e.target.value);
+            $('#optSwagger').addEventListener('change', e => state.swagger = e.target.checked);
             $('#newColumnName').addEventListener('keydown', e => { if (e.key === 'Enter') addColumn(); });
             $$('.step-btn').forEach(btn => btn.addEventListener('click', () => goToStep(parseInt(btn.dataset.step))));
 
@@ -470,7 +492,9 @@
                 route: state.route,
                 moduleName: state.moduleName,
                 outputApps: state.outputApps,
-                columns: state.columns
+                columns: state.columns,
+                implementationType: state.implementationType,
+                swagger: state.swagger
             };
 
             try {
@@ -510,7 +534,9 @@
                 route: state.route,
                 moduleName: state.moduleName,
                 outputApps: state.outputApps,
-                columns: state.columns
+                columns: state.columns,
+                implementationType: state.implementationType,
+                swagger: state.swagger
             };
 
             $('#logCard').classList.remove('hidden');

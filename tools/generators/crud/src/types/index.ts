@@ -31,6 +31,7 @@ export interface NormalizedColumn extends ColumnConfig {
     optional: boolean;
     enumTypeName?: string;
     decoratorArgs: string;
+    swaggerDecorator?: string;
 }
 
 export interface GeneratorConfig {
@@ -43,6 +44,8 @@ export interface GeneratorConfig {
         admin?: boolean;
         web?: boolean;
     };
+    implementationType?: 'nest-crud' | 'custom';
+    swagger?: boolean;
 }
 
 export interface GeneratorMeta {
@@ -54,6 +57,8 @@ export interface GeneratorMeta {
     route: string;
     columns: NormalizedColumn[];
     enumColumns: NormalizedColumn[];
+    implementationType: 'nest-crud' | 'custom';
+    swagger: boolean;
 }
 
 export interface GeneratorOptions {

@@ -38,28 +38,28 @@ export function AddEdit<%= entityPascal %>Dialog({ open, onClose, editId }: AddE
             <div className="dialog">
                 <h2>{editId ? 'Edit' : 'Add'} <%= entityPascal %></h2>
                 <form onSubmit={handleSubmit(onSubmit)}>
-<% for (const col of columns) { %>
+<% for (const col of columns) { -%>
                     <div className="form-group">
                         <label><%= col.propertyName %></label>
-<% if (col.dbType === 'boolean') { %>
+<%_ if (col.dbType === 'boolean') { -%>
                         <input type="checkbox" {...register('<%= col.propertyName %>')} />
-<% } else if (col.dbType === 'int' || col.dbType === 'float') { %>
+<%_ } else if (col.dbType === 'int' || col.dbType === 'float') { -%>
                         <input type="number" {...register('<%= col.propertyName %>')} />
-<% } else if (col.dbType === 'text') { %>
+<%_ } else if (col.dbType === 'text') { -%>
                         <textarea {...register('<%= col.propertyName %>')} />
-<% } else if (col.dbType === 'date' || col.dbType === 'datetime') { %>
+<%_ } else if (col.dbType === 'date' || col.dbType === 'datetime') { -%>
                         <input type="datetime-local" {...register('<%= col.propertyName %>')} />
-<% } else if (col.dbType === 'enum' && col.enumValues) { %>
+<%_ } else if (col.dbType === 'enum' && col.enumValues) { -%>
                         <select {...register('<%= col.propertyName %>')}>
-<% for (const val of col.enumValues) { %>
+<%_ for (const val of col.enumValues) { -%>
                             <option value="<%= val %>"><%= val %></option>
-<% } %>
+<%_ } -%>
                         </select>
-<% } else { %>
+<%_ } else { -%>
                         <input type="text" {...register('<%= col.propertyName %>')} />
-<% } %>
+<%_ } -%>
                     </div>
-<% } %>
+<% } -%>
                     <div className="dialog-actions">
                         <button type="button" onClick={onClose}>Cancel</button>
                         <button type="submit">Save</button>

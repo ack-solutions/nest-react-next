@@ -46,10 +46,21 @@ export const COLUMN_TYPES = ['string', 'text', 'int', 'float', 'boolean', 'date'
 /**
  * Normalize columns with computed properties
  */
-function normalizeColumns(columns: ColumnConfig[]): NormalizedColumn[] {
+function normalizeColumns(columns: ColumnConfig[], swagger = false): NormalizedColumn[] {
     return columns.map((col) => {
         const enumTypeName = col.dbType === 'enum' ? `${toPascalCase(col.name)}Enum` : undefined;
         const tsType = getTypeScriptType(col.dbType, enumTypeName);
+        let swaggerDecorator = '';
+
+        if (swagger) {
+            const props: string[] = [];
+            if (col.nullable) props.push('required: false');
+            if (col.dbType === 'enum' && enumTypeName) {
+                props.push(`enum: ${enumTypeName}`);
+                props.push(`enumName: '${enumTypeName}'`);
+            }
+            swaggerDecorator = `@ApiProperty(${props.length ? `{ ${props.join(', ')} }` : ''})`;
+        }
 
         return {
             ...col,
@@ -61,6 +72,7 @@ function normalizeColumns(columns: ColumnConfig[]): NormalizedColumn[] {
                 ...col,
                 enumTypeName,
             }),
+            swaggerDecorator,
         };
     });
 }
@@ -73,7 +85,7 @@ function buildMeta(config: GeneratorConfig): GeneratorMeta {
     const entityCamel = toCamelCase(config.entityName);
     const entityFile = toKebabCase(config.entityName);
     const pluralKebab = toPlural(entityFile);
-    const columns = normalizeColumns(config.columns || []);
+    const columns = normalizeColumns(config.columns || [], config.swagger);
 
     return {
         entityPascal,
@@ -84,6 +96,8 @@ function buildMeta(config: GeneratorConfig): GeneratorMeta {
         route: config.route || entityFile,
         columns,
         enumColumns: columns.filter((c) => c.dbType === 'enum' && c.enumValues?.length),
+        implementationType: config.implementationType || 'nest-crud',
+        swagger: config.swagger || false,
     };
 }
 
