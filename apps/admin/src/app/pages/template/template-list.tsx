@@ -4,15 +4,18 @@ import { useTemplate } from '@libs/react-shared';
 import { ITemplate, PermissionsEnum } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
 import { Button, Card } from '@mui/material';
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import AddEditTemplateDialog from './add-edit-template-dialog';
 import { StatusChip, getStatusConfig } from '../../components';
-import { DataTable, TableActionMenu } from '../../components/data-table';
+import { TableActionMenu } from '../../components/data-table';
 import { useConfirm } from '../../contexts/confirm-dialog-context';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import { useHasPermission, withRequirePermission } from '@ackplus/nest-auth-react';
+import DataGrid from '@admin/app/components/data-grid/data-grid';
+import { DataTableApi, DataTableColumn } from '@ackplus/react-tanstack-data-table';
+import { HEADER } from '@admin/app/layout/config';
 
 interface TemplateListProps {
     organizationId?: string;
@@ -24,26 +27,26 @@ function TemplateList({ organizationId }: TemplateListProps) {
     const { showToasty } = useToasty();
     const { useGetTemplate, useDeleteTemplate } = useTemplate();
     const { mutateAsync: deleteTemplate } = useDeleteTemplate();
-    const datatableRef = useRef<any>(null);
+    const datatableRef = useRef<DataTableApi<ITemplate>>(null);
     const isAddDialogOpen = useBoolean(false);
 
     const canCreate = useHasPermission(PermissionsEnum.CREATE_TEMPLATES);
     const canUpdate = useHasPermission(PermissionsEnum.UPDATE_TEMPLATES);
     const canDelete = useHasPermission(PermissionsEnum.DELETE_TEMPLATES);
 
-    const { data, isLoading } = useGetTemplate({
+    const { data, isLoading, refetch } = useGetTemplate({
         scopeId: organizationId,
     });
 
-    const handleEditTemplate = (template: ITemplate) => {
+    const handleEditTemplate = useCallback((template: ITemplate) => {
         navigate(PATH_DASHBOARD.templates.edit(template.id));
-    };
+    }, [navigate]);
 
     const handleDeleteTemplate = useCallback((template: ITemplate) => {
         confirmDialog('Are you sure you want to delete this template?').then(async () => {
             await deleteTemplate(template.id).then(() => {
                 showToasty('Template deleted successfully', 'success');
-                datatableRef.current?.refresh();
+                refetch();
             }).catch((error) => {
                 showToasty(error, 'error');
             });
@@ -54,57 +57,71 @@ function TemplateList({ organizationId }: TemplateListProps) {
         confirmDialog,
         deleteTemplate,
         showToasty,
+        refetch,
     ]);
 
-    const columns = [
+    const handleRowClick = useCallback((_event: React.MouseEvent<HTMLTableRowElement>, row: any) => {
+        if (canUpdate) {
+            handleEditTemplate(row.original);
+        }
+    }, [canUpdate, handleEditTemplate]);
+
+    const columns: DataTableColumn<ITemplate>[] = useMemo(() => [
         {
-            name: 'name',
-            label: 'Name',
+            accessorKey: 'name',
+            header: 'Name',
+            enableGlobalFilter: true,
+            enableSorting: true,
         },
         {
-            name: 'displayName',
-            label: 'Display Name',
+            accessorKey: 'displayName',
+            header: 'Display Name',
+            enableGlobalFilter: true,
+            enableSorting: true,
         },
         {
-            name: 'type',
-            label: 'Type',
+            accessorKey: 'type',
+            header: 'Type',
+            enableSorting: true,
         },
         {
-            name: 'language',
-            label: 'Language',
+            accessorKey: 'language',
+            header: 'Language',
+            enableSorting: true,
         },
         {
-            name: 'isActive',
-            label: 'Status',
-            render: (row: ITemplate) => (
+            accessorKey: 'isActive',
+            header: 'Status',
+            enableSorting: true,
+            cell: ({ row }) => (
                 <StatusChip
-                    status={row.isActive ? 'active' : 'inactive'}
+                    status={row.original.isActive ? 'active' : 'inactive'}
                     statusConfig={getStatusConfig('template')}
                 />
             ),
         },
         {
-            name: 'createdAt',
-            label: 'Created At',
-            render: (row: ITemplate) => toDisplayDate(row.createdAt),
+            accessorKey: 'createdAt',
+            header: 'Created At',
+            enableSorting: true,
+            cell: ({ row }) => toDisplayDate(row.original.createdAt),
         },
         {
-            name: 'action',
-            label: 'Action',
-            props: {
-                sx: {
-                    width: 120,
-                },
-            },
-            render: (row: ITemplate) => (
+            id: 'action',
+            header: 'Action',
+            enablePinning: false,
+            enableHiding: false,
+            enableResizing: false,
+            maxSize: 80,
+            cell: ({ row }) => (
                 <TableActionMenu
-                    row={row}
-                    {...(canDelete && { onDelete: () => handleDeleteTemplate(row) })}
-                    {...(canUpdate && { onEdit: () => handleEditTemplate(row) })}
+                    row={row.original}
+                    {...(canDelete && { onDelete: () => handleDeleteTemplate(row.original) })}
+                    {...(canUpdate && { onEdit: () => handleEditTemplate(row.original) })}
                 />
             ),
         },
-    ];
+    ], [canDelete, canUpdate, handleDeleteTemplate, handleEditTemplate]);
 
     return (
         <Page
@@ -122,15 +139,18 @@ function TemplateList({ organizationId }: TemplateListProps) {
             ]}
         >
             <Card>
-                <DataTable
-                    isLoading={isLoading}
+                <DataGrid
                     ref={datatableRef}
-                    data={data || null}
-                    totalRow={data?.length || 0}
-                    onRowClick={canUpdate ? handleEditTemplate : undefined}
                     columns={columns}
-                    hasFilter
-                    hideSearch
+                    idKey="id"
+                    data={data || []}
+                    totalRow={data?.length || 0}
+                    loading={isLoading}
+                    dataMode="client"
+                    stateKey="templatelist"
+                    maxHeight={`calc(100svh - ${HEADER.H_DESKTOP}px  - ${280}px)`}
+                    enablePagination
+                    onRowClick={canUpdate ? handleRowClick : undefined}
                     extraFilter={canCreate && (
                         <Button
                             onClick={() => isAddDialogOpen.onTrue()}

@@ -11,6 +11,7 @@ import { SettingsProvider } from './contexts/settings-provider';
 import { ThemeProvider } from './theme/theme-provider';
 import { AuthClient, LocalStorageAdapter, createAxiosAdapter } from '@ackplus/nest-auth-client';
 import { AuthProvider, config, instanceApi } from '@libs/react-shared';
+import { DataTableStateProvider } from './contexts/datatable-state-context';
 
 const MINUTE = 60 * 1000;
 const queryClient = new QueryClient({
@@ -43,12 +44,14 @@ function App() {
                 <SettingsProvider>
                     <ThemeProvider>
                         <AuthProvider client={authClient}>
-                            <ConfirmProvider>
-                                <PromptDialogProvider>
-                                    <Toasty />
-                                    <AppRoutes />
-                                </PromptDialogProvider>
-                            </ConfirmProvider>
+                            <DataTableStateProvider>
+                                <ConfirmProvider>
+                                    <PromptDialogProvider>
+                                        <Toasty />
+                                        <AppRoutes />
+                                    </PromptDialogProvider>
+                                </ConfirmProvider>
+                            </DataTableStateProvider>
                         </AuthProvider>
                     </ThemeProvider>
                 </SettingsProvider>

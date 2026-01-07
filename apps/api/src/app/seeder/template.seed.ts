@@ -28,10 +28,10 @@ export class EmailTemplateSeeder implements Seeder {
             description: 'Welcome email sent to new users after signup',
             subject: `Welcome to ${process.env.APP_NAME || 'Our App'}! 🎉`,
             previewContext: {
-                "firstName": "John",
-                "lastName": "Doe",
-                "email": "john.doe@example.com",
-                "loginUrl": "https://example.com/login"
+                firstName: "John",
+                lastName: "Doe",
+                email: "john.doe@example.com",
+                loginUrl: "https://example.com/login"
             }
         },
         {
@@ -40,13 +40,13 @@ export class EmailTemplateSeeder implements Seeder {
             description: 'OTP verification email for user login',
             subject: `Your Login Verification Code - ${process.env.APP_NAME || 'Our App'}`,
             previewContext: {
-                "firstName": "John",
-                "lastName": "Doe",
-                "email": "john.doe@example.com",
-                "otp": "123456",
-                "expiryMinutes": "10",
-                "timestamp": "January 6, 2025 at 10:30 AM",
-                "ipAddress": "192.168.1.1"
+                firstName: "John",
+                lastName: "Doe",
+                email: "john.doe@example.com",
+                otp: "123456",
+                expiryMinutes: "10",
+                timestamp: "January 6, 2025 at 10:30 AM",
+                ipAddress: "192.168.1.1"
             }
         },
         {
@@ -55,11 +55,11 @@ export class EmailTemplateSeeder implements Seeder {
             description: 'Email verification OTP for new user registration',
             subject: 'Verify Your Email Address',
             previewContext: {
-                "firstName": "John",
-                "lastName": "Doe",
-                "email": "john.doe@example.com",
-                "otp": "123456",
-                "expiryMinutes": "15"
+                firstName: "John",
+                lastName: "Doe",
+                email: "john.doe@example.com",
+                otp: "123456",
+                expiryMinutes: "15"
             }
         },
         {
@@ -68,11 +68,11 @@ export class EmailTemplateSeeder implements Seeder {
             description: 'Password reset verification email with OTP code',
             subject: 'Reset Your Password - Verification Code',
             previewContext: {
-                "firstName": "John",
-                "lastName": "Doe",
-                "email": "john.doe@example.com",
-                "otp": "123456",
-                "expiryMinutes": "15"
+                firstName: "John",
+                lastName: "Doe",
+                email: "john.doe@example.com",
+                otp: "123456",
+                expiryMinutes: "15"
             }
         },
         {
@@ -81,12 +81,12 @@ export class EmailTemplateSeeder implements Seeder {
             description: 'OTP verification for changing email address',
             subject: 'Verify Your New Email Address',
             previewContext: {
-                "firstName": "John",
-                "lastName": "Doe",
-                "oldEmail": "old.email@example.com",
-                "newEmail": "new.email@example.com",
-                "otp": "123456",
-                "expiryMinutes": "15"
+                firstName: "John",
+                lastName: "Doe",
+                oldEmail: "old.email@example.com",
+                newEmail: "new.email@example.com",
+                otp: "123456",
+                expiryMinutes: "15"
             }
         },
         {
@@ -95,12 +95,12 @@ export class EmailTemplateSeeder implements Seeder {
             description: 'OTP verification for changing phone number',
             subject: 'Verify Your Phone Number',
             previewContext: {
-                "firstName": "John",
-                "lastName": "Doe",
-                "phoneNumber": "+91 98765 43210",
-                "otp": "123456",
-                "expiryMinutes": "10",
-                "isChange": true
+                firstName: "John",
+                lastName: "Doe",
+                phoneNumber: "+91 98765 43210",
+                otp: "123456",
+                expiryMinutes: "10",
+                isChange: true
             }
         },
         {
@@ -109,11 +109,11 @@ export class EmailTemplateSeeder implements Seeder {
             description: 'Notification email when account is deactivated',
             subject: 'Your Account Has Been Deactivated',
             previewContext: {
-                "firstName": "John",
-                "lastName": "Doe",
-                "email": "john.doe@example.com",
-                "retentionDays": "30",
-                "reactivateUrl": "https://example.com/login"
+                firstName: "John",
+                lastName: "Doe",
+                email: "john.doe@example.com",
+                retentionDays: "30",
+                reactivateUrl: "https://example.com/login"
             }
         },
         {
@@ -122,18 +122,18 @@ export class EmailTemplateSeeder implements Seeder {
             description: 'Order confirmation email with order details',
             subject: 'Order Confirmed - #{{orderNumber}}',
             previewContext: {
-                "firstName": "John",
-                "lastName": "Doe",
-                "orderNumber": "ORD-2024-001234",
-                "orderDate": "January 6, 2025",
-                "paymentMethod": "Credit Card",
-                "totalAmount": "1,999.00",
-                "currency": "₹",
-                "items": [
-                    { "name": "Premium Coffee Blend", "quantity": 2, "price": "599.00" },
-                    { "name": "Organic Tea Collection", "quantity": 1, "price": "799.00" }
+                firstName: "John",
+                lastName: "Doe",
+                orderNumber: "ORD-2024-001234",
+                orderDate: "January 6, 2025",
+                paymentMethod: "Credit Card",
+                totalAmount: "1,999.00",
+                currency: "₹",
+                items: [
+                    { name: "Premium Coffee Blend", quantity: 2, price: "599.00" },
+                    { name: "Organic Tea Collection", quantity: 1, price: "799.00" }
                 ],
-                "orderUrl": "https://example.com/orders/ORD-2024-001234"
+                orderUrl: "https://example.com/orders/ORD-2024-001234"
             }
         },
         {
@@ -142,11 +142,11 @@ export class EmailTemplateSeeder implements Seeder {
             description: 'Contact form submission notification email',
             subject: 'New Contact Form Submission',
             previewContext: {
-                "name": "John Doe",
-                "email": "john.doe@example.com",
-                "phone": "+91 98765 43210",
-                "subject": "Product Inquiry",
-                "message": "I would like to know more about your premium coffee blends and subscription options."
+                name: "John Doe",
+                email: "john.doe@example.com",
+                phone: "+91 98765 43210",
+                subject: "Product Inquiry",
+                message: "I would like to know more about your premium coffee blends and subscription options."
             }
         }
     ];

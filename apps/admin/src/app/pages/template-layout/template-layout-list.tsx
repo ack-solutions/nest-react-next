@@ -4,15 +4,18 @@ import { useTemplateLayout } from '@libs/react-shared';
 import { ITemplateLayout, PermissionsEnum } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
 import { Button, Card } from '@mui/material';
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import AddEditTemplateLayoutDialog from './add-edit-template-layout-dialog';
 import { StatusChip, getStatusConfig } from '../../components';
-import { DataTable, TableActionMenu } from '../../components/data-table';
+import { TableActionMenu } from '../../components/data-table';
 import { useConfirm } from '../../contexts/confirm-dialog-context';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import { useHasPermission, withRequirePermission } from '@ackplus/nest-auth-react';
+import DataGrid from '@admin/app/components/data-grid/data-grid';
+import { DataTableApi, DataTableColumn } from '@ackplus/react-tanstack-data-table';
+import { HEADER } from '@admin/app/layout/config';
 
 
 function TemplateLayoutList() {
@@ -20,25 +23,25 @@ function TemplateLayoutList() {
     const confirmDialog = useConfirm();
     const { showToasty } = useToasty();
     const { useGetTemplateLayout, useDeleteTemplateLayout } = useTemplateLayout();
-    const { data, isLoading } = useGetTemplateLayout({});
+    const { data, isLoading, refetch } = useGetTemplateLayout({});
     const { mutateAsync: deleteTemplateLayout } = useDeleteTemplateLayout();
-    const datatableRef = useRef<any>(null);
+    const datatableRef = useRef<DataTableApi<ITemplateLayout>>(null);
     const isDialogOpen = useBoolean();
 
     const canCreate = useHasPermission(PermissionsEnum.CREATE_TEMPLATE_LAYOUTS);
     const canUpdate = useHasPermission(PermissionsEnum.UPDATE_TEMPLATE_LAYOUTS);
     const canDelete = useHasPermission(PermissionsEnum.DELETE_TEMPLATE_LAYOUTS);
 
-    const handleEditTemplateLayout = (templateLayout: ITemplateLayout) => {
+    const handleEditTemplateLayout = useCallback((templateLayout: ITemplateLayout) => {
         navigate(PATH_DASHBOARD.templateLayouts.edit(templateLayout.id));
-    };
+    }, [navigate]);
 
     const handleDeleteTemplateLayout = useCallback((templateLayout: ITemplateLayout) => {
         confirmDialog('Are you sure you want to delete this template layout?').then(async () => {
             try {
                 await deleteTemplateLayout(templateLayout.id || '');
                 showToasty('Template layout deleted successfully', 'success');
-                datatableRef.current?.refresh();
+                refetch();
             } catch (error) {
                 showToasty(error, 'error');
             }
@@ -49,57 +52,71 @@ function TemplateLayoutList() {
         confirmDialog,
         deleteTemplateLayout,
         showToasty,
+        refetch,
     ]);
 
-    const columns = [
+    const handleRowClick = useCallback((_event: React.MouseEvent<HTMLTableRowElement>, row: any) => {
+        if (canUpdate) {
+            handleEditTemplateLayout(row.original);
+        }
+    }, [canUpdate, handleEditTemplateLayout]);
+
+    const columns: DataTableColumn<ITemplateLayout>[] = useMemo(() => [
         {
-            name: 'name',
-            label: 'Name',
+            accessorKey: 'name',
+            header: 'Name',
+            enableGlobalFilter: true,
+            enableSorting: true,
         },
         {
-            name: 'displayName',
-            label: 'Display Name',
+            accessorKey: 'displayName',
+            header: 'Display Name',
+            enableGlobalFilter: true,
+            enableSorting: true,
         },
         {
-            name: 'type',
-            label: 'Type',
+            accessorKey: 'type',
+            header: 'Type',
+            enableSorting: true,
         },
         {
-            name: 'language',
-            label: 'Language',
+            accessorKey: 'language',
+            header: 'Language',
+            enableSorting: true,
         },
         {
-            name: 'isActive',
-            label: 'Status',
-            render: (row: ITemplateLayout) => (
+            accessorKey: 'isActive',
+            header: 'Status',
+            enableSorting: true,
+            cell: ({ row }) => (
                 <StatusChip
-                    status={row.isActive ? 'active' : 'inactive'}
+                    status={row.original.isActive ? 'active' : 'inactive'}
                     statusConfig={getStatusConfig('template')}
                 />
             ),
         },
         {
-            name: 'createdAt',
-            label: 'Created At',
-            render: (row: ITemplateLayout) => toDisplayDate(row.createdAt),
+            accessorKey: 'createdAt',
+            header: 'Created At',
+            enableSorting: true,
+            cell: ({ row }) => toDisplayDate(row.original.createdAt),
         },
         {
-            name: 'action',
-            label: 'Action',
-            props: {
-                sx: {
-                    width: 120,
-                },
-            },
-            render: (row: ITemplateLayout) => (
+            id: 'action',
+            header: 'Action',
+            enablePinning: false,
+            enableHiding: false,
+            enableResizing: false,
+            maxSize: 80,
+            cell: ({ row }) => (
                 <TableActionMenu
-                    row={row}
-                    {...(canDelete && { onDelete: () => handleDeleteTemplateLayout(row) })}
-                    {...(canUpdate && { onEdit: () => handleEditTemplateLayout(row) })}
+                    row={row.original}
+                    {...(canDelete && { onDelete: () => handleDeleteTemplateLayout(row.original) })}
+                    {...(canUpdate && { onEdit: () => handleEditTemplateLayout(row.original) })}
                 />
             ),
         },
-    ];
+    ], [canDelete, canUpdate, handleDeleteTemplateLayout, handleEditTemplateLayout]);
 
     return (
         <Page
@@ -117,15 +134,18 @@ function TemplateLayoutList() {
             ]}
         >
             <Card>
-                <DataTable
-                    isLoading={isLoading}
+                <DataGrid
                     ref={datatableRef}
-                    data={data || null}
-                    totalRow={data?.length || 0}
-                    onRowClick={canUpdate ? handleEditTemplateLayout : undefined}
                     columns={columns}
-                    hasFilter
-                    hideSearch
+                    idKey="id"
+                    data={data || []}
+                    totalRow={data?.length || 0}
+                    loading={isLoading}
+                    dataMode="client"
+                    stateKey="templatelayoutlist"
+                    maxHeight={`calc(100svh - ${HEADER.H_DESKTOP}px  - ${280}px)`}
+                    enablePagination
+                    onRowClick={canUpdate ? handleRowClick : undefined}
                     extraFilter={canCreate && (
                         <Button
                             onClick={() => isDialogOpen.onTrue()}

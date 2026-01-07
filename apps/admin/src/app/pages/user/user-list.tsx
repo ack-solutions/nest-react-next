@@ -8,9 +8,7 @@ import { filter, get, isEmpty, includes } from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { Page, Icon } from '../../components';
-import { CrudTable, CrudTableActions } from '../../components/crud/crud-table';
-import { DataTableColumn, DataTableTab, DataTableTabItem, IDataTableFilter } from '../../components/data-table';
+import { Page, Icon, DataTableTabItem, DataTableTab } from '../../components';
 import { IconEnum } from '../../components/icons/icons';
 import UserStatusDropdown from '../../components/user/user-status-dropdown';
 import UserStatusLabel from '../../components/user/user-status-label';
@@ -20,6 +18,9 @@ import { useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import ResetPasswordDialog from '../../sections/user/reset-password-dialog';
 import UserMfaDialog from '../../sections/user/user-mfa-dialog';
+import CrudDataGrid from '@admin/app/components/data-grid/crud-data-grid';
+import { DataTableApi, DataTableColumn } from '@ackplus/react-tanstack-data-table';
+import { useDataTableState } from '@admin/app/contexts/datatable-state-context';
 
 
 export interface IUserTableFilter {
@@ -38,12 +39,18 @@ function UsersList() {
     const { currentUser } = useAuth();
     const { showToasty } = useToasty();
     const navigate = useNavigate();
-    const datatableRef = useRef<CrudTableActions>(null);
-    const [tableFilter, setTableFilter] = useState(defaultFilter);
-    const [countFilter, setCountFilter] = useState({});
+    const datatableRef = useRef<DataTableApi<IUser>>(null);
+
+    // Get cached state for products table
+    const dataTableStateKey = 'userlist';
+    const { state: cachedState, setState: setCachedState } = useDataTableState(dataTableStateKey);
+
+    const [tableFilter, setTableFilter] = useState(cachedState?.tableFilter || defaultFilter);
+    const [countFilter, setCountFilter] = useState(cachedState?.countFilter || {});
     const [resetPasswordUser, setResetPasswordUser] = useState<IUser | null>(null);
     const [mfaUser, setMfaUser] = useState<IUser | null>(null);
     const [canToggle, setCanToggle] = useState(false);
+
 
     // Permission checks
     const canCreate = useHasPermission(PermissionsEnum.CREATE_USERS);
@@ -52,7 +59,7 @@ function UsersList() {
     const canResetPassword = useHasPermission(PermissionsEnum.RESET_PASSWORD_USERS);
 
     const {
-        useGetManyUser,
+        useFetchManyUser,
         useDeleteUser,
         useRestoreUser,
         useDeleteForeverUser,
@@ -121,7 +128,7 @@ function UsersList() {
 
     const handleMfaChanged = useCallback(() => {
         // Refresh the datatable when MFA settings change
-        datatableRef.current?.datatable.refresh();
+        datatableRef.current?.data.reload();
     }, []);
 
     const handleUpdateStatus = useCallback(
@@ -140,6 +147,7 @@ function UsersList() {
     );
 
     const handleOnChangeTableFilter = useCallback((value: any, key: string) => {
+        setCachedState({ tableFilter: { ...tableFilter, [key]: value } })
         setTableFilter((state) => {
             const newState = {
                 ...state,
@@ -147,7 +155,7 @@ function UsersList() {
             };
             return newState;
         });
-    }, []);
+    }, [tableFilter]);
 
     const handleTrashData = useCallback((checked: boolean) => {
         setCountFilter((state) => {
@@ -155,7 +163,29 @@ function UsersList() {
             newState.setOnlyDeleted(checked);
             return newState.toObject();
         });
-    }, []);
+        setCachedState({ countFilter: { ...countFilter, onlyDeleted: checked } })
+    }, [countFilter]);
+
+    const dataTableApiRequestMap = useCallback(
+        async (queryBuilder: QueryBuilder, _filters: any) => {
+            if (tableFilter?.status !== 'all') {
+                queryBuilder.where({
+                    status: { $eq: tableFilter?.status },
+                });
+            }
+            if (_filters?.search) {
+                // TODO: need to fix search with concat firstName and lastName
+                queryBuilder.orWhere('firstName', WhereOperatorEnum.ILIKE, `%${_filters?.search}%`);
+                queryBuilder.orWhere('lastName', WhereOperatorEnum.ILIKE, `%${_filters?.search}%`);
+            }
+
+            queryBuilder.addRelation('authUser');
+            queryBuilder.addRelation('authUser.roles');
+            return queryBuilder;
+        },
+        [],
+    );
+
 
     const handleDataTableApiRequestMap = useCallback(
         (queryBuilder: QueryBuilder, request: IDataTableFilter) => {
@@ -214,59 +244,58 @@ function UsersList() {
 
     const columns: DataTableColumn<IUser>[] = [
         {
-            name: 'firstName',
-            label: 'User Name',
-            isSortable: true,
-            render: (row) => (
+            accessorKey: 'firstName',
+            header: 'User Name',
+            enableGlobalFilter: true,
+            enableSorting: true,
+            cell: ({ row }) => (
                 <UserWithAvatar
-                    user={row}
-                    secondaryText={row?.authUser?.email ? row?.authUser?.email : toDisplayPhone(row?.formattedPhone)}
+                    user={row.original}
+                    secondaryText={row.original?.authUser?.email ? row.original?.authUser?.email : toDisplayPhone(row.original?.formattedPhone)}
                 />
             ),
         },
         {
-            name: 'authUser.email',
-            label: 'Email',
-            isSearchable: true,
-            render: (row) => row?.authUser?.email,
+            accessorKey: 'authUser.email',
+            header: 'Email',
+            enableGlobalFilter: true,
+            enableSorting: true,
         },
         {
-            name: 'authUser.roles.name',
-            label: 'Roles',
-            isSearchable: true,
-            render: (row) => row?.authUser?.roles?.map((role) => role.name).join(', '),
+            accessorKey: 'authUser.roles.name',
+            header: 'Roles',
+            enableSorting: true,
+            cell: ({ row }) => row.original?.authUser?.roles?.map((role: any) => role.name).join(', '),
         },
         {
-            name: 'status',
-            label: 'Status',
-            isSearchable: true,
-            isSortable: true,
-            render: (row) => (
+            accessorKey: 'status',
+            header: 'Status',
+            enableSorting: true,
+            cell: ({ row }) => (
                 canUpdate ? (
                     <UserStatusDropdown
-                        user={row}
-                        onChange={(option) => handleUpdateStatus(option, row)}
+                        user={row.original}
+                        onChange={(option) => handleUpdateStatus(option, row.original)}
                     />
                 ) : (
                     <UserStatusLabel
-                        user={row}
-                        onChange={(option) => handleUpdateStatus(option, row)}
+                        user={row.original}
+                        onChange={(option) => handleUpdateStatus(option, row.original)}
                     />
                 )
             ),
         },
         {
-            name: 'createdAt',
-            label: 'Created Date',
-            isSearchable: false,
-            isSortable: true,
-            render: (row) => toDisplayDate(row?.createdAt),
+            accessorKey: 'createdAt',
+            header: 'Created Date',
+            enableSorting: true,
+            cell: ({ row }) => toDisplayDate(row.original?.createdAt),
         },
     ];
 
     useEffect(() => {
         if (datatableRef.current) {
-            datatableRef.current.datatable.refresh();
+            datatableRef.current.data.reload();
         }
     }, [tableFilter]);
 
@@ -300,7 +329,99 @@ function UsersList() {
                     value={tableFilter?.status}
                     onChange={(tab) => handleOnChangeTableFilter(tab, 'status')}
                 />
-                <CrudTable
+                <CrudDataGrid
+                    ref={datatableRef}
+                    columns={columns}
+                    crudName="Product"
+                    stateKey={dataTableStateKey}
+                    exportFilename="products"
+                    onToggleTrashData={handleTrashData}
+                    dataTableApiRequestMap={dataTableApiRequestMap}
+                    isRowSelectable={({ row }) => {
+                        const isSuperAdmin = !isEmpty(filter(row?.authUser?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)));
+                        return (
+                            !!(row?.id !== currentUser?.id && !isSuperAdmin)
+                        );
+                    }}
+                    crudOperationHooks={{
+                        fetchMany: useFetchManyUser,
+                        useDelete: useDeleteUser,
+                        useRestore: useRestoreUser,
+                        useDeleteForever: useDeleteForeverUser,
+                        useBulkDelete: useBulkDeleteUser,
+                        useBulkRestore: useBulkRestoreUser,
+                        useBulkDeleteForever: useBulkDeleteForeverUser,
+                    }}
+
+                    tableActionMenuProps={
+                        (row) => {
+                            const isCurrentUser = row?.id === currentUser?.id;
+                            const canDeleteUser = canDelete && !isCurrentUser;
+                            const canResetUserPassword = canResetPassword && !isCurrentUser;
+
+                            // Build actions array
+                            const actions: any[] = [];
+
+                            // Reset password action
+                            if (canResetUserPassword) {
+                                actions.push({
+                                    icon: <Icon icon={IconEnum.Key} />,
+                                    title: 'Reset Password',
+                                    onClick: () => handleResetPassword(row),
+                                });
+                            }
+
+                            // MFA management action (for super admins only)
+                            if (canToggle) {
+                                actions.push({
+                                    icon: <Icon icon={IconEnum.Shield} />,
+                                    title: 'Manage MFA',
+                                    onClick: () => handleManageMfa(row),
+                                });
+                            }
+
+                            return {
+                                // Override delete permission for specific users
+                                ...(canDeleteUser ? {} : {
+                                    onDelete: null,
+                                    onDeleteForever: null,
+                                }),
+                                // Add actions
+                                ...(actions.length > 0 ? { actions } : {}),
+                            };
+                        }
+                    }
+                    initialState={{
+                        sorting: [
+                            {
+                                id: 'createdAt',
+                                desc: true,
+                            },
+                        ],
+                    }}
+                    hasSoftDelete
+                    onEdit={handleEditUser}
+                    onView={handleRowClick}
+                    // onRowClick={canUpdate ? handleRowClick : null}
+                    enableGlobalFilter={true}
+                    permissionsKey={{
+                        delete: PermissionsEnum.DELETE_USERS,
+                        deleteForever: PermissionsEnum.DELETE_USERS,
+                        restore: PermissionsEnum.DELETE_USERS,
+                        edit: PermissionsEnum.UPDATE_USERS,
+                        view: PermissionsEnum.ACCESS_USERS,
+                    }}
+                    extraFilter={canCreate ? (
+                        <Button
+                            component={Link}
+                            to={PATH_DASHBOARD.users.create}
+                            variant="contained"
+                        >
+                            New User
+                        </Button>
+                    ) : null}
+                />
+                {/* <CrudTable
                     crudName="User"
                     crudPermissionKey="users"
                     columns={columns}
@@ -388,7 +509,7 @@ function UsersList() {
                             New User
                         </Button>
                     ) : null}
-                />
+                /> */}
             </Card>
 
             <ResetPasswordDialog

@@ -27,17 +27,18 @@ import { TableAction, TableActionMenu, TableActionMenuProps } from '../data-tabl
 
 export interface CrudTableProps<T>
     extends Partial<Omit<DataTableProps, 'data' | 'ref'>> {
-    crudOperationHooks: Pick<
+    crudOperationHooks: {
+        useGetMany: any;
+    } & Partial<Pick<
         ReturnType<typeof useCrudOperations>,
         | 'useBulkDelete'
         | 'useBulkDeleteForever'
         | 'useDelete'
         | 'useDeleteForever'
-        | 'useGetMany'
         | 'useBulkRestore'
         | 'useBulkRestore'
         | 'useRestore'
-    >;
+    >>;
     crudName: string;
     crudPermissionKey?: string;
     hasSoftDelete?: boolean;

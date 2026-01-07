@@ -12,7 +12,7 @@
         "@ackplus/nest-auth-client": "^1.1.61",
         "@ackplus/nest-auth-react": "^1.1.61",
         "@ackplus/nest-crud-request": "^1.1.18",
-        "@ackplus/react-tanstack-data-table": "^1.1.1",
+        "@ackplus/react-tanstack-data-table": "^1.1.3",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
         "@faker-js/faker": "^10.1.0",

@@ -6,20 +6,18 @@ import { Card, Button } from '@mui/material';
 import { useCallback, useRef, useState, useMemo, useEffect } from 'react';
 
 import {
-    CrudTable,
-    CrudTableActions,
-    DataTableColumn,
     DataTableTab,
     DataTableTabItem,
-    IDataTableFilter,
     Page,
     StatusChip,
     getStatusConfig,
 } from '../../components';
-import { useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import AddEditPageDialog from '../../sections/pages/add-edit-page-dialog';
 import { useHasPermission, withRequirePermission } from '@ackplus/nest-auth-react';
+import CrudDataGrid from '@admin/app/components/data-grid/crud-data-grid';
+import { DataTableApi, DataTableColumn } from '@ackplus/react-tanstack-data-table';
+import { useDataTableState } from '@admin/app/contexts/datatable-state-context';
 
 
 export interface IPageTableFilter {
@@ -31,19 +29,23 @@ const defaultFilter: IPageTableFilter = {
 };
 
 function PageList() {
-    const datatableRef = useRef<CrudTableActions>(null);
-    const { showToasty } = useToasty();
+    const datatableRef = useRef<DataTableApi<IPage>>(null);
     const [selectedPage, setSelectedPage] = useState<IPage | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [tableFilter, setTableFilter] = useState(defaultFilter);
-    const [countFilter, setCountFilter] = useState({});
+
+    // Get cached state for pages table
+    const dataTableStateKey = 'pagelist';
+    const { state: cachedState, setState: setCachedState } = useDataTableState(dataTableStateKey);
+
+    const [tableFilter, setTableFilter] = useState(cachedState?.tableFilter || defaultFilter);
+    const [countFilter, setCountFilter] = useState(cachedState?.countFilter || {});
 
     const canCreate = useHasPermission(PermissionsEnum.CREATE_PAGES);
     const canEdit = useHasPermission(PermissionsEnum.UPDATE_PAGES);
     const canDelete = useHasPermission(PermissionsEnum.DELETE_PAGES);
 
     const {
-        useGetManyPage,
+        useFetchManyPage,
         useDeletePage,
         useRestorePage,
         useDeleteForeverPage,
@@ -62,33 +64,35 @@ function PageList() {
         setIsDialogOpen(false);
     }, []);
 
-    const handleOnChangeTableFilter = useCallback((value, key) => {
+    const handleOnChangeTableFilter = useCallback((value: any, key: string) => {
+        setCachedState({ tableFilter: { ...tableFilter, [key]: value } });
         setTableFilter((state) => ({
             ...state,
             [key]: value,
         }));
-    }, []);
+    }, [tableFilter, setCachedState]);
 
-    const handleTrashData = useCallback((checked) => {
+    const handleTrashData = useCallback((checked: boolean) => {
         setCountFilter((state) => {
             const newState = new QueryBuilder(state);
             newState.setOnlyDeleted(checked);
             return newState.toObject();
         });
-    }, []);
+        setCachedState({ countFilter: { ...countFilter, onlyDeleted: checked } });
+    }, [countFilter, setCachedState]);
 
-    const handleDataTableApiRequestMap = useCallback(
-        (queryBuilder: QueryBuilder, request: IDataTableFilter) => {
+    const dataTableApiRequestMap = useCallback(
+        async (queryBuilder: QueryBuilder, _filters: any) => {
             if (tableFilter?.status !== 'all') {
                 queryBuilder.where({
                     status: { $eq: tableFilter?.status },
                 });
             }
 
-            if (request?.search) {
-                queryBuilder.orWhere('title', WhereOperatorEnum.ILIKE, `%${request?.search}%`);
-                queryBuilder.orWhere('name', WhereOperatorEnum.ILIKE, `%${request?.search}%`);
-                queryBuilder.orWhere('slug', WhereOperatorEnum.ILIKE, `%${request?.search}%`);
+            if (_filters?.globalFilter) {
+                queryBuilder.orWhere('title', WhereOperatorEnum.ILIKE, `%${_filters?.globalFilter}%`);
+                queryBuilder.orWhere('name', WhereOperatorEnum.ILIKE, `%${_filters?.globalFilter}%`);
+                queryBuilder.orWhere('slug', WhereOperatorEnum.ILIKE, `%${_filters?.globalFilter}%`);
             }
 
             return queryBuilder;
@@ -126,54 +130,54 @@ function PageList() {
 
     const columns: DataTableColumn<IPage>[] = [
         {
-            name: 'name',
-            label: 'Name (Admin perspective)',
-            isSearchable: true,
-            isSortable: true,
-            render: (row) => row?.name || '-',
+            accessorKey: 'name',
+            header: 'Name (Admin perspective)',
+            enableGlobalFilter: true,
+            enableSorting: true,
+            cell: ({ row }) => row.original?.name || '-',
         },
         {
-            name: 'title',
-            label: 'Title',
-            isSortable: true,
-            isSearchable: true,
-            render: (row) => row?.title || '-',
+            accessorKey: 'title',
+            header: 'Title',
+            enableSorting: true,
+            enableGlobalFilter: true,
+            cell: ({ row }) => row.original?.title || '-',
         },
         {
-            name: 'slug',
-            label: 'Slug',
-            isSortable: true,
-            isSearchable: true,
-            render: (row) => row?.slug || '-',
+            accessorKey: 'slug',
+            header: 'Slug',
+            enableSorting: true,
+            enableGlobalFilter: true,
+            cell: ({ row }) => row.original?.slug || '-',
         },
         {
-            name: 'status',
-            label: 'Status',
-            isSortable: true,
-            render: (row) => (
+            accessorKey: 'status',
+            header: 'Status',
+            enableSorting: true,
+            cell: ({ row }) => (
                 <StatusChip
-                    status={row?.status || 'draft'}
+                    status={row.original?.status || 'draft'}
                     statusConfig={getStatusConfig('page')}
                 />
             ),
         },
         {
-            name: 'createdAt',
-            label: 'Created At',
-            isSortable: true,
-            render: (row) => toDisplayDate(row?.createdAt),
+            accessorKey: 'createdAt',
+            header: 'Created At',
+            enableSorting: true,
+            cell: ({ row }) => toDisplayDate(row.original?.createdAt),
         },
         {
-            name: 'updatedAt',
-            label: 'Updated At',
-            isSortable: true,
-            render: (row) => toDisplayDate(row?.updatedAt),
+            accessorKey: 'updatedAt',
+            header: 'Updated At',
+            enableSorting: true,
+            cell: ({ row }) => toDisplayDate(row.original?.updatedAt),
         },
     ];
 
     useEffect(() => {
         if (datatableRef.current) {
-            datatableRef.current.datatable.refresh();
+            datatableRef.current.data.reload();
         }
     }, [tableFilter]);
 
@@ -194,21 +198,16 @@ function PageList() {
                     value={tableFilter?.status}
                     onChange={(tab) => handleOnChangeTableFilter(tab, 'status')}
                 />
-                <CrudTable
-                    crudName="Page"
-                    crudPermissionKey="pages"
-                    columns={columns}
+                <CrudDataGrid
                     ref={datatableRef}
-                    hasSoftDelete
-                    // Permission props
-                    canEdit={canEdit}
-                    canDelete={canDelete}
-                    canRestore={canDelete} // Usually same as delete permission
-                    canDeleteForever={canDelete} // Usually same as delete permission
+                    columns={columns}
+                    crudName="Page"
+                    stateKey={dataTableStateKey}
+                    exportFilename="pages"
                     onToggleTrashData={handleTrashData}
-                    dataTableApiRequestMap={handleDataTableApiRequestMap}
+                    dataTableApiRequestMap={dataTableApiRequestMap}
                     crudOperationHooks={{
-                        useGetMany: useGetManyPage,
+                        fetchMany: useFetchManyPage,
                         useDelete: useDeletePage,
                         useRestore: useRestorePage,
                         useDeleteForever: useDeleteForeverPage,
@@ -216,7 +215,23 @@ function PageList() {
                         useBulkRestore: useBulkRestorePage,
                         useBulkDeleteForever: useBulkDeleteForeverPage,
                     }}
+                    initialState={{
+                        sorting: [
+                            {
+                                id: 'createdAt',
+                                desc: true,
+                            },
+                        ],
+                    }}
+                    hasSoftDelete
                     onEdit={canEdit ? handleAddEdit : undefined}
+                    permissionsKey={{
+                        delete: PermissionsEnum.DELETE_PAGES,
+                        deleteForever: PermissionsEnum.DELETE_PAGES,
+                        restore: PermissionsEnum.DELETE_PAGES,
+                        edit: PermissionsEnum.UPDATE_PAGES,
+                        view: PermissionsEnum.ACCESS_PAGES,
+                    }}
                     extraFilter={canCreate ? (
                         <Button
                             variant="contained"
@@ -233,7 +248,7 @@ function PageList() {
                     initialValue={selectedPage}
                     onClose={handleCloseDialog}
                     onSubmit={() => {
-                        datatableRef.current?.datatable?.refresh();
+                        datatableRef.current?.data?.reload();
                         handleCloseDialog();
                     }}
                 />
