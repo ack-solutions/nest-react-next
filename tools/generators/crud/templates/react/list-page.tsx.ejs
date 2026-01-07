@@ -1,0 +1,77 @@
+import React, { useState } from 'react';
+import { use<%= entityPascal %>List, useDelete<%= entityPascal %> } from '@libs/react-shared';
+import { I<%= entityPascal %> } from '@libs/types';
+import { AddEdit<%= entityPascal %>Dialog } from '../../sections/<%= pluralKebab %>/add-edit-<%= entityFile %>-dialog';
+
+export default function <%= entityPascal %>ListPage() {
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [editId, setEditId] = useState<string | undefined>();
+    const { data, isLoading, error } = use<%= entityPascal %>List();
+    const deleteMutation = useDelete<%= entityPascal %>();
+
+    const handleAdd = () => {
+        setEditId(undefined);
+        setDialogOpen(true);
+    };
+
+    const handleEdit = (id: string) => {
+        setEditId(id);
+        setDialogOpen(true);
+    };
+
+    const handleDelete = async (id: string) => {
+        if (confirm('Are you sure you want to delete this item?')) {
+            await deleteMutation.mutateAsync(id);
+        }
+    };
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
+
+    const items = data?.data || [];
+
+    return (
+        <div className="page">
+            <div className="page-header">
+                <h1><%= entityPascal %> List</h1>
+                <button onClick={handleAdd}>Add <%= entityPascal %></button>
+            </div>
+
+            <table className="data-table">
+                <thead>
+                    <tr>
+<% for (const col of columns.slice(0, 5)) { %>
+                        <th><%= col.propertyName %></th>
+<% } %>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {items.map((item: I<%= entityPascal %>) => (
+                        <tr key={item.id}>
+<% for (const col of columns.slice(0, 5)) { %>
+<% if (col.dbType === 'boolean') { %>
+                            <td>{item.<%= col.propertyName %> ? 'Yes' : 'No'}</td>
+<% } else if (col.dbType === 'date' || col.dbType === 'datetime') { %>
+                            <td>{item.<%= col.propertyName %> ? new Date(item.<%= col.propertyName %>).toLocaleDateString() : '-'}</td>
+<% } else { %>
+                            <td>{item.<%= col.propertyName %>}</td>
+<% } %>
+<% } %>
+                            <td>
+                                <button onClick={() => handleEdit(item.id)}>Edit</button>
+                                <button onClick={() => handleDelete(item.id)}>Delete</button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            <AddEdit<%= entityPascal %>Dialog
+                open={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+                editId={editId}
+            />
+        </div>
+    );
+}

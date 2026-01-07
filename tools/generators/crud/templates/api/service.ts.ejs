@@ -1,0 +1,11 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TypeOrmCrudService } from '@ackplus/nest-crud';
+import { <%= entityPascal %>Entity } from './<%= entityFile %>.entity';
+
+@Injectable()
+export class <%= entityPascal %>Service extends TypeOrmCrudService<<%= entityPascal %>Entity> {
+    constructor(@InjectRepository(<%= entityPascal %>Entity) repo) {
+        super(repo);
+    }
+}

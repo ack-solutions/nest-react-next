@@ -1,0 +1,29 @@
+import { IsString, IsOptional, IsBoolean, IsNumber, IsEnum, IsUUID, IsDate, IsObject } from 'class-validator';
+<% if (enumColumns.length > 0) { %>
+import { <%= enumColumns.map(c => c.enumTypeName).join(', ') %> } from '@libs/types';
+<% } %>
+
+export class Create<%= entityPascal %>Dto {
+<% for (const col of columns) { %>
+<% if (col.dbType === 'string' || col.dbType === 'text') { %>
+    @IsString()
+<% } else if (col.dbType === 'boolean') { %>
+    @IsBoolean()
+<% } else if (col.dbType === 'int' || col.dbType === 'float') { %>
+    @IsNumber()
+<% } else if (col.dbType === 'uuid') { %>
+    @IsUUID()
+<% } else if (col.dbType === 'date' || col.dbType === 'datetime') { %>
+    @IsDate()
+<% } else if (col.dbType === 'json') { %>
+    @IsObject()
+<% } else if (col.dbType === 'enum') { %>
+    @IsEnum(<%= col.enumTypeName %>)
+<% } %>
+<% if (col.optional) { %>
+    @IsOptional()
+<% } %>
+    <%= col.propertyName %><%= col.optional ? '?' : '' %>: <%= col.tsType %>;
+
+<% } %>
+}

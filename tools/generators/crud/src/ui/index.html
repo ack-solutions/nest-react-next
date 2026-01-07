@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+    <style>
+        :root {
+            --bg: #0f0f0f;
+            --bg2: #1a1a1a;
+            --bg3: #252525;
+            --text: #e5e5e5;
+            --muted: #888;
+            --primary: #646cff;
+            --primary-hover: #535bf2;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --border: #333;
+            --radius: 8px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        h1 { font-size: 1.75rem; margin-bottom: 0.5rem; }
+        h2 { font-size: 1.25rem; margin-bottom: 1rem; }
+        .subtitle { color: var(--muted); margin-bottom: 2rem; }
+
+        .card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-label.required::after { content: ' *'; color: var(--error); }
+        .form-input, .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-size: 1rem;
+        }
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .form-hint { font-size: 0.8rem; color: var(--muted); margin-top: 0.25rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        .checkbox-group { display: flex; gap: 2rem; flex-wrap: wrap; }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        .checkbox-label input { width: 18px; height: 18px; accent-color: var(--primary); }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-secondary { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: #2a2a2a; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-warning { background: var(--warning); color: black; }
+        .btn-danger { background: var(--error); color: white; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.875rem; }
+        .btn-group { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.5rem; }
+
+        .presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+        .preset-btn {
+            padding: 0.5rem 0.75rem;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+        .preset-btn:hover { border-color: var(--primary); }
+        .preset-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
+        th { font-weight: 600; color: var(--muted); font-size: 0.875rem; }
+        td input, td select {
+            padding: 0.5rem;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text);
+            width: 100%;
+        }
+        td input[type="checkbox"] { width: auto; }
+
+        .empty-state { text-align: center; padding: 2rem; color: var(--muted); }
+
+        .log-viewer {
+            background: #0a0a0a;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.875rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .log-entry { padding: 0.25rem 0; }
+        .log-success { color: var(--success); }
+        .log-error { color: var(--error); }
+        .log-warning { color: var(--warning); }
+
+        .step-nav { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem; }
+        .step-btn {
+            padding: 0.5rem 1rem;
+            background: var(--bg3);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .step-btn.active { border-color: var(--primary); color: var(--text); background: rgba(100, 108, 255, 0.1); }
+        .step-btn.completed { border-color: var(--success); color: var(--success); }
+
+        .hidden { display: none !important; }
+
+        .file-list { display: flex; flex-direction: column; gap: 0.25rem; max-height: 400px; overflow-y: auto; }
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: var(--bg3);
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 0.8rem;
+            border: 1px solid transparent;
+        }
+        .file-item:hover { background: #2a2a2a; }
+        .file-item.active { border-color: var(--primary); background: rgba(100, 108, 255, 0.1); }
+        .file-item .action { color: var(--success); font-weight: bold; }
+
+        .preview-container { display: grid; grid-template-columns: 350px 1fr; gap: 1rem; }
+        #monacoContainer { height: 450px; border: 1px solid var(--border); border-radius: var(--radius); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CRUD Generator</h1>
+        <p class="subtitle">Generate NestJS + React scaffolding with EJS templates</p>
+
+        <div class="step-nav">
+            <button class="step-btn active" data-step="1">1. Basic Info</button>
+            <button class="step-btn" data-step="2">2. Columns</button>
+            <button class="step-btn" data-step="3">3. Preview & Generate</button>
+        </div>
+
+        <!-- Step 1: Basic Info -->
+        <div id="step-1" class="step">
+            <div class="card">
+                <div class="card-header"><h2>Entity Details</h2></div>
+                <div class="form-group">
+                    <label class="form-label required">Entity Name</label>
+                    <input type="text" id="entityName" class="form-input" placeholder="e.g., Product, BlogPost, UserProfile">
+                    <p class="form-hint">Use PascalCase or camelCase. Will be converted automatically.</p>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">API Route</label>
+                        <input type="text" id="route" class="form-input" placeholder="Auto-generated from entity name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Module Name</label>
+                        <input type="text" id="moduleName" class="form-input" placeholder="Same as entity if empty">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><h2>Output Targets</h2></div>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="outputApi" checked>
+                        <span><strong>API (NestJS)</strong><br><small style="color:var(--muted)">Entity, Service, Controller, DTOs</small></span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="outputAdmin" checked>
+                        <span><strong>Admin (React)</strong><br><small style="color:var(--muted)">List page, Dialog, Hooks</small></span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="outputWeb">
+                        <span><strong>Web (Next.js)</strong><br><small style="color:var(--muted)">Public pages</small></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="goToStep(2)">Next: Columns</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Columns -->
+        <div id="step-2" class="step hidden">
+            <div class="card">
+                <div class="card-header"><h2>Quick Add Presets</h2></div>
+                <div class="presets" id="presets"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><h2>Columns</h2></div>
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                    <input type="text" id="newColumnName" class="form-input" placeholder="Enter column name and press Enter..." style="flex:1">
+                    <button class="btn btn-secondary" onclick="addColumn()">Add Column</button>
+                </div>
+                <div id="columnsTable"></div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="goToStep(1)">Back</button>
+                <button class="btn btn-primary" onclick="goToStep(3)">Next: Preview</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Preview & Generate -->
+        <div id="step-3" class="step hidden">
+            <div class="card">
+                <div class="card-header"><h2>Code Preview</h2></div>
+                <div class="preview-container">
+                    <div class="file-list" id="fileList"></div>
+                    <div id="monacoContainer"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="btn-group" style="justify-content: center; margin: 0;">
+                    <button class="btn btn-success" onclick="generate(false)">Generate Files</button>
+                    <button class="btn btn-warning" onclick="generate(true)">Force Generate (Overwrite)</button>
+                </div>
+            </div>
+
+            <div id="logCard" class="card hidden">
+                <div class="card-header"><h2>Generation Log</h2></div>
+                <div id="logViewer" class="log-viewer"></div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="goToStep(2)">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        const state = {
+            entityName: '',
+            route: '',
+            moduleName: '',
+            outputApps: { api: true, admin: true, web: false },
+            columns: [],
+            previewFiles: [],
+            presets: [],
+            columnTypes: []
+        };
+
+        let monacoEditor = null;
+
+        const $ = sel => document.querySelector(sel);
+        const $$ = sel => document.querySelectorAll(sel);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load metadata from server
+            const meta = await fetch('/api/meta').then(r => r.json());
+            state.presets = meta.presets;
+            state.columnTypes = meta.columnTypes;
+
+            renderPresets();
+            renderColumns();
+
+            // Event listeners
+            $('#entityName').addEventListener('input', e => state.entityName = e.target.value);
+            $('#route').addEventListener('input', e => state.route = e.target.value);
+            $('#moduleName').addEventListener('input', e => state.moduleName = e.target.value);
+            $('#outputApi').addEventListener('change', e => state.outputApps.api = e.target.checked);
+            $('#outputAdmin').addEventListener('change', e => state.outputApps.admin = e.target.checked);
+            $('#outputWeb').addEventListener('change', e => state.outputApps.web = e.target.checked);
+            $('#newColumnName').addEventListener('keydown', e => { if (e.key === 'Enter') addColumn(); });
+            $$('.step-btn').forEach(btn => btn.addEventListener('click', () => goToStep(parseInt(btn.dataset.step))));
+
+            // Initialize Monaco
+            require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
+            require(['vs/editor/editor.main'], () => {
+                monacoEditor = monaco.editor.create($('#monacoContainer'), {
+                    value: '// Select a file from the list to preview',
+                    language: 'typescript',
+                    theme: 'vs-dark',
+                    readOnly: true,
+                    minimap: { enabled: false },
+                    fontSize: 13,
+                    wordWrap: 'on'
+                });
+            });
+        });
+
+        function goToStep(step) {
+            if (step > 1 && !state.entityName.trim()) {
+                alert('Please enter an entity name');
+                return;
+            }
+            if (step > 2 && state.columns.length === 0) {
+                alert('Please add at least one column');
+                return;
+            }
+
+            $$('.step').forEach(s => s.classList.add('hidden'));
+            $(`#step-${step}`).classList.remove('hidden');
+
+            $$('.step-btn').forEach((btn, i) => {
+                btn.classList.remove('active', 'completed');
+                if (i + 1 === step) btn.classList.add('active');
+                else if (i + 1 < step) btn.classList.add('completed');
+            });
+
+            if (step === 3) loadPreview();
+        }
+
+        function renderPresets() {
+            const container = $('#presets');
+            container.innerHTML = state.presets.map(p =>
+                `<button class="preset-btn" data-preset="${p.id}" title="${p.description || ''}">${p.label}</button>`
+            ).join('');
+
+            container.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.addEventListener('click', () => addPreset(btn.dataset.preset));
+            });
+
+            updatePresetButtons();
+        }
+
+        function updatePresetButtons() {
+            $$('.preset-btn').forEach(btn => {
+                const preset = state.presets.find(p => p.id === btn.dataset.preset);
+                const used = state.columns.some(c => c.name === preset?.column?.name);
+                btn.disabled = used;
+            });
+        }
+
+        function addPreset(presetId) {
+            const preset = state.presets.find(p => p.id === presetId);
+            if (!preset) return;
+            state.columns.push({ ...preset.column });
+            renderColumns();
+            updatePresetButtons();
+        }
+
+        function addColumn() {
+            const input = $('#newColumnName');
+            const name = input.value.trim();
+            if (!name) return;
+
+            state.columns.push({
+                name,
+                dbType: 'string',
+                nullable: false,
+                unique: false
+            });
+
+            input.value = '';
+            renderColumns();
+            updatePresetButtons();
+        }
+
+        function removeColumn(index) {
+            state.columns.splice(index, 1);
+            renderColumns();
+            updatePresetButtons();
+        }
+
+        function updateColumn(index, field, value) {
+            state.columns[index][field] = value;
+            if (field === 'dbType') renderColumns();
+        }
+
+        function updateEnumValues(index, value) {
+            state.columns[index].enumValues = value.split(',').map(v => v.trim()).filter(Boolean);
+        }
+
+        function renderColumns() {
+            const container = $('#columnsTable');
+
+            if (state.columns.length === 0) {
+                container.innerHTML = '<div class="empty-state">No columns yet. Use presets above or add manually.</div>';
+                return;
+            }
+
+            let html = `<table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Extra</th>
+                        <th style="width:60px">Null</th>
+                        <th style="width:60px">Unique</th>
+                        <th style="width:50px"></th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+            state.columns.forEach((col, i) => {
+                let extra = '<span style="color:var(--muted)">-</span>';
+                if (col.dbType === 'enum') {
+                    extra = `<input type="text" placeholder="val1,val2,val3" value="${(col.enumValues || []).join(',')}" onchange="updateEnumValues(${i}, this.value)" title="Comma-separated enum values">`;
+                } else if (col.dbType === 'string') {
+                    extra = `<input type="number" placeholder="length" style="width:80px" value="${col.length || ''}" onchange="updateColumn(${i}, 'length', parseInt(this.value) || undefined)">`;
+                }
+
+                html += `<tr>
+                    <td style="color:var(--muted)">${i + 1}</td>
+                    <td><input type="text" value="${col.name}" onchange="updateColumn(${i}, 'name', this.value)"></td>
+                    <td>
+                        <select onchange="updateColumn(${i}, 'dbType', this.value)">
+                            ${state.columnTypes.map(t => `<option value="${t}" ${col.dbType === t ? 'selected' : ''}>${t}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td>${extra}</td>
+                    <td style="text-align:center"><input type="checkbox" ${col.nullable ? 'checked' : ''} onchange="updateColumn(${i}, 'nullable', this.checked)"></td>
+                    <td style="text-align:center"><input type="checkbox" ${col.unique ? 'checked' : ''} onchange="updateColumn(${i}, 'unique', this.checked)"></td>
+                    <td><button class="btn btn-danger btn-sm" onclick="removeColumn(${i})">x</button></td>
+                </tr>`;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        async function loadPreview() {
+            const config = {
+                entityName: state.entityName,
+                route: state.route,
+                moduleName: state.moduleName,
+                outputApps: state.outputApps,
+                columns: state.columns
+            };
+
+            try {
+                const res = await fetch('/api/preview', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ config })
+                });
+                state.previewFiles = await res.json();
+                renderFileList();
+                if (state.previewFiles.length > 0) showFile(0);
+            } catch (err) {
+                console.error('Preview error:', err);
+            }
+        }
+
+        function renderFileList() {
+            const container = $('#fileList');
+            container.innerHTML = state.previewFiles.map((f, i) =>
+                `<div class="file-item" onclick="showFile(${i})"><span class="action">+</span> ${f.path}</div>`
+            ).join('');
+        }
+
+        function showFile(index) {
+            $$('.file-item').forEach((el, i) => el.classList.toggle('active', i === index));
+            const file = state.previewFiles[index];
+            if (monacoEditor && file) {
+                const lang = file.path.endsWith('.tsx') ? 'typescriptreact' : 'typescript';
+                monaco.editor.setModelLanguage(monacoEditor.getModel(), lang);
+                monacoEditor.setValue(file.content || '// No content');
+            }
+        }
+
+        async function generate(force = false) {
+            const config = {
+                entityName: state.entityName,
+                route: state.route,
+                moduleName: state.moduleName,
+                outputApps: state.outputApps,
+                columns: state.columns
+            };
+
+            $('#logCard').classList.remove('hidden');
+            const logViewer = $('#logViewer');
+            logViewer.innerHTML = '<div class="log-entry">Starting generation...</div>';
+
+            try {
+                const res = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ config, options: { force } })
+                });
+
+                const results = await res.json();
+
+                logViewer.innerHTML = results.map(r => {
+                    const cls = r.action === 'created' ? 'log-success' :
+                                r.action === 'skipped' ? 'log-warning' : '';
+                    return `<div class="log-entry ${cls}">[${r.action}] ${r.path}${r.reason ? ' (' + r.reason + ')' : ''}</div>`;
+                }).join('');
+
+                logViewer.innerHTML += '<div class="log-entry log-success">Generation complete!</div>';
+            } catch (err) {
+                logViewer.innerHTML += `<div class="log-entry log-error">Error: ${err.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

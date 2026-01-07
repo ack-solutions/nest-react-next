@@ -1,0 +1,45 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { <%= entityCamel %>Service } from '../services/<%= entityFile %>.service';
+import { I<%= entityPascal %> } from '@libs/types';
+
+const QUERY_KEY = '<%= pluralKebab %>';
+
+export function use<%= entityPascal %>List(params?: Record<string, any>) {
+    return useQuery({
+        queryKey: [QUERY_KEY, params],
+        queryFn: () => <%= entityCamel %>Service.getMany(params),
+    });
+}
+
+export function use<%= entityPascal %>(id: string) {
+    return useQuery({
+        queryKey: [QUERY_KEY, id],
+        queryFn: () => <%= entityCamel %>Service.getOne(id),
+        enabled: !!id,
+    });
+}
+
+export function useCreate<%= entityPascal %>() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (data: Partial<I<%= entityPascal %>>) => <%= entityCamel %>Service.create(data),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: [QUERY_KEY] }),
+    });
+}
+
+export function useUpdate<%= entityPascal %>() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({ id, data }: { id: string; data: Partial<I<%= entityPascal %>> }) =>
+            <%= entityCamel %>Service.update(id, data),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: [QUERY_KEY] }),
+    });
+}
+
+export function useDelete<%= entityPascal %>() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (id: string) => <%= entityCamel %>Service.delete(id),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: [QUERY_KEY] }),
+    });
+}

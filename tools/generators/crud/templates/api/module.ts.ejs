@@ -1,0 +1,13 @@
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { <%= entityPascal %>Entity } from './<%= entityFile %>.entity';
+import { <%= entityPascal %>Service } from './<%= entityFile %>.service';
+import { <%= entityPascal %>Controller } from './<%= entityFile %>.controller';
+
+@Module({
+    imports: [TypeOrmModule.forFeature([<%= entityPascal %>Entity])],
+    providers: [<%= entityPascal %>Service],
+    controllers: [<%= entityPascal %>Controller],
+    exports: [<%= entityPascal %>Service],
+})
+export class <%= entityPascal %>Module {}

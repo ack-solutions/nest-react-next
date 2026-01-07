@@ -1,4 +1,8 @@
 packages:
   - "apps/*"
+<<<<<<< HEAD
   - "packages/*"
   - "tools/*"
+=======
+  - "libs/*"
+>>>>>>> 6a9847a (setup crud generator)

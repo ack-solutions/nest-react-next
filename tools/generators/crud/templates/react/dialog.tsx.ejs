@@ -1,0 +1,71 @@
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { I<%= entityPascal %> } from '@libs/types';
+import { useCreate<%= entityPascal %>, useUpdate<%= entityPascal %>, use<%= entityPascal %> } from '@libs/react-shared';
+
+interface AddEdit<%= entityPascal %>DialogProps {
+    open: boolean;
+    onClose: () => void;
+    editId?: string;
+}
+
+export function AddEdit<%= entityPascal %>Dialog({ open, onClose, editId }: AddEdit<%= entityPascal %>DialogProps) {
+    const { data: existing } = use<%= entityPascal %>(editId || '');
+    const createMutation = useCreate<%= entityPascal %>();
+    const updateMutation = useUpdate<%= entityPascal %>();
+
+    const { register, handleSubmit, reset } = useForm<Partial<I<%= entityPascal %>>>({
+        defaultValues: existing || {},
+    });
+
+    React.useEffect(() => {
+        if (existing) reset(existing);
+    }, [existing, reset]);
+
+    const onSubmit = async (data: Partial<I<%= entityPascal %>>) => {
+        if (editId) {
+            await updateMutation.mutateAsync({ id: editId, data });
+        } else {
+            await createMutation.mutateAsync(data);
+        }
+        onClose();
+    };
+
+    if (!open) return null;
+
+    return (
+        <div className="dialog-overlay">
+            <div className="dialog">
+                <h2>{editId ? 'Edit' : 'Add'} <%= entityPascal %></h2>
+                <form onSubmit={handleSubmit(onSubmit)}>
+<% for (const col of columns) { %>
+                    <div className="form-group">
+                        <label><%= col.propertyName %></label>
+<% if (col.dbType === 'boolean') { %>
+                        <input type="checkbox" {...register('<%= col.propertyName %>')} />
+<% } else if (col.dbType === 'int' || col.dbType === 'float') { %>
+                        <input type="number" {...register('<%= col.propertyName %>')} />
+<% } else if (col.dbType === 'text') { %>
+                        <textarea {...register('<%= col.propertyName %>')} />
+<% } else if (col.dbType === 'date' || col.dbType === 'datetime') { %>
+                        <input type="datetime-local" {...register('<%= col.propertyName %>')} />
+<% } else if (col.dbType === 'enum' && col.enumValues) { %>
+                        <select {...register('<%= col.propertyName %>')}>
+<% for (const val of col.enumValues) { %>
+                            <option value="<%= val %>"><%= val %></option>
+<% } %>
+                        </select>
+<% } else { %>
+                        <input type="text" {...register('<%= col.propertyName %>')} />
+<% } %>
+                    </div>
+<% } %>
+                    <div className="dialog-actions">
+                        <button type="button" onClick={onClose}>Cancel</button>
+                        <button type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+}

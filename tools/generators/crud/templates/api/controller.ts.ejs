@@ -1,0 +1,12 @@
+import { Controller } from '@nestjs/common';
+import { Crud, CrudController } from '@ackplus/nest-crud';
+import { <%= entityPascal %>Entity } from './<%= entityFile %>.entity';
+import { <%= entityPascal %>Service } from './<%= entityFile %>.service';
+
+@Crud({
+    model: { type: <%= entityPascal %>Entity },
+})
+@Controller('<%= route %>')
+export class <%= entityPascal %>Controller implements CrudController<<%= entityPascal %>Entity> {
+    constructor(public service: <%= entityPascal %>Service) {}
+}
