@@ -113,6 +113,8 @@ export interface IMfaStatusResponse {
   allowMethodSelection: boolean;
   totpDevices: IMfaDevice[];
   hasRecoveryCode: boolean;
+  required?: boolean;
+  canToggle?: boolean;
 }
 
 export interface IMfaCodeResponse {

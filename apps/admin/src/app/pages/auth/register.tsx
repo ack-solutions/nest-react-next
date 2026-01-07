@@ -32,13 +32,14 @@ function Register() {
 
     return (
         <Box>
-            <Typography
-                variant="h4"
-                gutterBottom
-                sx={{ mb: 4 }}
-            >
-                Create new account.
-            </Typography>
+            <Stack spacing={1} sx={{ mb: 4 }}>
+                <Typography variant="h4" gutterBottom>
+                    Create your account
+                </Typography>
+                <Typography color="text.secondary">
+                    Get started with your free account today
+                </Typography>
+            </Stack>
 
             <RegisterForm onSubmit={handleRegister} />
 
@@ -48,7 +49,9 @@ function Register() {
                 justifyContent="center"
                 mt={2}
             >
-                <Typography sx={{ color: 'text.secondary' }}>Already A Member?</Typography>
+                <Typography color="text.secondary">
+                    Already have an account?
+                </Typography>
                 <Link
                     component={RouterLink}
                     to={PATH_AUTH.login}
@@ -57,7 +60,7 @@ function Register() {
                         color: 'primary.main',
                     }}
                 >
-                    Login
+                    Sign in
                 </Link>
             </Stack>
         </Box>

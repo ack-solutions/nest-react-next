@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { errorMessage } from '@libs/utils';
-import { Alert, Box, Button, Stack, Typography } from '@mui/material';
-import { useCallback } from 'react';
+import { Alert, Box, Button, Checkbox, FormControlLabel, Stack, Typography } from '@mui/material';
+import { useCallback, useState } from 'react';
 import { useForm, UseFormSetError } from 'react-hook-form';
 import { object, string } from 'yup';
 
@@ -14,6 +14,7 @@ import { MfaMethod } from './mfa-method-select';
 
 export interface MfaOtpFormValues {
     otp: string;
+    trustDevice?: boolean;
 }
 
 export interface MfaOtpFormProps {
@@ -24,22 +25,37 @@ export interface MfaOtpFormProps {
     ) => Promise<void>;
     onResend?: (setError: UseFormSetError<MfaOtpFormValues>) => Promise<void>;
     onBack?: () => void;
+    onChangeMethod?: () => void;
     userEmail?: string;
     userPhone?: string;
     isLoading?: boolean;
+    showChangeMethod?: boolean;
+    showTrustDevice?: boolean;
 }
 
 const validationSchema = object().shape({
     otp: string()
         .label('OTP')
-        .required('OTP is required')
-        .length(6, 'OTP must be 6 digits'),
+        .required('Please enter the verification code')
+        .length(6, 'Code must be 6 digits'),
 }) as any;
 
-const methodLabels: Record<MfaMethod, string> = {
-    email: 'email',
-    phone: 'phone',
-    totp: 'authenticator app',
+const methodConfig: Record<MfaMethod, { label: string; description: string; icon: IconEnum }> = {
+    email: {
+        label: 'Email',
+        description: 'We sent a verification code to your email',
+        icon: IconEnum.Mail,
+    },
+    phone: {
+        label: 'Phone',
+        description: 'We sent a verification code to your phone',
+        icon: IconEnum.Phone,
+    },
+    totp: {
+        label: 'Authenticator App',
+        description: 'Enter the code from your authenticator app',
+        icon: IconEnum.Shield,
+    },
 };
 
 export default function MfaOtpForm({
@@ -47,10 +63,15 @@ export default function MfaOtpForm({
     onSubmit,
     onResend,
     onBack,
+    onChangeMethod,
     userEmail,
     userPhone,
     isLoading = false,
+    showChangeMethod = false,
+    showTrustDevice = true,
 }: MfaOtpFormProps) {
+    const [trustDevice, setTrustDevice] = useState(false);
+
     const formContext = useForm<MfaOtpFormValues>({
         defaultValues: {
             otp: '',
@@ -64,10 +85,14 @@ export default function MfaOtpForm({
         reset,
     } = formContext;
 
+    // TOTP codes come from authenticator apps, no resend available
+    const canResend = method !== 'totp';
+
     const handleSubmit = useCallback(
         async (values: MfaOtpFormValues) => {
             try {
-                await onSubmit(values, setError);
+                // Include trustDevice in the values passed to onSubmit
+                await onSubmit({ ...values, trustDevice }, setError);
             } catch (error) {
                 setError('root', {
                     type: 'manual',
@@ -75,13 +100,13 @@ export default function MfaOtpForm({
                 });
             }
         },
-        [onSubmit, setError],
+        [onSubmit, setError, trustDevice],
     );
 
     const handleResend = useCallback(
         async () => {
             try {
-                if (onResend) {
+                if (onResend && canResend) {
                     await onResend(setError);
                     reset();
                 }
@@ -92,7 +117,7 @@ export default function MfaOtpForm({
                 });
             }
         },
-        [onResend, setError, reset],
+        [onResend, setError, reset, canResend],
     );
 
     const getMethodDisplay = () => {
@@ -102,8 +127,11 @@ export default function MfaOtpForm({
         if (method === 'phone' && userPhone) {
             return userPhone;
         }
-        return methodLabels[method];
+        return null;
     };
+
+    const config = methodConfig[method];
+    const displayValue = getMethodDisplay();
 
     return (
         <Box>
@@ -111,21 +139,50 @@ export default function MfaOtpForm({
                 spacing={2}
                 sx={{ mb: 4 }}
             >
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        mb: 2,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            p: 2,
+                            borderRadius: 2,
+                            bgcolor: 'primary.lighter',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Icon
+                            color='primary'
+                            icon={config.icon}
+                            width={32}
+                            height={32}
+                        />
+                    </Box>
+                </Box>
+
                 <Typography
                     variant="h4"
-                    gutterBottom
+                    textAlign="center"
                 >
                     Enter verification code
                 </Typography>
-                <Typography>
-                    Please enter the 6-digit code sent to your {methodLabels[method]}
+
+                <Typography textAlign="center" color="text.secondary">
+                    {config.description}
                 </Typography>
-                {(userEmail || userPhone) && (
+
+                {displayValue && (
                     <Typography
-                        variant="body2"
-                        color="text.secondary"
+                        variant="subtitle2"
+                        textAlign="center"
                     >
-                        {getMethodDisplay()}
+                        {displayValue}
                     </Typography>
                 )}
             </Stack>
@@ -156,6 +213,25 @@ export default function MfaOtpForm({
                         />
                     </Box>
 
+                    {/* Remember this device checkbox */}
+                    {showTrustDevice && (
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={trustDevice}
+                                    onChange={(e) => setTrustDevice(e.target.checked)}
+                                    color="primary"
+                                />
+                            }
+                            label={
+                                <Typography variant="body2" color="text.secondary">
+                                    Remember this device
+                                </Typography>
+                            }
+                            sx={{ justifyContent: 'center', mx: 'auto' }}
+                        />
+                    )}
+
                     <Button
                         fullWidth
                         type="submit"
@@ -165,7 +241,8 @@ export default function MfaOtpForm({
                         Verify
                     </Button>
 
-                    {onResend && (
+                    {/* Only show resend option for email/phone, not for TOTP */}
+                    {canResend && onResend && (
                         <Stack
                             direction="row"
                             spacing={0.5}
@@ -193,17 +270,44 @@ export default function MfaOtpForm({
                         </Stack>
                     )}
 
-                    {onBack && (
-                        <Button
-                            onClick={onBack}
-                            startIcon={<Icon icon={IconEnum.ArrowLeft} />}
-                            sx={{
-                                mx: 'auto',
-                            }}
+                    {/* Show helpful message for TOTP */}
+                    {method === 'totp' && (
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            textAlign="center"
                         >
-                            Back
-                        </Button>
+                            Open your authenticator app (like Google Authenticator or Authy) to get the code.
+                        </Typography>
                     )}
+
+                    {/* Navigation options */}
+                    <Stack
+                        direction="row"
+                        justifyContent="center"
+                        spacing={2}
+                    >
+                        {showChangeMethod && onChangeMethod && (
+                            <Button
+                                onClick={onChangeMethod}
+                                variant="text"
+                                size="small"
+                            >
+                                Try another method
+                            </Button>
+                        )}
+
+                        {onBack && (
+                            <Button
+                                onClick={onBack}
+                                startIcon={<Icon icon={IconEnum.ArrowLeft} />}
+                                variant="text"
+                                size="small"
+                            >
+                                Back
+                            </Button>
+                        )}
+                    </Stack>
                 </Stack>
             </FormContainer>
         </Box>

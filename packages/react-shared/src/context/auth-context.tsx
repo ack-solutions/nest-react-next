@@ -77,6 +77,7 @@ export interface AuthContextValue {
     changePassword: NestAuth['changePassword'];
     send2fa: NestAuth['send2fa'];
     verify2fa: NestAuth['verify2fa'];
+    resetMfa: NestAuth['resetMfa'];
 
     // TOTP / MFA Management
     setupTotp: () => Promise<ITotpSetupResponse>;
@@ -250,6 +251,7 @@ function BridgeAuthProvider({
             changePassword: auth.changePassword,
             send2fa: auth.send2fa,
             verify2fa: auth.verify2fa,
+            resetMfa: auth.resetMfa,
 
             // TOTP / MFA Management - these methods exist at runtime in @ackplus/nest-auth-react
             // but may not be in the type definitions, so we use type assertions
@@ -290,6 +292,7 @@ function BridgeAuthProvider({
             auth.listTotpDevices,
             auth.removeTotpDevice,
             auth.toggleMfa,
+            auth.resetMfa,
             auth.generateRecoveryCode,
             refetchUser,
             authErrorStatus,

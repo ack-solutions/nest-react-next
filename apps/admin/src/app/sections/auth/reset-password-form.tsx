@@ -10,6 +10,8 @@ import { useAuth } from '@libs/react-shared';
 import { FormContainer, RHFPassword } from '../../form';
 import { useToasty } from '../../hook';
 import { PATH_AUTH } from '../../routes/paths';
+import { Icon } from '../../components';
+import { IconEnum } from '../../components/icons/icons';
 
 
 export interface ResetPasswordFormProps {
@@ -19,13 +21,16 @@ export interface ResetPasswordFormProps {
 const validationSchema = object().shape({
     password: string()
         .label('New Password')
-        .required()
-        .min(8, 'New Password must be at least 8 characters')
-        .matches(patterns.password, 'New Password must include at least one uppercase letter, one lowercase letter, one number, and one special character'),
+        .required('Please enter a new password')
+        .min(8, 'Password must be at least 8 characters')
+        .matches(
+            patterns.password,
+            'Password must include uppercase, lowercase, number, and special character'
+        ),
     confirmPassword: string()
         .label('Confirm Password')
-        .oneOf([ref('password'), null], 'Passwords must match the confirmation password.')
-        .required(),
+        .oneOf([ref('password'), null], 'Passwords do not match')
+        .required('Please confirm your password'),
 });
 
 function ResetPasswordForm({ token }: ResetPasswordFormProps) {
@@ -42,7 +47,7 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     const handleSubmitForm = useCallback(
         async (value: { password: string; confirmPassword: string }) => {
             if (!token) {
-                showToasty('Something went wrong, please try again later.', 'error');
+                showToasty('Invalid reset link. Please request a new one.', 'error');
                 return;
             }
             try {
@@ -50,7 +55,7 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                     token: token,
                     newPassword: value.password,
                 });
-                showToasty('Your password has been updated successfully.');
+                showToasty('Your password has been reset successfully');
                 navigate(PATH_AUTH.login);
             } catch (error) {
                 showToasty(errorMessage(error), 'error');
@@ -62,22 +67,48 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     return (
         <Box>
             <Stack
-                direction="row"
-                alignItems="center"
+                spacing={1}
                 sx={{ mb: 4 }}
             >
-                <Box>
-                    <Typography
-                        variant="h4"
-                        gutterBottom
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        mb: 2,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            p: 2,
+                            borderRadius: 2,
+                            bgcolor: 'primary.lighter',
+                            color: 'primary.main',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
                     >
-                        Set new password
-                    </Typography>
-                    <Typography>
-                        Your new password must be different to previously used passwords.
-                    </Typography>
+                        <Icon
+                            icon={IconEnum.Shield}
+                            width={32}
+                            height={32}
+                        />
+                    </Box>
                 </Box>
+
+                <Typography
+                    variant="h4"
+                    textAlign="center"
+                    gutterBottom
+                >
+                    Create new password
+                </Typography>
+                <Typography textAlign="center" color="text.secondary">
+                    Your new password must be different from your previous password.
+                </Typography>
             </Stack>
+
             <FormContainer
                 formProps={{
                     id: 'reset-password',
@@ -90,16 +121,17 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                     <RHFPassword
                         fullWidth
                         name="password"
-                        label="Password"
-                        required
+                        label="New Password"
+                        placeholder="Enter new password"
                     />
                     <RHFPassword
                         fullWidth
                         name="confirmPassword"
                         label="Confirm Password"
-                        required
+                        placeholder="Confirm new password"
                     />
                     <Button
+                        fullWidth
                         variant="contained"
                         type="submit"
                         loading={isSubmitting}

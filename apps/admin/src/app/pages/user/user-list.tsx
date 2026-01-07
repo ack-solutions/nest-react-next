@@ -1,6 +1,6 @@
 import { WhereOperatorEnum } from '@ackplus/nest-crud-request';
 import { QueryBuilder } from '@ackplus/nest-crud-request';
-import { useAuth, useUser } from '@libs/react-shared';
+import { useAuth, UserService, useUser } from '@libs/react-shared';
 import { IUser, PermissionsEnum, RoleNameEnum, UserStatusEnum } from '@libs/types';
 import { toDisplayDate, toDisplayPhone } from '@libs/utils';
 import { Button, Card } from '@mui/material';
@@ -19,6 +19,7 @@ import { useHasPermission, withRequirePermission } from '@ackplus/nest-auth-reac
 import { useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import ResetPasswordDialog from '../../sections/user/reset-password-dialog';
+import UserMfaDialog from '../../sections/user/user-mfa-dialog';
 
 
 export interface IUserTableFilter {
@@ -31,6 +32,8 @@ const defaultFilter: IUserTableFilter = {
     status: 'all',
 };
 
+const userService = UserService.getInstance<UserService>();
+
 function UsersList() {
     const { currentUser } = useAuth();
     const { showToasty } = useToasty();
@@ -39,6 +42,8 @@ function UsersList() {
     const [tableFilter, setTableFilter] = useState(defaultFilter);
     const [countFilter, setCountFilter] = useState({});
     const [resetPasswordUser, setResetPasswordUser] = useState<IUser | null>(null);
+    const [mfaUser, setMfaUser] = useState<IUser | null>(null);
+    const [canToggle, setCanToggle] = useState(false);
 
     // Permission checks
     const canCreate = useHasPermission(PermissionsEnum.CREATE_USERS);
@@ -90,6 +95,35 @@ function UsersList() {
         setResetPasswordUser(null);
     }, []);
 
+    const checkCanMenageTotp = useCallback(
+        async () => {
+            try {
+                const canToggleResponse = await userService.canToggleMfa();
+                setCanToggle(canToggleResponse.access);
+            } catch (error) {
+                console.error('Error checking MFA toggle permission:', error);
+                setCanToggle(false);
+            }
+        },
+        [],
+    );
+
+    const handleManageMfa = useCallback(
+        (user: IUser) => {
+            setMfaUser(user);
+        },
+        [],
+    );
+
+    const handleCloseMfaDialog = useCallback(() => {
+        setMfaUser(null);
+    }, []);
+
+    const handleMfaChanged = useCallback(() => {
+        // Refresh the datatable when MFA settings change
+        datatableRef.current?.datatable.refresh();
+    }, []);
+
     const handleUpdateStatus = useCallback(
         (value: UserStatusEnum, row: IUser) => {
             const request: any = {
@@ -98,23 +132,6 @@ function UsersList() {
             };
             updateUser(request).then(() => {
                 showToasty('Status update successfully');
-            }).catch((error) => {
-                showToasty(error, 'error');
-            });
-        },
-        [showToasty, updateUser],
-    );
-
-    const handleUpdateUserMfa = useCallback(
-        (checked: boolean, row: IUser) => {
-            const request: any = {
-                id: row.id,
-                authUserId: row?.authUser?.id,
-                isMfaEnabled: checked,
-            };
-            updateUser(request).then(() => {
-                showToasty('MFA status updated successfully');
-                datatableRef.current?.datatable.refresh();
             }).catch((error) => {
                 showToasty(error, 'error');
             });
@@ -253,6 +270,15 @@ function UsersList() {
         }
     }, [tableFilter]);
 
+    useEffect(() => {
+        checkCanMenageTotp();
+    }, []);
+
+    // Check if current user is super admin (for MFA management access)
+    const isCurrentUserSuperAdmin = useMemo(() => {
+        return !isEmpty(filter(currentUser?.authUser?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)));
+    }, [currentUser]);
+
     return (
         <Page
             title="Users"
@@ -301,9 +327,29 @@ function UsersList() {
                     tableActionMenuProps={
                         (row) => {
                             const isCurrentUser = row?.id === currentUser?.id;
-                            const isSuperAdmin = !isEmpty(filter(row?.authUser?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)));
-                            const canDeleteUser = canDelete && !isCurrentUser && !isSuperAdmin;
-                            const canResetUserPassword = canResetPassword && !isCurrentUser && !isSuperAdmin;
+                            const canDeleteUser = canDelete && !isCurrentUser;
+                            const canResetUserPassword = canResetPassword && !isCurrentUser;
+
+                            // Build actions array
+                            const actions: any[] = [];
+
+                            // Reset password action
+                            if (canResetUserPassword) {
+                                actions.push({
+                                    icon: <Icon icon={IconEnum.Key} />,
+                                    title: 'Reset Password',
+                                    onClick: () => handleResetPassword(row),
+                                });
+                            }
+
+                            // MFA management action (for super admins only)
+                            if (canToggle) {
+                                actions.push({
+                                    icon: <Icon icon={IconEnum.Shield} />,
+                                    title: 'Manage MFA',
+                                    onClick: () => handleManageMfa(row),
+                                });
+                            }
 
                             return {
                                 // Override delete permission for specific users
@@ -311,25 +357,8 @@ function UsersList() {
                                     onDelete: null,
                                     onDeleteForever: null,
                                 }),
-                                // Add reset password action
-                                ...(canResetUserPassword ? {
-                                    actions: [
-                                        {
-                                            icon: <Icon icon={IconEnum.Key} />,
-                                            title: 'Reset Password',
-                                            onClick: () => handleResetPassword(row),
-                                        },
-                                    ],
-                                    ...(isSuperAdmin ? {
-                                        actions: [
-                                            {
-                                                icon: <Icon icon={IconEnum.Key} />,
-                                                title: row?.authUser.isMfaEnabled ? 'Disable MFA' : 'Enable MFA',
-                                                onClick: () => handleUpdateUserMfa(!row?.authUser.isMfaEnabled, row),
-                                            },
-                                        ],
-                                    } : {}),
-                                } : {}),
+                                // Add actions
+                                ...(actions.length > 0 ? { actions } : {}),
                             };
                         }
                     }
@@ -366,6 +395,13 @@ function UsersList() {
                 open={!!resetPasswordUser}
                 onClose={handleCloseResetPasswordDialog}
                 user={resetPasswordUser}
+            />
+
+            <UserMfaDialog
+                open={!!mfaUser}
+                onClose={handleCloseMfaDialog}
+                user={mfaUser}
+                onMfaChanged={handleMfaChanged}
             />
         </Page>
     );

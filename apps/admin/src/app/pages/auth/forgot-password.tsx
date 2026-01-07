@@ -21,7 +21,7 @@ function ForgotPassword() {
                 await forgotPassword({
                     email: value.email,
                 });
-                showToasty('Password reset email has been sent to your email, please check your email');
+                showToasty('Password reset instructions have been sent to your email');
                 navigate(`${PATH_AUTH.resetPassword}?email=${encodeURIComponent(value.email)}`);
                 reset();
             } catch (error) {
@@ -31,9 +31,7 @@ function ForgotPassword() {
         [forgotPassword, navigate, showToasty],
     );
 
-    return (
-        <ForgotPasswordForm onSubmit={handleSubmit} />
-    );
+    return <ForgotPasswordForm onSubmit={handleSubmit} />;
 }
 
 export default ForgotPassword;

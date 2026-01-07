@@ -28,13 +28,13 @@ const mfaMethodsConfig: MfaMethodOption[] = [
     {
         value: 'email',
         label: 'Email',
-        description: 'Receive a code via email',
+        description: 'Receive a verification code via email',
         icon: IconEnum.Mail,
     },
     {
         value: 'phone',
         label: 'Phone',
-        description: 'Receive a code via SMS',
+        description: 'Receive a verification code via SMS',
         icon: IconEnum.Phone,
     },
     {
@@ -76,9 +76,13 @@ export default function MfaMethodSelect({
 
         let displayText = methodData.description;
         if (method === 'email' && userEmail) {
-            displayText = `Send code to ${userEmail}`;
+            // Mask email for privacy
+            const maskedEmail = maskEmail(userEmail);
+            displayText = `Send code to ${maskedEmail}`;
         } else if (method === 'phone' && userPhone) {
-            displayText = `Send code to ${userPhone}`;
+            // Mask phone for privacy
+            const maskedPhone = maskPhone(userPhone);
+            displayText = `Send code to ${maskedPhone}`;
         }
 
         return {
@@ -93,12 +97,17 @@ export default function MfaMethodSelect({
             <Box
                 sx={{
                     display: 'flex',
+                    flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
                     minHeight: 200,
+                    gap: 2,
                 }}
             >
                 <CircularProgress />
+                <Typography color="text.secondary">
+                    Preparing verification...
+                </Typography>
             </Box>
         );
     }
@@ -110,13 +119,13 @@ export default function MfaMethodSelect({
                     variant="h4"
                     gutterBottom
                 >
-                    Select verification method
+                    Verification Required
                 </Typography>
                 <Typography
                     color="text.secondary"
                     sx={{ mt: 2 }}
                 >
-                    No MFA methods available
+                    No verification methods are available. Please contact support.
                 </Typography>
                 {onBack && (
                     <Button
@@ -134,17 +143,17 @@ export default function MfaMethodSelect({
     return (
         <Box>
             <Stack
-                spacing={2}
+                spacing={1}
                 sx={{ mb: 4 }}
             >
                 <Typography
                     variant="h4"
                     gutterBottom
                 >
-                    Select verification method
+                    Verify your identity
                 </Typography>
-                <Typography>
-                    Choose how you'd like to verify your identity
+                <Typography color="text.secondary">
+                    Choose how you would like to receive your verification code
                 </Typography>
             </Stack>
 
@@ -158,17 +167,18 @@ export default function MfaMethodSelect({
                             key={method}
                             sx={{
                                 cursor: 'pointer',
-                                transition: 'all 0.2s',
-                                border: methodInfo.isDefault ? '2px solid' : undefined,
-                                borderColor: methodInfo.isDefault ? 'primary.main' : undefined,
+                                transition: 'all 0.2s ease-in-out',
+                                border: methodInfo.isDefault ? '2px solid' : '1px solid',
+                                borderColor: methodInfo.isDefault ? 'primary.main' : 'divider',
                                 '&:hover': {
-                                    boxShadow: (theme) => theme.customShadows.z8,
+                                    boxShadow: (theme) => theme.customShadows?.z8 || '0 8px 16px 0 rgba(0,0,0,0.1)',
                                     transform: 'translateY(-2px)',
+                                    borderColor: 'primary.main',
                                 },
                             }}
                             onClick={() => handleSelect(method)}
                         >
-                            <CardContent>
+                            <CardContent sx={{ py: 2 }}>
                                 <Stack
                                     direction="row"
                                     spacing={2}
@@ -177,9 +187,9 @@ export default function MfaMethodSelect({
                                     <Box
                                         sx={{
                                             p: 1.5,
-                                            borderRadius: 1,
-                                            bgcolor: 'primary.lighter',
-                                            color: 'primary.main',
+                                            borderRadius: 1.5,
+                                            bgcolor: methodInfo.isDefault ? 'primary.main' : 'primary.lighter',
+                                            color: methodInfo.isDefault ? 'primary.contrastText' : 'primary.main',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
@@ -195,7 +205,7 @@ export default function MfaMethodSelect({
                                         <Stack direction="row" spacing={1} alignItems="center">
                                             <Typography
                                                 variant="subtitle1"
-                                                gutterBottom
+                                                fontWeight={600}
                                             >
                                                 {methodInfo.label}
                                             </Typography>
@@ -208,6 +218,7 @@ export default function MfaMethodSelect({
                                                         px: 1,
                                                         py: 0.25,
                                                         borderRadius: 0.5,
+                                                        fontWeight: 500,
                                                     }}
                                                 >
                                                     Default
@@ -221,12 +232,11 @@ export default function MfaMethodSelect({
                                             {methodInfo.displayText}
                                         </Typography>
                                     </Box>
-                                    <Button
-                                        variant="outlined"
-                                        size="small"
-                                    >
-                                        Select
-                                    </Button>
+                                    <Icon
+                                        icon={IconEnum.ChevronRight}
+                                        width={20}
+                                        height={20}
+                                    />
                                 </Stack>
                             </CardContent>
                         </Card>
@@ -239,6 +249,7 @@ export default function MfaMethodSelect({
                     <Button
                         variant="text"
                         onClick={onBack}
+                        startIcon={<Icon icon={IconEnum.ArrowLeft} />}
                     >
                         Back to Login
                     </Button>
@@ -246,4 +257,39 @@ export default function MfaMethodSelect({
             )}
         </Box>
     );
+}
+
+/**
+ * Mask email for privacy display
+ * Example: john.doe@example.com -> j*******@example.com
+ */
+function maskEmail(email: string): string {
+    const [localPart, domain] = email.split('@');
+    if (!localPart || !domain) return email;
+
+    if (localPart.length <= 2) {
+        return `${localPart[0]}*@${domain}`;
+    }
+
+    const firstChar = localPart[0];
+    const lastChar = localPart[localPart.length - 1];
+    const maskedLength = Math.min(localPart.length - 2, 6);
+    const masked = '*'.repeat(maskedLength);
+
+    return `${firstChar}${masked}${lastChar}@${domain}`;
+}
+
+/**
+ * Mask phone for privacy display
+ * Example: +1234567890 -> +1******890
+ */
+function maskPhone(phone: string): string {
+    if (phone.length <= 4) return phone;
+
+    const visibleStart = phone.slice(0, 3);
+    const visibleEnd = phone.slice(-3);
+    const maskedLength = Math.min(phone.length - 6, 6);
+    const masked = '*'.repeat(maskedLength);
+
+    return `${visibleStart}${masked}${visibleEnd}`;
 }

@@ -11,15 +11,18 @@ import { PATH_AUTH } from '@admin/app/routes/paths';
 import { Link as RouterLink } from 'react-router-dom';
 
 
-const VeryFySchema = object().shape({
-    otp: string().label('OTP').required(),
+const validationSchema = object().shape({
+    otp: string()
+        .label('Code')
+        .required('Please enter the verification code')
+        .length(6, 'Code must be 6 digits'),
 });
 
 interface OtpVerificationProps {
-    onSubmit: (value: any, setError?: any) => void;
+    onSubmit: (value: { otp: string }, setError?: any) => void;
     onResent?: (setError?: any) => void;
     onGoBack?: () => void;
-    values?: any;
+    values?: { email?: string };
 }
 
 function OtpVerification({
@@ -29,7 +32,7 @@ function OtpVerification({
     values,
 }: OtpVerificationProps) {
     const formContext = useForm({
-        resolver: yupResolver(VeryFySchema),
+        resolver: yupResolver(validationSchema),
     });
     const {
         formState: { errors, isSubmitting },
@@ -38,8 +41,10 @@ function OtpVerification({
     } = formContext;
 
     const handleSubmit = useCallback(
-        async (value) => {
-            if (onSubmit) { await onSubmit(value, setError); }
+        async (value: { otp: string }) => {
+            if (onSubmit) {
+                await onSubmit(value, setError);
+            }
             reset();
         },
         [
@@ -52,20 +57,48 @@ function OtpVerification({
     return (
         <Stack spacing={3}>
             <Box>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        mb: 3,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            p: 2,
+                            borderRadius: 2,
+                            bgcolor: 'primary.lighter',
+                            color: 'primary.main',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Icon
+                            icon={IconEnum.Mail}
+                            width={32}
+                            height={32}
+                        />
+                    </Box>
+                </Box>
+
                 <Typography
                     variant="h4"
+                    textAlign="center"
                     gutterBottom
                 >
-                    Enter OTP Code
+                    Check your email
                 </Typography>
-                <Typography>
-                    Please enter the OTP code sent to your email.
+                <Typography textAlign="center" color="text.secondary">
+                    We sent a verification code to your email. Enter the code below to continue.
                 </Typography>
                 {values?.email && (
                     <Typography
                         variant="body2"
-                        color="text.secondary"
-                        sx={{ mt: 0.5 }}
+                        textAlign="center"
+                        sx={{ mt: 1, fontWeight: 600 }}
                     >
                         {values.email}
                     </Typography>
@@ -77,7 +110,7 @@ function OtpVerification({
                     id: 'otp-verification-form',
                 }}
                 formContext={formContext}
-                validationSchema={VeryFySchema}
+                validationSchema={validationSchema}
                 onSuccess={handleSubmit}
             >
                 <Stack spacing={2}>
@@ -92,19 +125,20 @@ function OtpVerification({
                         justifyContent="center"
                         sx={{ pt: 2 }}
                     >
-                        <RHFOtpInput name="otp" />
+                        <RHFOtpInput name="otp" numInputs={6} />
                     </Box>
 
                     <Stack
                         direction="row"
                         spacing={0.5}
-                        justifyContent="end"
+                        justifyContent="center"
                     >
                         <Typography color="text.secondary">
-                            Didn't receive the email?{' '}
+                            Didn't receive the code?
                         </Typography>
                         <Button
                             onClick={() => onResent?.(setError)}
+                            disabled={isSubmitting}
                             sx={{
                                 padding: 0,
                                 minWidth: 'auto',
@@ -116,7 +150,7 @@ function OtpVerification({
                                 },
                             }}
                         >
-                            Click to Resend
+                            Resend
                         </Button>
                     </Stack>
 
@@ -126,27 +160,22 @@ function OtpVerification({
                         variant="contained"
                         loading={isSubmitting}
                     >
-                        Verify OTP
+                        Verify Code
                     </Button>
 
                     {onGoBack && (
                         <Stack
                             direction="row"
-                            spacing={0.5}
                             justifyContent="center"
-                            mt={2}
                         >
-                            <Typography sx={{ color: 'text.secondary' }}>Back to</Typography>
-                            <Link
+                            <Button
                                 component={RouterLink}
                                 to={PATH_AUTH.login}
-                                sx={{
-                                    textDecoration: 'underline',
-                                    color: 'primary.main',
-                                }}
+                                startIcon={<Icon icon={IconEnum.ArrowLeft} />}
+                                variant="text"
                             >
-                                Login
-                            </Link>
+                                Back to Sign In
+                            </Button>
                         </Stack>
                     )}
                 </Stack>

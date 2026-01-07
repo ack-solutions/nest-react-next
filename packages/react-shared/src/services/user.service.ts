@@ -1,7 +1,12 @@
-import { IChangeEmailInput, IChangePhoneNumberInput, IDeleteAccountInput, ISetPasswordInput, IUser } from '@libs/types';
+import { IChangeEmailInput, IChangePhoneNumberInput, IDeleteAccountInput, IMfaDevice, ISetPasswordInput, IUser } from '@libs/types';
 
 import { CRUDService } from './crud-service';
 
+
+export interface ICanToggleMfaResponse {
+    access: boolean;
+    avaibleMethods: string[];
+}
 
 export class UserService extends CRUDService<any> {
 
@@ -59,6 +64,44 @@ export class UserService extends CRUDService<any> {
 
     deleteAccount(request: IDeleteAccountInput) {
         return this.instanceApi.delete(`${this.apiPath}/delete-account`, { data: request }).then(({ data }) => data);
+    }
+
+    // MFA Management Methods (Admin)
+
+    /**
+     * Check if MFA can be toggled for users
+     */
+    canToggleMfa(): Promise<ICanToggleMfaResponse> {
+        return this.instanceApi
+            .get<ICanToggleMfaResponse>(`${this.apiPath}/can-toggle-mfa`)
+            .then(({ data }) => data);
+    }
+
+    /**
+     * Toggle MFA for a specific user (Admin)
+     */
+    toggleMfa(userId: string, enable: boolean): Promise<{ message: string }> {
+        return this.instanceApi
+            .put<{ message: string }>(`${this.apiPath}/toggle-mfa/${userId}`, { enable })
+            .then(({ data }) => data);
+    }
+
+    /**
+     * Get MFA/TOTP devices for a specific user (Admin)
+     */
+    getMfaDevices(userId: string): Promise<IMfaDevice[]> {
+        return this.instanceApi
+            .get<IMfaDevice[]>(`${this.apiPath}/mfa-devices/${userId}`)
+            .then(({ data }) => data);
+    }
+
+    /**
+     * Remove a specific MFA device (Admin)
+     */
+    removeMfaDevice(deviceId: string): Promise<{ message: string }> {
+        return this.instanceApi
+            .delete<{ message: string }>(`${this.apiPath}/mfa-devices/${deviceId}`)
+            .then(({ data }) => data);
     }
 
 }

@@ -45,11 +45,11 @@ importers:
   apps/admin:
     dependencies:
       '@ackplus/nest-auth-client':
-        specifier: ^1.1.58
-        version: 1.1.58
+        specifier: ^1.1.61
+        version: 1.1.61
       '@ackplus/nest-auth-react':
-        specifier: ^1.1.58
-        version: 1.1.58(react@19.2.3)
+        specifier: ^1.1.61
+        version: 1.1.61(react@19.2.3)
       '@ackplus/nest-crud-request':
         specifier: ^1.1.18
         version: 1.1.18
@@ -205,8 +205,8 @@ importers:
   apps/api:
     dependencies:
       '@ackplus/nest-auth':
-        specifier: 1.1.58
-        version: 1.1.58(cd4209866784c70ae178325bed06c5d3)
+        specifier: 1.1.61
+        version: 1.1.61(cd4209866784c70ae178325bed06c5d3)
       '@ackplus/nest-crud':
         specifier: ^1.1.18
         version: 1.1.18(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(@nestjs/platform-express@11.1.11)(@nestjs/swagger@11.2.3(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2))(@nestjs/typeorm@11.0.0(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.8.2)(pg@8.16.3)(ts-node@10.9.2(@swc/core@1.5.29(@swc/helpers@0.5.18))(@types/node@25.0.3)(typescript@5.9.3))))(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.8.2)(pg@8.16.3)(ts-node@10.9.2(@swc/core@1.5.29(@swc/helpers@0.5.18))(@types/node@25.0.3)(typescript@5.9.3)))
@@ -398,11 +398,11 @@ importers:
   apps/web:
     dependencies:
       '@ackplus/nest-auth-client':
-        specifier: ^1.1.58
-        version: 1.1.58
+        specifier: ^1.1.61
+        version: 1.1.61
       '@ackplus/nest-auth-react':
-        specifier: ^1.1.58
-        version: 1.1.58(react@19.2.3)
+        specifier: ^1.1.61
+        version: 1.1.61(react@19.2.3)
       '@hookform/resolvers':
         specifier: ^5.0.1
         version: 5.2.2(react-hook-form@7.70.0(react@19.2.3))
@@ -504,11 +504,11 @@ importers:
   packages/react-shared:
     dependencies:
       '@ackplus/nest-auth-client':
-        specifier: ^1.1.53
-        version: 1.1.53
+        specifier: ^1.1.61
+        version: 1.1.61
       '@ackplus/nest-auth-react':
-        specifier: ^1.1.53
-        version: 1.1.53(react@19.2.3)
+        specifier: ^1.1.61
+        version: 1.1.61(react@19.2.3)
       '@libs/types':
         specifier: workspace:*
         version: link:../types
@@ -550,8 +550,8 @@ importers:
   packages/types:
     dependencies:
       '@ackplus/nest-auth':
-        specifier: 1.1.58
-        version: 1.1.58(fa3a74b5a4b4561f0b94d3cb815f7d97)
+        specifier: 1.1.61
+        version: 1.1.61(cd4209866784c70ae178325bed06c5d3)
       '@ackplus/nest-crud-request':
         specifier: ^1.1.18
         version: 1.1.18
@@ -569,7 +569,7 @@ importers:
         version: 2.8.1
       typeorm:
         specifier: ^0.3.27
-        version: 0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.8.2)(pg@8.16.3)(ts-node@10.9.2(@swc/core@1.5.29(@swc/helpers@0.5.18))(@types/node@20.19.27)(typescript@5.9.3))
+        version: 0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.8.2)(pg@8.16.3)(ts-node@10.9.2(@swc/core@1.5.29(@swc/helpers@0.5.18))(@types/node@25.0.3)(typescript@5.9.3))
 
   packages/utils:
     dependencies:
@@ -600,30 +600,19 @@ importers:
 
 packages:
 
-  '@ackplus/nest-auth-client@1.1.53':
-    resolution: {integrity: sha512-F/oxXzwoCjyS8Lws9iXi51VFbR32MOdLiBqogJb/Q6sflxkPapBUV4YaCRICUct+wyy9mFVkvi6qejiLPkpFfg==}
+  '@ackplus/nest-auth-client@1.1.61':
+    resolution: {integrity: sha512-nY1Zowdwu9w7CbXn6GHBKcAQMFkVYoc+l/sn62GtIggMbz0Tt0jkexVcLKn8+WzBfnB7/4e61NT4EZ/dozdHfw==}
 
-  '@ackplus/nest-auth-client@1.1.58':
-    resolution: {integrity: sha512-MQYFc6/WospkPyBXSu1CVdL+7STIvYR/jyJxSh46xpE63N3IENt2tZlNfZSYX+qBLMROSo7659wC0klmucPwKw==}
+  '@ackplus/nest-auth-contracts@1.1.61':
+    resolution: {integrity: sha512-RxIksYZZaXq4MCNOZNjSopTvidzCiZSsajtugk0x1V0fF7YKJd6Hhnrl3nrCQMLPmrjSRx1ODWgNjgdZ3Udlkw==}
 
-  '@ackplus/nest-auth-contracts@1.1.53':
-    resolution: {integrity: sha512-fS1Zv4RY44CCe0xRsMpfyOBju7vF4U/MoieOGKWwNXC5jUVDlJNBPga8uUchSN4chZ2sEDvX1YgI/fS+czb/MA==}
-
-  '@ackplus/nest-auth-contracts@1.1.58':
-    resolution: {integrity: sha512-7hKsAQhiGgG1+F1cv+i50IQ+Hz+7F+htZzoYTD4fs9nGbGW1ua//VtQyj+/+hJefRAu7xzQj9o0y7ofil5mMbA==}
-
-  '@ackplus/nest-auth-react@1.1.53':
-    resolution: {integrity: sha512-Fo43SFvrsTRgLxMQipbZ3WIs8BY8waq9QH9HllQKlfaxlVnb5Iw2Knji47KOI7cjlQwxJqVDp1tQEoUaYiW0lw==}
+  '@ackplus/nest-auth-react@1.1.61':
+    resolution: {integrity: sha512-wHyYrduplExmXqPOYZptFj9pJgOYSskvBIQnf65RN2K74fSs1A2Eo86OU/r83wsA+6b9F05IutfK+AAFOn8qFQ==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
 
-  '@ackplus/nest-auth-react@1.1.58':
-    resolution: {integrity: sha512-9PjEZAcvxSZHB2AU8o8KCb0D2akC5ga6U8b00D/V0bKwVgXqzaHeLqOKDG+7WisreQ3RtlLdvEdteMdCw3ftaA==}
-    peerDependencies:
-      react: ^18.0.0 || ^19.0.0
-
-  '@ackplus/nest-auth@1.1.58':
-    resolution: {integrity: sha512-LrmVWU0xT+c8GWT2URn+A4ZTV98HcsJ2C1BEAVVKm8knwdIMZKeAKaV0Kgi0IlVBxMgsFJogtrJvxcAQREl4Sw==}
+  '@ackplus/nest-auth@1.1.61':
+    resolution: {integrity: sha512-wpbOT/ecsx/IWYvA8VZ3d9AGyb3tCu+t94yUwq1wxdgr69Gi656a9ISlgOFaT0wfI8e9i6Hamzc4n0GK4Lo8xQ==}
     peerDependencies:
       '@nestjs/common': ^10 || ^11
       '@nestjs/core': ^10 || ^11
@@ -8164,35 +8153,22 @@ packages:
 
 snapshots:
 
-  '@ackplus/nest-auth-client@1.1.53':
+  '@ackplus/nest-auth-client@1.1.61':
     dependencies:
-      '@ackplus/nest-auth-contracts': 1.1.53
+      '@ackplus/nest-auth-contracts': 1.1.61
       jwt-decode: 4.0.0
       tslib: 2.8.1
 
-  '@ackplus/nest-auth-client@1.1.58':
+  '@ackplus/nest-auth-contracts@1.1.61': {}
+
+  '@ackplus/nest-auth-react@1.1.61(react@19.2.3)':
     dependencies:
-      '@ackplus/nest-auth-contracts': 1.1.58
-      jwt-decode: 4.0.0
-      tslib: 2.8.1
-
-  '@ackplus/nest-auth-contracts@1.1.53': {}
-
-  '@ackplus/nest-auth-contracts@1.1.58': {}
-
-  '@ackplus/nest-auth-react@1.1.53(react@19.2.3)':
-    dependencies:
-      '@ackplus/nest-auth-client': 1.1.53
+      '@ackplus/nest-auth-client': 1.1.61
       react: 19.2.3
 
-  '@ackplus/nest-auth-react@1.1.58(react@19.2.3)':
+  '@ackplus/nest-auth@1.1.61(cd4209866784c70ae178325bed06c5d3)':
     dependencies:
-      '@ackplus/nest-auth-client': 1.1.58
-      react: 19.2.3
-
-  '@ackplus/nest-auth@1.1.58(cd4209866784c70ae178325bed06c5d3)':
-    dependencies:
-      '@ackplus/nest-auth-contracts': 1.1.58
+      '@ackplus/nest-auth-contracts': 1.1.61
       '@nestjs/common': 11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.11(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.11)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/event-emitter': 3.0.1(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)
@@ -8219,32 +8195,6 @@ snapshots:
       apple-auth: 1.0.9
       fb: 2.0.0
       google-auth-library: 10.5.0
-
-  '@ackplus/nest-auth@1.1.58(fa3a74b5a4b4561f0b94d3cb815f7d97)':
-    dependencies:
-      '@ackplus/nest-auth-contracts': 1.1.58
-      '@nestjs/common': 11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@nestjs/core': 11.1.11(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.11)(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@nestjs/event-emitter': 3.0.1(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)
-      '@nestjs/platform-express': 11.1.11(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)
-      '@nestjs/swagger': 11.2.3(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)
-      '@nestjs/typeorm': 11.0.0(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.8.2)(pg@8.16.3)(ts-node@10.9.2(@swc/core@1.5.29(@swc/helpers@0.5.18))(@types/node@20.19.27)(typescript@5.9.3)))
-      '@node-rs/argon2': 2.0.2
-      class-transformer: 0.5.1
-      class-validator: 0.14.3
-      deepmerge: 4.3.1
-      express: 5.2.1
-      jsonwebtoken: 9.0.3
-      lodash: 4.17.21
-      moment: 2.30.1
-      ms: 2.1.3
-      pluralize: 8.0.0
-      qrcode: 1.5.4
-      qs: 6.14.1
-      reflect-metadata: 0.2.2
-      rxjs: 7.8.2
-      speakeasy: 2.0.0
-      typeorm: 0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.8.2)(pg@8.16.3)(ts-node@10.9.2(@swc/core@1.5.29(@swc/helpers@0.5.18))(@types/node@20.19.27)(typescript@5.9.3))
 
   '@ackplus/nest-crud-request@1.1.18':
     dependencies:
@@ -10199,14 +10149,6 @@ snapshots:
       '@nestjs/common': 11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.11(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.11)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       reflect-metadata: 0.2.2
-
-  '@nestjs/typeorm@11.0.0(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.8.2)(pg@8.16.3)(ts-node@10.9.2(@swc/core@1.5.29(@swc/helpers@0.5.18))(@types/node@20.19.27)(typescript@5.9.3)))':
-    dependencies:
-      '@nestjs/common': 11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@nestjs/core': 11.1.11(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.11)(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      reflect-metadata: 0.2.2
-      rxjs: 7.8.2
-      typeorm: 0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.8.2)(pg@8.16.3)(ts-node@10.9.2(@swc/core@1.5.29(@swc/helpers@0.5.18))(@types/node@20.19.27)(typescript@5.9.3))
 
   '@nestjs/typeorm@11.0.0(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.8.2)(pg@8.16.3)(ts-node@10.9.2(@swc/core@1.5.29(@swc/helpers@0.5.18))(@types/node@25.0.3)(typescript@5.9.3)))':
     dependencies:
@@ -12815,7 +12757,7 @@ snapshots:
       eslint: 9.39.2(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1))
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.6.1))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.2(jiti@2.6.1))
       eslint-plugin-react: 7.37.5(eslint@9.39.2(jiti@2.6.1))
       eslint-plugin-react-hooks: 7.0.1(eslint@9.39.2(jiti@2.6.1))
@@ -12852,7 +12794,7 @@ snapshots:
       tinyglobby: 0.2.15
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.6.1))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1))
     transitivePeerDependencies:
       - supports-color
 
@@ -12867,7 +12809,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.6.1)):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -16494,27 +16436,6 @@ snapshots:
       typescript: 5.9.3
       webpack: 5.103.0
 
-  ts-node@10.9.2(@swc/core@1.5.29(@swc/helpers@0.5.18))(@types/node@20.19.27)(typescript@5.9.3):
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.12
-      '@tsconfig/node12': 1.0.11
-      '@tsconfig/node14': 1.0.3
-      '@tsconfig/node16': 1.0.4
-      '@types/node': 20.19.27
-      acorn: 8.15.0
-      acorn-walk: 8.3.4
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.2
-      make-error: 1.3.6
-      typescript: 5.9.3
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-    optionalDependencies:
-      '@swc/core': 1.5.29(@swc/helpers@0.5.18)
-    optional: true
-
   ts-node@10.9.2(@swc/core@1.5.29(@swc/helpers@0.5.18))(@types/node@25.0.3)(typescript@5.9.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
@@ -16648,31 +16569,6 @@ snapshots:
       reflect.getprototypeof: 1.0.10
 
   typedarray@0.0.6: {}
-
-  typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.8.2)(pg@8.16.3)(ts-node@10.9.2(@swc/core@1.5.29(@swc/helpers@0.5.18))(@types/node@20.19.27)(typescript@5.9.3)):
-    dependencies:
-      '@sqltools/formatter': 1.2.5
-      ansis: 4.2.0
-      app-root-path: 3.1.0
-      buffer: 6.0.3
-      dayjs: 1.11.19
-      debug: 4.4.3
-      dedent: 1.7.1(babel-plugin-macros@3.1.0)
-      dotenv: 16.6.1
-      glob: 10.5.0
-      reflect-metadata: 0.2.2
-      sha.js: 2.4.12
-      sql-highlight: 6.1.0
-      tslib: 2.8.1
-      uuid: 11.1.0
-      yargs: 17.7.2
-    optionalDependencies:
-      ioredis: 5.8.2
-      pg: 8.16.3
-      ts-node: 10.9.2(@swc/core@1.5.29(@swc/helpers@0.5.18))(@types/node@20.19.27)(typescript@5.9.3)
-    transitivePeerDependencies:
-      - babel-plugin-macros
-      - supports-color
 
   typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.8.2)(pg@8.16.3)(ts-node@10.9.2(@swc/core@1.5.29(@swc/helpers@0.5.18))(@types/node@25.0.3)(typescript@5.9.3)):
     dependencies:
