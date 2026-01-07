@@ -66,6 +66,20 @@ export function useCrudOperations<T extends IBaseEntity>(service: CRUDService<T>
         ...options,
     });
 
+    // builder for get-many (same key + fetcher)
+    const buildGetManyQuery = (request?: IFindOptions) => ({
+        queryKey: [service.getQueryKey('get-many'), request],
+        queryFn: () => service.getMany(request),
+    });
+
+    // imperative fetch using the builder
+    const fetchMany = async (request?: IFindOptions) => {
+        const queryDef = buildGetManyQuery(request);
+        // will reuse cache if fresh — this is the good pattern for “fetch on demand”  [oai_citation:1‡GitHub](https://github.com/TanStack/query/discussions/9135?utm_source=chatgpt.com)
+        return queryClient.fetchQuery(queryDef);
+    };
+
+
 
     const useGetOne = (id?: any, params?: any, options?: Partial<DefinedInitialDataOptions<T>>) => useQuery({
         queryKey: [service.getQueryKey('get'), id],
@@ -195,6 +209,8 @@ export function useCrudOperations<T extends IBaseEntity>(service: CRUDService<T>
         useBulkRestore,
         useBulkDeleteForever,
         removeQueryCache,
+        buildGetManyQuery,
+        fetchMany,
     };
 }
 

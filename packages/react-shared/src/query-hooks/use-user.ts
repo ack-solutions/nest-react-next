@@ -20,6 +20,7 @@ const userService = UserService.getInstance<UserService>();
 export const useUser = () => {
     const {
         useGetMany,
+        fetchMany,
         useGetCounts,
         useGetOne,
         useCreate,
@@ -109,6 +110,7 @@ export const useUser = () => {
         useChangeEmail,
         useChangePhone,
         useGetManyUser: useGetMany,
+        useFetchManyUser: fetchMany,
         useGetUserById: useGetOne,
         useGetUserCounts: useGetCounts,
         useCreateUser: useCreate,
