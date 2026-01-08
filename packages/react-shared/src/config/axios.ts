@@ -29,6 +29,8 @@ const getApiBaseUrl = (): string => {
 
     if (!url) {
         url = isBrowser ? 'http://localhost:3333' : 'http://api:3333';
+        // eslint-disable-next-line no-console
+        console.warn('[axios] API base URL is not set, using default:', url);
     }
 
     // Ensure URL ends with /api/
@@ -149,12 +151,10 @@ instanceApi.interceptors.request.use((req: AxiosRequestConfig & any) => {
     // If you really need dynamic baseURL each request:
     req.baseURL = getApiBaseUrl();
 
-    // Ensure headers object exists
-    req.headers = req.headers ?? {};
-
     // Transform params / body safely (non-mutating)
     if (req.params) req.params = convertMomentToISO(req.params);
     if (req.data) req.data = convertMomentToISO(req.data);
+
     return req;
 });
 
@@ -165,13 +165,8 @@ instanceApi.interceptors.request.use((req: AxiosRequestConfig & any) => {
  * ----------------------------------------
  */
 instanceApi.interceptors.response.use(
-    (res) => {
-        return res;
-    },
-    (error) => {
-        const normalizedError = normalizeAxiosError(error);
-        return Promise.reject(normalizedError);
-    },
+    (res) => res,
+    (error) => Promise.reject(normalizeAxiosError(error)),
 );
 
 /**

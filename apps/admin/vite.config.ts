@@ -1,10 +1,17 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import envCompatible from 'vite-plugin-env-compatible';
 import { fileURLToPath } from 'url';
 
 export default defineConfig({
-    plugins: [react()],
+    plugins: [
+        react(),
+        envCompatible({
+            prefix: 'VITE_',
+            mountedPath: 'process.env',
+        }),
+    ],
     resolve: {
         dedupe: ['react', 'react-dom'],
         alias: {
@@ -23,8 +30,5 @@ export default defineConfig({
         outDir: '../../dist/apps/admin',
         emptyOutDir: true,
     },
-    envPrefix: ['VITE_'],
-    define: {
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV ?? 'development'),
-    },
+    envPrefix: 'VITE_',
 });

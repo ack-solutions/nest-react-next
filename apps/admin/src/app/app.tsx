@@ -12,6 +12,7 @@ import { ThemeProvider } from './theme/theme-provider';
 import { AuthClient, LocalStorageAdapter, createAxiosAdapter } from '@ackplus/nest-auth-client';
 import { AuthProvider, config, instanceApi } from '@libs/react-shared';
 import { DataTableStateProvider } from './contexts/datatable-state-context';
+import { useEffect } from 'react';
 
 const MINUTE = 60 * 1000;
 const queryClient = new QueryClient({
@@ -34,13 +35,10 @@ const authClient = new AuthClient({
     storage: new LocalStorageAdapter(),
     httpAdapter: createAxiosAdapter(instanceApi),
 });
-
 const handleTokenSet = (tokens: { accessToken: string; refreshToken: string, trustToken?: string }) => {
     if (tokens?.accessToken) {
-        // const token = localStorage.getItem('nest_auth_access_token');
         instanceApi.defaults.headers.common['Authorization'] = `Bearer ${tokens.accessToken}`;
     }
-
 };
 
 const handleTokenRemoved = () => {
@@ -48,8 +46,15 @@ const handleTokenRemoved = () => {
 };
 
 
-
 function App() {
+    useEffect(() => {
+        const accessToken = localStorage.getItem('nest_auth_access_token');
+        const refreshToken = localStorage.getItem('nest_auth_refresh_token');
+        if (accessToken) {
+            handleTokenSet({ accessToken, refreshToken });
+        }
+    }, []);
+
     return (
         <LocalizationProvider dateAdapter={AdapterMoment}>
             <QueryClientProvider client={queryClient}>
