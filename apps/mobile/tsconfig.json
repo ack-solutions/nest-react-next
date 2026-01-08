@@ -1,0 +1,29 @@
+{
+    "extends": "expo/tsconfig.base",
+    "compilerOptions": {
+        "strict": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./src/*"],
+            "@components/*": ["./src/components/*"],
+            "@libs/react-shared": ["../../packages/react-shared/src/index.ts"],
+            "@libs/types": ["../../packages/types/src/index.ts"],
+            "@libs/utils": ["../../packages/utils/src/index.ts"],
+            "@theme/*": ["./src/theme/*"],
+            "@lib/*": ["./src/lib/*"],
+            "@config/*": ["./src/config/*"],
+            "@assets/*": ["./src/assets/*"]
+        },
+        "jsx": "react-native",
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "types": [],
+        "noImplicitAny": false
+    },
+    "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
+    "exclude": ["node_modules"]
+}
