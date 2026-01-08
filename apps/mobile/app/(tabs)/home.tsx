@@ -7,6 +7,7 @@
  */
 
 import { View, StyleSheet } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { Screen, AppText, AppCard } from '../../src/components';
 import { useAuth } from '@libs/react-shared';
@@ -40,7 +41,11 @@ export default function HomeScreen() {
                         { backgroundColor: theme.colors.primaryContainer },
                     ]}
                 >
-                    <AppText variant="h3">🎉</AppText>
+                    <MaterialCommunityIcons
+                        name="hand-wave"
+                        size={32}
+                        color={theme.colors.primary}
+                    />
                 </View>
                 <AppText variant="h5" bold>
                     Welcome to {appConfig.app.name}!
@@ -59,22 +64,22 @@ export default function HomeScreen() {
 
                 <View style={styles.actionsGrid}>
                     <ActionCard
-                        icon="📊"
+                        icon="chart-bar"
                         title="Dashboard"
                         description="View stats"
                     />
                     <ActionCard
-                        icon="📝"
+                        icon="plus-circle"
                         title="Create"
                         description="New item"
                     />
                     <ActionCard
-                        icon="🔍"
+                        icon="magnify"
                         title="Search"
                         description="Find anything"
                     />
                     <ActionCard
-                        icon="⚙️"
+                        icon="cog"
                         title="Settings"
                         description="Configure"
                     />
@@ -105,15 +110,17 @@ function ActionCard({
     title,
     description,
 }: {
-    icon: string;
+    icon: keyof typeof MaterialCommunityIcons.glyphMap;
     title: string;
     description: string;
 }) {
+    const theme = useAppTheme();
+
     return (
         <AppCard style={styles.actionCard} onPress={() => { }}>
-            <AppText variant="h4" style={styles.actionIcon}>
-                {icon}
-            </AppText>
+            <View style={styles.actionIcon}>
+                <MaterialCommunityIcons name={icon} size={32} color={theme.colors.primary} />
+            </View>
             <AppText variant="body2" bold>
                 {title}
             </AppText>

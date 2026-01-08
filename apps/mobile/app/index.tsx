@@ -31,7 +31,7 @@ export default function IndexScreen() {
 
     useEffect(() => {
         const handleInitialRoute = async () => {
-            // Wait for auth to initialize
+            // Wait for auth to initialize (optional, but good for consistent state)
             if (status === 'loading') return;
 
             // Check if onboarding should be shown
@@ -46,16 +46,21 @@ export default function IndexScreen() {
                 }
             }
 
-            // Route based on auth status
-            if (isAuthenticated) {
-                router.replace('/(tabs)/home');
+            // Handle auth routing based on configuration
+            if (appConfig.features.requiredLogin) {
+                if (isAuthenticated) {
+                    router.replace('/(tabs)/home');
+                } else {
+                    router.replace('/(auth)/login');
+                }
             } else {
-                router.replace('/(auth)/login');
+                // Skip auth check if not required
+                router.replace('/(tabs)/home');
             }
         };
 
         handleInitialRoute();
-    }, [status, isAuthenticated]);
+    }, [status]);
 
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>

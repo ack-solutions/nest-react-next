@@ -37,6 +37,9 @@ export const features = {
     enableBiometrics: false,
 
     /** Enable push notifications */
+    requiredLogin: false,
+
+    /** Enable push notifications */
     enablePushNotifications: false,
 
     /** Enable dark mode */

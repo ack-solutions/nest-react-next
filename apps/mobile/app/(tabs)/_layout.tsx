@@ -18,17 +18,7 @@ export default function TabsLayout() {
     const { isAuthenticated, status } = useAuth();
     const theme = useAppTheme();
 
-    // Protect route - redirect if not authenticated
-    useEffect(() => {
-        if (status !== 'loading' && !isAuthenticated) {
-            router.replace('/(auth)/login');
-        }
-    }, [isAuthenticated, status]);
 
-    // Don't render tabs while checking auth
-    if (status === 'loading' || !isAuthenticated) {
-        return null;
-    }
 
     return (
         <Tabs

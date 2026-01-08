@@ -15,6 +15,7 @@ import { Screen, AppText, AppButton, AppInput, AppDivider } from '../../src/comp
 import { useAuth } from '@libs/react-shared';
 import { useAppTheme } from '../../src/theme';
 import { spacing } from '../../src/constants';
+import { appConfig } from '../../src/config/app.config';
 
 /**
  * Basic validation helper
@@ -83,6 +84,16 @@ export default function LoginScreen() {
             <View style={styles.container}>
                 {/* Header */}
                 <View style={styles.header}>
+                    {!appConfig.features.requiredLogin && (
+                        <TouchableOpacity
+                            onPress={() => router.replace('/(tabs)/home')}
+                            style={{ alignSelf: 'flex-end', padding: spacing.sm }}
+                        >
+                            <AppText variant="body2" style={{ color: theme.colors.primary }}>
+                                Skip
+                            </AppText>
+                        </TouchableOpacity>
+                    )}
                     <AppText variant="h3" bold>
                         Welcome Back
                     </AppText>

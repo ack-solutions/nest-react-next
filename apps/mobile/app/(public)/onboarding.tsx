@@ -9,6 +9,7 @@
 
 import { View, StyleSheet, Image } from 'react-native';
 import { router } from 'expo-router';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { Screen, AppText, AppButton } from '../../src/components';
 import { useAppTheme } from '../../src/theme';
@@ -23,8 +24,8 @@ export default function OnboardingScreen() {
         // Mark onboarding as complete
         await storage.set(appConfig.storageKeys.onboardingComplete, true);
 
-        // Navigate to login
-        router.replace('/(auth)/login');
+        // Navigate to home (skip auth)
+        router.replace('/(tabs)/home');
     };
 
     return (
@@ -37,9 +38,11 @@ export default function OnboardingScreen() {
                         { backgroundColor: theme.colors.primaryContainer },
                     ]}
                 >
-                    <AppText variant="h2" style={{ color: theme.colors.primary }}>
-                        📱
-                    </AppText>
+                    <MaterialCommunityIcons
+                        name="cellphone"
+                        size={48}
+                        color={theme.colors.primary}
+                    />
                 </View>
 
                 {/* Welcome content */}
@@ -61,17 +64,17 @@ export default function OnboardingScreen() {
                 {/* Feature highlights */}
                 <View style={styles.features}>
                     <FeatureItem
-                        icon="🚀"
+                        icon="rocket-launch"
                         title="Fast & Modern"
                         description="Built with Expo and React Native"
                     />
                     <FeatureItem
-                        icon="🎨"
+                        icon="palette"
                         title="Beautiful Design"
                         description="Material Design 3 theming"
                     />
                     <FeatureItem
-                        icon="🔐"
+                        icon="shield-check"
                         title="Secure"
                         description="Built-in authentication flow"
                     />
@@ -99,7 +102,7 @@ function FeatureItem({
     title,
     description,
 }: {
-    icon: string;
+    icon: keyof typeof MaterialCommunityIcons.glyphMap;
     title: string;
     description: string;
 }) {
@@ -113,7 +116,7 @@ function FeatureItem({
                     { backgroundColor: theme.colors.surfaceVariant },
                 ]}
             >
-                <AppText variant="h5">{icon}</AppText>
+                <MaterialCommunityIcons name={icon} size={24} color={theme.colors.onSurfaceVariant} />
             </View>
             <View style={styles.featureText}>
                 <AppText variant="body1" bold>

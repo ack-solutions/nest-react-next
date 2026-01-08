@@ -16,9 +16,90 @@ import { useTheme, useAppTheme } from '../../src/theme';
 import { spacing } from '../../src/constants';
 
 export default function ProfileScreen() {
-    const { currentUser: user, logout, isLoading } = useAuth();
+    const { currentUser: user, logout, isLoading, isAuthenticated } = useAuth();
     const { isDark, toggleTheme, themeMode, setThemeMode } = useTheme();
     const theme = useAppTheme();
+
+    if (isLoading) return null; // or loader
+
+    if (!isAuthenticated) {
+        return (
+            <Screen scroll padded>
+                <View style={[styles.header, { marginTop: spacing.xl }]}>
+                    <Avatar.Icon
+                        size={80}
+                        icon="account"
+                        style={{ backgroundColor: theme.colors.surfaceVariant }}
+                        color={theme.colors.primary}
+                    />
+                    <View style={styles.headerText}>
+                        <AppText variant="h5" bold>
+                            Guest User
+                        </AppText>
+                        <AppText variant="body2" secondary>
+                            Sign in to access your profile
+                        </AppText>
+                    </View>
+                </View>
+
+                <View style={styles.section}>
+                    <AppButton
+                        fullWidth
+                        onPress={() => router.push('/(auth)/login')}
+                        style={styles.logoutButton}
+                    >
+                        Sign In
+                    </AppButton>
+                    <AppButton
+                        mode="text"
+                        fullWidth
+                        onPress={() => router.push('/(auth)/register')}
+                        style={{ marginTop: spacing.sm }}
+                    >
+                        Create Account
+                    </AppButton>
+                </View>
+
+                {/* Settings section - show for guests too */}
+                <AppCard style={styles.section}>
+                    <AppText variant="h6" bold style={styles.sectionTitle}>
+                        Appearance
+                    </AppText>
+
+                    {/* Dark mode toggle */}
+                    <List.Item
+                        title="Dark Mode"
+                        description={`Currently ${isDark ? 'on' : 'off'}`}
+                        left={(props) => <List.Icon {...props} icon="theme-light-dark" />}
+                        right={() => (
+                            <Switch
+                                value={isDark}
+                                onValueChange={toggleTheme}
+                                color={theme.colors.primary}
+                            />
+                        )}
+                        style={styles.listItem}
+                    />
+
+                    {/* Theme mode selector */}
+                    <List.Item
+                        title="Theme Mode"
+                        description={themeMode === 'system' ? 'Follow system' : themeMode}
+                        left={(props) => <List.Icon {...props} icon="palette" />}
+                        onPress={() => {
+                            // Cycle through modes: light -> dark -> system
+                            const modes = ['light', 'dark', 'system'] as const;
+                            const currentIndex = modes.indexOf(themeMode);
+                            const nextIndex = (currentIndex + 1) % modes.length;
+                            setThemeMode(modes[nextIndex]);
+                        }}
+                        right={(props) => <List.Icon {...props} icon="chevron-right" />}
+                        style={styles.listItem}
+                    />
+                </AppCard>
+            </Screen>
+        );
+    }
 
     // Handle logout
     const handleLogout = () => {
@@ -150,7 +231,6 @@ export default function ProfileScreen() {
                 <AppButton
                     mode="outline"
                     fullWidth
-                    loading={isLoading}
                     onPress={handleLogout}
                     style={styles.logoutButton}
                 >
