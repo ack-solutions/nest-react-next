@@ -35,6 +35,18 @@ const authClient = new AuthClient({
     httpAdapter: createAxiosAdapter(instanceApi),
 });
 
+const handleTokenSet = (tokens: { accessToken: string; refreshToken: string, trustToken?: string }) => {
+    if (tokens?.accessToken) {
+        // const token = localStorage.getItem('nest_auth_access_token');
+        instanceApi.defaults.headers.common['Authorization'] = `Bearer ${tokens.accessToken}`;
+    }
+
+};
+
+const handleTokenRemoved = () => {
+    delete instanceApi.defaults.headers.common?.['Authorization'];
+};
+
 
 
 function App() {
@@ -43,7 +55,7 @@ function App() {
             <QueryClientProvider client={queryClient}>
                 <SettingsProvider>
                     <ThemeProvider>
-                        <AuthProvider client={authClient}>
+                        <AuthProvider client={authClient} onTokensSet={handleTokenSet} onTokensRemoved={handleTokenRemoved}>
                             <DataTableStateProvider>
                                 <ConfirmProvider>
                                     <PromptDialogProvider>

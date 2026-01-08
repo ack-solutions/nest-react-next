@@ -27,15 +27,15 @@ export default async function (tree: Tree, options: BulkGeneratorSchema) {
         createBackup: options.createBackup || false,
     };
 
-    console.log('🚀 Starting bulk CRUD generation...');
-    console.log(`📄 Config file: ${bulkOptions.configFile}`);
+    console.info('🚀 Starting bulk CRUD generation...');
+    console.info(`📄 Config file: ${bulkOptions.configFile}`);
 
     if (bulkOptions.entities && bulkOptions.entities.length > 0) {
-        console.log(`🎯 Generating specific entities: ${bulkOptions.entities.join(', ')}`);
+        console.info(`🎯 Generating specific entities: ${bulkOptions.entities.join(', ')}`);
     }
 
     if (bulkOptions.dryRun) {
-        console.log('🔍 Running in dry-run mode');
+        console.info('🔍 Running in dry-run mode');
     }
 
     await BulkCrudGenerator.generate(tree, bulkOptions);

@@ -16,7 +16,7 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
     try {
         page = await pageService.getPageBySlug(slug);
     } catch (e) {
-        console.log(e);
+        console.error(e);
     }
 
     if (!page) {

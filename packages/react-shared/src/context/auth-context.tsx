@@ -19,7 +19,7 @@ import {
     IToggleMfaRequest,
     IMessageResponse,
 } from '@libs/types';
-import { AuthProvider as NestAuthClientProvider, useNestAuth } from '@ackplus/nest-auth-react';
+import { AuthProvider as NestAuthClientProvider, AuthProviderProps as NestAuthClientProviderProps, useNestAuth } from '@ackplus/nest-auth-react';
 import type { AuthClient } from '@ackplus/nest-auth-react';
 import { UserService } from '../services';
 import { IAuthUser } from '@ackplus/nest-auth-client';
@@ -102,12 +102,10 @@ const AuthContext = createContext<AuthContextValue | null>(null);
  * Auth Provider Props
  * -----------------------------
  */
-export interface AuthProviderProps {
+export interface AuthProviderProps extends NestAuthClientProviderProps {
     children: React.ReactNode;
     client: AuthClient;
     initialAuthState?: any; // Transformed auth state from createInitialState
-    onLogoutRedirect?: () => void;
-    onUnauthorized?: () => void;
 }
 
 /**
@@ -117,12 +115,10 @@ export interface AuthProviderProps {
  */
 function BridgeAuthProvider({
     children,
-    onLogoutRedirect,
-    onUnauthorized,
+    onUnauthenticated,
 }: {
     children: ReactNode;
-    onLogoutRedirect?: () => void;
-    onUnauthorized?: () => void;
+    onUnauthenticated?: () => void;
 }) {
     const auth = useNestAuth();
     const [authUser, setAuthUser] = useState<IAuthUser | null>(null);
@@ -139,7 +135,6 @@ function BridgeAuthProvider({
             setIsInitialized(true);
         }
     }, [auth.isLoading, auth.status, isInitialized]);
-
 
     /**
      * Fetch current user
@@ -168,7 +163,6 @@ function BridgeAuthProvider({
                 console.warn('[Auth] 401 - Logging out');
                 setCurrentUser(null);
                 await auth.logout();
-                onUnauthorized?.();
                 return null;
             }
 
@@ -183,7 +177,7 @@ function BridgeAuthProvider({
         } finally {
             setIsLoadingUser(false);
         }
-    }, [auth.status, auth.logout, onUnauthorized]);
+    }, [auth.status, auth.logout]);
 
     /**
      * Fetch user when auth status changes to authenticated
@@ -221,7 +215,6 @@ function BridgeAuthProvider({
             console.error('[Auth] Logout error:', error);
         } finally {
             await clearAppState();
-            onLogoutRedirect?.();
         }
     });
 
@@ -311,8 +304,7 @@ export function AuthProvider({
     children,
     client,
     initialAuthState,
-    onLogoutRedirect,
-    onUnauthorized,
+    ...props
 }: AuthProviderProps) {
     const NestProvider = NestAuthClientProvider as React.ComponentType<{
         client: AuthClient;
@@ -321,11 +313,8 @@ export function AuthProvider({
     }>;
 
     return (
-        <NestProvider client={client} initialState={initialAuthState}>
-            <BridgeAuthProvider
-                onLogoutRedirect={onLogoutRedirect}
-                onUnauthorized={onUnauthorized}
-            >
+        <NestProvider client={client} initialState={initialAuthState} {...props}>
+            <BridgeAuthProvider >
                 {children}
             </BridgeAuthProvider>
         </NestProvider>

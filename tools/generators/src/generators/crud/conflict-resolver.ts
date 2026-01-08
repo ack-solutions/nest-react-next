@@ -242,11 +242,11 @@ export class ConflictResolver {
     }
 
     private async resolveInteractive(conflict: EntityConflict): Promise<ConflictResolutionResult> {
-        console.log(`\n⚠️  Conflict detected for entity: ${conflict.entityName}`);
-        console.log('   The following files already exist:');
+        console.info(`\n⚠️  Conflict detected for entity: ${conflict.entityName}`);
+        console.info('   The following files already exist:');
 
         conflict.conflictingFiles.forEach(file => {
-            console.log(`   - ${file.path}`);
+            console.info(`   - ${file.path}`);
         });
 
         const choices = [
@@ -325,9 +325,9 @@ export class ConflictResolver {
             return conflicts.map(conflict => this.resolveNonInteractive(conflict));
         }
 
-        console.log(`\n⚠️  Found conflicts for ${conflicts.length} entities:`);
+        console.info(`\n⚠️  Found conflicts for ${conflicts.length} entities:`);
         conflicts.forEach(conflict => {
-            console.log(`   - ${conflict.entityName} (${conflict.conflictingFiles.length} files)`);
+            console.info(`   - ${conflict.entityName} (${conflict.conflictingFiles.length} files)`);
         });
 
         const choices = [
@@ -422,7 +422,7 @@ export class ConflictResolver {
                 const content = this.tree.read(filePath, 'utf-8');
                 const backupPath = `${filePath}${backupSuffix}`;
                 this.tree.write(backupPath, content);
-                console.log(`   📋 Created backup: ${backupPath}`);
+                console.info(`   📋 Created backup: ${backupPath}`);
             }
         });
     }
@@ -442,26 +442,26 @@ export class ConflictResolver {
         const backed = results.filter(r => r.createBackup);
         const renamed = results.filter(r => r.action === 'rename');
 
-        console.log('\n📊 Conflict Resolution Summary:');
+        console.info('\n📊 Conflict Resolution Summary:');
 
         if (updated.length > 0) {
-            console.log(`   ✅ Updated: ${updated.length} entities`);
-            updated.forEach(r => console.log(`      - ${r.entityName}`));
+            console.info(`   ✅ Updated: ${updated.length} entities`);
+            updated.forEach(r => console.info(`      - ${r.entityName}`));
         }
 
         if (skipped.length > 0) {
-            console.log(`   ⏭️  Skipped: ${skipped.length} entities`);
-            skipped.forEach(r => console.log(`      - ${r.entityName}`));
+            console.info(`   ⏭️  Skipped: ${skipped.length} entities`);
+            skipped.forEach(r => console.info(`      - ${r.entityName}`));
         }
 
         if (backed.length > 0) {
-            console.log(`   📋 Backed up: ${backed.length} entities`);
-            backed.forEach(r => console.log(`      - ${r.entityName}`));
+            console.info(`   📋 Backed up: ${backed.length} entities`);
+            backed.forEach(r => console.info(`      - ${r.entityName}`));
         }
 
         if (renamed.length > 0) {
-            console.log(`   🔄 Renamed: ${renamed.length} entities`);
-            renamed.forEach(r => console.log(`      - ${r.entityName} (with ${r.backupSuffix} suffix)`));
+            console.info(`   🔄 Renamed: ${renamed.length} entities`);
+            renamed.forEach(r => console.info(`      - ${r.entityName} (with ${r.backupSuffix} suffix)`));
         }
     }
 

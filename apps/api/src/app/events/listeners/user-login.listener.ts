@@ -23,7 +23,6 @@ export class UserLoginListener {
     async handleUserLogin(event: UserLoggedInEvent): Promise<void> {
         this.logger.log(`Handling user login event for auth user`);
         const { user: authUser, input } = event.payload;
-        console.log('handleUserLogin', authUser, input)
         try {
             // let user = await User.findOne({ where: { authUserId: authUser.id }, select: ['id'] });
 

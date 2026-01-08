@@ -1,3 +1,4 @@
+
 /**
  * =================================================================
  * ROOT LAYOUT
@@ -6,7 +7,7 @@
  * The root layout for the entire app.
  * Sets up all providers and wraps the navigation stack.
  */
-
+import * as SecureStore from 'expo-secure-store';
 import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -16,7 +17,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import * as SplashScreen from 'expo-splash-screen';
 
 import { ThemeProvider } from '../src/theme';
-import { AuthProvider } from '@libs/react-shared';
+import { AuthProvider, instanceApi } from '@libs/react-shared';
 import { queryClient } from '../src/lib';
 import { authClient } from '@/auth';
 
@@ -55,12 +56,23 @@ export default function RootLayout() {
         hideSplash();
     }, []);
 
+    const handleTokenSet = (tokens: { accessToken: string; refreshToken: string, trustToken?: string }) => {
+        if (tokens?.accessToken) {
+            // const token = localStorage.getItem('nest_auth_access_token');
+            instanceApi.defaults.headers.common['Authorization'] = `Bearer ${tokens.accessToken}`;
+        }
+    };
+
+    const handleTokenRemoved = () => {
+        delete instanceApi.defaults.headers.common?.['Authorization'];
+    };
+
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <SafeAreaProvider>
                 <QueryClientProvider client={queryClient}>
                     <ThemeProvider>
-                        <AuthProvider client={authClient}>
+                        <AuthProvider client={authClient} onTokensSet={handleTokenSet} onTokensRemoved={handleTokenRemoved}>
                             <StatusBar style="auto" />
                             <Stack
                                 screenOptions={{

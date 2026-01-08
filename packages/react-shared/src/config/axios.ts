@@ -29,30 +29,12 @@ const getApiBaseUrl = (): string => {
 
     if (!url) {
         url = isBrowser ? 'http://localhost:3333' : 'http://api:3333';
-        // eslint-disable-next-line no-console
-        console.warn('[axios] API base URL is not set, using default:', url);
     }
 
     // Ensure URL ends with /api/
     if (url.endsWith('/api/')) return url;
     if (url.endsWith('/api')) return url + '/';
     return url + '/api/';
-};
-
-/**
- * ----------------------------------------
- * Token getter (browser only)
- * ----------------------------------------
- */
-const getTokenFromStorage = (): string | null => {
-    if (!isBrowser) return null;
-
-    try {
-        const token = localStorage.getItem('nest_auth_access_token');
-        return token || null;
-    } catch {
-        return null;
-    }
 };
 
 /**
@@ -170,19 +152,9 @@ instanceApi.interceptors.request.use((req: AxiosRequestConfig & any) => {
     // Ensure headers object exists
     req.headers = req.headers ?? {};
 
-    if (isBrowser) {
-        const token = getTokenFromStorage();
-        if (token) {
-            req.headers.Authorization = `Bearer ${token}`;
-        } else {
-            delete req.headers.Authorization;
-        }
-    }
-
     // Transform params / body safely (non-mutating)
     if (req.params) req.params = convertMomentToISO(req.params);
     if (req.data) req.data = convertMomentToISO(req.data);
-
     return req;
 });
 
@@ -193,8 +165,13 @@ instanceApi.interceptors.request.use((req: AxiosRequestConfig & any) => {
  * ----------------------------------------
  */
 instanceApi.interceptors.response.use(
-    (res) => res,
-    (error) => Promise.reject(normalizeAxiosError(error)),
+    (res) => {
+        return res;
+    },
+    (error) => {
+        const normalizedError = normalizeAxiosError(error);
+        return Promise.reject(normalizedError);
+    },
 );
 
 /**

@@ -7,6 +7,7 @@
         "web": "pnpm -C apps/web",
         "admin": "pnpm -C apps/admin",
         "api": "pnpm -C apps/api",
+        "mobile": "pnpm -C apps/mobile",
         "build": "pnpm -C apps/api build && pnpm -C apps/web build && pnpm -C apps/admin build",
         "test": "pnpm -r test",
         "lint": "pnpm -r run lint",

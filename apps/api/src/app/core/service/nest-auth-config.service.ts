@@ -101,7 +101,7 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
                 slug: this.configService.get<IAppConfig>('app')?.defaultTenantName,
             },
             mfa: {
-                enabled: true,
+                enabled: false,
                 required: false,
                 methods: [NestAuthMFAMethodEnum.EMAIL],
                 otpLength: 6,

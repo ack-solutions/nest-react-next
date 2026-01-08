@@ -59,7 +59,6 @@ const DataGrid = forwardRef<DataTableApi<any>, DataGridProps<any>>(
                 debounce(() => {
                     if (dataTableStateContext && !isRestoringRef.current) {
                         const layout = tableRef.current.layout.saveLayout();
-                        console.log('handleColumnChange', layout);
 
                         // Only save layout properties
                         const layoutOnly: DataTableLayoutState = {
@@ -92,7 +91,6 @@ const DataGrid = forwardRef<DataTableApi<any>, DataGridProps<any>>(
         useEffect(() => {
             if (savedLayout && !isLayoutRestoredRef.current && tableRef.current) {
                 // Small delay to ensure table is fully initialized
-                console.log('Restoring layout', savedLayout);
                 isRestoringRef.current = true;
 
                 setTimeout(() => {
@@ -110,7 +108,6 @@ const DataGrid = forwardRef<DataTableApi<any>, DataGridProps<any>>(
         }, []); // Empty deps - only run once on mount
         // Cleanup debounce on unmount
         useEffect(() => {
-            console.log({ debouncedSaveLayout });
             return () => {
 
                 debouncedSaveLayout.cancel();

@@ -45,11 +45,11 @@ importers:
   apps/admin:
     dependencies:
       '@ackplus/nest-auth-client':
-        specifier: ^1.1.61
-        version: 1.1.61
+        specifier: ^1.1.62
+        version: 1.1.62
       '@ackplus/nest-auth-react':
-        specifier: ^1.1.61
-        version: 1.1.61(react@19.2.3)
+        specifier: ^1.1.62
+        version: 1.1.62(react@19.2.3)
       '@ackplus/nest-crud-request':
         specifier: ^1.1.18
         version: 1.1.18
@@ -205,8 +205,8 @@ importers:
   apps/api:
     dependencies:
       '@ackplus/nest-auth':
-        specifier: 1.1.61
-        version: 1.1.61(0af8e323c430a31166859f851ae04b42)
+        specifier: 1.1.62
+        version: 1.1.62(0af8e323c430a31166859f851ae04b42)
       '@ackplus/nest-crud':
         specifier: ^1.1.18
         version: 1.1.18(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(@nestjs/platform-express@11.1.11)(@nestjs/swagger@11.2.4(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2))(@nestjs/typeorm@11.0.0(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.9.0)(pg@8.16.3)(ts-node@10.9.2(@types/node@25.0.3)(typescript@5.9.3))))(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.9.0)(pg@8.16.3)(ts-node@10.9.2(@types/node@25.0.3)(typescript@5.9.3)))
@@ -398,17 +398,20 @@ importers:
   apps/mobile:
     dependencies:
       '@ackplus/nest-auth-client':
-        specifier: 1.1.61
-        version: 1.1.61
+        specifier: 1.1.62
+        version: 1.1.62
       '@ackplus/nest-auth-react':
-        specifier: 1.1.61
-        version: 1.1.61(react@18.3.1)
+        specifier: 1.1.62
+        version: 1.1.62(react@18.3.1)
       '@babel/runtime':
         specifier: ^7.28.4
         version: 7.28.4
       '@expo/vector-icons':
         specifier: ^14.0.0
         version: 14.1.0(expo-font@13.0.4(expo@52.0.48(@babel/core@7.28.5)(@babel/preset-env@7.28.5(@babel/core@7.28.5))(@expo/metro-runtime@4.0.1(react-native@0.76.3(@babel/core@7.28.5)(@babel/preset-env@7.28.5(@babel/core@7.28.5))(@types/react@18.3.27)(encoding@0.1.13)(react@18.3.1)))(encoding@0.1.13)(react-native@0.76.3(@babel/core@7.28.5)(@babel/preset-env@7.28.5(@babel/core@7.28.5))(@types/react@18.3.27)(encoding@0.1.13)(react@18.3.1))(react@18.3.1))(react@18.3.1))(react-native@0.76.3(@babel/core@7.28.5)(@babel/preset-env@7.28.5(@babel/core@7.28.5))(@types/react@18.3.27)(encoding@0.1.13)(react@18.3.1))(react@18.3.1)
+      '@hookform/resolvers':
+        specifier: ^5.2.2
+        version: 5.2.2(react-hook-form@7.70.0(react@18.3.1))
       '@libs/react-shared':
         specifier: workspace:*
         version: link:../../packages/react-shared
@@ -472,6 +475,9 @@ importers:
       react-dom:
         specifier: 18.3.1
         version: 18.3.1(react@18.3.1)
+      react-hook-form:
+        specifier: ^7.70.0
+        version: 7.70.0(react@18.3.1)
       react-native:
         specifier: 0.76.3
         version: 0.76.3(@babel/core@7.28.5)(@babel/preset-env@7.28.5(@babel/core@7.28.5))(@types/react@18.3.27)(encoding@0.1.13)(react@18.3.1)
@@ -496,6 +502,9 @@ importers:
       react-native-web:
         specifier: ~0.19.10
         version: 0.19.13(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      yup:
+        specifier: ^1.7.1
+        version: 1.7.1
     devDependencies:
       '@babel/core':
         specifier: ^7.25.0
@@ -528,11 +537,11 @@ importers:
   apps/web:
     dependencies:
       '@ackplus/nest-auth-client':
-        specifier: ^1.1.61
-        version: 1.1.61
+        specifier: ^1.1.62
+        version: 1.1.62
       '@ackplus/nest-auth-react':
-        specifier: ^1.1.61
-        version: 1.1.61(react@19.2.3)
+        specifier: ^1.1.62
+        version: 1.1.62(react@19.2.3)
       '@hookform/resolvers':
         specifier: ^5.0.1
         version: 5.2.2(react-hook-form@7.70.0(react@19.2.3))
@@ -634,11 +643,11 @@ importers:
   packages/react-shared:
     dependencies:
       '@ackplus/nest-auth-client':
-        specifier: ^1.1.61
-        version: 1.1.61
+        specifier: ^1.1.62
+        version: 1.1.62
       '@ackplus/nest-auth-react':
-        specifier: ^1.1.61
-        version: 1.1.61(react@19.2.3)
+        specifier: ^1.1.62
+        version: 1.1.62(react@19.2.3)
       '@libs/types':
         specifier: workspace:*
         version: link:../types
@@ -680,8 +689,8 @@ importers:
   packages/types:
     dependencies:
       '@ackplus/nest-auth':
-        specifier: 1.1.61
-        version: 1.1.61(407865a8dda19c89f40d1d12fd815a68)
+        specifier: 1.1.62
+        version: 1.1.62(407865a8dda19c89f40d1d12fd815a68)
       '@ackplus/nest-crud-request':
         specifier: ^1.1.18
         version: 1.1.18
@@ -738,19 +747,19 @@ packages:
       graphql:
         optional: true
 
-  '@ackplus/nest-auth-client@1.1.61':
-    resolution: {integrity: sha512-nY1Zowdwu9w7CbXn6GHBKcAQMFkVYoc+l/sn62GtIggMbz0Tt0jkexVcLKn8+WzBfnB7/4e61NT4EZ/dozdHfw==}
+  '@ackplus/nest-auth-client@1.1.62':
+    resolution: {integrity: sha512-iM0GRInjFrmvg3NfXOpTmlBCSsNwDXMuw3iYvVBAEnZTrBK1YXsqMmvx34OF0OVMcGsDvql3ibsb5+pz3Qru0A==}
 
-  '@ackplus/nest-auth-contracts@1.1.61':
-    resolution: {integrity: sha512-RxIksYZZaXq4MCNOZNjSopTvidzCiZSsajtugk0x1V0fF7YKJd6Hhnrl3nrCQMLPmrjSRx1ODWgNjgdZ3Udlkw==}
+  '@ackplus/nest-auth-contracts@1.1.62':
+    resolution: {integrity: sha512-/2H9d3wymShRh5FK6fbBbnx9t5ktvXsQTj9jpJX20J/gZMDfUB/ZXikkxV3MZCZwLW43nKFBb2y9rXxO9uhjVg==}
 
-  '@ackplus/nest-auth-react@1.1.61':
-    resolution: {integrity: sha512-wHyYrduplExmXqPOYZptFj9pJgOYSskvBIQnf65RN2K74fSs1A2Eo86OU/r83wsA+6b9F05IutfK+AAFOn8qFQ==}
+  '@ackplus/nest-auth-react@1.1.62':
+    resolution: {integrity: sha512-Y1Hrn65ONsR3rx9W1Fq1c46TavW7AYJ2GTeAVVqzVZ17zOpiMe9uv/rOGocbPewqaP2waot0DMwLpnd51TR3bg==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
 
-  '@ackplus/nest-auth@1.1.61':
-    resolution: {integrity: sha512-wpbOT/ecsx/IWYvA8VZ3d9AGyb3tCu+t94yUwq1wxdgr69Gi656a9ISlgOFaT0wfI8e9i6Hamzc4n0GK4Lo8xQ==}
+  '@ackplus/nest-auth@1.1.62':
+    resolution: {integrity: sha512-VmZrqW5OV/2ggA6pw5PMJZ2DIYCaKrG2c9srwXpRxxz9Q5tFEBnFU1U2iH1VOm0RmZem7OmuGm5RWytDYzFU5w==}
     peerDependencies:
       '@nestjs/common': ^10 || ^11
       '@nestjs/core': ^10 || ^11
@@ -10599,27 +10608,27 @@ snapshots:
 
   '@0no-co/graphql.web@1.2.0': {}
 
-  '@ackplus/nest-auth-client@1.1.61':
+  '@ackplus/nest-auth-client@1.1.62':
     dependencies:
-      '@ackplus/nest-auth-contracts': 1.1.61
+      '@ackplus/nest-auth-contracts': 1.1.62
       jwt-decode: 4.0.0
       tslib: 2.8.1
 
-  '@ackplus/nest-auth-contracts@1.1.61': {}
+  '@ackplus/nest-auth-contracts@1.1.62': {}
 
-  '@ackplus/nest-auth-react@1.1.61(react@18.3.1)':
+  '@ackplus/nest-auth-react@1.1.62(react@18.3.1)':
     dependencies:
-      '@ackplus/nest-auth-client': 1.1.61
+      '@ackplus/nest-auth-client': 1.1.62
       react: 18.3.1
 
-  '@ackplus/nest-auth-react@1.1.61(react@19.2.3)':
+  '@ackplus/nest-auth-react@1.1.62(react@19.2.3)':
     dependencies:
-      '@ackplus/nest-auth-client': 1.1.61
+      '@ackplus/nest-auth-client': 1.1.62
       react: 19.2.3
 
-  '@ackplus/nest-auth@1.1.61(0af8e323c430a31166859f851ae04b42)':
+  '@ackplus/nest-auth@1.1.62(0af8e323c430a31166859f851ae04b42)':
     dependencies:
-      '@ackplus/nest-auth-contracts': 1.1.61
+      '@ackplus/nest-auth-contracts': 1.1.62
       '@nestjs/common': 11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.11(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.11)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/event-emitter': 3.0.1(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)
@@ -10647,9 +10656,9 @@ snapshots:
       fb: 2.0.0
       google-auth-library: 10.5.0
 
-  '@ackplus/nest-auth@1.1.61(407865a8dda19c89f40d1d12fd815a68)':
+  '@ackplus/nest-auth@1.1.62(407865a8dda19c89f40d1d12fd815a68)':
     dependencies:
-      '@ackplus/nest-auth-contracts': 1.1.61
+      '@ackplus/nest-auth-contracts': 1.1.62
       '@nestjs/common': 11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.11(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.11)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/event-emitter': 3.0.1(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)
@@ -13046,6 +13055,11 @@ snapshots:
   '@faker-js/faker@10.2.0': {}
 
   '@gar/promisify@1.1.3': {}
+
+  '@hookform/resolvers@5.2.2(react-hook-form@7.70.0(react@18.3.1))':
+    dependencies:
+      '@standard-schema/utils': 0.3.0
+      react-hook-form: 7.70.0(react@18.3.1)
 
   '@hookform/resolvers@5.2.2(react-hook-form@7.70.0(react@19.2.3))':
     dependencies:
@@ -20890,6 +20904,10 @@ snapshots:
       react: 19.2.3
       react-fast-compare: 3.2.2
       shallowequal: 1.1.0
+
+  react-hook-form@7.70.0(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   react-hook-form@7.70.0(react@19.2.3):
     dependencies:

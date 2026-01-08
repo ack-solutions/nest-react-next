@@ -418,7 +418,6 @@ export const CrudDataGrid = forwardRef<DataTableApi<any>, CrudDataGridProps<any>
                 result = await onFetchDataRef.current(queryBuilder, filters);
             } else if (fetchMany) {
                 const request = queryBuilder.toObject();
-                console.log('request', request);
                 result = await fetchMany(request).then((_res) => {
                     return _res;
                 }).catch((_error) => {

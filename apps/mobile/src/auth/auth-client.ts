@@ -12,7 +12,7 @@ import { config, instanceApi } from '@libs/react-shared';
 // Use the existing mobile api client's axios instance
 
 export const authClient = new AuthClient({
-    baseUrl: config.apiUrl,
+    baseUrl: config.apiUrl + '/api',
     accessTokenType: 'header',
     storage: new SecureStorageAdapter(),
     httpAdapter: createAxiosAdapter(instanceApi),

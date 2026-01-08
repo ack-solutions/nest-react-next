@@ -66,7 +66,7 @@ export function SettingsProvider({
 
     const onChangeDirectionByLang = useCallback((lang: string) => {
         // Implementation for direction change by language if needed
-        console.log('Direction change by language:', lang);
+        console.info('Direction change by language:', lang);
     }, []);
 
     const canReset = !isEqual(state, {

@@ -38,7 +38,6 @@ export class RoleService {
     }
 
     async createRole(body: CreateRoleDTO) {
-        console.log(body);
         return this.roleService.createRole(body.name, body.guard, null, false, body.permissions);
     }
 

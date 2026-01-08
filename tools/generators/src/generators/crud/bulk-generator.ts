@@ -55,7 +55,7 @@ export class BulkCrudGenerator {
     }
 
     async generate(): Promise<void> {
-        console.log('🚀 Starting bulk CRUD generation...');
+        console.info('🚀 Starting bulk CRUD generation...');
 
         // Load and validate config
         this.loadConfig();
@@ -67,17 +67,17 @@ export class BulkCrudGenerator {
         const entitiesToGenerate = this.filterEntities();
 
         if (entitiesToGenerate.length === 0) {
-            console.log('❌ No entities to generate');
+            console.info('❌ No entities to generate');
             return;
         }
 
-        console.log(`📋 Generating ${entitiesToGenerate.length} entities:`);
+        console.info(`📋 Generating ${entitiesToGenerate.length} entities:`);
         entitiesToGenerate.forEach((entity, index) => {
-            console.log(`  ${index + 1}. ${entity.name} (${entity.crudType})`);
+            console.info(`  ${index + 1}. ${entity.name} (${entity.crudType})`);
         });
 
         if (this.options.dryRun) {
-            console.log('🔍 Dry run mode - no files will be generated');
+            console.info('🔍 Dry run mode - no files will be generated');
             return;
         }
 
@@ -92,7 +92,7 @@ export class BulkCrudGenerator {
         });
 
         if (entitiesToProcess.length === 0) {
-            console.log('⏭️  All entities were skipped due to conflicts');
+            console.info('⏭️  All entities were skipped due to conflicts');
             return;
         }
 
@@ -111,22 +111,22 @@ export class BulkCrudGenerator {
         await formatFiles(this.tree);
 
         // Fix HTML entities in generated files (after formatting)
-        console.log('🔧 Fixing HTML entities in generated files...');
+        console.info('🔧 Fixing HTML entities in generated files...');
         this.fixHtmlEntitiesInGeneratedFiles();
 
         // Run ESLint auto-fix to clean up imports and formatting
-        console.log('🔧 Running ESLint auto-fix...');
+        console.info('🔧 Running ESLint auto-fix...');
         try {
             execSync('npx eslint --fix apps/api/src/app/modules/ libs/react-shared/src/ libs/types/src/ apps/admin/src/app/', {
                 stdio: 'pipe',
                 cwd: process.cwd(),
             });
-            console.log('✅ ESLint auto-fix completed');
+            console.info('✅ ESLint auto-fix completed');
         } catch (_error) {
             console.warn('⚠️  ESLint auto-fix had some issues, but generation completed');
         }
 
-        console.log('✅ Bulk CRUD generation completed successfully!');
+        console.info('✅ Bulk CRUD generation completed successfully!');
         this.printSummary(entitiesToProcess, conflictResults);
     }
 
@@ -145,8 +145,8 @@ export class BulkCrudGenerator {
             this.config = rawConfig as ProcessedBulkConfig;
 
             if (this.options.verbose) {
-                console.log('📄 Config loaded successfully');
-                console.log(`   Entities: ${this.config.entities.length}`);
+                console.info('📄 Config loaded successfully');
+                console.info(`   Entities: ${this.config.entities.length}`);
             }
         } catch (error) {
             throw new Error(`Failed to load config file: ${error.message}`);
@@ -258,11 +258,11 @@ export class BulkCrudGenerator {
     }
 
     private async generateEntity(entity: ProcessedEntityConfig, conflictResult?: ConflictResolutionResult): Promise<void> {
-        console.log(`🔧 Generating ${entity.name}...`);
+        console.info(`🔧 Generating ${entity.name}...`);
 
         // Create backup if requested
         if (conflictResult?.createBackup && conflictResult.backupSuffix) {
-            console.log(`  📋 Creating backup files for ${entity.name}...`);
+            console.info(`  📋 Creating backup files for ${entity.name}...`);
             this.conflictResolver.createBackupFiles(entity.name, conflictResult.backupSuffix);
         }
 
@@ -272,26 +272,26 @@ export class BulkCrudGenerator {
         try {
             // Generate Types
             if (entity.generateTypes) {
-                if (this.options.verbose) console.log(`  📝 Generating types for ${entity.name}...`);
+                if (this.options.verbose) console.info(`  📝 Generating types for ${entity.name}...`);
                 const typesGenerator = new TypesGenerator(this.tree, legacySchema);
                 await typesGenerator.run();
             }
 
             // Generate API
             if (entity.generateApi) {
-                if (this.options.verbose) console.log(`  🔧 Generating API for ${entity.name}...`);
+                if (this.options.verbose) console.info(`  🔧 Generating API for ${entity.name}...`);
                 const apiGenerator = new ApiGenerator(this.tree, legacySchema);
                 await apiGenerator.run();
             }
 
             // Generate React Components
             if (entity.generateReact) {
-                if (this.options.verbose) console.log(`  ⚛️  Generating React components for ${entity.name}...`);
+                if (this.options.verbose) console.info(`  ⚛️  Generating React components for ${entity.name}...`);
                 const reactGenerator = new ReactGenerator(this.tree, legacySchema);
                 await reactGenerator.run();
             }
 
-            console.log(`  ✅ ${entity.name} generated successfully`);
+            console.info(`  ✅ ${entity.name} generated successfully`);
         } catch (error) {
             console.error(`  ❌ Failed to generate ${entity.name}: ${error.message}`);
             if (!this.options.force) {
@@ -325,20 +325,20 @@ export class BulkCrudGenerator {
     }
 
     private printSummary(entities: ProcessedEntityConfig[], conflictResults?: ConflictResolutionResult[]): void {
-        console.log('\n📊 Generation Summary:');
-        console.log(`  Total entities processed: ${entities.length}`);
-        console.log(`  API modules: ${entities.filter(e => e.generateApi).length}`);
-        console.log(`  React components: ${entities.filter(e => e.generateReact).length}`);
-        console.log(`  TypeScript types: ${entities.filter(e => e.generateTypes).length}`);
+        console.info('\n📊 Generation Summary:');
+        console.info(`  Total entities processed: ${entities.length}`);
+        console.info(`  API modules: ${entities.filter(e => e.generateApi).length}`);
+        console.info(`  React components: ${entities.filter(e => e.generateReact).length}`);
+        console.info(`  TypeScript types: ${entities.filter(e => e.generateTypes).length}`);
 
         const crudTypes = entities.reduce((acc, entity) => {
             acc[entity.crudType] = (acc[entity.crudType] || 0) + 1;
             return acc;
         }, {} as Record<string, number>);
 
-        console.log('  CRUD types:');
+        console.info('  CRUD types:');
         Object.entries(crudTypes).forEach(([type, count]) => {
-            console.log(`    ${type}: ${count}`);
+            console.info(`    ${type}: ${count}`);
         });
 
         // Show conflict resolution summary if there were conflicts
@@ -347,23 +347,23 @@ export class BulkCrudGenerator {
             const updated = conflictResults.filter(r => !r.skipGeneration && r.action === 'update');
             const backed = conflictResults.filter(r => r.createBackup);
 
-            console.log('\n🔄 Conflict Resolution:');
+            console.info('\n🔄 Conflict Resolution:');
             if (updated.length > 0) {
-                console.log(`  Updated: ${updated.length} entities`);
+                console.info(`  Updated: ${updated.length} entities`);
             }
             if (backed.length > 0) {
-                console.log(`  Backed up: ${backed.length} entities`);
+                console.info(`  Backed up: ${backed.length} entities`);
             }
             if (skipped.length > 0) {
-                console.log(`  Skipped: ${skipped.length} entities`);
+                console.info(`  Skipped: ${skipped.length} entities`);
             }
         }
 
-        console.log('\n📋 Next steps:');
-        console.log('1. Review generated files');
-        console.log('2. Update imports in your modules');
-        console.log('3. Run tests to ensure everything works');
-        console.log('4. Update navigation/routing as needed');
+        console.info('\n📋 Next steps:');
+        console.info('1. Review generated files');
+        console.info('2. Update imports in your modules');
+        console.info('3. Run tests to ensure everything works');
+        console.info('4. Update navigation/routing as needed');
     }
 
     // Utility methods
@@ -523,7 +523,7 @@ export class BulkCrudGenerator {
             .map(change => change.path)
             .filter(path => path.endsWith('.ts') || path.endsWith('.tsx'));
 
-        console.log(`  📋 Checking ${filesToFix.length} files for HTML entities...`);
+        console.info(`  📋 Checking ${filesToFix.length} files for HTML entities...`);
 
         filesToFix.forEach(filePath => {
             if (this.tree.exists(filePath)) {
@@ -532,9 +532,9 @@ export class BulkCrudGenerator {
                     const fixedContent = this.decodeHtmlEntities(content);
                     if (fixedContent !== content) {
                         this.tree.write(filePath, fixedContent);
-                        console.log(`  ✅ Fixed HTML entities in ${filePath}`);
+                        console.info(`  ✅ Fixed HTML entities in ${filePath}`);
                     } else {
-                        console.log(`  ⏭️  No HTML entities found in ${filePath}`);
+                        console.info(`  ⏭️  No HTML entities found in ${filePath}`);
                     }
                 }
             }

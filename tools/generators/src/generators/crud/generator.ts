@@ -264,7 +264,7 @@ function toKebabCase(str: string): string {
 export default async function (tree: Tree, options: PluginGeneratorSchema) {
     // Handle interactive column input if needed
     if (options.addColumns && (!options.columns || options.columns.length === 0)) {
-        console.log('📝 Setting up entity columns...');
+        console.info('📝 Setting up entity columns...');
         const columns = await takeEntityColumns();
         options.columns = columns;
     }
@@ -274,27 +274,27 @@ export default async function (tree: Tree, options: PluginGeneratorSchema) {
     // Always use ackplus now
     processedOptions.crudType = 'ackplus';
 
-    console.log('🚀 Generating CRUD files...');
-    console.log(`📁 Entity: ${processedOptions.name}`);
-    console.log('🔧 Type: @ackplus/nest-crud');
-    console.log(`📊 Features: ${Object.entries(processedOptions.features).filter(([_, enabled]) => enabled).map(([key]) => key).join(', ')}`);
-    console.log(`📋 Columns: ${processedOptions.columns.map(col => `${col.name} (${col.type})`).join(', ')}`);
+    console.info('🚀 Generating CRUD files...');
+    console.info(`📁 Entity: ${processedOptions.name}`);
+    console.info('🔧 Type: @ackplus/nest-crud');
+    console.info(`📊 Features: ${Object.entries(processedOptions.features).filter(([_, enabled]) => enabled).map(([key]) => key).join(', ')}`);
+    console.info(`📋 Columns: ${processedOptions.columns.map(col => `${col.name} (${col.type})`).join(', ')}`);
 
     // Generate API files
     if (processedOptions.generateApi) {
-        console.log('🔄 Generating API files...');
+        console.info('🔄 Generating API files...');
         await new ApiGenerator(tree, processedOptions).run();
     }
 
     // Generate React files
     if (processedOptions.generateReact) {
-        console.log('🔄 Generating React files...');
+        console.info('🔄 Generating React files...');
         await new ReactGenerator(tree, processedOptions).run();
     }
 
     // Generate Types files
     if (processedOptions.generateTypes) {
-        console.log('🔄 Generating Types files...');
+        console.info('🔄 Generating Types files...');
         await new TypesGenerator(tree, processedOptions).run();
     }
 
@@ -302,21 +302,21 @@ export default async function (tree: Tree, options: PluginGeneratorSchema) {
     await formatFiles(tree);
 
     // Run ESLint auto-fix to clean up imports and formatting
-    console.log('🔧 Running ESLint auto-fix...');
+    console.info('🔧 Running ESLint auto-fix...');
     try {
         execSync('npx eslint --fix apps/api/src/app/modules/ libs/react-shared/src/ libs/types/src/ apps/admin/src/app/', {
             stdio: 'pipe',
             cwd: process.cwd(),
         });
-        console.log('✅ ESLint auto-fix completed');
+        console.info('✅ ESLint auto-fix completed');
     } catch (_error) {
         console.warn('⚠️  ESLint auto-fix had some issues, but generation completed');
     }
 
-    console.log('✅ CRUD generation completed successfully!');
-    console.log('\n📋 Next steps:');
-    console.log('1. Add the module to your app.module.ts imports');
-    console.log('2. Run database migrations if needed');
-    console.log('3. Update navigation/routes if generating React components');
-    console.log('4. Configure permissions if using role-based access');
+    console.info('✅ CRUD generation completed successfully!');
+    console.info('\n📋 Next steps:');
+    console.info('1. Add the module to your app.module.ts imports');
+    console.info('2. Run database migrations if needed');
+    console.info('3. Update navigation/routes if generating React components');
+    console.info('4. Configure permissions if using role-based access');
 }

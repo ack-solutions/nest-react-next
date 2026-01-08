@@ -199,7 +199,7 @@ export class EmailTemplateSeeder implements Seeder {
                     curruntYear: new Date().getFullYear()
                 }
             });
-            console.log('✅ Created template layout: default');
+            console.info('✅ Created template layout: default');
         } catch (error) {
             if (error.message?.includes('already exists')) {
                 console.warn('⚠️  Template layout "default" already exists, skipping creation');
@@ -224,7 +224,7 @@ export class EmailTemplateSeeder implements Seeder {
                     scope: 'system',
                     previewContext: template.previewContext
                 });
-                console.log(`✅ Created template: ${template.name}`);
+                console.info(`✅ Created template: ${template.name}`);
             } catch (error) {
                 if (error.message?.includes('already exists')) {
                     console.warn(`⚠️  Template "${template.name}" already exists, skipping creation`);
@@ -242,7 +242,7 @@ export class EmailTemplateSeeder implements Seeder {
         await NestDynamicTemplateLayout.getRepository().query(
             `TRUNCATE TABLE "${NestDynamicTemplateLayout.getRepository().metadata.tableName}" CASCADE`,
         );
-        console.log('🗑️  Truncated template tables');
+        console.info('🗑️  Truncated template tables');
         return;
     }
 
