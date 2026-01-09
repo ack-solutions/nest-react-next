@@ -1,0 +1,43 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+<% if (implementationType === 'nest-crud') { -%>
+import { TypeOrmCrudService } from '@ackplus/nest-crud';
+import { <%= entityPascal %>Entity } from './<%= entityFile %>.entity';
+
+@Injectable()
+export class <%= entityPascal %>Service extends TypeOrmCrudService<<%= entityPascal %>Entity> {
+    constructor(@InjectRepository(<%= entityPascal %>Entity) repo) {
+        super(repo);
+    }
+}
+<% } else { -%>
+import { Repository } from 'typeorm';
+import { <%= entityPascal %>Entity } from './<%= entityFile %>.entity';
+import { Create<%= entityPascal %>Dto } from './dto/create-<%= entityFile %>.dto';
+import { Update<%= entityPascal %>Dto } from './dto/update-<%= entityFile %>.dto';
+
+@Injectable()
+export class <%= entityPascal %>Service {
+    constructor(@InjectRepository(<%= entityPascal %>Entity) private repo: Repository<<%= entityPascal %>Entity>) {}
+
+    findAll() {
+        return this.repo.find();
+    }
+
+    findOne(id: string) {
+        return this.repo.findOneBy({ id });
+    }
+
+    create(data: Create<%= entityPascal %>Dto) {
+        return this.repo.save(data);
+    }
+
+    update(id: string, data: Update<%= entityPascal %>Dto) {
+        return this.repo.update(id, data);
+    }
+
+    delete(id: string) {
+        return this.repo.softDelete(id);
+    }
+}
+<% } -%>

@@ -1,0 +1,147 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useCreate<%= entityPascal %>, useUpdate<%= entityPascal %>, use<%= entityPascal %> } from '@libs/react-shared';
+import { I<%= entityPascal %> } from '@libs/types';
+import { Box, Button, Drawer, Typography, Stack, Grid, IconButton, Divider } from '@mui/material';
+import { useEffect, useMemo } from 'react';
+import { useForm } from 'react-hook-form';
+import * as Yup from 'yup';
+import { Icon } from '../../components';
+import { IconEnum } from '../../components/icons/icons';
+
+import { FormContainer, RHFTextField, RHFSwitch, RHFSelect } from '../../form';
+
+interface AddEdit<%= entityPascal %>FormProps {
+    open: boolean;
+    onClose: () => void;
+    id?: string | null;
+}
+
+export default function AddEdit<%= entityPascal %>Form({ open, onClose, id }: AddEdit<%= entityPascal %>FormProps) {
+    const isEdit = !!id;
+    const { data: current<%= entityPascal %> } = use<%= entityPascal %>(id || '');
+
+    const createMutation = useCreate<%= entityPascal %>();
+    const updateMutation = useUpdate<%= entityPascal %>();
+
+    const defaultValues = useMemo(
+        () => ({
+<%_ for (const col of columns) { -%>
+<%_ if (col.propertyName === 'id' || col.propertyName === 'createdAt' || col.propertyName === 'updatedAt' || col.propertyName === 'deletedAt') continue; -%>
+<%_ if (col.dbType === 'boolean') { -%>
+            <%= col.propertyName %>: false,
+<%_ } else if (col.dbType === 'int' || col.dbType === 'float') { -%>
+            <%= col.propertyName %>: 0,
+<%_ } else { -%>
+            <%= col.propertyName %>: '',
+<%_ } -%>
+<%_ } -%>
+        }),
+        []
+    );
+
+    const New<%= entityPascal %>Schema = Yup.object().shape({
+<%_ for (const col of columns) { -%>
+<%_ if (col.propertyName === 'id' || col.propertyName === 'createdAt' || col.propertyName === 'updatedAt' || col.propertyName === 'deletedAt') continue; -%>
+<%_ if (!col.optional) { -%>
+        <%= col.propertyName %>: Yup.<%= col.dbType === 'int' || col.dbType === 'float' ? 'number' : (col.dbType === 'boolean' ? 'boolean' : 'string') %>().required('<%= col.label %> is required'),
+<%_ } -%>
+<%_ } -%>
+    });
+
+    const methods = useForm({
+        resolver: yupResolver(New<%= entityPascal %>Schema),
+        defaultValues,
+    });
+
+    const {
+        reset,
+        handleSubmit,
+        formState: { isSubmitting },
+    } = methods;
+
+    useEffect(() => {
+        if (isEdit && current<%= entityPascal %>) {
+            reset(current<%= entityPascal %>);
+        }
+        if (!isEdit) {
+            reset(defaultValues);
+        }
+    }, [isEdit, current<%= entityPascal %>, reset, defaultValues, open]);
+
+    const onSubmit = async (data: any) => {
+        try {
+            if (isEdit && id) {
+                await updateMutation.mutateAsync({ id, data });
+            } else {
+                await createMutation.mutateAsync(data);
+            }
+            onClose();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    return (
+        <Drawer
+            anchor="right"
+            open={open}
+            onClose={onClose}
+            PaperProps={{ sx: { width: { xs: '100%', sm: 480 } } }}
+        >
+            <FormContainer
+                formContext={methods}
+                onSuccess={handleSubmit(onSubmit)}
+                formProps={{
+                    id: 'add-edit-<%= entityFile %>',
+                    style: { height: '100%', display: 'flex', flexDirection: 'column' }
+                }}
+            >
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
+                    <Typography variant="h6">{isEdit ? 'Edit <%= entityPascal %>' : 'New <%= entityPascal %>'}</Typography>
+                    <IconButton onClick={onClose}>
+                        <Icon icon={IconEnum.X} />
+                    </IconButton>
+                </Box>
+                <Divider />
+
+                <Box sx={{ p: 2, flexGrow: 1, overflowY: 'auto' }}>
+                    <Grid container spacing={3}>
+<%_ for (const col of columns) { -%>
+<%_ if (col.propertyName === 'id' || col.propertyName === 'createdAt' || col.propertyName === 'updatedAt' || col.propertyName === 'deletedAt') continue; -%>
+                        <Grid item xs={12}>
+<%_ if (col.dbType === 'boolean') { -%>
+                            <RHFSwitch name="<%= col.propertyName %>" label="<%= col.label %>" />
+<%_ } else if (col.dbType === 'enum' && col.enumValues) { -%>
+                            <RHFSelect
+                                name="<%= col.propertyName %>"
+                                label="<%= col.label %>"
+                                options={[
+<%_ for (const val of col.enumValues) { -%>
+                                    { value: '<%= val %>', label: '<%= val %>' },
+<%_ } -%>
+                                ]}
+                            />
+<%_ } else if (col.dbType === 'int' || col.dbType === 'float') { -%>
+                            <RHFTextField name="<%= col.propertyName %>" label="<%= col.label %>" type="number" />
+<%_ } else if (col.dbType === 'text') { -%>
+                            <RHFTextField name="<%= col.propertyName %>" label="<%= col.label %>" multiline rows={4} />
+<%_ } else { -%>
+                            <RHFTextField name="<%= col.propertyName %>" label="<%= col.label %>" />
+<%_ } -%>
+                        </Grid>
+<%_ } -%>
+                    </Grid>
+                </Box>
+
+                <Box sx={{ p: 2, borderTop: 1, borderColor: 'divider', bgcolor: 'background.neutral' }}>
+                    <Stack direction="row" spacing={2} justifyContent="flex-end">
+                        <Button variant="outlined" onClick={onClose}>Cancel</Button>
+                        <Button type="submit" variant="contained" disabled={isSubmitting}>
+                            {isEdit ? 'Save Changes' : 'Create <%= entityPascal %>'}
+                        </Button>
+                    </Stack>
+                </Box>
+            </FormContainer>
+        </Drawer>
+    );
+}

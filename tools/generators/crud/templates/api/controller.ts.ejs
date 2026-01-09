@@ -1,0 +1,82 @@
+import { Controller } from '@nestjs/common';
+<% if (implementationType === 'nest-crud') { -%>
+import { Crud, CrudController } from '@ackplus/nest-crud';
+import { <%= entityPascal %>Entity } from './<%= entityFile %>.entity';
+import { <%= entityPascal %>Service } from './<%= entityFile %>.service';
+import { Create<%= entityPascal %>Dto } from './dto/create-<%= entityFile %>.dto';
+import { Update<%= entityPascal %>Dto } from './dto/update-<%= entityFile %>.dto';
+<% if (swagger) { -%>
+import { ApiTags } from '@nestjs/swagger';
+<% } -%>
+
+<% if (swagger) { -%>
+@ApiTags('<%= entityPascal %>')
+<% } -%>
+@Crud({
+    model: { type: <%= entityPascal %>Entity },
+    dto: {
+        create: Create<%= entityPascal %>Dto,
+        update: Update<%= entityPascal %>Dto,
+    },
+})
+@Controller('<%= route %>')
+export class <%= entityPascal %>Controller implements CrudController<<%= entityPascal %>Entity> {
+    constructor(public service: <%= entityPascal %>Service) {}
+}
+<% } else { -%>
+import { Get, Post, Patch, Delete, Body, Param } from '@nestjs/common';
+import { <%= entityPascal %>Service } from './<%= entityFile %>.service';
+import { Create<%= entityPascal %>Dto } from './dto/create-<%= entityFile %>.dto';
+import { Update<%= entityPascal %>Dto } from './dto/update-<%= entityFile %>.dto';
+<% if (swagger) { -%>
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
+<% } -%>
+
+<% if (swagger) { -%>
+@ApiTags('<%= entityPascal %>')
+<% } -%>
+@Controller('<%= route %>')
+export class <%= entityPascal %>Controller {
+    constructor(private readonly service: <%= entityPascal %>Service) {}
+
+    @Get()
+    <%_ if (swagger) { -%>
+    @ApiOperation({ summary: 'Get all <%= pluralKebab %>' })
+    <%_ } -%>
+    findAll() {
+        return this.service.findAll();
+    }
+
+    @Get(':id')
+    <%_ if (swagger) { -%>
+    @ApiOperation({ summary: 'Get one <%= entityPascal %>' })
+    <%_ } -%>
+    findOne(@Param('id') id: string) {
+        return this.service.findOne(id);
+    }
+
+    @Post()
+    <%_ if (swagger) { -%>
+    @ApiOperation({ summary: 'Create <%= entityPascal %>' })
+    <%_ } -%>
+    create(@Body() dto: Create<%= entityPascal %>Dto) {
+        return this.service.create(dto);
+    }
+
+    @Patch(':id')
+    <%_ if (swagger) { -%>
+    @ApiOperation({ summary: 'Update <%= entityPascal %>' })
+    <%_ } -%>
+    update(@Param('id') id: string, @Body() dto: Update<%= entityPascal %>Dto) {
+        return this.service.update(id, dto);
+    }
+
+    @Delete(':id')
+    <%_ if (swagger) { -%>
+    @ApiOperation({ summary: 'Delete <%= entityPascal %>' })
+    <%_ } -%>
+    delete(@Param('id') id: string) {
+        return this.service.delete(id);
+    }
+}
+<% } -%>

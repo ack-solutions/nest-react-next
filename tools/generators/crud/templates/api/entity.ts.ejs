@@ -1,0 +1,20 @@
+import { Column, Entity } from 'typeorm';
+<% if (swagger) { -%>
+import { ApiProperty } from '@nestjs/swagger';
+<% } -%>
+import { CoreEntity } from '../../core/typeorm/core.entity';
+<% if (enumColumns.length > 0) { -%>
+import { <%= enumColumns.map(c => c.enumTypeName).join(', ') %> } from '@libs/types';
+<% } -%>
+
+@Entity('<%= tableName %>')
+export class <%= entityPascal %>Entity extends CoreEntity {
+<% for (const col of columns) { -%>
+    <%_ if (swagger) { -%>
+    <%- col.swaggerDecorator %>
+    <%_ } -%>
+    @Column(<%= col.decoratorArgs %>)
+    <%= col.propertyName %><%= col.optional ? '?' : '' %>: <%= col.dbType === 'enum' ? col.enumTypeName : col.tsType %>;
+
+<% } -%>
+}

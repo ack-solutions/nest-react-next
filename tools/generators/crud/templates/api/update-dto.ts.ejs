@@ -1,0 +1,4 @@
+import { PartialType } from '@nestjs/mapped-types';
+import { Create<%= entityPascal %>Dto } from './create-<%= entityFile %>.dto';
+
+export class Update<%= entityPascal %>Dto extends PartialType(Create<%= entityPascal %>Dto) {}

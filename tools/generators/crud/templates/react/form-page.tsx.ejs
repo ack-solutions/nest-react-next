@@ -1,0 +1,139 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useCreate<%= entityPascal %>, useUpdate<%= entityPascal %>, use<%= entityPascal %> } from '@libs/react-shared';
+import { I<%= entityPascal %> } from '@libs/types';
+import { Box, Button, Card, CardContent, Divider, Grid, Stack, Typography } from '@mui/material';
+import { useCallback, useEffect, useMemo } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate, useParams } from 'react-router-dom';
+import * as Yup from 'yup';
+
+import { FormContainer, RHFTextField, RHFSwitch, RHFSelect } from '../../form';
+import { PATH_DASHBOARD } from '../../routes/paths';
+
+export default function AddEdit<%= entityPascal %>Form() {
+    const navigate = useNavigate();
+    const { id } = useParams();
+    const isEdit = !!id;
+
+    const { data: current<%= entityPascal %> } = use<%= entityPascal %>(id || '');
+
+    const createMutation = useCreate<%= entityPascal %>();
+    const updateMutation = useUpdate<%= entityPascal %>();
+
+    const defaultValues = useMemo(
+        () => ({
+<%_ for (const col of columns) { -%>
+<%_ if (col.propertyName === 'id' || col.propertyName === 'createdAt' || col.propertyName === 'updatedAt' || col.propertyName === 'deletedAt') continue; -%>
+<%_ if (col.dbType === 'boolean') { -%>
+            <%= col.propertyName %>: false,
+<%_ } else if (col.dbType === 'int' || col.dbType === 'float') { -%>
+            <%= col.propertyName %>: 0,
+<%_ } else { -%>
+            <%= col.propertyName %>: '',
+<%_ } -%>
+<%_ } -%>
+        }),
+        []
+    );
+
+    const New<%= entityPascal %>Schema = Yup.object().shape({
+<%_ for (const col of columns) { -%>
+<%_ if (col.propertyName === 'id' || col.propertyName === 'createdAt' || col.propertyName === 'updatedAt' || col.propertyName === 'deletedAt') continue; -%>
+<%_ if (!col.optional) { -%>
+        <%= col.propertyName %>: Yup.<%= col.dbType === 'int' || col.dbType === 'float' ? 'number' : (col.dbType === 'boolean' ? 'boolean' : 'string') %>().required('<%= col.label %> is required'),
+<%_ } -%>
+<%_ } -%>
+    });
+
+    const methods = useForm({
+        resolver: yupResolver(New<%= entityPascal %>Schema),
+        defaultValues,
+    });
+
+    const {
+        reset,
+        handleSubmit,
+        formState: { isSubmitting },
+    } = methods;
+
+    useEffect(() => {
+        if (isEdit && current<%= entityPascal %>) {
+            reset(current<%= entityPascal %>);
+        }
+        if (!isEdit) {
+            reset(defaultValues);
+        }
+    }, [isEdit, current<%= entityPascal %>, reset, defaultValues]);
+
+    const onSubmit = async (data: any) => {
+        try {
+            if (isEdit && id) {
+                await updateMutation.mutateAsync({ id, data });
+            } else {
+                await createMutation.mutateAsync(data);
+            }
+            navigate(PATH_DASHBOARD.<%= entityCamel %>.root);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    return (
+        <FormContainer
+            formContext={methods}
+            onSuccess={handleSubmit(onSubmit)}
+            formProps={{ id: 'add-edit-<%= entityFile %>' }}
+        >
+            <Card>
+                <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                        {isEdit ? 'Edit <%= entityPascal %>' : 'New <%= entityPascal %>'}
+                    </Typography>
+
+                    <Grid container spacing={3}>
+<%_ for (const col of columns) { -%>
+<%_ if (col.propertyName === 'id' || col.propertyName === 'createdAt' || col.propertyName === 'updatedAt' || col.propertyName === 'deletedAt') continue; -%>
+                        <Grid item xs={12} md={6}>
+<%_ if (col.dbType === 'boolean') { -%>
+                            <RHFSwitch name="<%= col.propertyName %>" label="<%= col.label %>" />
+<%_ } else if (col.dbType === 'enum' && col.enumValues) { -%>
+                            <RHFSelect
+                                name="<%= col.propertyName %>"
+                                label="<%= col.label %>"
+                                options={[
+<%_ for (const val of col.enumValues) { -%>
+                                    { value: '<%= val %>', label: '<%= val %>' },
+<%_ } -%>
+                                ]}
+                            />
+<%_ } else if (col.dbType === 'int' || col.dbType === 'float') { -%>
+                            <RHFTextField name="<%= col.propertyName %>" label="<%= col.label %>" type="number" />
+<%_ } else if (col.dbType === 'text') { -%>
+                            <RHFTextField name="<%= col.propertyName %>" label="<%= col.label %>" multiline rows={4} />
+<%_ } else { -%>
+                            <RHFTextField name="<%= col.propertyName %>" label="<%= col.label %>" />
+<%_ } -%>
+                        </Grid>
+<%_ } -%>
+                    </Grid>
+
+                    <Stack direction="row" spacing={2} sx={{ mt: 3 }} justifyContent="flex-end">
+                        <Button
+                            variant="outlined"
+                            onClick={() => navigate(PATH_DASHBOARD.<%= entityCamel %>.root)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="contained"
+                            type="submit"
+                            disabled={isSubmitting}
+                        >
+                            {isEdit ? 'Save Changes' : 'Create <%= entityPascal %>'}
+                        </Button>
+                    </Stack>
+                </CardContent>
+            </Card>
+        </FormContainer>
+    );
+}

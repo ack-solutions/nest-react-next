@@ -1,0 +1,17 @@
+import { IBaseEntity } from './base-entity';
+<% if (enumColumns.length > 0) { -%>
+
+<% for (const col of enumColumns) { -%>
+export enum <%= col.enumTypeName %> {
+<% for (const val of col.enumValues) { -%>
+    <%= val.toUpperCase() %> = '<%= val %>',
+<% } -%>
+}
+
+<% } -%>
+<% } -%>
+export interface I<%= entityPascal %> extends IBaseEntity {
+<% for (const col of columns) { -%>
+    <%= col.propertyName %><%= col.optional ? '?' : '' %>: <%= col.tsType %>;
+<% } -%>
+}

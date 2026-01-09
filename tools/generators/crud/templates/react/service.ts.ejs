@@ -1,0 +1,10 @@
+import { BaseApiService } from './base-api.service';
+import { I<%= entityPascal %> } from '@libs/types';
+
+class <%= entityPascal %>ServiceClass extends BaseApiService<I<%= entityPascal %>> {
+    constructor() {
+        super('/<%= route %>');
+    }
+}
+
+export const <%= entityCamel %>Service = new <%= entityPascal %>ServiceClass();

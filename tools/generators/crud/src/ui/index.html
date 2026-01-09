@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+    <style>
+        :root {
+            --bg: #0f0f0f;
+            --bg2: #1a1a1a;
+            --bg3: #252525;
+            --text: #e5e5e5;
+            --muted: #888;
+            --primary: #646cff;
+            --primary-hover: #535bf2;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --border: #333;
+            --radius: 6px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.4;
+            min-height: 100vh;
+            font-size: 14px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+        h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+        h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .subtitle { color: var(--muted); margin-bottom: 1rem; font-size: 0.9rem; }
+
+        .card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .card-header {
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header h2 { margin: 0; }
+
+        .form-group { margin-bottom: 0.75rem; }
+        .form-label { display: block; margin-bottom: 0.25rem; font-weight: 500; font-size: 0.85rem; }
+        .form-label.required::after { content: ' *'; color: var(--error); }
+        .form-input, .form-select {
+            width: 100%;
+            padding: 0.5rem;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .form-hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+
+        .checkbox-group { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .checkbox-label input { width: 16px; height: 16px; accent-color: var(--primary); }
+        .checkbox-label small { display: block; font-size: 0.75rem; }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-secondary { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: #2a2a2a; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-warning { background: var(--warning); color: black; }
+        .btn-danger { background: var(--error); color: white; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.8rem; }
+        .btn-group { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; }
+
+        .presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .preset-btn {
+            padding: 0.25rem 0.5rem;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+        .preset-btn:hover { border-color: var(--primary); }
+        .preset-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th, td { padding: 0.5rem; text-align: left; border-bottom: 1px solid var(--border); }
+        th { font-weight: 600; color: var(--muted); font-size: 0.8rem; }
+        td input, td select {
+            padding: 0.25rem 0.5rem;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text);
+            width: 100%;
+            font-size: 0.85rem;
+        }
+        td input[type="checkbox"] { width: auto; }
+
+        .empty-state { text-align: center; padding: 1.5rem; color: var(--muted); font-size: 0.9rem; }
+
+        .log-viewer {
+            background: #0a0a0a;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.75rem;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.8rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .log-entry { padding: 0.15rem 0; }
+        .log-success { color: var(--success); }
+        .log-error { color: var(--error); }
+        .log-warning { color: var(--warning); }
+
+        .step-nav { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; }
+        .step-btn {
+            padding: 0.4rem 0.8rem;
+            background: var(--bg3);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        .step-btn.active { border-color: var(--primary); color: var(--text); background: rgba(100, 108, 255, 0.1); }
+        .step-btn.completed { border-color: var(--success); color: var(--success); }
+
+        .hidden { display: none !important; }
+
+        .file-list { display: flex; flex-direction: column; gap: 0.1rem; max-height: 500px; overflow-y: auto; }
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.75rem;
+            background: var(--bg3);
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 0.8rem;
+            border: 1px solid transparent;
+        }
+        .file-item:hover { background: #2a2a2a; }
+        .file-item.active { border-color: var(--primary); background: rgba(100, 108, 255, 0.1); }
+        .file-item .action { color: var(--success); font-weight: bold; width: 15px; }
+
+        .preview-container { display: grid; grid-template-columns: 300px 1fr; gap: 1rem; }
+        #monacoContainer { height: 500px; border: 1px solid var(--border); border-radius: var(--radius); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CRUD Generator</h1>
+
+        <div class="step-nav">
+            <button class="step-btn active" data-step="1">1. Configuration</button>
+            <button class="step-btn" data-step="2">2. Columns</button>
+            <button class="step-btn" data-step="3">3. Preview</button>
+        </div>
+
+        <!-- Step 1: Basic Info -->
+        <div id="step-1" class="step">
+            <div class="card">
+                <div class="card-header"><h2>Entity Details</h2></div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label required">Entity Name</label>
+                        <input type="text" id="entityName" class="form-input" placeholder="e.g. Product, BlogPost">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">API Route</label>
+                        <input type="text" id="route" class="form-input" placeholder="Auto-generated">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Module Name</label>
+                        <input type="text" id="moduleName" class="form-input" placeholder="Same as entity if empty">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Options</h2>
+                </div>
+                <div class="form-grid">
+                     <div class="form-group">
+                        <label class="form-label">View Type (Admin)</label>
+                        <select id="viewType" class="form-select">
+                            <option value="page">Full Page (Form)</option>
+                            <option value="dialog">Dialog (Modal)</option>
+                            <option value="drawer">Drawer (Side Panel)</option>
+                        </select>
+                        <p class="form-hint">How the Add/Edit form should be presented.</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Backend Strategy</label>
+                        <select id="implementationType" class="form-select">
+                            <option value="nest-crud">Use @ackplus/nest-crud</option>
+                            <option value="custom">Custom Service</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="outputApi" checked>
+                            <span>API (NestJS)</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="outputAdmin" checked>
+                            <span>Admin (React)</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="outputWeb">
+                            <span>Web (Next)</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="optSwagger">
+                            <span>Swagger</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="goToStep(2)">Next: Columns</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Columns -->
+        <div id="step-2" class="step hidden">
+            <div class="card">
+                <div class="card-header" style="justify-content: flex-start; gap: 1rem; padding-bottom: 0.5rem;">
+                     <h2>Presets:</h2>
+                     <div class="presets" id="presets"></div>
+                </div>
+            </div>
+
+            <div class="card" style="padding: 0;">
+                <div style="padding: 0.75rem; border-bottom: 1px solid var(--border); display: flex; gap: 0.5rem; align-items: center;">
+                    <strong style="margin-right: 0.5rem;">New Column:</strong>
+                    <input type="text" id="newColumnName" class="form-input" placeholder="Column name..." style="width: 250px">
+                    <button class="btn btn-secondary btn-sm" onclick="addColumn()">Add</button>
+                </div>
+                <div id="columnsTable" style="margin: 0; border: none; border-radius: 0;"></div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="goToStep(1)">Back</button>
+                <button class="btn btn-primary" onclick="goToStep(3)">Next: Preview</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Preview & Generate -->
+        <div id="step-3" class="step hidden">
+            <div class="card" style="height: calc(100vh - 150px); display: flex; flex-direction: column;">
+                <div class="card-header">
+                     <h2>Code Preview</h2>
+                     <div class="btn-group" style="margin: 0;">
+                        <button class="btn btn-success btn-sm" onclick="generate(false)">Generate</button>
+                        <button class="btn btn-warning btn-sm" onclick="generate(true)">Force Overwrite</button>
+                    </div>
+                </div>
+                <div class="preview-container" style="flex: 1; min-height: 0;">
+                    <div class="file-list" id="fileList"></div>
+                    <div id="monacoContainer" style="height: 100%;"></div>
+                </div>
+                 <div id="logCard" class="hidden" style="margin-top: 1rem;">
+                    <div id="logViewer" class="log-viewer"></div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="goToStep(2)">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        const state = {
+            entityName: '',
+            route: '',
+            moduleName: '',
+            outputApps: { api: true, admin: true, web: false },
+            implementationType: 'nest-crud',
+            viewType: 'page',
+            swagger: false,
+            columns: [],
+            previewFiles: [],
+            presets: [],
+            columnTypes: []
+        };
+
+        let monacoEditor = null;
+
+        const $ = sel => document.querySelector(sel);
+        const $$ = sel => document.querySelectorAll(sel);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load metadata from server
+            try {
+                const meta = await fetch('/api/meta').then(r => r.json());
+                state.presets = meta.presets;
+                state.columnTypes = meta.columnTypes;
+                renderPresets();
+                renderColumns();
+            } catch (e) {
+                console.error('Failed to load meta', e);
+            }
+
+            // Event listeners
+            $('#entityName').addEventListener('input', e => state.entityName = e.target.value);
+            $('#route').addEventListener('input', e => state.route = e.target.value);
+            $('#moduleName').addEventListener('input', e => state.moduleName = e.target.value);
+            $('#outputApi').addEventListener('change', e => state.outputApps.api = e.target.checked);
+            $('#outputAdmin').addEventListener('change', e => state.outputApps.admin = e.target.checked);
+            $('#outputWeb').addEventListener('change', e => state.outputApps.web = e.target.checked);
+            $('#implementationType').addEventListener('change', e => state.implementationType = e.target.value);
+            $('#viewType').addEventListener('change', e => state.viewType = e.target.value);
+            $('#optSwagger').addEventListener('change', e => state.swagger = e.target.checked);
+            $('#newColumnName').addEventListener('keydown', e => { if (e.key === 'Enter') addColumn(); });
+            $$('.step-btn').forEach(btn => btn.addEventListener('click', () => goToStep(parseInt(btn.dataset.step))));
+
+            // Initialize Monaco
+            require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
+            require(['vs/editor/editor.main'], () => {
+                monacoEditor = monaco.editor.create($('#monacoContainer'), {
+                    value: '// Select a file from the list to preview',
+                    language: 'typescript',
+                    theme: 'vs-dark',
+                    readOnly: true,
+                    minimap: { enabled: false },
+                    fontSize: 12,
+                    lineNumbers: 'off',
+                    wordWrap: 'on'
+                });
+            });
+        });
+
+        function goToStep(step) {
+            if (step > 1 && !state.entityName.trim()) {
+                alert('Please enter an entity name');
+                return;
+            }
+            if (step > 2 && state.columns.length === 0) {
+                alert('Please add at least one column');
+                return;
+            }
+
+            $$('.step').forEach(s => s.classList.add('hidden'));
+            $(`#step-${step}`).classList.remove('hidden');
+
+            $$('.step-btn').forEach((btn, i) => {
+                btn.classList.remove('active', 'completed');
+                if (i + 1 === step) btn.classList.add('active');
+                else if (i + 1 < step) btn.classList.add('completed');
+            });
+
+            if (step === 3) loadPreview();
+        }
+
+        function renderPresets() {
+            const container = $('#presets');
+            container.innerHTML = state.presets.map(p =>
+                `<button class="preset-btn" data-preset="${p.id}" title="${p.description || ''}">${p.label}</button>`
+            ).join('');
+
+            container.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.addEventListener('click', () => addPreset(btn.dataset.preset));
+            });
+
+            updatePresetButtons();
+        }
+
+        function updatePresetButtons() {
+            $$('.preset-btn').forEach(btn => {
+                const preset = state.presets.find(p => p.id === btn.dataset.preset);
+                const used = state.columns.some(c => c.name === preset?.column?.name);
+                btn.disabled = used;
+            });
+        }
+
+        function addPreset(presetId) {
+            const preset = state.presets.find(p => p.id === presetId);
+            if (!preset) return;
+            state.columns.push({ ...preset.column });
+            renderColumns();
+            updatePresetButtons();
+        }
+
+        function addColumn() {
+            const input = $('#newColumnName');
+            const name = input.value.trim();
+            if (!name) return;
+
+            state.columns.push({
+                name,
+                dbType: 'string',
+                nullable: false,
+                unique: false
+            });
+
+            input.value = '';
+            renderColumns();
+            updatePresetButtons();
+        }
+
+        function removeColumn(index) {
+            state.columns.splice(index, 1);
+            renderColumns();
+            updatePresetButtons();
+        }
+
+        function updateColumn(index, field, value) {
+            state.columns[index][field] = value;
+            if (field === 'dbType') renderColumns();
+        }
+
+        function updateEnumValues(index, value) {
+            state.columns[index].enumValues = value.split(',').map(v => v.trim()).filter(Boolean);
+        }
+
+        function renderColumns() {
+            const container = $('#columnsTable');
+
+            if (state.columns.length === 0) {
+                container.innerHTML = '<div class="empty-state">No columns yet. Use presets above or add manually.</div>';
+                return;
+            }
+
+            let html = `<table>
+                <thead>
+                    <tr>
+                        <th style="width:30px">#</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Extra</th>
+                        <th style="width:40px; text-align:center">Null</th>
+                        <th style="width:40px; text-align:center">Uniq</th>
+                        <th style="width:30px"></th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+            state.columns.forEach((col, i) => {
+                let extra = '<span style="color:var(--muted)">-</span>';
+                if (col.dbType === 'enum') {
+                    extra = `<input type="text" placeholder="val1,val2" value="${(col.enumValues || []).join(',')}" onchange="updateEnumValues(${i}, this.value)">`;
+                } else if (col.dbType === 'string') {
+                    extra = `<input type="number" placeholder="len" style="width:60px" value="${col.length || ''}" onchange="updateColumn(${i}, 'length', parseInt(this.value) || undefined)">`;
+                }
+
+                html += `<tr>
+                    <td style="color:var(--muted)">${i + 1}</td>
+                    <td><input type="text" value="${col.name}" onchange="updateColumn(${i}, 'name', this.value)"></td>
+                    <td>
+                        <select onchange="updateColumn(${i}, 'dbType', this.value)">
+                            ${state.columnTypes.map(t => `<option value="${t}" ${col.dbType === t ? 'selected' : ''}>${t}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td>${extra}</td>
+                    <td style="text-align:center"><input type="checkbox" ${col.nullable ? 'checked' : ''} onchange="updateColumn(${i}, 'nullable', this.checked)"></td>
+                    <td style="text-align:center"><input type="checkbox" ${col.unique ? 'checked' : ''} onchange="updateColumn(${i}, 'unique', this.checked)"></td>
+                    <td><button class="btn btn-danger btn-sm" onclick="removeColumn(${i})">x</button></td>
+                </tr>`;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        async function loadPreview() {
+            const config = {
+                entityName: state.entityName,
+                route: state.route,
+                moduleName: state.moduleName,
+                outputApps: state.outputApps,
+                columns: state.columns,
+                implementationType: state.implementationType,
+                viewType: state.viewType,
+                swagger: state.swagger
+            };
+
+            try {
+                const res = await fetch('/api/preview', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ config })
+                });
+                state.previewFiles = await res.json();
+                renderFileList();
+                if (state.previewFiles.length > 0) showFile(0);
+            } catch (err) {
+                console.error('Preview error:', err);
+            }
+        }
+
+        function renderFileList() {
+            const container = $('#fileList');
+            container.innerHTML = state.previewFiles.map((f, i) =>
+                `<div class="file-item" onclick="showFile(${i})"><span class="action">${f.action === 'skipped' ? '!' : '+'}</span> ${f.path.split('/').pop()} <small style="color:var(--muted); margin-left:auto">${f.path.includes('apps/') ? 'app' : 'lib'}</small></div>`
+            ).join('');
+        }
+
+        function showFile(index) {
+            $$('.file-item').forEach((el, i) => el.classList.toggle('active', i === index));
+            const file = state.previewFiles[index];
+            if (monacoEditor && file) {
+                const lang = file.path.endsWith('.tsx') ? 'typescriptreact' : 'typescript';
+                monaco.editor.setModelLanguage(monacoEditor.getModel(), lang);
+                monacoEditor.setValue(file.content || '// No content');
+            }
+        }
+
+        async function generate(force = false) {
+            const config = {
+                entityName: state.entityName,
+                route: state.route,
+                moduleName: state.moduleName,
+                outputApps: state.outputApps,
+                columns: state.columns,
+                implementationType: state.implementationType,
+                viewType: state.viewType,
+                swagger: state.swagger
+            };
+
+            $('#logCard').classList.remove('hidden');
+            const logViewer = $('#logViewer');
+            logViewer.innerHTML = '<div class="log-entry">Starting generation...</div>';
+
+            try {
+                const res = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ config, options: { force } })
+                });
+
+                const results = await res.json();
+
+                logViewer.innerHTML = results.map(r => {
+                    const cls = r.action === 'created' ? 'log-success' :
+                                r.action === 'skipped' ? 'log-warning' : '';
+                    return `<div class="log-entry ${cls}">[${r.action}] ${r.path}${r.reason ? ' (' + r.reason + ')' : ''}</div>`;
+                }).join('');
+
+                logViewer.innerHTML += '<div class="log-entry log-success">Generation complete!</div>';
+            } catch (err) {
+                logViewer.innerHTML += `<div class="log-entry log-error">Error: ${err.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -11,7 +11,8 @@
         "build": "pnpm -C apps/api build && pnpm -C apps/web build && pnpm -C apps/admin build",
         "test": "pnpm -r test",
         "lint": "pnpm -r run lint",
-        "update-ackplus": "pnpm -r up --latest @ackplus/nest-auth @ackplus/nest-auth-client @ackplus/nest-auth-react @ackplus/nest-crud @ackplus/nest-crud-request @ackplus/nest-dynamic-templates @ackplus/react-tanstack-data-table @ackplus/nest-file-storage @ackplus/nest-seeder"
+        "update-ackplus": "pnpm -r up --latest @ackplus/nest-auth @ackplus/nest-auth-client @ackplus/nest-auth-react @ackplus/nest-crud @ackplus/nest-crud-request @ackplus/nest-dynamic-templates @ackplus/react-tanstack-data-table @ackplus/nest-file-storage @ackplus/nest-seeder",
+        "g:crud": "cd tools/generators/crud && pnpm install --silent && pnpm run dev"
     },
     "keywords": [],
     "author": "",
@@ -28,5 +29,6 @@
         "prettier": "^2.6.2",
         "ts-loader": "^9.5.4",
         "typescript": "5.9.3"
-    }
+    },
+    "packageManager": "pnpm@10.21.0+sha512.da3337267e400fdd3d479a6c68079ac6db01d8ca4f67572083e722775a796788a7a9956613749e000fac20d424b594f7a791a5f4e2e13581c5ef947f26968a40"
 }
