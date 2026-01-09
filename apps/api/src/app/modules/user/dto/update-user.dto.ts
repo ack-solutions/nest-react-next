@@ -26,13 +26,4 @@ export class UpdateUserDTO extends PartialType(User) {
     @IsArray()
     @IsOptional()
     roles?: string[];
-
-    @ApiProperty({
-        type: Boolean,
-        description: 'Enable or disable MFA for the user',
-    })
-    @IsBoolean()
-    @IsOptional()
-    isMfaEnabled?: boolean;
-
 }

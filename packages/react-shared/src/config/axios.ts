@@ -41,22 +41,6 @@ const getApiBaseUrl = (): string => {
 
 /**
  * ----------------------------------------
- * Token getter (browser only)
- * ----------------------------------------
- */
-const getTokenFromStorage = (): string | null => {
-    if (!isBrowser) return null;
-
-    try {
-        const token = localStorage.getItem('nest_auth_access_token');
-        return token || null;
-    } catch {
-        return null;
-    }
-};
-
-/**
- * ----------------------------------------
  * Helpers: detect binary/file-like objects
  * ----------------------------------------
  */
@@ -166,18 +150,6 @@ export const instanceApi: AxiosInstance = axios.create({
 instanceApi.interceptors.request.use((req: AxiosRequestConfig & any) => {
     // If you really need dynamic baseURL each request:
     req.baseURL = getApiBaseUrl();
-
-    // Ensure headers object exists
-    req.headers = req.headers ?? {};
-
-    if (isBrowser) {
-        const token = getTokenFromStorage();
-        if (token) {
-            req.headers.Authorization = `Bearer ${token}`;
-        } else {
-            delete req.headers.Authorization;
-        }
-    }
 
     // Transform params / body safely (non-mutating)
     if (req.params) req.params = convertMomentToISO(req.params);

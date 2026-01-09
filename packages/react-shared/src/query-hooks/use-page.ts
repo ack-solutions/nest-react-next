@@ -10,6 +10,7 @@ const pageService = PageService.getInstance<PageService>();
 export const usePage = () => {
     const {
         useGetMany,
+        fetchMany,
         useGetOne,
         useCreate,
         useUpdate,
@@ -32,6 +33,7 @@ export const usePage = () => {
     return {
         useGetBySlug,
         useGetManyPage: useGetMany,
+        useFetchManyPage: fetchMany,
         useGetPageById: useGetOne,
         useCreatePage: useCreate,
         useDeletePage: useDelete,

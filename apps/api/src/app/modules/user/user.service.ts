@@ -1,4 +1,4 @@
-import { UserService as NestAuthUserService, TenantService } from '@ackplus/nest-auth';
+import { MfaService, UserService as NestAuthUserService, TenantService } from '@ackplus/nest-auth';
 import { ID, PaginationResponse, IFindOneOptions } from '@ackplus/nest-crud';
 import {
     IChangeEmailInput,
@@ -42,6 +42,7 @@ export class UserService extends BaseService<User> {
 
         private tenantService: TenantService,
 
+        private nestAuthMfaService: MfaService,
         private configService: ConfigService,
 
     ) {
@@ -76,13 +77,6 @@ export class UserService extends BaseService<User> {
     }
 
     protected override async beforeUpdate(entity: Partial<UpdateUserDTO>) {
-        // Enable or disable MFA for the user
-        if (has(entity, 'isMfaEnabled')) {
-            const { authUserId } = entity;
-            if (authUserId) {
-                await this.nestAuthUserService.updateUser(authUserId, { isMfaEnabled: entity.isMfaEnabled });
-            }
-        }
 
         // Check if the roles are valid for the user
         if (has(entity, 'roles') && entity.roles) {
@@ -278,4 +272,33 @@ export class UserService extends BaseService<User> {
         return new SuccessDTO({ message: 'Your account has been successfully deleted. If this was a mistake, please contact support.' });
     }
 
+    async canToggleMfa() {
+        const config = await this.nestAuthMfaService.getMfaConfig();
+        const access = config.enabled && !config.required && config.methods?.length > 0;
+        const avaibleMethods = config.methods?.filter(Boolean);
+        return { access, avaibleMethods };
+    }
+
+    async toggleMfa(userId: string, enable: boolean) {
+        const authUserId = await this.userRepository.findOne({
+            where: { id: userId },
+            select: ['authUserId'],
+        });
+        if (enable) {
+            return this.nestAuthMfaService.enableMFA(authUserId.authUserId);
+        }
+        return this.nestAuthMfaService.disableMFA(authUserId.authUserId);
+    }
+
+    async getTotpDevices(userId: string) {
+        const authUserId = await this.userRepository.findOne({
+            where: { id: userId },
+            select: ['authUserId'],
+        });
+        return this.nestAuthMfaService.getTotpDevices(authUserId.authUserId);
+    }
+
+    async removeDevice(deviceId: string) {
+        return this.nestAuthMfaService.removeDevice(deviceId);
+    }
 }

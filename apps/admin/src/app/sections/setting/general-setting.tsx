@@ -90,8 +90,6 @@ const GeneralSetting = () => {
         limit: 20,
     });
 
-    console.log(settingsData);
-
 
     const handleSubmit = useCallback((values?: any) => {
         updateSettings(values).then(() => {

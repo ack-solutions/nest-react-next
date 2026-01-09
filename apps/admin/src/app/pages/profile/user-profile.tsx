@@ -14,7 +14,8 @@ import {
     CardContent,
     styled,
 } from '@mui/material';
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import { Avatar, Icon, InfoCard, Page } from '../../components';
 import { IconEnum } from '../../components/icons/icons';
@@ -27,6 +28,8 @@ import UserChangePhone from '../../sections/profile/user-change-phone';
 import TotpManagement from '../../sections/profile/totp-management';
 import { useToasty } from '../../hook';
 
+const SECTION_PARAM = 'section';
+const DEFAULT_SECTION = 'contact';
 
 const ListItemButtonStyle = styled(ListItemButton)(({ theme }) => ({
     borderRadius: 12,
@@ -68,8 +71,33 @@ const profileSections = [
     },
 ];
 
+const validSectionIds = profileSections.map((s) => s.id);
+
 function UserProfile() {
-    const [activeSection, setActiveSection] = useState('contact');
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    // Get active section from URL, with validation and fallback to default
+    const activeSection = useMemo(() => {
+        const sectionFromUrl = searchParams.get(SECTION_PARAM);
+        if (sectionFromUrl && validSectionIds.includes(sectionFromUrl)) {
+            return sectionFromUrl;
+        }
+        return DEFAULT_SECTION;
+    }, [searchParams]);
+
+    // Update URL when section changes
+    const setActiveSection = useCallback((sectionId: string) => {
+        setSearchParams((prev) => {
+            const newParams = new URLSearchParams(prev);
+            if (sectionId === DEFAULT_SECTION) {
+                newParams.delete(SECTION_PARAM);
+            } else {
+                newParams.set(SECTION_PARAM, sectionId);
+            }
+            return newParams;
+        }, { replace: true });
+    }, [setSearchParams]);
+
     const { currentUser, authUser, refetchUser } = useAuth();
     const { showToasty } = useToasty();
     const [openEditDialog, setOpenEditDialog] = useState(false);

@@ -8,17 +8,19 @@ import { object, string } from 'yup';
 
 import { FormContainer, RHFTextField } from '../../form';
 import { PATH_AUTH } from '../../routes/paths';
+import { Icon } from '../../components';
+import { IconEnum } from '../../components/icons/icons';
 
 
 interface ForgotPasswordFormProps {
-    onSubmit: (value, reset) => void
+    onSubmit: (value: { email: string }, reset: () => void) => void;
 }
 
 const validationSchema = object().shape({
     email: string()
         .label('Email')
-        .required()
-        .matches(patterns.email, 'Please enter a valid email'),
+        .required('Please enter your email address')
+        .matches(patterns.email, 'Please enter a valid email address'),
 });
 
 function ForgotPasswordForm({ onSubmit }: ForgotPasswordFormProps) {
@@ -28,7 +30,7 @@ function ForgotPasswordForm({ onSubmit }: ForgotPasswordFormProps) {
     const { formState: { errors, isSubmitting }, reset } = formContext;
 
     const handleSubmitForm = useCallback(
-        async (value) => {
+        async (value: { email: string }) => {
             if (onSubmit) {
                 await onSubmit(value, reset);
             }
@@ -39,14 +41,42 @@ function ForgotPasswordForm({ onSubmit }: ForgotPasswordFormProps) {
     return (
         <Stack spacing={3}>
             <Box>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        mb: 3,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            p: 2,
+                            borderRadius: 2,
+                            bgcolor: 'primary.lighter',
+                            color: 'primary.main',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Icon
+                            icon={IconEnum.LockKeyhole}
+                            width={32}
+                            height={32}
+                        />
+                    </Box>
+                </Box>
+
                 <Typography
                     variant="h4"
+                    textAlign="center"
                     gutterBottom
                 >
-                    Forgot Password
+                    Forgot your password?
                 </Typography>
-                <Typography>
-                    Enter your email for password recovery.
+                <Typography textAlign="center" color="text.secondary">
+                    Enter your email address and we'll send you a verification code to reset your password.
                 </Typography>
             </Box>
 
@@ -70,7 +100,8 @@ function ForgotPasswordForm({ onSubmit }: ForgotPasswordFormProps) {
                         type="email"
                         name="email"
                         label="Email address"
-                        required
+                        placeholder="Enter your email"
+                        autoComplete="email"
                     />
 
                     <Button
@@ -79,7 +110,7 @@ function ForgotPasswordForm({ onSubmit }: ForgotPasswordFormProps) {
                         variant="contained"
                         loading={isSubmitting}
                     >
-                        Submit
+                        Send Reset Code
                     </Button>
                 </Stack>
             </FormContainer>
@@ -88,19 +119,15 @@ function ForgotPasswordForm({ onSubmit }: ForgotPasswordFormProps) {
                 direction="row"
                 spacing={0.5}
                 justifyContent="center"
-                mt={2}
             >
-                <Typography sx={{ color: 'text.secondary' }}>Back to</Typography>
-                <Link
+                <Button
                     component={RouterLink}
                     to={PATH_AUTH.login}
-                    sx={{
-                        textDecoration: 'underline',
-                        color: 'primary.main',
-                    }}
+                    startIcon={<Icon icon={IconEnum.ArrowLeft} />}
+                    variant="text"
                 >
-                    Login
-                </Link>
+                    Back to Sign In
+                </Button>
             </Stack>
         </Stack>
     );

@@ -233,9 +233,9 @@ export class PageSeeder implements Seeder {
 
         if (pagesToSeed.length > 0) {
             await this.pageRepository.save(pagesToSeed);
-            console.log(`✅ Seeded ${pagesToSeed.length} pages: ${pagesToSeed.map(p => p.title).join(', ')}`);
+            console.info(`✅ Seeded ${pagesToSeed.length} pages: ${pagesToSeed.map(p => p.title).join(', ')}`);
         } else {
-            console.log('✅ All default pages already exist');
+            console.info('✅ All default pages already exist');
         }
 
         return pagesToSeed;
@@ -256,7 +256,7 @@ export class PageSeeder implements Seeder {
             .where('slug IN (:...slugs)', { slugs: defaultSlugs })
             .execute();
 
-        console.log('🗑️ Dropped default pages');
+        console.info('🗑️ Dropped default pages');
     }
 
 }

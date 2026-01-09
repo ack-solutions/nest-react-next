@@ -28,7 +28,7 @@ function ResetPassword() {
                 if (token) {
                     navigate(`${PATH_AUTH.resetPassword}?resetToken=${token}`);
                 } else {
-                    showToasty('Token not received, please try again.', 'error');
+                    showToasty('Unable to verify code. Please try again.', 'error');
                 }
             } catch (error) {
                 showToasty(errorMessage(error), 'error');
@@ -41,18 +41,18 @@ function ResetPassword() {
         [email, navigate, showToasty, verifyForgotPasswordOtp],
     );
 
-    const handleReSentOtp = useCallback(
+    const handleResendOtp = useCallback(
         async (setError?: any) => {
             if (!email) {
                 setError?.('afterSubmit', {
                     type: 'manual',
-                    message: 'Email is required to resend OTP',
+                    message: 'Email address is required to resend the code',
                 });
                 return;
             }
             try {
                 await forgotPassword({ email });
-                showToasty('Successfully Resend OTP');
+                showToasty('A new verification code has been sent to your email');
             } catch (error) {
                 setError?.('afterSubmit', {
                     type: 'manual',
@@ -63,7 +63,7 @@ function ResetPassword() {
         [email, forgotPassword, showToasty],
     );
 
-    const handleBackLogin = useCallback(
+    const handleBackToLogin = useCallback(
         () => {
             navigate(PATH_AUTH.login);
         },
@@ -77,8 +77,8 @@ function ResetPassword() {
             ) : (
                 <OtpVerification
                     onSubmit={handleOTPVerify}
-                    onResent={handleReSentOtp}
-                    onGoBack={handleBackLogin}
+                    onResent={handleResendOtp}
+                    onGoBack={handleBackToLogin}
                     values={email ? { email } : undefined}
                 />
             )}

@@ -4,7 +4,7 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "dependencies": {
-    "@ackplus/nest-auth": "1.1.58",
+    "@ackplus/nest-auth": "1.1.62",
     "@ackplus/nest-crud-request": "^1.1.18",
     "@ackplus/nest-file-storage": "^1.1.17",
     "@nestjs/swagger": "^11.2.0",

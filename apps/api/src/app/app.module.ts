@@ -62,6 +62,10 @@ import { NestAuthConfigService } from './core/service/nest-auth-config.service';
         NestDynamicTemplatesModule.forRoot({
             isGlobal: true,
             enginesOptions: {
+                globalValues: {
+                    appName: process.env.APP_NAME || '',
+                    appUrl: process.env.FRONT_URL || '',
+                },
                 filters: templateFilters,
             },
         }),

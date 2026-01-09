@@ -1,15 +1,12 @@
 import { useRole } from '@libs/react-shared';
-import { IRole, PermissionsEnum, RoleGuardEnum } from '@libs/types';
+import { IRole, PermissionsEnum } from '@libs/types';
 import { toDisplayDate } from '@libs/utils';
 import { Card, Button } from '@mui/material';
 import { startCase } from 'lodash';
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import {
-    DataTable,
-    DataTableColumn,
-    DataTableHandle,
     Page,
     TableActionMenu,
 } from '../../components';
@@ -17,10 +14,13 @@ import { useConfirm } from '../../contexts/confirm-dialog-context';
 import { useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import { useHasPermission, withRequirePermission } from '@ackplus/nest-auth-react';
+import DataGrid from '@admin/app/components/data-grid/data-grid';
+import { DataTableApi, DataTableColumn } from '@ackplus/react-tanstack-data-table';
+import { HEADER } from '@admin/app/layout/config';
 
 
 function RoleList() {
-    const datatableRef = useRef<DataTableHandle>(null);
+    const datatableRef = useRef<DataTableApi<IRole>>(null);
     const navigate = useNavigate();
     const confirmDialog = useConfirm();
     const { showToasty } = useToasty();
@@ -29,13 +29,12 @@ function RoleList() {
     const canEdit = useHasPermission(PermissionsEnum.UPDATE_ROLES);
     const canDelete = useHasPermission(PermissionsEnum.DELETE_ROLES);
 
-    console.log(canCreate, canEdit, canDelete);
     const {
         useGetRoles,
         useDeleteRole,
     } = useRole();
 
-    const { data, isLoading } = useGetRoles({});
+    const { data, isLoading, refetch } = useGetRoles({});
     const { mutateAsync: deleteRole } = useDeleteRole();
 
     const handleDelete = useCallback((row: IRole) => () => {
@@ -46,6 +45,7 @@ function RoleList() {
             try {
                 await deleteRole(row.id);
                 showToasty('Role deleted successfully');
+                refetch();
             } catch (error) {
                 showToasty(error || 'Failed to delete role', 'error');
             }
@@ -56,37 +56,45 @@ function RoleList() {
         confirmDialog,
         deleteRole,
         showToasty,
+        refetch,
     ]);
 
+    const handleRowClick = useCallback((_event: React.MouseEvent<HTMLTableRowElement>, row: any) => {
+        if (canEdit) {
+            navigate(PATH_DASHBOARD.users.roles.edit(row.original.id));
+        }
+    }, [canEdit, navigate]);
 
-    const columns: DataTableColumn<IRole>[] = [
+    const columns: DataTableColumn<IRole>[] = useMemo(() => [
         {
-            name: 'name',
-            label: 'Name',
-            render: (row) => startCase(row?.name),
+            accessorKey: 'name',
+            header: 'Name',
+            enableGlobalFilter: true,
+            enableSorting: true,
+            cell: ({ row }) => startCase(row.original?.name),
         },
         {
-            name: 'createdAt',
-            label: 'Created At',
-            render: (row) => toDisplayDate(row?.createdAt),
+            accessorKey: 'createdAt',
+            header: 'Created At',
+            enableSorting: true,
+            cell: ({ row }) => toDisplayDate(row.original?.createdAt),
         },
         {
-            name: 'action',
-            label: 'Action',
-            props: {
-                sx: {
-                    width: 120,
-                },
-            },
-            render: (row: IRole) => (
+            id: 'action',
+            header: 'Action',
+            enablePinning: false,
+            enableHiding: false,
+            enableResizing: false,
+            maxSize: 80,
+            cell: ({ row }) => (
                 <TableActionMenu
-                    row={row}
-                    {...(canEdit && { onEdit: () => navigate(PATH_DASHBOARD.users.roles.edit(row.id)) })}
-                    {...(!row?.isSystem && canDelete && { onDelete: handleDelete(row) })}
+                    row={row.original}
+                    {...(canEdit && { onEdit: () => navigate(PATH_DASHBOARD.users.roles.edit(row.original.id)) })}
+                    {...(!row.original?.isSystem && canDelete && { onDelete: handleDelete(row.original) })}
                 />
             ),
         },
-    ];
+    ], [canEdit, canDelete, handleDelete, navigate]);
 
     return (
         <Page
@@ -103,17 +111,19 @@ function RoleList() {
                 { name: 'List' },
             ]}
         >
-
             <Card>
-                <DataTable
+                <DataGrid
                     ref={datatableRef}
-                    data={data || null}
-                    isLoading={isLoading}
-                    totalRow={data?.length}
-                    hasFilter
-                    hideSearch
                     columns={columns}
-
+                    idKey="id"
+                    data={data || []}
+                    totalRow={data?.length || 0}
+                    loading={isLoading}
+                    dataMode="client"
+                    stateKey="rolelist"
+                    maxHeight={`calc(100svh - ${HEADER.H_DESKTOP}px  - ${280}px)`}
+                    enablePagination
+                    onRowClick={canEdit ? handleRowClick : undefined}
                     extraFilter={canCreate && (
                         <Button
                             component={Link}

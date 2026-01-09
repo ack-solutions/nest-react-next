@@ -1,10 +1,14 @@
+// Safely access process.env to avoid ReferenceError in environments where process is undefined (e.g. pure Vite without polyfill)
+const getEnv = (key: string) => {
+    if (typeof process !== 'undefined' && process.env) {
+        return process.env[key];
+    }
+    return '';
+};
+
 export const config = {
-    apiUrl: ((import.meta as any).env && (import.meta as any).env.VITE_API_URL) ||
-        process.env.NEXT_PUBLIC_APP_API_URL,
-    frontUrl: ((import.meta as any).env && (import.meta as any).env.VITE_FRONT_URL) ||
-        process.env.NEXT_PUBLIC_APP_FRONT_URL,
-    adminUrl: ((import.meta as any).env && (import.meta as any).env.VITE_ADMIN_URL) ||
-        process.env.NEXT_PUBLIC_APP_ADMIN_URL,
-    version: ((import.meta as any).env && (import.meta as any).env.VITE_VERSION) ||
-        process.env.NEXT_PUBLIC_APP_VERSION,
+    apiUrl: getEnv('VITE_API_URL') || getEnv('NEXT_PUBLIC_APP_API_URL') || getEnv('EXPO_PUBLIC_API_URL'),
+    frontUrl: getEnv('VITE_FRONT_URL') || getEnv('NEXT_PUBLIC_APP_FRONT_URL') || getEnv('EXPO_PUBLIC_FRONT_URL'),
+    adminUrl: getEnv('VITE_ADMIN_URL') || getEnv('NEXT_PUBLIC_APP_ADMIN_URL') || getEnv('EXPO_PUBLIC_ADMIN_URL'),
+    version: getEnv('VITE_VERSION') || getEnv('NEXT_PUBLIC_APP_VERSION') || getEnv('EXPO_PUBLIC_VERSION'),
 };
