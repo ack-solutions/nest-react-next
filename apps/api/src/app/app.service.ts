@@ -1,13 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
-import { getConfigValue } from '@libs/app-config';
-
-
 @Injectable()
 export class AppService {
 
     getData(): { message: string } {
-        const appName = getConfigValue<string>('app.name', 'API');
+        const appName = process.env.APP_NAME || 'API';
         return ({ message: `Hello ${appName}` });
     }
 

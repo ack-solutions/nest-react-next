@@ -63,6 +63,7 @@ import { NestAuthConfigService } from './core/service/nest-auth-config.service';
             isGlobal: true,
             enginesOptions: {
                 globalValues: {
+                    currentYear: new Date().getFullYear(),
                     appName: process.env.APP_NAME || '',
                     appUrl: process.env.FRONT_URL || '',
                 },

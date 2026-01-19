@@ -10,7 +10,7 @@ import React, {
     useState,
     ReactNode,
 } from 'react';
-import { IUser } from '@libs/types';
+import { IMessageResponse, IMfaDevice, IMfaStatusResponse, IToggleMfaRequest, ITotpSetupResponse, IUser, IVerifyTotpSetupRequest } from '@libs/types';
 import { AuthProvider as NestAuthClientProvider, AuthProviderProps as NestAuthClientProviderProps, useNestAuth } from '@ackplus/nest-auth-react';
 import type { AuthClient } from '@ackplus/nest-auth-react';
 import { UserService } from '../services';
@@ -69,6 +69,18 @@ export interface AuthContextValue {
     verifyForgotPasswordOtp: NestAuth['verifyForgotPasswordOtp'];
     resetPassword: NestAuth['resetPassword'];
     changePassword: NestAuth['changePassword'];
+    send2fa: NestAuth['send2fa'];
+    verify2fa: NestAuth['verify2fa'];
+    resetMfa: NestAuth['resetMfa'];
+
+    // TOTP / MFA Management
+    setupTotp: NestAuth['setupTotp'];
+    verifyTotpSetup: NestAuth['verifyTotpSetup'];
+    getMfaStatus: NestAuth['getMfaStatus'];
+    listTotpDevices: NestAuth['listTotpDevices'];
+    removeTotpDevice: NestAuth['removeTotpDevice'];
+    toggleMfa: NestAuth['toggleMfa'];
+    generateRecoveryCode: NestAuth['generateRecoveryCode'];
 
     // User management
     refetchUser: () => Promise<IUser | null>;
@@ -236,6 +248,18 @@ function BridgeAuthProvider({
             verifyForgotPasswordOtp: auth.verifyForgotPasswordOtp,
             resetPassword: auth.resetPassword,
             changePassword: auth.changePassword,
+            send2fa: auth.send2fa,
+            verify2fa: auth.verify2fa,
+            resetMfa: auth.resetMfa,
+
+            // TOTP / MFA Management
+            setupTotp: auth.setupTotp,
+            verifyTotpSetup: auth.verifyTotpSetup,
+            getMfaStatus: auth.getMfaStatus,
+            listTotpDevices: auth.listTotpDevices,
+            removeTotpDevice: auth.removeTotpDevice,
+            toggleMfa: auth.toggleMfa,
+            generateRecoveryCode: auth.generateRecoveryCode,
 
             refetchUser,
             authErrorStatus,
@@ -258,6 +282,16 @@ function BridgeAuthProvider({
             auth.verifyForgotPasswordOtp,
             auth.resetPassword,
             auth.changePassword,
+            auth.send2fa,
+            auth.verify2fa,
+            auth.setupTotp,
+            auth.verifyTotpSetup,
+            auth.getMfaStatus,
+            auth.listTotpDevices,
+            auth.removeTotpDevice,
+            auth.toggleMfa,
+            auth.resetMfa,
+            auth.generateRecoveryCode,
             refetchUser,
             authErrorStatus,
         ]
