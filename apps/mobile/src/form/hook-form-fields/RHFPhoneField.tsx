@@ -2,12 +2,12 @@ import React, { forwardRef } from 'react';
 import { useController, Control } from 'react-hook-form';
 import { FormInput, FormInputProps } from '../FormInput';
 
-export type RHFTextFieldProps = FormInputProps & {
+export type RHFPhoneFieldProps = FormInputProps & {
     name: string;
     control?: Control<any>;
 };
 
-export const RHFTextField = forwardRef<any, RHFTextFieldProps>(
+export const RHFPhoneField = forwardRef<any, RHFPhoneFieldProps>(
     ({ name, control, ...other }, ref) => {
         const {
             field: { value, onChange, onBlur, ref: fieldRef },
@@ -18,9 +18,15 @@ export const RHFTextField = forwardRef<any, RHFTextFieldProps>(
             <FormInput
                 ref={ref || fieldRef}
                 value={value}
-                onChangeText={onChange}
+                onChangeText={(text) => {
+                    // Only allow numeric input
+                    const numericValue = text.replace(/[^0-9]/g, '');
+                    onChange(numericValue);
+                }}
                 onBlur={onBlur}
                 error={error?.message}
+                keyboardType="phone-pad"
+                maxLength={10}
                 {...other}
             />
         );

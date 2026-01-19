@@ -4,17 +4,26 @@
  * =================================================================
  *
  * User login screen with email/password form.
- * Similar layout patterns to the admin app's login page.
+ * Design matches the provided mockups with:
+ * - Logo at top
+ * - Welcome message
+ * - Email and Password fields with icons
+ * - Forgot password link
+ * - Sign In button
+ * - Skip option (if login not required)
+ * - Sign Up link at bottom
  */
 
-import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
 import { router } from 'expo-router';
 import { FieldValues } from 'react-hook-form';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Feather } from '@expo/vector-icons';
 
-import { Screen, AppText, AppButton, AppDivider } from '../../src/components';
+import { Screen, AppText, AppButton } from '../../src/components';
 import { useAuth } from '@libs/react-shared';
 import { useAppTheme } from '../../src/theme';
-import { spacing } from '../../src/constants';
+import { spacing, colors } from '../../src/constants';
 import { appConfig } from '../../src/config/app.config';
 import {
     FormContainer,
@@ -24,58 +33,78 @@ import {
     useFormSubmit
 } from '../../src/form';
 
+import { images } from '@/assets';
+
 export default function LoginScreen() {
     const { login } = useAuth();
     const theme = useAppTheme();
 
     // Handle form submission
     const handleLogin = async (data: FieldValues) => {
+        console.log('Login data:', data);
         try {
-            await login({
+            const resp = await login({
                 providerName: 'email',
                 credentials: {
                     email: data.email.trim(),
                     password: data.password
                 },
             });
+            router.replace('/(tabs)/home');
+            console.log('Login response:', resp);
         } catch (err: any) {
-            Alert.alert('Login Failed', err.message || 'Please check your credentials and try again.');
+            console.log('Login error:', err);
+            const message =
+                err?.response?.data?.message ??
+                err?.message ??
+                'Please check your credentials and try again.';
+            Alert.alert('Login Failed', Array.isArray(message) ? message.join('\n') : message);
         }
     };
 
     return (
-        <Screen scroll keyboardAvoiding padded>
-            <View style={styles.container}>
-                {/* Header */}
+        <Screen scroll keyboardAvoiding edges={['top']}>
+            <View style={[styles.container]}>
+                {/* Skip Button - Top Right */}
+                {!appConfig.features.requiredLogin && (
+                    <TouchableOpacity
+                        onPress={() => router.replace('/(tabs)/home')}
+                        style={styles.skipButton}
+                    >
+                        <AppText variant="body2" style={{ color: theme.colors.primary }}>
+                            Skip
+                        </AppText>
+                    </TouchableOpacity>
+                )}
+
+                {/* Logo Section */}
+                <View style={styles.logoSection}>
+                    <View style={styles.logoContainer}>
+                        <Image
+                            source={images.logoSmall}
+                            style={styles.logo}
+                            resizeMode="contain"
+                        />
+                    </View>
+                </View>
+
+                {/* Header Section */}
                 <View style={styles.header}>
-                    {!appConfig.features.requiredLogin && (
-                        <TouchableOpacity
-                            onPress={() => router.replace('/(tabs)/home')}
-                            style={{ alignSelf: 'flex-end', padding: spacing.sm }}
-                        >
-                            <AppText variant="body2" style={{ color: theme.colors.primary }}>
-                                Skip
-                            </AppText>
-                        </TouchableOpacity>
-                    )}
-                    <AppText variant="h3" bold>
+                    <AppText variant="h3" bold style={styles.title}>
                         Welcome Back
                     </AppText>
-                    <AppText variant="body1" secondary style={styles.subtitle}>
-                        Sign in to continue to your account
+                    <AppText variant="body2" secondary>
+                        Sign in to continue
                     </AppText>
                 </View>
 
                 {/* Form */}
                 <FormContainer
                     validationSchema={loginFormSchema}
-                    defaultValues={{ email: 'ajay@ackplus.com', password: 'Admin@123' }}
+                    defaultValues={{ email: '', password: '' }}
                 >
                     <LoginFormContent onSubmit={handleLogin} />
                 </FormContainer>
-
-                {/* Divider */}
-                <AppDivider label="or" marginVertical={spacing.lg} />
 
                 {/* Register link */}
                 <View style={styles.registerContainer}>
@@ -86,7 +115,7 @@ export default function LoginScreen() {
                         <AppText
                             variant="body2"
                             bold
-                            style={{ color: theme.colors.primary }}
+                            style={{ color: colors.primary.main }}
                         >
                             Sign Up
                         </AppText>
@@ -98,7 +127,6 @@ export default function LoginScreen() {
 }
 
 function LoginFormContent({ onSubmit }: { onSubmit: (data: FieldValues) => Promise<void> }) {
-    const theme = useAppTheme();
     const { handleSubmit, isSubmitting } = useFormSubmit();
 
     return (
@@ -106,19 +134,23 @@ function LoginFormContent({ onSubmit }: { onSubmit: (data: FieldValues) => Promi
             {/* Email input */}
             <RHFTextField
                 name="email"
-                label="Email"
+                label="Email Address"
+                placeholder="Enter your email"
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoComplete="email"
-                textContentType="emailAddress"
+                textContentType="username"
+                leftIcon={<Feather name="mail" size={18} color={colors.grey[400]} />}
             />
 
             {/* Password input */}
             <RHFPassword
                 name="password"
                 label="Password"
+                placeholder="Enter your password"
                 autoComplete="password"
                 textContentType="password"
+                leftIcon={<Feather name="lock" size={18} color={colors.grey[400]} />}
             />
 
             {/* Forgot password link */}
@@ -128,7 +160,7 @@ function LoginFormContent({ onSubmit }: { onSubmit: (data: FieldValues) => Promi
             >
                 <AppText
                     variant="body2"
-                    style={{ color: theme.colors.primary }}
+                    style={{ color: colors.primary.main }}
                 >
                     Forgot Password?
                 </AppText>
@@ -150,20 +182,43 @@ function LoginFormContent({ onSubmit }: { onSubmit: (data: FieldValues) => Promi
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: spacing.xl,
+    },
+    skipButton: {
+        alignSelf: 'flex-end',
+        paddingHorizontal: spacing.md,
+        paddingVertical: spacing.sm,
+    },
+    logoSection: {
+        alignItems: 'center',
+        marginTop: spacing.xl,
+        marginBottom: spacing.lg,
+    },
+    logoContainer: {
+        width: 100,
+        height: 100,
+        borderRadius: 20,
+        backgroundColor: colors.background.neutral,
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow: 'hidden',
+    },
+    logo: {
+        width: 80,
+        height: 80,
     },
     header: {
+        alignItems: 'center',
         marginBottom: spacing.xl,
     },
-    subtitle: {
-        marginTop: spacing.xs,
+    title: {
+        marginBottom: spacing.xs,
     },
     form: {
-        gap: spacing.xs,
+        gap: spacing.sm,
     },
     forgotPassword: {
         alignSelf: 'flex-end',
-        marginTop: spacing.xs,
+        marginTop: spacing.sm,
         marginBottom: spacing.sm,
     },
     submitButton: {
@@ -173,5 +228,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: spacing.xl,
+        paddingBottom: spacing.xl,
     },
 });

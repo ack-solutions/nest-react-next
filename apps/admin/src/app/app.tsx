@@ -31,7 +31,7 @@ const queryClient = new QueryClient({
 // Create auth client for admin
 const authClient = new AuthClient({
     baseUrl: config.apiUrl + '/api',
-    accessTokenType: 'header',
+    accessTokenType: 'header' as const,
     storage: new LocalStorageAdapter(),
     httpAdapter: createAxiosAdapter(instanceApi),
 });
@@ -60,7 +60,11 @@ function App() {
             <QueryClientProvider client={queryClient}>
                 <SettingsProvider>
                     <ThemeProvider>
-                        <AuthProvider client={authClient} onTokensSet={handleTokenSet} onTokensRemoved={handleTokenRemoved}>
+                        <AuthProvider
+                            client={authClient}
+                            onTokensSet={handleTokenSet}
+                            onTokensRemoved={handleTokenRemoved}
+                        >
                             <DataTableStateProvider>
                                 <ConfirmProvider>
                                     <PromptDialogProvider>

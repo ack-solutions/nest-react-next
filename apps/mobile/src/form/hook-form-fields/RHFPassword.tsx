@@ -1,8 +1,8 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef } from 'react';
 import { useController, Control } from 'react-hook-form';
-import { AppInput, AppInputProps } from '../../components/AppInput';
+import { FormInput, FormInputProps } from '../FormInput';
 
-export type RHFPasswordProps = AppInputProps & {
+export type RHFPasswordProps = FormInputProps & {
     name: string;
     control?: Control<any>;
 };
@@ -15,7 +15,7 @@ export const RHFPassword = forwardRef<any, RHFPasswordProps>(
         } = useController({ name, control });
 
         return (
-            <AppInput
+            <FormInput
                 ref={ref || fieldRef}
                 value={value}
                 onChangeText={onChange}

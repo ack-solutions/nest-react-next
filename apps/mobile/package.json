@@ -12,8 +12,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@ackplus/nest-auth-client": "1.1.62",
-    "@ackplus/nest-auth-react": "1.1.62",
+    "@ackplus/nest-auth-client": "1.1.63",
+    "@ackplus/nest-auth-react": "1.1.63",
     "@babel/runtime": "^7.28.4",
     "@expo/vector-icons": "^14.0.0",
     "@hookform/resolvers": "^5.2.2",

@@ -19,7 +19,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { ThemeProvider } from '../src/theme';
 import { AuthProvider, instanceApi } from '@libs/react-shared';
 import { queryClient } from '../src/lib';
-import { authClient } from '@/auth';
+import { authClient, SecureStorageAdapter } from '@/auth';
 
 // Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
@@ -72,19 +72,14 @@ export default function RootLayout() {
             <SafeAreaProvider>
                 <QueryClientProvider client={queryClient}>
                     <ThemeProvider>
-                        <AuthProvider client={authClient} onTokensSet={handleTokenSet} onTokensRemoved={handleTokenRemoved}>
+                        <AuthProvider
+                            client={authClient}
+                            onTokensSet={handleTokenSet}
+                            onTokensRemoved={handleTokenRemoved}
+                            storage={new SecureStorageAdapter()}
+                        >
                             <StatusBar style="auto" />
-                            <Stack
-                                screenOptions={{
-                                    headerShown: false,
-                                    animation: 'fade',
-                                }}
-                            >
-                                <Stack.Screen name="index" />
-                                <Stack.Screen name="(public)" />
-                                <Stack.Screen name="(auth)" />
-                                <Stack.Screen name="(tabs)" />
-                            </Stack>
+                            <Stack screenOptions={{ headerShown: false, animation: 'fade' }} />
                         </AuthProvider>
                     </ThemeProvider>
                 </QueryClientProvider>

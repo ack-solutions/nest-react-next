@@ -4,174 +4,97 @@
  * =================================================================
  *
  * User registration screen with form.
+ * Design matches the provided mockups with:
+ * - Skip button at top right
+ * - Create Account title
+ * - First Name, Last Name, Email, Phone, Password fields with icons
+ * - Referral code (optional)
+ * - Sign Up button
+ * - Sign In link at bottom
  */
 
-import { useState, useCallback } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { router } from 'expo-router';
+import { FieldValues } from 'react-hook-form';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Feather } from '@expo/vector-icons';
 
-import { Screen, AppText, AppButton, AppInput, AppDivider } from '../../src/components';
+import { Screen, AppText, AppButton } from '../../src/components';
 import { useAuth } from '@libs/react-shared';
 import { useAppTheme } from '../../src/theme';
-import { spacing } from '../../src/constants';
-
-/**
- * Basic validation helper
- *
- * TODO: Replace with zod or yup for more robust validation
- */
-function validateForm(
-    email: string,
-    password: string,
-    confirmPassword: string
-): string | null {
-    if (!email.trim()) {
-        return 'Email is required';
-    }
-    if (!/\S+@\S+\.\S+/.test(email)) {
-        return 'Please enter a valid email';
-    }
-    if (!password) {
-        return 'Password is required';
-    }
-    if (password.length < 6) {
-        return 'Password must be at least 6 characters';
-    }
-    if (password !== confirmPassword) {
-        return 'Passwords do not match';
-    }
-    return null;
-}
+import { spacing, colors } from '../../src/constants';
+import { appConfig } from '../../src/config/app.config';
+import {
+    FormContainer,
+    RHFTextField,
+    RHFPassword,
+    RHFPhoneField,
+    registerFormSchema,
+    useFormSubmit
+} from '../../src/form';
 
 export default function RegisterScreen() {
-    const { signup, isLoading } = useAuth();
+    const { signup } = useAuth();
     const theme = useAppTheme();
-
-    // Form state
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState<string | null>(null);
+    const insets = useSafeAreaInsets();
 
     // Handle form submission
-    const handleSubmit = useCallback(async () => {
-        setError(null);
-
-        const validationError = validateForm(email, password, confirmPassword);
-        if (validationError) {
-            setError(validationError);
-            return;
-        }
-
+    const handleRegister = async (data: FieldValues) => {
         try {
             await signup({
-                email: email.trim(),
-                password,
-                firstName: firstName.trim() || undefined,
-                lastName: lastName.trim() || undefined,
+                email: data.email.trim(),
+                password: data.password,
+                firstName: data.firstName.trim(),
+                lastName: data.lastName.trim(),
+                phoneNumber: data.phoneNumber,
+                referralCode: data.referralCode?.trim() || undefined,
             });
             // Navigation is handled by auth provider/layout
         } catch (err: any) {
-            setError(err.message || 'Registration failed. Please try again.');
+            Alert.alert('Registration Failed', err.message || 'Please try again.');
         }
-    }, [email, password, confirmPassword, firstName, lastName, signup]);
+    };
 
     return (
-        <Screen scroll keyboardAvoiding padded>
-            <View style={styles.container}>
-                {/* Header */}
+        <Screen scroll keyboardAvoiding edges={['top']}>
+            <View style={[styles.container]}>
+                {/* Skip Button - Top Right */}
+                {!appConfig.features.requiredLogin && (
+                    <TouchableOpacity
+                        onPress={() => router.replace('/(tabs)/home')}
+                        style={styles.skipButton}
+                    >
+                        <AppText variant="body2" style={{ color: theme.colors.primary }}>
+                            Skip
+                        </AppText>
+                    </TouchableOpacity>
+                )}
+
+                {/* Header Section */}
                 <View style={styles.header}>
-                    <AppText variant="h3" bold>
+                    <AppText variant="h3" bold style={styles.title}>
                         Create Account
                     </AppText>
-                    <AppText variant="body1" secondary style={styles.subtitle}>
-                        Sign up to get started
+                    <AppText variant="body2" secondary>
+                        Join Badacup to discover amazing deals
                     </AppText>
                 </View>
 
                 {/* Form */}
-                <View style={styles.form}>
-                    {/* Error message */}
-                    {error && (
-                        <View
-                            style={[
-                                styles.errorContainer,
-                                { backgroundColor: theme.colors.errorContainer },
-                            ]}
-                        >
-                            <AppText
-                                variant="body2"
-                                style={{ color: theme.colors.onErrorContainer }}
-                            >
-                                {error}
-                            </AppText>
-                        </View>
-                    )}
-
-                    {/* Name inputs */}
-                    <View style={styles.nameRow}>
-                        <AppInput
-                            label="First Name"
-                            value={firstName}
-                            onChangeText={setFirstName}
-                            autoCapitalize="words"
-                            containerStyle={styles.nameInput}
-                        />
-                        <AppInput
-                            label="Last Name"
-                            value={lastName}
-                            onChangeText={setLastName}
-                            autoCapitalize="words"
-                            containerStyle={styles.nameInput}
-                        />
-                    </View>
-
-                    {/* Email input */}
-                    <AppInput
-                        label="Email"
-                        value={email}
-                        onChangeText={setEmail}
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                        autoComplete="email"
-                        textContentType="emailAddress"
-                    />
-
-                    {/* Password input */}
-                    <AppInput
-                        label="Password"
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry
-                        autoComplete="password-new"
-                        textContentType="newPassword"
-                    />
-
-                    {/* Confirm password input */}
-                    <AppInput
-                        label="Confirm Password"
-                        value={confirmPassword}
-                        onChangeText={setConfirmPassword}
-                        secureTextEntry
-                        autoComplete="password-new"
-                        textContentType="newPassword"
-                    />
-
-                    {/* Submit button */}
-                    <AppButton
-                        fullWidth
-                        loading={isLoading}
-                        onPress={handleSubmit}
-                        style={styles.submitButton}
-                    >
-                        Create Account
-                    </AppButton>
-                </View>
-
-                {/* Divider */}
-                <AppDivider label="or" marginVertical={spacing.lg} />
+                <FormContainer
+                    validationSchema={registerFormSchema}
+                    defaultValues={{
+                        firstName: '',
+                        lastName: '',
+                        email: '',
+                        phoneNumber: '',
+                        password: '',
+                        confirmPassword: '',
+                        referralCode: '',
+                    }}
+                >
+                    <RegisterFormContent onSubmit={handleRegister} />
+                </FormContainer>
 
                 {/* Login link */}
                 <View style={styles.loginContainer}>
@@ -182,7 +105,7 @@ export default function RegisterScreen() {
                         <AppText
                             variant="body2"
                             bold
-                            style={{ color: theme.colors.primary }}
+                            style={{ color: colors.primary.main }}
                         >
                             Sign In
                         </AppText>
@@ -193,38 +116,127 @@ export default function RegisterScreen() {
     );
 }
 
+function RegisterFormContent({ onSubmit }: { onSubmit: (data: FieldValues) => Promise<void> }) {
+    const { handleSubmit, isSubmitting } = useFormSubmit();
+
+    return (
+        <View style={styles.form}>
+            {/* Full Name input */}
+            <View style={styles.row}>
+                <RHFTextField
+                    name="firstName"
+                    label="First Name"
+                    placeholder="First name"
+                    autoCapitalize="words"
+                    autoComplete="name"
+                    textContentType="name"
+                    fullWidth={false}
+                    leftIcon={<Feather name="user" size={18} color={colors.grey[400]} />}
+                />
+                <RHFTextField
+                    name="lastName"
+                    label="Last Name"
+                    placeholder="Last name"
+                    autoCapitalize="words"
+                    autoComplete="name"
+                    fullWidth={false}
+                    textContentType="name"
+                    leftIcon={<Feather name="user" size={18} color={colors.grey[400]} />}
+                />
+            </View>
+
+            {/* Email input */}
+            <RHFTextField
+                name="email"
+                label="Email Address"
+                placeholder="Enter your email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoComplete="email"
+                textContentType="emailAddress"
+                leftIcon={<Feather name="mail" size={18} color={colors.grey[400]} />}
+            />
+
+            {/* Phone Number input */}
+            <RHFPhoneField
+                name="phoneNumber"
+                label="Phone Number"
+                placeholder="Enter your 10-digit mobile number"
+                leftIcon={<Feather name="phone" size={18} color={colors.grey[400]} />}
+            />
+
+            {/* Password input */}
+            <RHFPassword
+                name="password"
+                label="Password"
+                placeholder="Password"
+                autoComplete="password-new"
+                textContentType="newPassword"
+                leftIcon={<Feather name="lock" size={18} color={colors.grey[400]} />}
+            />
+
+            {/* Confirm Password input */}
+            <RHFPassword
+                name="confirmPassword"
+                label="Confirm Password"
+                placeholder="Re-enter your password"
+                autoComplete="password-new"
+                textContentType="newPassword"
+                leftIcon={<Feather name="lock" size={18} color={colors.grey[400]} />}
+            />
+
+            {/* Referral Code input (optional) */}
+            <RHFTextField
+                name="referralCode"
+                label="Referral Code"
+                labelSuffix="(Optional)"
+                placeholder="Referral code"
+                leftIcon={<Feather name="gift" size={18} color={colors.grey[400]} />}
+            />
+
+            {/* Submit button */}
+            <AppButton
+                fullWidth
+                loading={isSubmitting}
+                onPress={handleSubmit(onSubmit)}
+                style={styles.submitButton}
+            >
+                Sign Up
+            </AppButton>
+        </View>
+    );
+}
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: spacing.xl,
+    },
+    skipButton: {
+        alignSelf: 'flex-end',
+        padding: spacing.xs,
     },
     header: {
-        marginBottom: spacing.xl,
+        alignItems: 'center',
+        marginBottom: spacing.lg,
     },
-    subtitle: {
-        marginTop: spacing.xs,
+    title: {
+        marginBottom: spacing.xs,
     },
     form: {
-        gap: spacing.xs,
-    },
-    nameRow: {
-        flexDirection: 'row',
         gap: spacing.sm,
     },
-    nameInput: {
-        flex: 1,
-    },
-    errorContainer: {
-        padding: spacing.md,
-        borderRadius: 8,
-        marginBottom: spacing.md,
+    row: {
+        flexDirection: 'row',
+        gap: spacing.sm
     },
     submitButton: {
-        marginTop: spacing.md,
+        marginTop: spacing.sm,
     },
     loginContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: spacing.xl,
+        paddingBottom: spacing.xl,
     },
 });

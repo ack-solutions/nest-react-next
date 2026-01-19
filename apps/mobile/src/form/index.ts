@@ -7,4 +7,6 @@
 
 export * from './hook-form-fields';
 export * from './FormContainer';
+export * from './FormInput';
 export * from './schema-helper';
+export * from './OTPInput';

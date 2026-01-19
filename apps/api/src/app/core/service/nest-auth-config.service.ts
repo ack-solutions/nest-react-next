@@ -58,14 +58,33 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
         const normalizedFrontUrl = normalizeUrl(frontUrl || '');
         const normalizedAdminUrl = normalizeUrl(adminUrl || '');
 
-        // Check if origin matches front URL (web portal)
-        if (normalizedFrontUrl && normalizedOrigin.includes(normalizedFrontUrl)) {
-            return RoleGuardEnum.WEB;
+        // Check admin URL first (more specific match should be checked first)
+        // This prevents cases where admin.dev.badacup.com matches dev.badacup.com first
+        if (normalizedAdminUrl) {
+            // Exact match
+            if (normalizedOrigin === normalizedAdminUrl) {
+                console.log('return admin (exact match)');
+                return RoleGuardEnum.ADMIN;
+            }
+            // Substring match (for cases like ports or paths, though normalized shouldn't have them)
+            if (normalizedOrigin.includes(normalizedAdminUrl)) {
+                console.log('return admin (substring match)');
+                return RoleGuardEnum.ADMIN;
+            }
         }
 
-        // Check if origin matches admin URL (admin portal)
-        if (normalizedAdminUrl && normalizedOrigin.includes(normalizedAdminUrl)) {
-            return RoleGuardEnum.ADMIN;
+        // Check front URL only if admin didn't match
+        if (normalizedFrontUrl) {
+            // Exact match
+            if (normalizedOrigin === normalizedFrontUrl) {
+                console.log('return web (exact match)');
+                return RoleGuardEnum.WEB;
+            }
+            // Substring match
+            if (normalizedOrigin.includes(normalizedFrontUrl)) {
+                console.log('return web (substring match)');
+                return RoleGuardEnum.WEB;
+            }
         }
 
         return null;
@@ -188,7 +207,6 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
                     const request = context?.request;
                     const guardFromInput = input?.guard as RoleGuardEnum;
                     const guardFromOrigin = this.getGuardFromRequest(request);
-
                     // Determine required guard (priority: input > origin)
                     const requiredGuard = guardFromInput || guardFromOrigin;
 

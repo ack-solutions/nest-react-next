@@ -10,7 +10,11 @@
         "moduleResolution": "bundler",
         "resolveJsonModule": true,
         "isolatedModules": true,
-        "lib": ["dom", "dom.iterable", "esnext"],
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "esnext"
+        ],
         "allowJs": true,
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
@@ -20,15 +24,30 @@
                 "name": "next"
             }
         ],
-        "types": ["jest", "node"],
+        "types": [
+            "jest",
+            "node"
+        ],
         "baseUrl": ".",
         "paths": {
-            "@web/*": ["./src/*"],
-            "@ui/*": ["./src/components/ui/*"],
-            "@sections/*": ["./src/sections/*"],
-            "@libs/utils": ["../../packages/utils/src"],
-            "@libs/types": ["../../packages/types/src"],
-            "@libs/react-shared": ["../../packages/react-shared/src"]
+            "@web/*": [
+                "./src/*"
+            ],
+            "@ui/*": [
+                "./src/components/ui/*"
+            ],
+            "@sections/*": [
+                "./src/sections/*"
+            ],
+            "@libs/utils": [
+                "../../packages/utils/src"
+            ],
+            "@libs/types": [
+                "../../packages/types/src"
+            ],
+            "@libs/react-shared": [
+                "../../packages/react-shared/src"
+            ]
         }
     },
     "include": [

@@ -10,19 +10,13 @@ import React, {
     useState,
     ReactNode,
 } from 'react';
-import {
-    IUser,
-    ITotpSetupResponse,
-    IVerifyTotpSetupRequest,
-    IMfaDevice,
-    IMfaStatusResponse,
-    IToggleMfaRequest,
-    IMessageResponse,
-} from '@libs/types';
+import { IUser } from '@libs/types';
 import { AuthProvider as NestAuthClientProvider, AuthProviderProps as NestAuthClientProviderProps, useNestAuth } from '@ackplus/nest-auth-react';
 import type { AuthClient } from '@ackplus/nest-auth-react';
 import { UserService } from '../services';
-import { IAuthUser } from '@ackplus/nest-auth-client';
+import { INestAuthUser } from '@ackplus/nest-auth-client';
+import { instanceApi } from '../config';
+import { IStorageAdapter } from '@libs/utils';
 
 const userService = UserService.getInstance<UserService>();
 
@@ -75,18 +69,6 @@ export interface AuthContextValue {
     verifyForgotPasswordOtp: NestAuth['verifyForgotPasswordOtp'];
     resetPassword: NestAuth['resetPassword'];
     changePassword: NestAuth['changePassword'];
-    send2fa: NestAuth['send2fa'];
-    verify2fa: NestAuth['verify2fa'];
-    resetMfa: NestAuth['resetMfa'];
-
-    // TOTP / MFA Management
-    setupTotp: () => Promise<ITotpSetupResponse>;
-    verifyTotpSetup: (dto: IVerifyTotpSetupRequest) => Promise<IMessageResponse>;
-    getMfaStatus: () => Promise<IMfaStatusResponse>;
-    listTotpDevices: () => Promise<IMfaDevice[]>;
-    removeTotpDevice: (deviceId: string) => Promise<IMessageResponse>;
-    toggleMfa: (dto: IToggleMfaRequest) => Promise<IMessageResponse>;
-    generateRecoveryCode: () => Promise<{ code: string }>;
 
     // User management
     refetchUser: () => Promise<IUser | null>;
@@ -106,6 +88,7 @@ export interface AuthProviderProps extends NestAuthClientProviderProps {
     children: React.ReactNode;
     client: AuthClient;
     initialAuthState?: any; // Transformed auth state from createInitialState
+    storage?: IStorageAdapter;
 }
 
 /**
@@ -115,26 +98,38 @@ export interface AuthProviderProps extends NestAuthClientProviderProps {
  */
 function BridgeAuthProvider({
     children,
-    onUnauthenticated,
+    storage,
 }: {
     children: ReactNode;
-    onUnauthenticated?: () => void;
+    storage?: IStorageAdapter;
 }) {
     const auth = useNestAuth();
-    const [authUser, setAuthUser] = useState<IAuthUser | null>(null);
+    const [authUser, setAuthUser] = useState<INestAuthUser | null>(null);
     const [isInitialized, setIsInitialized] = useState(false);
     const [currentUser, setCurrentUser] = useState<IUser | null>(null);
     const [isLoadingUser, setIsLoadingUser] = useState(false);
     const [authErrorStatus, setAuthErrorStatus] = useState<number | string | null>(null);
-
     /**
      * Mark initialized once auth lib finishes booting.
      */
     useEffect(() => {
-        if (!auth.isLoading && !isInitialized) {
-            setIsInitialized(true);
-        }
-    }, [auth.isLoading, auth.status, isInitialized]);
+        const initializeAuth = async () => {
+            if (!auth.isLoading && !isInitialized) {
+                const tokenStorage = storage ? storage : localStorage;
+                let accessToken = await tokenStorage.getItem('nest_auth_access_token');
+                if (!accessToken) {
+                    accessToken = await tokenStorage.getItem('access_token');
+                }
+                if (accessToken) {
+                    instanceApi.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+                }
+                setIsInitialized(true);
+            }
+        };
+
+        initializeAuth();
+    }, [auth.isLoading, auth.status, isInitialized, storage]);
+
 
     /**
      * Fetch current user
@@ -142,6 +137,7 @@ function BridgeAuthProvider({
     const fetchUser = useCallback(async (): Promise<IUser | null> => {
         if (auth.status !== 'authenticated') {
             setCurrentUser(null);
+            setAuthUser(null);
             return null;
         }
 
@@ -151,17 +147,14 @@ function BridgeAuthProvider({
         try {
             const user = await userService.getMe();
             setCurrentUser(user);
+            setAuthUser(user?.authUser || null);
             setAuthErrorStatus(null);
-            if (user.authUser) {
-                setAuthUser(user.authUser);
-            }
             return user;
         } catch (err: any) {
             const status = err?.status ?? err?.response?.status;
 
             if (status === 401) {
                 console.warn('[Auth] 401 - Logging out');
-                setCurrentUser(null);
                 await auth.logout();
                 return null;
             }
@@ -187,6 +180,7 @@ function BridgeAuthProvider({
             fetchUser();
         } else if (auth.status === 'unauthenticated') {
             setCurrentUser(null);
+            setAuthUser(null);
         }
     }, [isInitialized, auth.status, fetchUser]);
 
@@ -202,6 +196,7 @@ function BridgeAuthProvider({
      */
     const clearAppState = useEvent(async () => {
         setCurrentUser(null);
+        setAuthUser(null);
         setAuthErrorStatus(null);
     });
 
@@ -217,14 +212,13 @@ function BridgeAuthProvider({
             await clearAppState();
         }
     });
-
     /**
      * Memo context value
      */
     const value = useMemo<AuthContextValue>(
         () => ({
             status: auth.status,
-            authUser: authUser,
+            authUser,
             session: auth.session,
             isLoading: auth.isLoading || isLoadingUser,
             isAuthenticated: auth.status === 'authenticated',
@@ -242,26 +236,13 @@ function BridgeAuthProvider({
             verifyForgotPasswordOtp: auth.verifyForgotPasswordOtp,
             resetPassword: auth.resetPassword,
             changePassword: auth.changePassword,
-            send2fa: auth.send2fa,
-            verify2fa: auth.verify2fa,
-            resetMfa: auth.resetMfa,
-
-            // TOTP / MFA Management - these methods exist at runtime in @ackplus/nest-auth-react
-            // but may not be in the type definitions, so we use type assertions
-            setupTotp: (auth as any).setupTotp,
-            verifyTotpSetup: (auth as any).verifyTotpSetup,
-            getMfaStatus: (auth as any).getMfaStatus,
-            listTotpDevices: (auth as any).listTotpDevices,
-            removeTotpDevice: (auth as any).removeTotpDevice,
-            toggleMfa: (auth as any).toggleMfa,
-            generateRecoveryCode: (auth as any).generateRecoveryCode,
 
             refetchUser,
             authErrorStatus,
         }),
         [
             auth.status,
-            auth.user,
+            authUser,
             auth.session,
             auth.isLoading,
             isLoadingUser,
@@ -277,16 +258,6 @@ function BridgeAuthProvider({
             auth.verifyForgotPasswordOtp,
             auth.resetPassword,
             auth.changePassword,
-            auth.send2fa,
-            auth.verify2fa,
-            auth.setupTotp,
-            auth.verifyTotpSetup,
-            auth.getMfaStatus,
-            auth.listTotpDevices,
-            auth.removeTotpDevice,
-            auth.toggleMfa,
-            auth.resetMfa,
-            auth.generateRecoveryCode,
             refetchUser,
             authErrorStatus,
         ]
@@ -304,6 +275,7 @@ export function AuthProvider({
     children,
     client,
     initialAuthState,
+    storage,
     ...props
 }: AuthProviderProps) {
     const NestProvider = NestAuthClientProvider as React.ComponentType<{
@@ -314,12 +286,13 @@ export function AuthProvider({
 
     return (
         <NestProvider client={client} initialState={initialAuthState} {...props}>
-            <BridgeAuthProvider >
+            <BridgeAuthProvider storage={storage} >
                 {children}
             </BridgeAuthProvider>
         </NestProvider>
     );
 }
+
 
 /**
  * -----------------------------

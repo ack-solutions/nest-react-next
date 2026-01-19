@@ -7,14 +7,18 @@
  */
 
 import { AuthClient, createAxiosAdapter } from '@ackplus/nest-auth-client';
-import { SecureStorageAdapter } from './storage-adapter';
+import { AsyncStorageAdapter, SecureStorageAdapter } from './storage-adapter';
 import { config, instanceApi } from '@libs/react-shared';
+import { Platform } from 'react-native';
 // Use the existing mobile api client's axios instance
+
+export const secureStorageAdapter = new SecureStorageAdapter();
+export const asyncStorageAdapter = new AsyncStorageAdapter();
 
 export const authClient = new AuthClient({
     baseUrl: config.apiUrl + '/api',
     accessTokenType: 'header',
-    storage: new SecureStorageAdapter(),
+    storage: Platform.OS === 'web' ? asyncStorageAdapter : secureStorageAdapter,
     httpAdapter: createAxiosAdapter(instanceApi),
 });
 
