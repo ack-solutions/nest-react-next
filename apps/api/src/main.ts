@@ -33,6 +33,8 @@ async function bootstrap() {
         prefix: '/public',
     });
 
+    // Enable extended query parser to support nested objects
+    app.set('query parser', 'extended');
     // Increase body size limit isssue when file upload
     app.use(bodyParser.json({ limit: '50mb' }));
     app.use(bodyParser.urlencoded({

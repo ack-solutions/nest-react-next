@@ -61,13 +61,23 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
         activePaths: [PATH_DASHBOARD.users.root],
     },
     {
-        id: 'roles',
-        title: 'Roles',
-        path: PATH_DASHBOARD.users.roles.root,
+        id: 'roles-permissions',
+        title: 'Roles & Permissions',
         icon: <Icon icon={IconEnum.Shield} />,
         group: 'Users',
         permissions: [PermissionsEnum.ACCESS_ROLES],
-        activePaths: [PATH_DASHBOARD.users.roles.root],
+        children: [
+            {
+                id: 'roles',
+                title: 'Roles',
+                path: PATH_DASHBOARD.users.roles.root,
+            },
+            {
+                id: 'permissions',
+                title: 'Permissions',
+                path: PATH_DASHBOARD.users.permissions,
+            },
+        ],
     },
     // {
     //     id: 'test',

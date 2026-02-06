@@ -33,9 +33,9 @@ const RoleList = Loadable(
 const AddEditRole = Loadable(
     lazy(() => import('../pages/roles/add-edit-role')),
 );
-// const PermissionList = Loadable(
-//     lazy(() => import('../pages/permission/permission-list')),
-// );
+const PermissionList = Loadable(
+    lazy(() => import('../pages/permission/permission-list')),
+);
 const UserProfile = Loadable(
     lazy(() => import('../pages/profile/user-profile')),
 );
@@ -149,10 +149,10 @@ export default function Router() {
                             path: 'roles/create',
                             element: <AddEditRole />,
                         },
-                        // {
-                        //     path: 'permissions',
-                        //     element: <PermissionList />,
-                        // },
+                        {
+                            path: 'permissions',
+                            element: <PermissionList />,
+                        },
                     ],
                 },
                 {

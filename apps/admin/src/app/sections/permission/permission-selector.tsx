@@ -1,19 +1,24 @@
 import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
     Box,
     Checkbox,
     Divider,
     FormControlLabel,
+    Grid,
     Paper,
     TextField,
     Typography,
-    Grid,
 } from '@mui/material';
-import { startCase } from 'lodash';
+import { startCase, groupBy } from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-
+import { IPermission } from '@libs/types';
+import { Icon } from '../../components';
+import { IconEnum } from '../../components/icons/icons';
 
 interface PermissionSelectorProps {
-    allPermissions: string[];
+    allPermissions: IPermission[];
     selectedPermissions: string[];
     onChange: (updated: string[]) => void;
 }
@@ -23,196 +28,295 @@ function PermissionSelector({
     selectedPermissions,
     onChange,
 }: PermissionSelectorProps) {
-    const [selected, setSelected] = useState<Set<string>>(new Set(selectedPermissions));
+    const [selected, setSelected] = useState<Set<string>>(
+        new Set(selectedPermissions),
+    );
     const [search, setSearch] = useState<string>('');
 
+    // Filter permissions based on search
     const filteredPermissions = useMemo(() => {
         if (search) {
             const findText = search.toString().toLowerCase();
-            let results: any[] = [];
-            try {
-                results = allPermissions?.filter((item) => {
-                    if (typeof item === 'string') {
-                        return (`${item}`.toLowerCase().replace(/-/g, ' ').includes(findText));
-                    }
-                    return false;
-                });
-            } catch (error) {
-                console.error(error);
-                results = [];
-            }
-            return results;
+            return (
+                allPermissions?.filter(item => {
+                    return (
+                        item.name
+                            ?.toLowerCase()
+                            .replace(/-/g, ' ')
+                            .includes(findText) ||
+                        item.category?.toLowerCase().includes(findText)
+                    );
+                }) || []
+            );
         }
-        return allPermissions;
+        return allPermissions || [];
     }, [allPermissions, search]);
 
+    // Group permissions by category
+    const groupedPermissions = useMemo(() => {
+        const grouped = groupBy(
+            filteredPermissions,
+            p => p.category || 'Other',
+        );
+        // Sort categories alphabetically
+        const sortedCategories = Object.keys(grouped).sort();
+        return sortedCategories.map(category => ({
+            category,
+            permissions: grouped[category],
+        }));
+    }, [filteredPermissions]);
+
+    // Check if all permissions are selected
     const allSelectedData = useMemo(() => {
-        let isAllSelected = false;
-        let isIntermediate = false;
-        if (selected.size > 0) {
-            isAllSelected = filteredPermissions.every((p) => selected.has(p));
-            isIntermediate = isAllSelected ? false : filteredPermissions.some((p) => selected.has(p));
-        }
+        const permissionNames = filteredPermissions.map(p => p.name);
+        const selectedCount = permissionNames.filter(p => selected.has(p)).length;
+        const totalCount = permissionNames.length;
+
+        const isAllSelected = totalCount > 0 && selectedCount === totalCount;
+        const isIntermediate = selectedCount > 0 && selectedCount < totalCount;
+
         return {
             isAllSelected,
             isIntermediate,
+            selectedCount,
+            totalCount,
         };
     }, [filteredPermissions, selected]);
 
+    // Get category selection state
+    const getCategorySelectionState = useCallback(
+        (permissions: IPermission[]) => {
+            const permissionNames = permissions.map(p => p.name);
+            const selectedInCategory = permissionNames.filter(p =>
+                selected.has(p),
+            );
+            const isAllSelected =
+                selectedInCategory.length === permissionNames.length &&
+                permissionNames.length > 0;
+            const isIntermediate =
+                !isAllSelected && selectedInCategory.length > 0;
+            return {
+                isAllSelected,
+                isIntermediate,
+                selectedCount: selectedInCategory.length,
+            };
+        },
+        [selected],
+    );
 
     useEffect(() => {
         setSelected(new Set(selectedPermissions));
     }, [selectedPermissions]);
 
-    // const togglePermission = (perm: IPermission) => {
-    //     const isSelected = selected.some((p) => p.id === perm.id);
-    //     let updated: IPermission[] = [];
+    const togglePermission = useCallback(
+        (permName: string) => {
+            const newSelected = new Set(selected);
+            if (newSelected.has(permName)) {
+                newSelected.delete(permName);
+            } else {
+                newSelected.add(permName);
+            }
+            setSelected(newSelected);
+            onChange(Array.from(newSelected));
+        },
+        [selected, onChange],
+    );
 
-    //     if (isSelected) {
-    //         // Remove this permission and its children
-    //         updated = selected.filter(
-    //             (p) => p.id !== perm.id && !isDependentOn(p, perm),
-    //         );
-    //     } else {
-    //         // Add this permission and its dependencies
-    //         const required = getDependencies(perm);
-    //         updated = Array.from(new Set([
-    //             ...selected,
-    //             ...required,
-    //             perm,
-    //         ]));
-    //     }
+    const toggleCategory = useCallback(
+        (permissions: IPermission[]) => {
+            const newSelected = new Set(selected);
+            const permissionNames = permissions.map(p => p.name);
+            const { isAllSelected } = getCategorySelectionState(permissions);
 
-    //     setSelected(updated);
-    //     onChange(updated);
-    // };
+            if (isAllSelected) {
+                // Deselect all in category
+                permissionNames.forEach(name => newSelected.delete(name));
+            } else {
+                // Select all in category
+                permissionNames.forEach(name => newSelected.add(name));
+            }
 
-    const togglePermission = useCallback((perm: any) => {
-        const isSelected = selected.has(perm);
+            setSelected(newSelected);
+            onChange(Array.from(newSelected));
+        },
+        [selected, onChange, getCategorySelectionState],
+    );
 
-        if (isSelected) {
-            selected.delete(perm);
-        } else {
-            selected.add(perm);
-        }
+    const handleAllSelectToggle = useCallback(() => {
+        const newSelected = new Set(selected);
+        const permissionNames = filteredPermissions.map(p => p.name);
 
-        setSelected(new Set(selected));
-        onChange(Array.from(selected));
-    }, [selected, onChange]);
-
-
-    const handleAllSelectToggle = useCallback((_event: React.ChangeEvent<HTMLInputElement>, _checked: boolean) => {
         if (allSelectedData.isAllSelected) {
-            filteredPermissions.forEach((item) => {
-                selected.delete(item);
-            });
+            permissionNames.forEach(name => newSelected.delete(name));
         } else {
-            filteredPermissions.forEach((item) => {
-                selected.add(item);
-            });
+            permissionNames.forEach(name => newSelected.add(name));
         }
-        setSelected(new Set(selected));
-        onChange(Array.from(selected));
-    }, [
-        filteredPermissions,
-        onChange,
-        allSelectedData,
-        selected,
-    ]);
+
+        setSelected(newSelected);
+        onChange(Array.from(newSelected));
+    }, [filteredPermissions, onChange, allSelectedData, selected]);
 
     return (
-        <Paper
-            sx={{
-                p: 2,
-                width: 1,
-            }}
-        >
+        <Paper sx={{ p: 1.5, width: 1 }}>
+            {/* Header */}
             <Box
                 sx={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    gap: 2,
-                    py: 1,
-                }}
-            >
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 2,
-                    }}
-                >
+                    gap: 1.5,
+                    pb: 1,
+                }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <FormControlLabel
-                        control={(
+                        control={
                             <Checkbox
                                 checked={allSelectedData.isAllSelected}
                                 indeterminate={allSelectedData.isIntermediate}
                                 onChange={handleAllSelectToggle}
+                                size="small"
                             />
-                        )}
-                        label="Select All"
+                        }
+                        label={<Typography variant="body2">Select All</Typography>}
+                        sx={{ mr: 0 }}
                     />
-                    <Typography
-                        variant="body2"
-                        color="text.secondary"
-                    >
-                        (
-                        {selected.size}
-                        {' '}
-                        of
-                        {' '}
-                        {allPermissions.length}
-                        {' '}
-                        selected)
+                    <Typography variant="caption" color="text.secondary">
+                        ({allSelectedData.selectedCount}/{allSelectedData.totalCount})
                     </Typography>
                 </Box>
                 <TextField
                     fullWidth
-                    label="Search Permission"
+                    placeholder="Search..."
                     name="search"
                     size="small"
                     type="search"
-                    onChange={(e) => {
-                        setSearch(e.target.value);
-                    }}
-                    sx={{
-                        maxWidth: 300,
-                    }}
+                    onChange={e => setSearch(e.target.value)}
+                    sx={{ maxWidth: 250, '& .MuiInputBase-root': { height: 36 } }}
                 />
             </Box>
-            <Divider
-                sx={{
-                    my: 2,
-                }}
-            />
+
+            <Divider sx={{ my: 1 }} />
+
+            {/* Grouped Permissions */}
             <Box>
-                <Grid
-                    container
-                    spacing={2}
-                >
-                    {filteredPermissions.map((perm) => (
-                        <Grid
-                            key={perm}
-                            size={{
-                                xs: 12,
-                                sm: 6,
-                                md: 4,
+                {groupedPermissions.map(({ category, permissions }) => {
+                    const categoryState =
+                        getCategorySelectionState(permissions);
+
+                    return (
+                        <Accordion
+                            key={category}
+                            defaultExpanded
+                            disableGutters
+                            sx={{
+                                '&:before': { display: 'none' },
+                                boxShadow: 'none',
+                                border: '1px solid',
+                                borderColor: 'divider',
+                                mb: 0.5,
+                                borderRadius: 1,
+                                overflow: 'hidden',
+                                '&:last-of-type': { mb: 0 },
                             }}>
-                            <Box>
-                                <FormControlLabel
-                                    control={(
-                                        <Checkbox
-                                            checked={selected.has(perm)}
-                                            onChange={() => togglePermission(perm)}
-                                        />
-                                    )}
-                                    label={startCase(perm)}
-                                />
-                            </Box>
-                        </Grid>
-                    ))}
-                </Grid>
+                            <AccordionSummary
+                                expandIcon={
+                                    <Icon icon={IconEnum.ChevronDown} width={20} />
+                                }
+                                sx={{
+                                    backgroundColor: 'action.hover',
+                                    minHeight: 40,
+                                    margin: 0,
+                                    px: 1.5,
+                                    '&.Mui-expanded': { minHeight: 40, margin: 0 },
+                                    '& .MuiAccordionSummary-content': {
+                                        margin: 0,
+                                        '&.Mui-expanded': { margin: 0 }
+                                    }
+                                }}>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 1,
+                                        cursor: 'pointer',
+                                    }}
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        toggleCategory(permissions);
+                                    }}>
+                                    <Checkbox
+                                        checked={categoryState.isAllSelected}
+                                        indeterminate={
+                                            categoryState.isIntermediate
+                                        }
+                                        onChange={() => toggleCategory(permissions)}
+                                        onClick={e => e.stopPropagation()}
+                                        size="small"
+                                        sx={{ p: 0.5 }}
+                                    />
+                                    <Typography
+                                        variant="subtitle2"
+                                        fontWeight="bold">
+                                        {category}
+                                    </Typography>
+                                    <Typography
+                                        variant="caption"
+                                        color="text.secondary">
+                                        ({categoryState.selectedCount}/
+                                        {permissions.length})
+                                    </Typography>
+                                </Box>
+                            </AccordionSummary>
+                            <AccordionDetails sx={{ p: 1.5, pt: 1 }}>
+                                <Grid container spacing={0.5} rowSpacing={0}>
+                                    {permissions.map(perm => (
+                                        <Grid
+                                            key={perm.id || perm.name}
+                                            size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                                            <FormControlLabel
+                                                sx={{ ml: 0, mr: 0, width: '100%', cursor: 'pointer' }}
+                                                control={
+                                                    <Checkbox
+                                                        checked={selected.has(
+                                                            perm.name,
+                                                        )}
+                                                        onChange={() =>
+                                                            togglePermission(
+                                                                perm.name,
+                                                            )
+                                                        }
+                                                        size="small"
+                                                        sx={{ p: 0.5 }}
+                                                    />
+                                                }
+                                                label={
+                                                    <Typography variant="body2" sx={{ fontSize: '0.8125rem' }}>
+                                                        {startCase(
+                                                            perm.name.replace(
+                                                                /-/g,
+                                                                ' ',
+                                                            ),
+                                                        )}
+                                                    </Typography>
+                                                }
+                                            />
+                                        </Grid>
+                                    ))}
+                                </Grid>
+                            </AccordionDetails>
+                        </Accordion>
+                    );
+                })}
+
+                {groupedPermissions.length === 0 && (
+                    <Box sx={{ py: 4, textAlign: 'center' }}>
+                        <Typography color="text.secondary">
+                            {search
+                                ? 'No permissions match your search'
+                                : 'No permissions available'}
+                        </Typography>
+                    </Box>
+                )}
             </Box>
         </Paper>
     );

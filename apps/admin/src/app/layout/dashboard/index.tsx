@@ -46,7 +46,7 @@ export default function DashboardLayout() {
             <Header onOpenNav={handleOpen} />
             <Box
                 sx={{
-                    display: { md: 'flex' },
+                    display: { md: 'flex', flexDirection: 'column' },
                     minHeight: 1,
                 }}
             >

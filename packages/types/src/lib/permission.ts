@@ -1,7 +1,28 @@
-export enum PermissionGuardEnum {
-    ADMIN = 'Admin',
-    PORTAL = 'Portal',
-    CUSTOMER_PORTAL = 'Customer Portal',
+export interface IPermission {
+    id: string;
+    name: string;
+    guard?: string;
+    description?: string;
+    category?: string;
+    metadata?: Record<string, any>;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+export interface ICreatePermissionInput {
+    name: string;
+    guard?: string;
+    description?: string;
+    category?: string;
+    metadata?: Record<string, any>;
+}
+
+export interface IUpdatePermissionInput {
+    name?: string;
+    guard?: string;
+    description?: string;
+    category?: string;
+    metadata?: Record<string, any>;
 }
 
 export enum PermissionsEnum {

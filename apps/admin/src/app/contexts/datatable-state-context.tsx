@@ -1,4 +1,12 @@
-import { createContext, useContext, useCallback, useMemo, ReactNode, useState } from 'react';
+import {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+    ReactNode,
+} from 'react';
 
 // Layout state - persisted in localStorage (only column-related properties)
 export interface DataTableLayoutState {
@@ -12,22 +20,19 @@ export interface DataTableLayoutState {
 }
 
 export interface DataTableState {
-    // Filter states (session cache - clears on refresh)
     [x: string]: any;
+    // Custom screen states
     filterValues?: any;
     currentTab?: string;
     showDeleted?: boolean;
 
-    // Table states (session cache - clears on refresh)
+    // Table states
     globalFilter?: string;
-    columnFilter?: any; // ColumnFilterState type from tanstack-data-table
+    columnFilter?: any;
     sorting?: any[];
-    pagination?: {
-        pageIndex: number;
-        pageSize: number;
-    };
+    pagination?: { pageIndex: number; pageSize: number };
 
-    // Layout states (persisted in localStorage)
+    // Layout (localStorage)
     layout?: DataTableLayoutState;
 }
 
@@ -36,55 +41,89 @@ interface DataTableStateContextValue {
     setState: (key: string, state: Partial<DataTableState>) => void;
     clearState: (key: string) => void;
     clearAllStates: () => void;
-    // Layout management (localStorage)
+
+    // Layout (localStorage)
     getLayout: (key: string) => DataTableLayoutState | null;
     saveLayout: (key: string, layout: DataTableLayoutState) => void;
     clearLayout: (key: string) => void;
 }
 
-const DataTableStateContext = createContext<DataTableStateContextValue | null>(null);
+const DataTableStateContext = createContext<DataTableStateContextValue | null>(
+    null,
+);
+
+/** Table state (filters, pagination, etc.) can be stored in memory or sessionStorage. */
+export type StateStorageType = 'memory' | 'session';
 
 interface DataTableStateProviderProps {
     children: ReactNode;
+    /** Where to persist table state. Default: 'memory' (lost on refresh). Use 'session' to survive refresh. */
+    stateStorage?: StateStorageType;
 }
 
-const LAYOUT_STORAGE_KEY = 'datatable-layouts';
+const SESSION_STORAGE_KEY = 'datatable-states-v1';
+const LAYOUT_STORAGE_KEY = 'datatable-layouts-v1';
 
-export function DataTableStateProvider({ children }: DataTableStateProviderProps) {
-    // Session cache (clears on page refresh)
-    const [stateCache, setStateCache] = useState<Record<string, DataTableState>>({});
+function safeParse<T>(value: string | null): T | null {
+    if (!value) return null;
+    try {
+        return JSON.parse(value) as T;
+    } catch {
+        return null;
+    }
+}
 
-    // Session state methods
+function readSessionCache(): Record<string, DataTableState> {
+    if (typeof window === 'undefined') return {};
+    return safeParse<Record<string, DataTableState>>(
+        sessionStorage.getItem(SESSION_STORAGE_KEY),
+    ) ?? {};
+}
+
+function writeSessionCache(cache: Record<string, DataTableState>) {
+    try {
+        sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(cache));
+    } catch (e) {
+        console.error('Error saving datatable session cache:', e);
+    }
+}
+
+export function DataTableStateProvider({
+    children,
+    stateStorage = 'memory',
+}: DataTableStateProviderProps) {
+    const [stateCache, setStateCache] = useState<Record<string, DataTableState>>(
+        () =>
+            stateStorage === 'session' ? readSessionCache() : {},
+    );
+
+    useEffect(() => {
+        if (typeof window === 'undefined' || stateStorage !== 'session') return;
+        writeSessionCache(stateCache);
+    }, [stateCache, stateStorage]);
+
     const getState = useCallback(
-        (key: string): DataTableState | null => {
-            return stateCache[key] || null;
-        },
+        (key: string): DataTableState | null => stateCache[key] || null,
         [stateCache],
     );
 
-    const setState = useCallback(
-        (key: string, state: Partial<DataTableState>) => {
-            setStateCache((prev) => ({
-                ...prev,
-                [key]: {
-                    ...prev[key],
-                    ...state,
-                },
-            }));
-        },
-        [],
-    );
+    const setState = useCallback((key: string, state: Partial<DataTableState>) => {
+        setStateCache(prev => ({
+            ...prev,
+            [key]: {
+                ...prev[key],
+                ...state,
+            },
+        }));
+    }, []);
 
-    const clearState = useCallback(
-        (key: string) => {
-            setStateCache((prev) => {
-                const newState = { ...prev };
-                delete newState[key];
-                return newState;
-            });
-        },
-        [],
-    );
+    const clearState = useCallback((key: string) => {
+        setStateCache(prev => {
+            const next = { ...prev };
+            delete next[key];
+            return next;
+        });
+    }, []);
 
     const clearAllStates = useCallback(() => {
         setStateCache({});
@@ -148,21 +187,19 @@ export function DataTableStateProvider({ children }: DataTableStateProviderProps
 
 export function useDataTableState(key: string) {
     const context = useContext(DataTableStateContext);
-
     if (!context) {
         throw new Error('useDataTableState must be used within DataTableStateProvider');
     }
 
-    // Return key-specific helpers
     return useMemo(
         () => ({
-            // Session state (clears on refresh)
+            // sessionStorage-backed
             state: context.getState(key),
             setState: (state: Partial<DataTableState>) => context.setState(key, state),
             clearState: () => context.clearState(key),
-            getState: context.getState,
             clearAllStates: context.clearAllStates,
-            // Layout state (persisted in localStorage)
+
+            // localStorage-backed
             layout: context.getLayout(key),
             saveLayout: (layout: DataTableLayoutState) => context.saveLayout(key, layout),
             clearLayout: () => context.clearLayout(key),

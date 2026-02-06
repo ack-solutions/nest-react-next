@@ -1,5 +1,7 @@
 {
-    "eslint.validate": ["json"],
+    "eslint.validate": [
+        "json"
+    ],
     "cSpell.words": [
         "datatable",
         "hookform",
@@ -48,5 +50,8 @@
     "[handlebars]": {
         "editor.defaultFormatter": "vscode.html-language-features"
     },
-    "typescript.tsdk": "node_modules/typescript/lib"
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "[svg]": {
+        "editor.defaultFormatter": "jock.svg"
+    }
 }
