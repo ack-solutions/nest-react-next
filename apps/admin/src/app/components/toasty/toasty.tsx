@@ -38,25 +38,25 @@ export function Toasty() {
                     info: (
                         <Icon
                             className="toaster__icon__svg"
-                            icon={IconEnum.INFO}
+                            icon={IconEnum.Info}
                         />
                     ),
                     success: (
                         <Icon
                             className="toaster__icon__svg"
-                            icon={IconEnum.CIRCLE_CHECK}
+                            icon={IconEnum.CircleCheck}
                         />
                     ),
                     warning: (
                         <Icon
                             className="toaster__icon__svg"
-                            icon={IconEnum.TRIANGLE_ALERT}
+                            icon={IconEnum.TriangleAlert}
                         />
                     ),
                     error: (
                         <Icon
                             className="toaster__icon__svg"
-                            icon={IconEnum.CIRCLE_ALERT}
+                            icon={IconEnum.CircleAlert}
                         />
                     ),
                 }}

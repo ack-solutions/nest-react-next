@@ -101,7 +101,7 @@ function CrudDataGridInner<T>(
     }: CrudDataGridProps<T>,
     ref: React.Ref<DataTableApi<T>>,
 ) {
-    const { showToasty } = useToasty();
+    const { showToasty, dismissToasty } = useToasty();
     const confirmDialog = useConfirm();
     const datatableRef = useRef<DataTableApi<any>>(null);
 
@@ -268,7 +268,7 @@ function CrudDataGridInner<T>(
         [],
     );
 
-    const { onExportProgress, onExportComplete, onExportError, onCancelExport } = useExportToasts(showToasty);
+    const { onExportProgress, onExportComplete, onExportError, onCancelExport } = useExportToasts({ showToasty, dismissToasty });
 
 
     const handleFetchRequestGeneration = useCallback(

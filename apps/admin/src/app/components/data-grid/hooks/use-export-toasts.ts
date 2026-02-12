@@ -1,19 +1,23 @@
+import { useToasty } from '@admin/app/hook/use-toasty';
 import { useCallback, useRef } from 'react';
 
-export function useExportToasts(showToasty: any) {
-    const toastIdRef = useRef<string | number | null>(null);
+const EXPORT_TOAST_ID_PREFIX = 'export-toast-';
+
+export function useExportToasts({ showToasty, dismissToasty }: { showToasty: any; dismissToasty: any }) {
+    const toastIdRef = useRef<string | null>(null);
 
     const onExportProgress = useCallback(
         (progress: { processedRows?: number; totalRows?: number; percentage?: number }) => {
             let message = 'Exporting data';
-            if (progress?.percentage >= 0) {
-                message += `... ${progress.percentage.toFixed(0)}% (${progress.processedRows}/${progress.totalRows})`;
+            if (progress?.percentage != null && progress.percentage >= 0) {
+                message += `... ${progress.percentage.toFixed(0)}% (${progress.processedRows ?? 0}/${progress.totalRows ?? 0})`;
             } else {
-                message += `... please wait`;
+                message += '... please wait';
             }
 
             if (toastIdRef.current === null) {
-                toastIdRef.current = showToasty(message, 'loading') as any;
+                toastIdRef.current = `${EXPORT_TOAST_ID_PREFIX}${Date.now()}`;
+                showToasty(message, 'loading', { id: toastIdRef.current });
             } else {
                 showToasty(message, 'loading', { id: toastIdRef.current });
             }
@@ -24,9 +28,10 @@ export function useExportToasts(showToasty: any) {
     const onExportComplete = useCallback(
         (result: { success: boolean; filename: string; totalRows: number }) => {
             const message = `Successfully exported ${result.totalRows} rows to ${result.filename}`;
-            if (toastIdRef.current !== null) {
-                showToasty(message, 'success', { id: toastIdRef.current });
-                toastIdRef.current = null;
+            const id = toastIdRef.current;
+            toastIdRef.current = null;
+            if (id !== null) {
+                showToasty(message, 'success', { id });
             } else {
                 showToasty(message, 'success');
             }
@@ -37,9 +42,10 @@ export function useExportToasts(showToasty: any) {
     const onExportError = useCallback(
         (error: { message: string; code?: string }) => {
             const message = `Export failed: ${error.message}`;
-            if (toastIdRef.current !== null) {
-                showToasty(message, 'error', { id: toastIdRef.current });
-                toastIdRef.current = null;
+            const id = toastIdRef.current;
+            toastIdRef.current = null;
+            if (id !== null) {
+                showToasty(message, 'error', { id });
             } else {
                 showToasty(message, 'error');
             }
@@ -48,11 +54,12 @@ export function useExportToasts(showToasty: any) {
     );
 
     const onCancelExport = useCallback(() => {
-        if (toastIdRef.current !== null) {
-            showToasty('Export cancelled', 'error', { id: toastIdRef.current });
-            toastIdRef.current = null;
+        const id = toastIdRef.current;
+        toastIdRef.current = null;
+        if (id !== null) {
+            dismissToasty(id);
         }
-    }, [showToasty]);
+    }, [dismissToasty]);
 
     return { onExportProgress, onExportComplete, onExportError, onCancelExport };
 }
