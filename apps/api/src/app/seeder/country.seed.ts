@@ -17,6 +17,9 @@ export class CountrySeeder implements Seeder {
     ) { }
 
     async seed() {
+        await this.countryRepository.query(
+            `TRUNCATE TABLE "${this.countryRepository.metadata.tableName}" CASCADE`,
+        );
         const countriesFilePath = path.join(__dirname, 'data', 'countries.json');
         const rawData = fs.readFileSync(countriesFilePath, 'utf-8');
         const countries = JSON.parse(rawData);

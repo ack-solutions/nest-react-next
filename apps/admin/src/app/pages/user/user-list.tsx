@@ -2,9 +2,9 @@ import { WhereOperatorEnum } from '@ackplus/nest-crud-request';
 import { QueryBuilder } from '@ackplus/nest-crud-request';
 import { useAuth, UserService, useUser } from '@libs/react-shared';
 import { IUser, PermissionsEnum, RoleNameEnum, UserStatusEnum } from '@libs/types';
-import { toDisplayDate, toDisplayPhone } from '@libs/utils';
+import { toDisplayDateTime } from '@libs/utils';
 import { Button, Card } from '@mui/material';
-import { filter, get, isEmpty, includes } from 'lodash';
+import { filter, get, isEmpty, includes, startCase } from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -21,6 +21,8 @@ import UserMfaDialog from '../../sections/user/user-mfa-dialog';
 import CrudDataGrid from '@admin/app/components/data-grid/crud-data-grid';
 import { DataTableApi, DataTableColumn } from '@ackplus/react-tanstack-data-table';
 import { useDataTableState } from '@admin/app/contexts/datatable-state-context';
+import { searchBySplitName } from '@admin/app/utils/builder';
+import { toDisplayPhone } from '@admin/app/utils/phone';
 
 
 export interface IUserTableFilter {
@@ -60,6 +62,7 @@ function UsersList() {
 
     const {
         useFetchManyUser,
+        useGetManyUser,
         useDeleteUser,
         useRestoreUser,
         useDeleteForeverUser,
@@ -167,43 +170,18 @@ function UsersList() {
     }, [countFilter]);
 
     const dataTableApiRequestMap = useCallback(
-        async (queryBuilder: QueryBuilder, _filters: any) => {
+        async (queryBuilder: QueryBuilder, filters: any) => {
             if (tableFilter?.status !== 'all') {
                 queryBuilder.where({
                     status: { $eq: tableFilter?.status },
                 });
             }
-            if (_filters?.search) {
-                // TODO: need to fix search with concat firstName and lastName
-                queryBuilder.orWhere('firstName', WhereOperatorEnum.ILIKE, `%${_filters?.search}%`);
-                queryBuilder.orWhere('lastName', WhereOperatorEnum.ILIKE, `%${_filters?.search}%`);
+            if (filters?.search) {
+                searchBySplitName(queryBuilder, filters?.search, ['firstName', 'lastName']);
             }
 
             queryBuilder.addRelation('authUser');
             queryBuilder.addRelation('authUser.roles');
-            return queryBuilder;
-        },
-        [],
-    );
-
-
-    const handleDataTableApiRequestMap = useCallback(
-        (queryBuilder: QueryBuilder, request: IDataTableFilter) => {
-            if (tableFilter?.status !== 'all') {
-                queryBuilder.where({
-                    status: { $eq: tableFilter?.status },
-                });
-            }
-
-            if (request?.search) {
-                // TODO: need to fix search with concat firstName and lastName
-                queryBuilder.orWhere('firstName', WhereOperatorEnum.ILIKE, `%${request?.search}%`);
-                queryBuilder.orWhere('lastName', WhereOperatorEnum.ILIKE, `%${request?.search}%`);
-            }
-
-            queryBuilder.addRelation('authUser');
-            queryBuilder.addRelation('authUser.roles');
-
             return queryBuilder;
         },
         [tableFilter?.status],
@@ -248,6 +226,7 @@ function UsersList() {
             header: 'User Name',
             enableGlobalFilter: true,
             enableSorting: true,
+            accessorFn: (row) => row.name,
             cell: ({ row }) => (
                 <UserWithAvatar
                     user={row.original}
@@ -271,6 +250,12 @@ function UsersList() {
             accessorKey: 'status',
             header: 'Status',
             enableSorting: true,
+            accessorFn: (row) => startCase(row.status),
+            type: 'select',
+            options: Object.values(UserStatusEnum).map((status) => ({
+                label: startCase(status),
+                value: status,
+            })),
             cell: ({ row }) => (
                 canUpdate ? (
                     <UserStatusDropdown
@@ -289,7 +274,8 @@ function UsersList() {
             accessorKey: 'createdAt',
             header: 'Created Date',
             enableSorting: true,
-            cell: ({ row }) => toDisplayDate(row.original?.createdAt),
+            type: 'date',
+            accessorFn: (row) => toDisplayDateTime(row.createdAt),
         },
     ];
 
@@ -297,7 +283,7 @@ function UsersList() {
         if (datatableRef.current) {
             datatableRef.current.data.reload();
         }
-    }, [tableFilter]);
+    }, [tableFilter?.status]);
 
     useEffect(() => {
         checkCanMenageTotp();
@@ -345,6 +331,7 @@ function UsersList() {
                     }}
                     crudOperationHooks={{
                         fetchMany: useFetchManyUser,
+                        useGetMany: useGetManyUser,
                         useDelete: useDeleteUser,
                         useRestore: useRestoreUser,
                         useDeleteForever: useDeleteForeverUser,
@@ -402,7 +389,7 @@ function UsersList() {
                     hasSoftDelete
                     onEdit={handleEditUser}
                     onView={handleRowClick}
-                    // onRowClick={canUpdate ? handleRowClick : null}
+                    onRowClick={canUpdate ? handleRowClick : null}
                     enableGlobalFilter={true}
                     permissionsKey={{
                         delete: PermissionsEnum.DELETE_USERS,
@@ -421,95 +408,6 @@ function UsersList() {
                         </Button>
                     ) : null}
                 />
-                {/* <CrudTable
-                    crudName="User"
-                    crudPermissionKey="users"
-                    columns={columns}
-                    ref={datatableRef}
-                    hasSoftDelete
-                    // Permission props
-                    canEdit={canUpdate}
-                    canDelete={canDelete}
-                    canRestore={canDelete} // Usually same as delete permission
-                    canDeleteForever={canDelete} // Usually same as delete permission
-                    onToggleTrashData={handleTrashData}
-                    dataTableApiRequestMap={handleDataTableApiRequestMap}
-                    crudOperationHooks={{
-                        useGetMany: useGetManyUser,
-                        useDelete: useDeleteUser,
-                        useRestore: useRestoreUser,
-                        useDeleteForever: useDeleteForeverUser,
-                        useBulkDelete: useBulkDeleteUser,
-                        useBulkRestore: useBulkRestoreUser,
-                        useBulkDeleteForever: useBulkDeleteForeverUser,
-                    }}
-                    onEdit={handleEditUser}
-                    onRowClick={canUpdate ? handleRowClick : null}
-                    tableActionMenuProps={
-                        (row) => {
-                            const isCurrentUser = row?.id === currentUser?.id;
-                            const canDeleteUser = canDelete && !isCurrentUser;
-                            const canResetUserPassword = canResetPassword && !isCurrentUser;
-
-                            // Build actions array
-                            const actions: any[] = [];
-
-                            // Reset password action
-                            if (canResetUserPassword) {
-                                actions.push({
-                                    icon: <Icon icon={IconEnum.Key} />,
-                                    title: 'Reset Password',
-                                    onClick: () => handleResetPassword(row),
-                                });
-                            }
-
-                            // MFA management action (for super admins only)
-                            if (canToggle) {
-                                actions.push({
-                                    icon: <Icon icon={IconEnum.Shield} />,
-                                    title: 'Manage MFA',
-                                    onClick: () => handleManageMfa(row),
-                                });
-                            }
-
-                            return {
-                                // Override delete permission for specific users
-                                ...(canDeleteUser ? {} : {
-                                    onDelete: null,
-                                    onDeleteForever: null,
-                                }),
-                                // Add actions
-                                ...(actions.length > 0 ? { actions } : {}),
-                            };
-                        }
-                    }
-                    filterSelectAll={row => {
-                        const isSuperAdmin = !isEmpty(filter(row?.authUser?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)));
-                        return (
-                            !row?.isSuprUser && row?.id !== currentUser?.id && !isSuperAdmin
-                        );
-                    }}
-                    checkBoxProps={(row, type) => {
-                        const isSuperAdmin = !isEmpty(filter(row?.authUser?.roles, role => includes([RoleNameEnum.SUPER_ADMIN], role.name)));
-                        if (!(
-                            !row?.isSuprUser && row?.id !== currentUser?.id && !isSuperAdmin
-                        ) &&
-                            type === 'row'
-                        ) {
-                            return { disabled: true };
-                        }
-                        return {};
-                    }}
-                    extraFilter={canCreate ? (
-                        <Button
-                            component={Link}
-                            to={PATH_DASHBOARD.users.create}
-                            variant="contained"
-                        >
-                            New User
-                        </Button>
-                    ) : null}
-                /> */}
             </Card>
 
             <ResetPasswordDialog

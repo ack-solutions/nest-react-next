@@ -41,7 +41,6 @@ export default function LoginScreen() {
 
     // Handle form submission
     const handleLogin = async (data: FieldValues) => {
-        console.log('Login data:', data);
         try {
             const resp = await login({
                 providerName: 'email',
@@ -51,9 +50,7 @@ export default function LoginScreen() {
                 },
             });
             router.replace('/(tabs)/home');
-            console.log('Login response:', resp);
         } catch (err: any) {
-            console.log('Login error:', err);
             const message =
                 err?.response?.data?.message ??
                 err?.message ??

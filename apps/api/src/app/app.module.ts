@@ -24,6 +24,7 @@ import { EventsModule } from './events/events.module';
 import { NestAuthConfigService } from './core/service/nest-auth-config.service';
 import { FileStorageEnum, NestFileStorageModule } from '@ackplus/nest-file-storage';
 import path from 'path';
+import { PermissionModule } from './modules/permission/permission.module';
 
 
 @Module({
@@ -94,6 +95,7 @@ import path from 'path';
             },
         }),
         RoleModule,
+        PermissionModule,
         UsersModule,
         PageModule,
         CountryModule,

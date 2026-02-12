@@ -18,7 +18,6 @@ export class SecureStorageAdapter extends BaseStorageAdapter {
 
     async getItem(key: string): Promise<string | null> {
         // Use SecureStore for sensitive token data
-        console.log('SecureStorageAdapter.getItem', key);
         if (this.isSecureKey(key)) {
             return SecureStore.getItemAsync(key);
         }
@@ -26,7 +25,6 @@ export class SecureStorageAdapter extends BaseStorageAdapter {
     }
 
     async setItem(key: string, value: string): Promise<void> {
-        console.log('SecureStorageAdapter.setItem', key);
         if (this.isSecureKey(key)) {
             await SecureStore.setItemAsync(key, value);
         } else {

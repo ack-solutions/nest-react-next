@@ -47,5 +47,12 @@ export function useExportToasts(showToasty: any) {
         [showToasty],
     );
 
-    return { onExportProgress, onExportComplete, onExportError };
+    const onCancelExport = useCallback(() => {
+        if (toastIdRef.current !== null) {
+            showToasty('Export cancelled', 'error', { id: toastIdRef.current });
+            toastIdRef.current = null;
+        }
+    }, [showToasty]);
+
+    return { onExportProgress, onExportComplete, onExportError, onCancelExport };
 }

@@ -1,30 +1,32 @@
-import React, { forwardRef, useCallback, useMemo, useRef, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useCallback, useMemo, useRef, useImperativeHandle, useState, useEffect } from 'react';
 import { FormControlLabel, Switch } from '@mui/material';
 import { QueryBuilder } from '@ackplus/nest-crud-request';
-import { DataTableApi, DataTableProps, TableFilters, TableState } from '@ackplus/react-tanstack-data-table';
+import { DataFetchMeta, DataTableApi, DataTableProps, TableFilters, TableState } from '@ackplus/react-tanstack-data-table';
 
 import { useCrudOperations } from '@libs/react-shared';
 import { useToasty } from '@admin/app/hook';
 import { useConfirm } from '@admin/app/contexts';
 import { useDataTableState } from '@admin/app/contexts/datatable-state-context';
 import { HEADER } from '@admin/app/layout/config';
-import { PermissionsEnum } from '@libs/types';
+import { IFindOptions, PermissionsEnum } from '@libs/types';
 
 import DataGrid from './data-grid';
-import { useUpdateEffect } from './hooks/use-update-effect';
-import { useServerQueryBuilder } from './hooks/use-server-query-builder';
 import { useExportToasts } from './hooks/use-export-toasts';
 import { useCrudTableActions } from './hooks/use-crud-table-actions';
 
 import { TableAction, TableActionMenu, TableActionMenuProps, TableBulkActionMenu } from '../data-table';
+import { buildQBFromTableState } from './ table-to-qb';
+import { UseQueryResult } from '@tanstack/react-query';
+import { useLatestRef } from './hooks/use-latest-ref';
 
 export interface CrudDataGridProps<T>
     extends Partial<Omit<DataTableProps<T>, 'data' | 'ref' | 'onFetchData' | 'bulkActions' | 'onRowClick'>> {
     crudOperationHooks: {
-        fetchMany: any;
+        useGetMany: any;
     } & Partial<
         Pick<
             ReturnType<typeof useCrudOperations>,
+            | 'fetchMany'
             | 'useBulkDelete'
             | 'useBulkDeleteForever'
             | 'useDelete'
@@ -86,7 +88,7 @@ function CrudDataGridInner<T>(
         onRowClick,
         bulkActions,
         extraFilter,
-        columns: userColumns = [],
+        columns: initialColumns = [],
         dataTableApiRequestMap,
         onAction,
         onToggleTrashData,
@@ -111,10 +113,13 @@ function CrudDataGridInner<T>(
     const cached = ctx?.state;
 
     const [isTrash, setIsTrash] = useState<boolean>(cached?.showDeleted || false);
+    const [rows, setRows] = useState<T[]>([]);
+    const [total, setTotal] = useState<number>(0);
 
     // CRUD hooks
     const {
         fetchMany,
+        useGetMany,
         useDelete,
         useRestore,
         useDeleteForever,
@@ -130,6 +135,18 @@ function CrudDataGridInner<T>(
     const { mutateAsync: bulkRestoreItems } = useBulkRestore?.() || ({} as any);
     const { mutateAsync: bulkDeleteForeverItems } = useBulkDeleteForever?.() || ({} as any);
 
+    const [mappedQuery, setMappedQuery] = useState<QueryBuilder | undefined>(undefined);
+    const mapQueryRef = useLatestRef(dataTableApiRequestMap);
+
+    const queryObj = useMemo(
+        () => mappedQuery?.toObject() as IFindOptions | undefined,
+        [mappedQuery]
+    );
+
+    const { data, error, isSuccess, refetch, isFetching, ...q }: UseQueryResult<any, any> = useGetMany(queryObj, {
+        enabled: !!queryObj,
+    });
+
     const crudActions = useCrudTableActions({
         crudName,
         confirmDialog,
@@ -143,29 +160,30 @@ function CrudDataGridInner<T>(
         bulkRestoreItems,
         bulkDeleteForeverItems,
     });
+    const mergedInitialState = useMemo(() => {
+        const base = initialState || {};
+        if (!cached) return base;
 
-    const handleChangeSoftDelete = useCallback(
-        (_e: any, checked: boolean) => {
-            onToggleTrashData?.(checked);
-            setIsTrash(checked);
+        return {
+            ...base,
+            ...(cached.sorting && { sorting: cached.sorting }),
+            ...(cached.pagination && { pagination: cached.pagination }),
+            ...(cached.globalFilter && { globalFilter: cached.globalFilter }),
+            ...(cached.columnFilter && { columnFilter: cached.columnFilter }),
+        };
+    }, [cached, initialState]);
 
-            if (stateKey && ctx) {
-                ctx.setState({ showDeleted: checked });
-            }
-        },
-        [onToggleTrashData, stateKey, ctx],
-    );
 
-    // reload when trash changed
-    useUpdateEffect(() => {
-        datatableRef.current?.selection?.deselectAll?.();
-        datatableRef.current?.data?.reload?.();
-    }, [isTrash]);
+    // row click adapter
+    const adaptedOnRowClick = useMemo(() => {
+        if (!onRowClick) return undefined;
+        return (_event: any, row: any) => onRowClick(row.original);
+    }, [onRowClick]);
 
     // build columns (append action)
     const columns = useMemo(() => {
         return [
-            ...userColumns,
+            ...initialColumns,
             {
                 id: 'action',
                 header: 'Action',
@@ -177,7 +195,6 @@ function CrudDataGridInner<T>(
                 size: 80,
                 cell: ({ row }: any) => (
                     <TableActionMenu
-                        permissionsKeys={permissionsKey}
                         {...((row.original as any).deletedAt
                             ? {
                                 onDeleteForever: () => crudActions.handleDeleteForever(row.original),
@@ -197,35 +214,80 @@ function CrudDataGridInner<T>(
                 ),
             },
         ];
-    }, [userColumns, permissionsKey, crudActions, onEdit, onView, tableActionMenuProps]);
+    }, [initialColumns, permissionsKey, crudActions, onEdit, onView, tableActionMenuProps]);
 
     // server fetch builder
-    const { fetchData } = useServerQueryBuilder<T>({
-        columns,
-        fetchMany,
-        onFetchData: onFetchData
-            ? async (qb, filters) => onFetchData(qb, filters)
-            : undefined,
-        mapQuery: dataTableApiRequestMap
-            ? async (qb, filters) => dataTableApiRequestMap(qb, filters)
-            : undefined,
-        isTrash,
-    });
+    // const { fetchData } = useServerQueryBuilder<T>({
+    //     columns,
+    //     fetchMany,
+    //     onFetchData: onFetchData
+    //         ? async (qb, filters) => onFetchData(qb, filters)
+    //         : undefined,
+    //     mapQuery: dataTableApiRequestMap
+    //         ? async (qb, filters) => dataTableApiRequestMap(qb, filters)
+    //         : undefined,
+    //     isTrash,
+    // });
+
+    const handleChangeSoftDelete = useCallback(
+        (_e: any, checked: boolean) => {
+            onToggleTrashData?.(checked);
+            setIsTrash(checked);
+
+            if (stateKey && ctx) {
+                ctx.setState({ showDeleted: checked });
+            }
+            setMappedQuery((prev) => {
+                if (!prev) return prev;
+                const next = new QueryBuilder(prev.toObject());
+                next.setOnlyDeleted(checked);
+                return next;
+            });
+        },
+        [onToggleTrashData, stateKey, ctx, mappedQuery],
+    );
 
     const handleServerExportData = useCallback(
         async (filters?: Partial<TableFilters>) => {
-            if (filters) delete (filters as any).pagination;
-            return fetchData(filters as any);
+            // return fetchData(filters as any);
+            const qb = await buildQBFromTableState({
+                columns: initialColumns,
+                filters,
+                isTrash,
+                mapQuery: mapQueryRef.current
+                    ? async (qb, f) => mapQueryRef.current!(qb, f)
+                    : undefined,
+            });
+
+            const q = await fetchMany(qb.toObject() as IFindOptions);
+            return {
+                data: q?.items || [],
+                total: q?.total || 0,
+            };
         },
-        [fetchData],
+        [],
     );
 
-    const { onExportProgress, onExportComplete, onExportError } = useExportToasts(showToasty);
+    const { onExportProgress, onExportComplete, onExportError, onCancelExport } = useExportToasts(showToasty);
 
+
+    const handleFetchRequestGeneration = useCallback(
+        async (filters: Partial<TableFilters>, meta?: DataFetchMeta) => {
+            const qb = await buildQBFromTableState({
+                columns: initialColumns,
+                filters,
+                isTrash,
+                mapQuery: mapQueryRef.current
+                    ? async (qb, f) => mapQueryRef.current!(qb, f)
+                    : undefined,
+            });
+            setMappedQuery(qb);
+        },
+        [initialColumns, isTrash, mapQueryRef],
+    );
     // save table session state (sorting/pagination/globalFilter/columnFilter)
     const handleTableStateChange = useCallback(
         (state: Partial<TableState>) => {
-            console.log('state', state);
             if (!stateKey || !ctx) return;
             ctx.setState({
                 sorting: state.sorting,
@@ -237,37 +299,32 @@ function CrudDataGridInner<T>(
         [stateKey, ctx],
     );
 
-    // merge cached state into initialState
-    const mergedInitialState = useMemo(() => {
-        const base = initialState || {};
-        if (!cached) return base;
-
-        return {
-            ...base,
-            ...(cached.sorting && { sorting: cached.sorting }),
-            ...(cached.pagination && { pagination: cached.pagination }),
-            ...(cached.globalFilter && { globalFilter: cached.globalFilter }),
-            ...(cached.columnFilter && { columnFilter: cached.columnFilter }),
-        };
-    }, [cached, initialState]);
-
-    // row click adapter
-    const adaptedOnRowClick = useMemo(() => {
-        if (!onRowClick) return undefined;
-        return (_event: any, row: any) => onRowClick(row.original);
-    }, [onRowClick]);
-
+    useEffect(() => {
+        if (!isSuccess) {
+            setRows(data?.items || []);
+            setTotal(data?.total || 0);
+            return;
+        }
+        if (data) {
+            setRows(data?.items || []);
+            setTotal(data?.total || 0);
+        }
+    }, [data]);
     return (
         <DataGrid
-            idKey={idKey}
+            idKey={idKey as keyof T}
+            data={rows}
+            totalRow={total}
+            loading={isFetching}
             ref={datatableRef}
             stateKey={stateKey}
             defaultHiddenColumns={defaultHiddenColumns}
-            onFetchData={fetchData}
+            // onFetchData={fetchData}
+            onFetchStateChange={handleFetchRequestGeneration}
             initialLoadData
             dataMode="server"
             extraFilter={extraFilter}
-            maxHeight={maxHeight || `calc(100svh - ${HEADER.H_DESKTOP}px  - ${230}px)`}
+            maxHeight={maxHeight || `calc(100svh - ${HEADER.H_DESKTOP}px  - ${280}px)`}
             footerFilter={
                 hasSoftDelete ? (
                     <FormControlLabel
@@ -284,7 +341,6 @@ function CrudDataGridInner<T>(
 
                 return (
                     <TableBulkActionMenu
-                        permissionsKeys={permissionsKey}
                         {...(hasSoftDelete && isTrash
                             ? {
                                 onRestore: () => crudActions.handleBulkRestore(ids),
@@ -301,7 +357,9 @@ function CrudDataGridInner<T>(
             onExportProgress={onExportProgress}
             onExportComplete={onExportComplete}
             onExportError={onExportError}
+            onExportCancel={onCancelExport}
             onServerExport={handleServerExportData}
+
             enablePagination
             enableRowSelection
             enableRefresh
@@ -309,12 +367,23 @@ function CrudDataGridInner<T>(
             initialState={mergedInitialState}
             onRowClick={adaptedOnRowClick}
             onDataStateChange={handleTableStateChange}
+            slotProps={{
+                toolbar: {
+                    refreshButtonProps: {
+                        loading: isFetching,
+                        showSpinnerWhileLoading: true,
+                        onRefresh: () => {
+                            refetch();
+                        }
+                    }
+                }
+            }}
             {...props}
         />
     );
 }
 
-export const CrudDataGrid = forwardRef(CrudDataGridInner) as <T>(
+export const CrudDataGrid = forwardRef(CrudDataGridInner) as unknown as <T>(
     props: CrudDataGridProps<T> & { ref?: React.Ref<DataTableApi<T>> },
 ) => React.ReactElement;
 

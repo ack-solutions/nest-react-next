@@ -15,10 +15,11 @@ export interface SeederMetadata {
 export const ALL_SEEDERS = [
     CountrySeeder,
     PermissionSeeder,
-    RoleSeeder,
-    UserSeeder,
-    PageSeeder,
-    EmailTemplateSeeder,
+    // RoleSeeder,
+    // UserSeeder,
+    // PageSeeder,
+    // PermissionSeeder,
+    // EmailTemplateSeeder,
 ];
 
 export const SEEDER_METADATA: SeederMetadata[] = [

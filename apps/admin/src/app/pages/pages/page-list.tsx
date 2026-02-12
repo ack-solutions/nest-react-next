@@ -1,7 +1,7 @@
 import { QueryBuilder, WhereOperatorEnum } from '@ackplus/nest-crud-request';
 import { usePage } from '@libs/react-shared';
 import { IPage, PermissionsEnum, PageStatusEnum } from '@libs/types';
-import { toDisplayDate } from '@libs/utils';
+import { toDisplayDate, toDisplayDateTime } from '@libs/utils';
 import { Card, Button } from '@mui/material';
 import { useCallback, useRef, useState, useMemo, useEffect } from 'react';
 
@@ -18,6 +18,7 @@ import { useHasPermission, withRequirePermission } from '@ackplus/nest-auth-reac
 import CrudDataGrid from '@admin/app/components/data-grid/crud-data-grid';
 import { DataTableApi, DataTableColumn } from '@ackplus/react-tanstack-data-table';
 import { useDataTableState } from '@admin/app/contexts/datatable-state-context';
+import { startCase } from 'lodash';
 
 
 export interface IPageTableFilter {
@@ -46,6 +47,7 @@ function PageList() {
 
     const {
         useFetchManyPage,
+        useGetManyPage,
         useDeletePage,
         useRestorePage,
         useDeleteForeverPage,
@@ -134,26 +136,29 @@ function PageList() {
             header: 'Name (Admin perspective)',
             enableGlobalFilter: true,
             enableSorting: true,
-            cell: ({ row }) => row.original?.name || '-',
         },
         {
             accessorKey: 'title',
             header: 'Title',
             enableSorting: true,
             enableGlobalFilter: true,
-            cell: ({ row }) => row.original?.title || '-',
         },
         {
             accessorKey: 'slug',
             header: 'Slug',
             enableSorting: true,
             enableGlobalFilter: true,
-            cell: ({ row }) => row.original?.slug || '-',
         },
         {
             accessorKey: 'status',
             header: 'Status',
             enableSorting: true,
+            accessorFn: (row) => startCase(row.status),
+            type: 'select',
+            options: Object.values(PageStatusEnum).map((status) => ({
+                label: startCase(status),
+                value: status,
+            })),
             cell: ({ row }) => (
                 <StatusChip
                     status={row.original?.status || 'draft'}
@@ -165,13 +170,15 @@ function PageList() {
             accessorKey: 'createdAt',
             header: 'Created At',
             enableSorting: true,
-            cell: ({ row }) => toDisplayDate(row.original?.createdAt),
+            type: 'date',
+            accessorFn: (row) => toDisplayDateTime(row.createdAt),
         },
         {
             accessorKey: 'updatedAt',
             header: 'Updated At',
             enableSorting: true,
-            cell: ({ row }) => toDisplayDate(row.original?.updatedAt),
+            type: 'date',
+            accessorFn: (row) => toDisplayDateTime(row.updatedAt),
         },
     ];
 
@@ -208,6 +215,7 @@ function PageList() {
                     dataTableApiRequestMap={dataTableApiRequestMap}
                     crudOperationHooks={{
                         fetchMany: useFetchManyPage,
+                        useGetMany: useGetManyPage,
                         useDelete: useDeletePage,
                         useRestore: useRestorePage,
                         useDeleteForever: useDeleteForeverPage,

@@ -5,7 +5,7 @@
  * This is a simple fallback implementation.
  */
 
-export function toDisplayPhone(phoneNumber: string): string {
+export function toFormattedPhone(phoneNumber: string): string {
     if (!phoneNumber) return '';
 
     // Simple formatting: just return the phone number as-is
