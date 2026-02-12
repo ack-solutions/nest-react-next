@@ -1,74 +1,40 @@
+import { logoWhiteSvg, logoSvg } from '@admin/assets';
 import { Box, Link, BoxProps, useTheme } from '@mui/material';
-import { forwardRef } from 'react';
+import { forwardRef, useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 
 export interface LogoProps extends BoxProps {
     disabledLink?: boolean;
+    isDark?: boolean;
     small?: boolean;
-    reset?: (values: any) => void;
+    width?: number;
+    height?: number;
 }
 
 export const Logo = forwardRef<HTMLDivElement, LogoProps>(
-    ({ disabledLink = false, small, sx, reset, ...other }, ref) => {
-        const theme = useTheme();
+    ({ disabledLink = false, small, sx, isDark = false, width, height = null, ...other }, ref) => {
+        const logoWidth = useMemo(() => {
+            return (width ?? (small ? 130 : 180));
+        }, [width, small]);
 
-        const logoWidth = small ? 80 : 120;
-        const logoHeight = small ? 32 : 48;
+        const logoHeight = useMemo(() => {
+            return (height ?? null);
+        }, [height]);
+        // const logoHeight = small ? 32 : 48;
+        const path = useMemo(() => {
+            return isDark ? logoWhiteSvg : logoSvg;
+        }, []);
 
         const LogoIcon = () => (
             <Box
-                component="svg"
+                component="img"
                 width={logoWidth}
-                height={logoHeight}
-                viewBox="0 0 120 48"
-                sx={{
-                    display: 'block',
-                    ...sx,
-                }}
-            >
-                {/* Simple gradient for the "A" */}
-                <defs>
-                    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor={theme.palette.primary.main} />
-                        <stop offset="100%" stopColor={theme.palette.primary.dark} />
-                    </linearGradient>
-                </defs>
-
-                {/* Company initial "A" - larger and better positioned */}
-                <text
-                    x="8"
-                    y="32"
-                    fill="url(#textGradient)"
-                    fontSize="36"
-                    fontWeight="bold"
-                    fontFamily="Arial, sans-serif"
-                >
-                    A
-                </text>
-
-                {/* Company name - larger and better positioned */}
-                <text
-                    x="45"
-                    y="18"
-                    fill={theme.palette.text.primary}
-                    fontSize="16"
-                    fontWeight="700"
-                    fontFamily="Arial, sans-serif"
-                >
-                    ADMIN
-                </text>
-                <text
-                    x="45"
-                    y="36"
-                    fill={theme.palette.text.secondary}
-                    fontSize="12"
-                    fontWeight="500"
-                    fontFamily="Arial, sans-serif"
-                >
-                    PORTAL
-                </text>
-            </Box>
+                height={logoHeight || 'auto'}
+                src={path}
+                alt="logo"
+                sx={sx}
+            />
         );
 
         if (disabledLink) {

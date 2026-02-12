@@ -4,12 +4,22 @@
         "module": "esnext",
         "moduleResolution": "bundler",
         "outDir": "../../dist/out-tsc",
-        "types": ["vite/client"],
+        "types": [
+            "vite/client"
+        ],
         "paths": {
-            "@admin/*": ["apps/admin/src/*"],
-            "@libs/types": ["packages/types/src"],
-            "@libs/utils": ["packages/utils/src"],
-            "@libs/react-shared": ["packages/react-shared/src"]
+            "@admin/*": [
+                "apps/admin/src/*"
+            ],
+            "@libs/types": [
+                "packages/types/src"
+            ],
+            "@libs/utils": [
+                "packages/utils/src"
+            ],
+            "@libs/react-shared": [
+                "packages/react-shared/src"
+            ]
         }
     },
     "exclude": [
@@ -25,5 +35,10 @@
         "vite.config.ts",
         "vitest.config.ts"
     ],
-    "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"]
+    "include": [
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "src/**/*.ts",
+        "src/**/*.tsx"
+    ]
 }

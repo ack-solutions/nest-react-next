@@ -82,3 +82,5 @@ export const PhoneInput = forwardRef(({
         </PhoneInputContext.Provider>
     );
 });
+
+PhoneInput.displayName = 'PhoneInput';

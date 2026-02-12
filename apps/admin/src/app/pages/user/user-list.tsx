@@ -241,6 +241,13 @@ function UsersList() {
             enableSorting: true,
         },
         {
+            accessorKey: 'phoneNumber',
+            header: 'Phone Number',
+            enableGlobalFilter: true,
+            enableSorting: true,
+            accessorFn: (row) => toDisplayPhone(row.formattedPhone),
+        },
+        {
             accessorKey: 'authUser.roles.name',
             header: 'Roles',
             enableSorting: true,

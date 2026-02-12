@@ -1,43 +1,60 @@
+import { ASSETS } from '@admin/assets';
 import Box, { BoxProps } from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import { useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 
 export const StyledBgFlag = styled(Box)<BoxProps>(({ theme }) => ({
     width: 24,
     height: 24,
     flexShrink: 0,
-    overflow: 'hidden',
-    display: 'inline-flex',
-    backgroundColor: theme.palette.grey[100],
+    // overflow: 'hidden',
+    // display: 'inline-flex',
     position: 'relative',
-    borderRadius: 2,
-    border: `1px solid ${theme.palette.divider}`,
 }));
 
-// Fallback component for when flag image fails to load
-const FlagFallback = ({ iso }: { iso?: string }) => (
-    <Box
-        sx={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '10px',
-            fontWeight: 'bold',
-            color: 'text.secondary',
-            backgroundColor: 'grey.200',
-        }}
-    >
-        {iso?.toUpperCase() || '??'}
-    </Box>
-);
+export interface FlagImageProps {
+    iso?: string;
+}
 
-export function FlagImage({ iso }: { iso?: string }) {
+function FlagFallback({ iso }: { iso?: string }) {
+    return (
+        <Box
+            sx={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'grey.200',
+            }}
+        >
+            <Typography variant="caption" color="text.secondary" fontWeight="bold">
+                {iso?.toUpperCase() ?? '??'}
+            </Typography>
+        </Box>
+    );
+}
+
+function FlagImageComponent({ iso }: FlagImageProps) {
     const [imageError, setImageError] = useState(false);
+    const flagSrc = iso ? ASSETS.flags.getFlag(iso) : '';
 
-    if (!iso || imageError) {
+    // Reset error state when iso or resolved src changes (e.g. country change)
+    useEffect(() => {
+        setImageError(false);
+    }, [iso, flagSrc]);
+
+    if (!iso) {
+        return (
+            <StyledBgFlag component="span">
+                <FlagFallback />
+            </StyledBgFlag>
+        );
+    }
+
+    if (imageError || !flagSrc) {
         return (
             <StyledBgFlag component="span">
                 <FlagFallback iso={iso} />
@@ -45,21 +62,21 @@ export function FlagImage({ iso }: { iso?: string }) {
         );
     }
 
-    const flagSrc = `/assets/flag-icons/${iso.toLowerCase()}.webp`;
-
     return (
         <StyledBgFlag component="span">
-            <img
+            <Box
+                component="img"
+                width="100%"
+                height="100%"
                 src={flagSrc}
                 alt={`${iso.toUpperCase()} flag`}
-                style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                }}
+                loading="lazy"
                 onError={() => setImageError(true)}
                 onLoad={() => setImageError(false)}
+                sx={{ objectFit: 'contain' }}
             />
         </StyledBgFlag>
     );
 }
+
+export const FlagImage = memo(FlagImageComponent);

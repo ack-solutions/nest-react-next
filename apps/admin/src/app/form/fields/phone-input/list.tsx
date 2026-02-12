@@ -6,7 +6,7 @@ import ButtonBase from '@mui/material/ButtonBase';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useCallback } from 'react';
 import { Country } from 'react-phone-number-input';
 
 import { FlagImage } from './flag-image';
@@ -21,6 +21,43 @@ import { TextFieldRaw } from '../text-field-raw';
 export interface CountryListProps {
     isoCode?: Country;
     onClickCountry: (iso: Country, code: string) => void;
+}
+
+const PRIORITY_ISO = ['US', 'IN'] as const;
+
+interface CountryMenuItemProps {
+    country: ICountry;
+    isSelected: boolean;
+    shouldAutoFocus: boolean;
+    onSelect: (iso: Country, code: string) => void;
+}
+
+function CountryMenuItem({ country, isSelected, shouldAutoFocus, onSelect }: CountryMenuItemProps) {
+    const handleClick = useCallback(() => {
+        onSelect(country.iso as Country, country.code ? `+${country.code}` : '');
+    }, [country.iso, country.code, onSelect]);
+
+    if (!country.iso) return null;
+
+    return (
+        <MenuItem
+            selected={isSelected}
+            autoFocus={shouldAutoFocus}
+            onClick={handleClick}
+            sx={{ py: 1.5, px: 2, minHeight: 'auto' }}
+        >
+            <FlagImage iso={country.iso} />
+            <ListItemText
+                sx={{ ml: 1.5 }}
+                primary={country.country}
+                secondary={`${country.iso} (+${country.code})`}
+                slotProps={{
+                    primary: { noWrap: true, typography: 'body2' },
+                    secondary: { typography: 'caption', color: 'text.secondary' },
+                }}
+            />
+        </MenuItem>
+    );
 }
 
 export function CountryListPopover({ isoCode, onClickCountry }: CountryListProps) {
@@ -40,47 +77,42 @@ export function CountryListPopover({ isoCode, onClickCountry }: CountryListProps
 
     const dataFiltered = useMemo(() => {
         if (!countries || countries?.length === 0) {
-            return {
-                priorityCountries: [],
-                otherCountries: [],
-            };
+            return { priorityCountries: [], otherCountries: [] };
         }
 
-        const filtered = countries.filter((country) => {
-            return country.country.toLowerCase().includes(searchValue.toLowerCase()) ||
-                country.code.toLowerCase().includes(searchValue.toLowerCase()) ||
-                country.iso.toLowerCase().includes(searchValue.toLowerCase());
+        // Dedupe by iso so keys are unique and no duplicate list items (fixes React key warnings / duplicate Belgium etc.)
+        const byIso = new Map<string, ICountry>();
+        countries.forEach((c) => {
+            if (c?.iso && !byIso.has(c.iso)) byIso.set(c.iso, c);
         });
+        const unique = Array.from(byIso.values());
 
-        // Priority countries: India (IN) and United States (US)
-        const priorityIso = ['IN', 'US'];
-        const priorityCountries = [];
-        const otherCountries = [];
+        const search = searchValue.toLowerCase().trim();
+        const filtered = search
+            ? unique.filter(
+                (c) =>
+                    c.country?.toLowerCase().includes(search) ||
+                    c.code?.toLowerCase().includes(search) ||
+                    c.iso?.toLowerCase().includes(search),
+            )
+            : unique;
 
-        // If no search, show priority countries first
+        const priorityCountries: ICountry[] = [];
+        const otherCountries: ICountry[] = [];
+
         if (!searchValue) {
-            priorityIso.forEach(iso => {
-                const country = filtered.find(c => c.iso === iso);
-                if (country) {
-                    priorityCountries.push(country);
-                }
+            PRIORITY_ISO.forEach((iso) => {
+                const country = filtered.find((c) => c.iso === iso);
+                if (country) priorityCountries.push(country);
             });
-
-            // Add remaining countries
-            filtered.forEach(country => {
-                if (!priorityIso.includes(country.iso)) {
-                    otherCountries.push(country);
-                }
+            filtered.forEach((c) => {
+                if (!PRIORITY_ISO.includes(c.iso as (typeof PRIORITY_ISO)[number])) otherCountries.push(c);
             });
         } else {
-            // If searching, just return filtered results
             otherCountries.push(...filtered);
         }
 
-        return {
-            priorityCountries,
-            otherCountries,
-        };
+        return { priorityCountries, otherCountries };
     }, [countries, searchValue]);
 
     // Reset search when dropdown closes
@@ -122,7 +154,7 @@ export function CountryListPopover({ isoCode, onClickCountry }: CountryListProps
                     </Typography>
 
                     <Icon
-                        icon={IconEnum.ChevronDown}
+                        icon={IconEnum.CHEVRON_DOWN}
                         size={12}
                         sx={{
                             color: 'text.disabled',
@@ -187,7 +219,7 @@ export function CountryListPopover({ isoCode, onClickCountry }: CountryListProps
                                         startAdornment: (
                                             <InputAdornment position="start">
                                                 <Icon
-                                                    icon={IconEnum.Search}
+                                                    icon={IconEnum.SEARCH}
                                                     sx={{ color: 'text.disabled' }}
                                                 />
                                             </InputAdornment>
@@ -231,96 +263,34 @@ export function CountryListPopover({ isoCode, onClickCountry }: CountryListProps
                                     }}
                                 />
                             ) : (
-                                <MenuList
-                                    dense
-                                    disablePadding
-                                >
-                                    {/* Priority Countries */}
-                                    {dataFiltered.priorityCountries.map((country) => {
-                                        if (!country.iso) {
-                                            return null;
-                                        }
-
-                                        return (
-                                            <MenuItem
-                                                key={country.iso}
-                                                selected={isoCode === country.iso}
-                                                autoFocus={isoCode === country.iso && !isTyping.value}
-                                                onClick={() => {
-                                                    handleCloseAndReset();
-                                                    onClickCountry?.(country.iso as Country, country.code ? `+${country.code}` : '');
-                                                }}
-                                                sx={{
-                                                    py: 1.5,
-                                                    px: 2,
-                                                    minHeight: 'auto',
-                                                }}
-                                            >
-                                                <FlagImage iso={country.iso} />
-                                                <ListItemText
-                                                    sx={{ ml: 1.5 }}
-                                                    primary={country.country}
-                                                    secondary={`${country.iso} (+${country.code})`}
-                                                    slotProps={{
-                                                        primary: {
-                                                            noWrap: true,
-                                                            typography: 'body2',
-                                                        },
-                                                        secondary: {
-                                                            typography: 'caption',
-                                                            color: 'text.secondary',
-                                                        },
-                                                    }}
-                                                />
-                                            </MenuItem>
-                                        );
-                                    })}
-
-                                    {/* Divider between priority and other countries */}
+                                <MenuList dense disablePadding>
+                                    {dataFiltered.priorityCountries.map((country) => (
+                                        <CountryMenuItem
+                                            key={country.iso}
+                                            country={country}
+                                            isSelected={isoCode === country.iso}
+                                            shouldAutoFocus={isoCode === country.iso && !isTyping.value}
+                                            onSelect={(iso, code) => {
+                                                handleCloseAndReset();
+                                                onClickCountry?.(iso, code);
+                                            }}
+                                        />
+                                    ))}
                                     {dataFiltered.priorityCountries.length > 0 && dataFiltered.otherCountries.length > 0 && (
                                         <Divider sx={{ my: 0.5 }} />
                                     )}
-
-                                    {/* Other Countries */}
-                                    {dataFiltered.otherCountries.map((country) => {
-                                        if (!country.iso) {
-                                            return null;
-                                        }
-
-                                        return (
-                                            <MenuItem
-                                                key={country.iso}
-                                                selected={isoCode === country.iso}
-                                                autoFocus={isoCode === country.iso && !isTyping.value}
-                                                onClick={() => {
-                                                    handleCloseAndReset();
-                                                    onClickCountry?.(country.iso as Country, country.code ? `+${country.code}` : '');
-                                                }}
-                                                sx={{
-                                                    py: 1.5,
-                                                    px: 2,
-                                                    minHeight: 'auto',
-                                                }}
-                                            >
-                                                <FlagImage iso={country.iso} />
-                                                <ListItemText
-                                                    sx={{ ml: 1.5 }}
-                                                    primary={country.country}
-                                                    secondary={`${country.iso} (+${country.code})`}
-                                                    slotProps={{
-                                                        primary: {
-                                                            noWrap: true,
-                                                            typography: 'body2',
-                                                        },
-                                                        secondary: {
-                                                            typography: 'caption',
-                                                            color: 'text.secondary',
-                                                        },
-                                                    }}
-                                                />
-                                            </MenuItem>
-                                        );
-                                    })}
+                                    {dataFiltered.otherCountries.map((country) => (
+                                        <CountryMenuItem
+                                            key={country.iso}
+                                            country={country}
+                                            isSelected={isoCode === country.iso}
+                                            shouldAutoFocus={isoCode === country.iso && !isTyping.value}
+                                            onSelect={(iso, code) => {
+                                                handleCloseAndReset();
+                                                onClickCountry?.(iso, code);
+                                            }}
+                                        />
+                                    ))}
                                 </MenuList>
                             )}
                         </Box>

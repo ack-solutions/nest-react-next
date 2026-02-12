@@ -1,3 +1,4 @@
+import { Logo } from '@admin/app/components/logo';
 import { Box, styled, Typography } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 
@@ -170,17 +171,7 @@ export default function AuthLayout() {
                         textAlign: 'center',
                         mb: 3,
                     }}>
-                        <LogoIcon sx={{
-                            width: 60,
-                            height: 60,
-                            mb: 2,
-                            display: {
-                                xs: 'flex',
-                                md: 'none',
-                            },
-                        }}>
-                            A
-                        </LogoIcon>
+                        <Logo disabledLink small />
                     </Box>
                     <Outlet />
                 </FormContainer>
