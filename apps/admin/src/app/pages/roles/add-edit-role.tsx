@@ -122,14 +122,20 @@ function AddEditRole() {
 
     useEffect(() => {
         if (roleValues) {
+            const assignedPermissionNames =
+                (roleValues as any)?.rolePermissions
+                    ?.map((rp: any) => rp?.permission?.name)
+                    ?.filter(Boolean) || [];
+
             reset({
                 id: roleValues.id,
                 name: roleValues.name || '',
                 guard:
                     (roleValues.guard as RoleGuardEnum) || RoleGuardEnum.ADMIN,
-                permissions: roleValues.permissions || [],
+                // backend now returns many-to-many rolePermissions
+                permissions: assignedPermissionNames,
             });
-            setSelectedPermissions(roleValues?.permissions || []);
+            setSelectedPermissions(assignedPermissionNames);
         }
     }, [reset, roleValues]);
 
