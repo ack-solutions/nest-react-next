@@ -117,26 +117,6 @@ export class EmailTemplateSeeder implements Seeder {
             }
         },
         {
-            name: 'order-confirmation',
-            displayName: 'Order Confirmation',
-            description: 'Order confirmation email with order details',
-            subject: 'Order Confirmed - #{{orderNumber}}',
-            previewContext: {
-                firstName: "John",
-                lastName: "Doe",
-                orderNumber: "ORD-2024-001234",
-                orderDate: "January 6, 2025",
-                paymentMethod: "Credit Card",
-                totalAmount: "1,999.00",
-                currency: "₹",
-                items: [
-                    { name: "Premium Coffee Blend", quantity: 2, price: "599.00" },
-                    { name: "Organic Tea Collection", quantity: 1, price: "799.00" }
-                ],
-                orderUrl: "https://example.com/orders/ORD-2024-001234"
-            }
-        },
-        {
             name: 'contact-form',
             displayName: 'Contact Form',
             description: 'Contact form submission notification email',

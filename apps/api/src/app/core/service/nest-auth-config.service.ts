@@ -1,9 +1,10 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestAuthUser, IAuthModuleOptions, IAuthModuleOptionsFactory, NestAuthMFAMethodEnum, ERROR_CODES } from '@ackplus/nest-auth';
+import { NestAuthUser, IAuthModuleOptions, IAuthModuleOptionsFactory, NestAuthMFAMethodEnum, ERROR_CODES, TenantModeEnum } from '@ackplus/nest-auth';
 import { IAppConfig } from "../../config/app";
 import { DebugLogLevel } from '@ackplus/nest-auth';
 import { RoleGuardEnum, RoleNameEnum } from '@libs/types';
+import { INestAuthEnvConfig } from '../../config/nest_auth';
 
 @Injectable()
 export class NestAuthConfigService implements IAuthModuleOptionsFactory {
@@ -95,37 +96,49 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
      */
     private async validateUserGuard(user: NestAuthUser, requiredGuard: RoleGuardEnum): Promise<boolean> {
         // Reload user with roles if not already loaded
-        if (!user.roles || user.roles.length === 0) {
+        const userRoles = (user.userAccesses || []).map((userAccess: any) => userAccess.roles).flat().filter(Boolean);
+        if (!userRoles || userRoles.length === 0) {
             const userWithRoles = await NestAuthUser.findOne({
                 where: { id: user.id },
-                relations: ['roles']
+                relations: ['userAccesses', 'userAccesses.roles'],
             });
             if (!userWithRoles) return false;
-            return userWithRoles.roles.some((role: any) => role.guard === requiredGuard);
+            return (userWithRoles.userAccesses || []).some((userAccess: any) => userAccess.roles.some((role: any) => role.guard === requiredGuard));
         }
 
         return user.roles.some((role: any) => role.guard === requiredGuard);
     }
 
     createAuthModuleOptions(): IAuthModuleOptions {
+        const authConfig = this.configService.get<INestAuthEnvConfig>('nest_auth');
+
         const config: IAuthModuleOptions = {
             appName: process.env.APP_NAME || 'Template',
-            jwt: {
-                secret: this.configService.getOrThrow<string>('jwt.secret'),
-                accessTokenExpiresIn: this.configService.get<string>('jwt.expiresIn'),
-                refreshTokenExpiresIn: this.configService.get<string>('jwt.expiresIn'),
-            },
-            defaultTenant: {
-                name: process.env.APP_NAME || 'Template',
-                slug: this.configService.get<IAppConfig>('app')?.defaultTenantName,
+            roleGuards: [RoleGuardEnum.ADMIN, RoleGuardEnum.WEB],
+            tenant: {
+                enabled: false,
+                mode: TenantModeEnum.SHARED,
             },
             mfa: {
-                enabled: false,
+                enabled: true,
                 required: false,
-                methods: [NestAuthMFAMethodEnum.EMAIL],
-                otpLength: 6,
-                otpExpiresIn: '15m',
-                defaultOtp: this.configService.get('env') !== 'prod' ? '123456' : undefined,
+                methods: [NestAuthMFAMethodEnum.EMAIL, NestAuthMFAMethodEnum.TOTP, NestAuthMFAMethodEnum.SMS],
+                trustedDeviceSecret: authConfig.trustedDevicesSecret,
+            },
+            otp: {
+                length: 6,
+                format: 'numeric',
+                codeExpiresIn: '15m',
+            },
+            emailAuth: {
+                enabled: true,
+            },
+            phoneAuth: {
+                enabled: true,
+            },
+            passwordless: {
+                enabled: true,
+                allowSignUp: true,
             },
             // google: {
             //     clientId: this.configService.getOrThrow<string>('sso.google.clientId'),
@@ -139,7 +152,7 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
             // },
             adminConsole: {
                 enabled: true,
-                secretKey: this.configService.get<string>('nest_auth.adminUIsecretKey'),
+                secretKey: authConfig.adminUIsecretKey,
             },
             debug: {
                 enabled: false,
@@ -148,13 +161,17 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
             } as any,
             session: {
                 storageType: 'database' as any,
-                sessionExpiry: '30d'
-            },
-            cookieOptions: {
-                domain: process.env.COOKIES_DOMAIN,
-                httpOnly: true,
-                secure: process.env.APP_ENV !== 'local',
-                sameSite: process.env.APP_ENV !== 'local' ? 'none' : 'lax',
+                accessTokenValidity: '1h',
+                refreshTokenValidity: '30d',
+                jwt: {
+                    secret: authConfig.jwtSecret,
+                },
+                cookieOptions: {
+                    domain: authConfig.cookiesDomain,
+                    httpOnly: true,
+                    secure: process.env.APP_ENV !== 'local',
+                    sameSite: process.env.APP_ENV !== 'local' ? 'none' : 'lax',
+                },
             },
             registrationHooks: {
                 beforeSignup: async (input: any, context: { request: any }) => {
@@ -209,6 +226,8 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
                     const guardFromOrigin = this.getGuardFromRequest(request);
                     // Determine required guard (priority: input > origin)
                     const requiredGuard = guardFromInput || guardFromOrigin;
+
+                    console.log('requiredGuard', requiredGuard);
 
                     if (!requiredGuard) {
                         // If no guard specified, allow login (for backward compatibility or mobile)

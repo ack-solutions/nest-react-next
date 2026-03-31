@@ -12,15 +12,19 @@ export interface SeederMetadata {
     description?: string;
 }
 
-export const ALL_SEEDERS = [
-    CountrySeeder,
-    PermissionSeeder,
-    // RoleSeeder,
-    // UserSeeder,
-    // PageSeeder,
-    // PermissionSeeder,
-    // EmailTemplateSeeder,
-];
+export const SEEDERS_BY_KEY = {
+    country: CountrySeeder,
+    permission: PermissionSeeder,
+    role: RoleSeeder,
+    user: UserSeeder,
+    page: PageSeeder,
+    'email-template': EmailTemplateSeeder,
+} as const;
+
+// Keep this list to control what is exposed/run via the API + CLI config.
+export const ENABLED_SEEDER_KEYS = ['country', 'permission', 'role', 'user', 'page', 'email-template'] as const;
+
+export const ALL_SEEDERS = ENABLED_SEEDER_KEYS.map(key => SEEDERS_BY_KEY[key]);
 
 export const SEEDER_METADATA: SeederMetadata[] = [
     {
@@ -54,3 +58,11 @@ export const SEEDER_METADATA: SeederMetadata[] = [
         description: 'Seeds email templates (welcome, OTP, password reset, notifications, etc.)',
     },
 ];
+
+export const SEEDER_METADATA_BY_KEY: Record<string, SeederMetadata> = Object.fromEntries(
+    SEEDER_METADATA.map(m => [m.key, m]),
+);
+
+export const ENABLED_SEEDER_METADATA: SeederMetadata[] = ENABLED_SEEDER_KEYS.map(
+    key => SEEDER_METADATA_BY_KEY[key],
+).filter(Boolean);

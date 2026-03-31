@@ -79,7 +79,6 @@ export class UserSeeder implements Seeder {
             try {
                 authUser = await this.userService.createUser({
                     email: user.email,
-                    tenantId: user.tenantId,
                 });
             } catch (_error) {
                 authUser = await this.userService.getUserByEmail(user.email, user.tenantId);

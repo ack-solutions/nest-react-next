@@ -23,12 +23,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { Icon } from '../../components';
 import { IconEnum } from '../../components/icons/icons';
 import { useToasty } from '../../hook';
+import { useConfirm } from '@admin/app/contexts';
 
 
 const seederService = SeederService.getInstance();
 
 const DatabaseSeederSetting = () => {
     const { showToasty } = useToasty();
+    const confirmDialog = useConfirm();
     const [seeders, setSeeders] = useState<SeederInfo[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -60,9 +62,19 @@ const DatabaseSeederSetting = () => {
 
     const handleRunSeeder = useCallback(
         async (seederKey: string) => {
+            const truncate = truncateOptions[seederKey];
+            const continueConfirm = await confirmDialog({
+                title: 'Confirm Run Seeder',
+                message: truncate ? 'Are you sure you want to run this seeder? This will truncate the existing data and seed the seeder.' : 'Are you sure you want to run this seeder? This will seed the seeder.',
+                yesText: 'Run Seeder',
+                noText: 'Cancel',
+            }).then(() => true).catch(() => false);
+            if (!continueConfirm) {
+                return;
+            }
             setRunningSeeder(seederKey);
             try {
-                const result = await seederService.runSeeder(seederKey, truncateOptions[seederKey]);
+                const result = await seederService.runSeeder(seederKey, truncate);
                 if (result.success) {
                     showToasty(result.message, 'success');
                 } else {
@@ -78,15 +90,25 @@ const DatabaseSeederSetting = () => {
     );
 
     const handleRunAllSeeders = useCallback(async () => {
+        const truncateAll = Object.values(truncateOptions).some((v) => v);
+        const continueConfirm = await confirmDialog({
+            title: 'Confirm Run All Seeders',
+            message: truncateAll ? 'Are you sure you want to run all seeders? This will truncate all existing data and seed all seeders.' : 'Are you sure you want to run all seeders? This will seed all seeders.',
+            yesText: 'Run All Seeders',
+            noText: 'Cancel',
+        }).then(() => true).catch(() => false);
+        if (!continueConfirm) {
+            return;
+        }
         setRunningSeeder('all');
         try {
-            const truncateAll = Object.values(truncateOptions).some((v) => v);
+
             const result = await seederService.runAllSeeders(truncateAll);
             if (result.success) {
                 showToasty(result.message, 'success');
             } else {
-                const failedSeeders = result.results.filter((r) => !r.success);
-                showToasty(`Some seeders failed: ${failedSeeders.map((r) => r.name).join(', ')}`, 'warning');
+                const failedSeeders = result.results.filter((r: any) => !r.success);
+                showToasty(`Some seeders failed: ${failedSeeders.map((r: any) => r.name).join(', ')}`, 'warning');
             }
         } catch (err: any) {
             showToasty(err.message || 'Failed to run seeders', 'error');

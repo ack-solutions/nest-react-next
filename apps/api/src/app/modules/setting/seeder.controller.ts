@@ -10,7 +10,12 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { NestAuthAuthGuard, NestAuthRoles } from '@ackplus/nest-auth';
 import { ModuleRef } from '@nestjs/core';
-import { ALL_SEEDERS, SEEDER_METADATA } from '../../seeders';
+import {
+    ALL_SEEDERS,
+    ENABLED_SEEDER_METADATA,
+    SEEDER_METADATA_BY_KEY,
+    SEEDERS_BY_KEY,
+} from '../../seeders';
 
 
 interface SeederInfo {
@@ -37,26 +42,27 @@ export class SeederController {
     @NestAuthRoles(RoleNameEnum.SUPER_ADMIN, RoleGuardEnum.ADMIN)
     @ApiOperation({ summary: 'Get list of available seeders' })
     async getSeeders(): Promise<SeederInfo[]> {
-        return SEEDER_METADATA.map((metadata, index) => ({
-            name: metadata.name,
-            key: metadata.key,
-            description: metadata.description,
-            hasDrop: typeof ALL_SEEDERS[index].prototype.drop === 'function',
-        }));
+        return ENABLED_SEEDER_METADATA.map(metadata => {
+            const SeederClass = SEEDERS_BY_KEY[metadata.key as keyof typeof SEEDERS_BY_KEY];
+            return {
+                name: metadata.name,
+                key: metadata.key,
+                description: metadata.description,
+                hasDrop: typeof (SeederClass as any)?.prototype?.drop === 'function',
+            };
+        });
     }
 
     @Post('run')
     @NestAuthRoles(RoleNameEnum.SUPER_ADMIN, RoleGuardEnum.ADMIN)
     @ApiOperation({ summary: 'Run a specific seeder' })
     async runSeeder(@Body() dto: RunSeederDto): Promise<{ success: boolean; message: string }> {
-        const seederIndex = SEEDER_METADATA.findIndex(m => m.key === dto.seederKey);
+        const SeederClass = (SEEDERS_BY_KEY as any)[dto.seederKey];
+        const metadata = SEEDER_METADATA_BY_KEY[dto.seederKey];
 
-        if (seederIndex === -1) {
+        if (!SeederClass || !metadata) {
             throw new BadRequestException(`Seeder with key "${dto.seederKey}" not found`);
         }
-
-        const SeederClass = ALL_SEEDERS[seederIndex];
-        const metadata = SEEDER_METADATA[seederIndex];
 
         try {
             // Get the seeder instance from the module ref
@@ -87,7 +93,7 @@ export class SeederController {
 
         for (let i = 0; i < ALL_SEEDERS.length; i++) {
             const SeederClass = ALL_SEEDERS[i];
-            const metadata = SEEDER_METADATA[i];
+            const metadata = ENABLED_SEEDER_METADATA[i];
 
             try {
                 const seederInstance = await this.moduleRef.create(SeederClass as any);

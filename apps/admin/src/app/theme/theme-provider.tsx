@@ -17,6 +17,7 @@ import {
     initialSetting,
     useSettingsContext,
 } from '../contexts/settings-provider';
+import { compactLayoutOverrides } from './components/compact-layout-overrides';
 
 
 type ThemeProviderProps = {
@@ -34,8 +35,9 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
         shadows: shadows(settings.colorScheme),
         customShadows: customShadows(settings.colorScheme),
         shape: {
-            borderRadius: settings.compactLayout ? 4 : 8,
+            borderRadius: settings.compactLayout ? 6 : 8,
         },
+        spacing: settings.compactLayout ? 6 : 8,
         components: {
             ...components,
             ...contrastOption.components,
@@ -111,35 +113,23 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
                 ...customShadows(settings.colorScheme),
                 ...presets(settings.primaryColor).customShadows,
             },
-            components: {
-                ...initialTheme.components,
-                ...(settings.compactLayout && {
-                    MuiCard: {
-                        styleOverrides: {
-                            root: {
-                                padding: '12px',
-                            },
-                        },
-                    },
-                    MuiButton: {
-                        styleOverrides: {
-                            root: {
-                                minHeight: '32px',
-                                padding: '6px 12px',
-                            },
-                        },
-                    },
-                    MuiTextField: {
-                        styleOverrides: {
-                            root: {
-                                '& .MuiInputBase-root': {
-                                    minHeight: '36px',
-                                },
-                            },
-                        },
-                    },
-                }),
-            },
+            components: (() => {
+                const base = initialTheme.components as Record<string, unknown>;
+                if (!settings.compactLayout) return base;
+                const merged: Record<string, unknown> = { ...base };
+                const compactKeys = Object.keys(compactLayoutOverrides) as (keyof typeof compactLayoutOverrides)[];
+                for (const key of compactKeys) {
+                    const existing = merged[key] as Record<string, unknown> | undefined;
+                    const compact = compactLayoutOverrides[key] as Record<string, unknown>;
+                    merged[key] = {
+                        ...(existing || {}),
+                        ...compact,
+                        defaultProps: { ...(existing?.defaultProps as object || {}), ...(compact?.defaultProps as object || {}) },
+                        styleOverrides: { ...(existing?.styleOverrides as object || {}), ...(compact?.styleOverrides as object || {}) },
+                    };
+                }
+                return merged;
+            })(),
         };
     }, [
         settings,
@@ -197,18 +187,18 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
                             textDecoration: 'none',
                             color: 'inherit',
                         },
-                        ...(settings.compactLayout && {
-                            '& .MuiContainer-root': {
-                                paddingTop: '8px !important',
-                                paddingBottom: '8px !important',
-                            },
-                            '& .MuiStack-root': {
-                                gap: '8px !important',
-                            },
-                            '& .MuiBox-root': {
-                                padding: '8px',
-                            },
-                        }),
+                        // ...(settings.compactLayout && {
+                        //     '& .MuiContainer-root': {
+                        //         paddingTop: '8px !important',
+                        //         paddingBottom: '8px !important',
+                        //     },
+                        //     '& .MuiStack-root': {
+                        //         gap: '8px !important',
+                        //     },
+                        //     '& .MuiBox-root': {
+                        //         padding: '8px',
+                        //     },
+                        // }),
                     },
                 }}
             />

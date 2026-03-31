@@ -25,6 +25,7 @@ import { NestAuthConfigService } from './core/service/nest-auth-config.service';
 import { FileStorageEnum, NestFileStorageModule } from '@ackplus/nest-file-storage';
 import path from 'path';
 import { PermissionModule } from './modules/permission/permission.module';
+import { FileStorageConfigService } from './core/service/file-storage-config.service';
 
 
 @Module({
@@ -64,24 +65,8 @@ import { PermissionModule } from './modules/permission/permission.module';
 
         NestFileStorageModule.forRootAsync({
             imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: () => ({
-                storage: (process.env.FILE_STORAGE ||
-                    FileStorageEnum.LOCAL) as any,
-                s3Config: {
-                    accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
-                    secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
-                    region: process.env.AWS_S3_REGION,
-                    bucket: process.env.AWS_S3_BUCKET,
-                    cloudFrontUrl: process.env.AWS_CDN_URL,
-                },
-                localConfig: {
-                    rootPath: path.join(process.cwd(), 'public'),
-                    baseUrl: `${process.env.API_URL}/public`,
-                },
-            }),
+            useClass: FileStorageConfigService,
         }),
-
 
         NestDynamicTemplatesModule.forRoot({
             isGlobal: true,
