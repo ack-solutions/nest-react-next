@@ -1,0 +1,20 @@
+# Web dev Dockerfile: hot reload (Next.js), no production build.
+# Build context: repo root. Source + node_modules are mounted from host at runtime.
+FROM node:20-alpine
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY tsconfig.base.json ./
+COPY libs ./libs
+COPY apps/web/package.json ./apps/web/package.json
+
+RUN pnpm install
+
+COPY apps/web ./apps/web
+
+WORKDIR /app
+EXPOSE 3000

@@ -1,12 +1,80 @@
 services:
+  # -----------------------
+  # PostgreSQL (Persistent)
+  # -----------------------
+  db:
+    image: postgres:16
+    container_name: ${APP_NAME}-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: template
+      POSTGRES_USER: template
+      POSTGRES_PASSWORD: i962oOk1WGA9Xr5RD
+    ports:
+      - '5432:5432' # optional; remove if only internal use
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U template -d template']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-net
+
+  # -----------------------
+  # MinIO (S3) (Persistent)
+  # -----------------------
+  minio:
+    image: minio/minio:latest
+    container_name: ${APP_NAME}-minio
+    restart: unless-stopped
+    ports:
+      - '9000:9000' # S3 API
+      - '9001:9001' # Console
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: i962oOk1WGA9Xr5RD
+    volumes:
+      - ./data/minio:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-net
+
+  # -----------------------
+  # API (NestJS)
+  # -----------------------
   api:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
-    image: template-api:latest
-    container_name: template-api
+    image: ${APP_NAME}-api:latest
+    container_name: ${APP_NAME}-api
     env_file:
-      - apps/api/.env-prod
+      - path: apps/api/.env-prod
+        required: true
+    environment:
+      # DB connection for docker network
+      DATABASE_HOST: db
+      DATABASE_USERNAME: template
+      DATABASE_PASSWORD: i962oOk1WGA9Xr5RD
+      DATABASE_NAME: template
+      DATABASE_PORT: '5432'
+
+      # MinIO S3 settings (update keys to match your code/env names)
+      AWS_S3_ENDPOINT: http://minio:9000
+      AWS_S3_ACCESS_KEY_ID: minioadmin
+      AWS_S3_SECRET_ACCESS_KEY: i962oOk1WGA9Xr5RD
+      AWS_S3_REGION: us-east-1
+      AWS_S3_BUCKET: template
+      AWS_CDN_URL:
+      # Only if public bucket (otherwise use presigned URLs):
+      # S3_PUBLIC_BASE_URL: https://s3.badacup.com/badacup
     ports:
       - '3333:3333'
     extra_hosts:
@@ -17,7 +85,13 @@ services:
       options:
         max-size: '50m'
         max-file: '3'
+    networks:
+      - app-net
+    command: ['./start.sh']
 
+  # -----------------------
+  # Web (Next.js)
+  # -----------------------
   web:
     build:
       context: .
@@ -29,8 +103,8 @@ services:
         NEXT_PUBLIC_APP_FRONT_URL:
         NEXT_PUBLIC_APP_ADMIN_URL:
         SERVER_APP_API_URL:
-    image: template-web:latest
-    container_name: template-web
+    image: ${APP_NAME}-web:latest
+    container_name: ${APP_NAME}-web
     environment:
       - NEXT_PUBLIC_INBOX_ARMY_URL=
       - NEXT_PUBLIC_BASE_PATH=
@@ -48,7 +122,13 @@ services:
       options:
         max-size: '50m'
         max-file: '3'
+    networks:
+      - app-net
+    command: ['node', 'apps/web/server.js']
 
+  # -----------------------
+  # Admin (Vite -> Nginx static usually)
+  # -----------------------
   admin:
     build:
       context: .
@@ -57,8 +137,8 @@ services:
         VITE_API_URL:
         VITE_FRONT_URL:
         VITE_ADMIN_URL:
-    image: template-admin:latest
-    container_name: template-admin
+    image: ${APP_NAME}-admin:latest
+    container_name: ${APP_NAME}-admin
     environment:
       - VITE_API_URL=
       - VITE_FRONT_URL=
@@ -73,3 +153,11 @@ services:
       options:
         max-size: '50m'
         max-file: '3'
+    networks:
+      - app-net
+    command: ['nginx', '-g', 'daemon off;']
+
+networks:
+  app-net:
+    name: ${APP_NAME}-net
+    driver: bridge

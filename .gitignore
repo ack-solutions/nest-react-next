@@ -48,6 +48,7 @@ out
 
 # env file
 .env
+.env-local
 ormlogs.log
 /public
 
@@ -55,3 +56,7 @@ vite.config.*.timestamp*
 vitest.config.*.timestamp*
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
+
+# Data
+/data/
+/backups/

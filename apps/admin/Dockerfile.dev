@@ -1,0 +1,19 @@
+# Admin dev Dockerfile: hot reload (Vite), no production build.
+# Build context: repo root. Source + node_modules are mounted from host at runtime.
+FROM node:20-alpine
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY tsconfig.base.json ./
+COPY libs ./libs
+COPY apps/admin/package.json ./apps/admin/package.json
+
+RUN pnpm install
+
+COPY apps/admin ./apps/admin
+
+EXPOSE 4200
