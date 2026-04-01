@@ -40,13 +40,13 @@
                 "./src/sections/*"
             ],
             "@libs/utils": [
-                "../../packages/utils/src"
+                "../../libs/utils/src"
             ],
             "@libs/types": [
-                "../../packages/types/src"
+                "../../libs/types/src"
             ],
             "@libs/react-shared": [
-                "../../packages/react-shared/src"
+                "../../libs/react-shared/src"
             ]
         }
     },

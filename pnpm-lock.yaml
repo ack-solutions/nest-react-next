@@ -166,13 +166,13 @@ importers:
         version: 5.2.2(react-hook-form@7.70.0(react@19.2.3))
       '@libs/react-shared':
         specifier: workspace:*
-        version: link:../../packages/react-shared
+        version: link:../../libs/react-shared
       '@libs/types':
         specifier: workspace:*
-        version: link:../../packages/types
+        version: link:../../libs/types
       '@libs/utils':
         specifier: workspace:*
-        version: link:../../packages/utils
+        version: link:../../libs/utils
       '@monaco-editor/react':
         specifier: ^4.7.0
         version: 4.7.0(monaco-editor@0.55.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -332,10 +332,10 @@ importers:
         version: 12.29.1
       '@libs/types':
         specifier: workspace:*
-        version: link:../../packages/types
+        version: link:../../libs/types
       '@libs/utils':
         specifier: workspace:*
-        version: link:../../packages/utils
+        version: link:../../libs/utils
       '@nestjs-modules/ioredis':
         specifier: ^2.0.2
         version: 2.0.2(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(@nestjs/typeorm@11.0.0(@nestjs/common@11.1.11(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.11)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.9.0)(pg@8.16.3)(ts-node@10.9.2(@types/node@25.0.3)(typescript@5.9.3))))(ioredis@5.9.0)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.9.0)(pg@8.16.3)(ts-node@10.9.2(@types/node@25.0.3)(typescript@5.9.3)))
@@ -513,13 +513,13 @@ importers:
         version: 5.2.2(react-hook-form@7.70.0(react@18.3.1))
       '@libs/react-shared':
         specifier: workspace:*
-        version: link:../../packages/react-shared
+        version: link:../../libs/react-shared
       '@libs/types':
         specifier: workspace:*
-        version: link:../../packages/types
+        version: link:../../libs/types
       '@libs/utils':
         specifier: workspace:*
-        version: link:../../packages/utils
+        version: link:../../libs/utils
       '@react-native-async-storage/async-storage':
         specifier: ~1.23.1
         version: 1.23.1(react-native@0.76.3(@babel/core@7.28.5)(@babel/preset-env@7.28.5(@babel/core@7.28.5))(@types/react@18.3.27)(encoding@0.1.13)(react@18.3.1))
@@ -646,13 +646,13 @@ importers:
         version: 5.2.2(react-hook-form@7.70.0(react@19.2.3))
       '@libs/react-shared':
         specifier: workspace:*
-        version: link:../../packages/react-shared
+        version: link:../../libs/react-shared
       '@libs/types':
         specifier: workspace:*
-        version: link:../../packages/types
+        version: link:../../libs/types
       '@libs/utils':
         specifier: workspace:*
-        version: link:../../packages/utils
+        version: link:../../libs/utils
       axios:
         specifier: 'catalog:'
         version: 1.13.2
@@ -739,7 +739,7 @@ importers:
         specifier: ^5
         version: 5.9.3
 
-  packages/react-shared:
+  libs/react-shared:
     dependencies:
       '@ackplus/nest-auth-client':
         specifier: ^1.1.64
@@ -785,7 +785,7 @@ importers:
         specifier: ^4.4.5
         version: 4.5.14(@types/node@20.19.27)(lightningcss@1.30.2)(terser@5.44.1)
 
-  packages/types:
+  libs/types:
     dependencies:
       '@ackplus/nest-auth':
         specifier: 'catalog:'
@@ -809,7 +809,7 @@ importers:
         specifier: ^0.3.27
         version: 0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.9.0)(pg@8.16.3)(ts-node@10.9.2(@types/node@20.19.33)(typescript@5.9.3))
 
-  packages/utils:
+  libs/utils:
     dependencies:
       class-transformer:
         specifier: ^0.5.1
@@ -824,7 +824,7 @@ importers:
         specifier: 'catalog:'
         version: 2.8.1
 
-packages:
+libs:
 
   '@0no-co/graphql.web@1.2.0':
     resolution: {integrity: sha512-/1iHy9TTr63gE1YcR5idjx8UREz1s0kFhydf3bBLCXyqjhkIc6igAzTOx3zPifCwFR87tsh/4Pa9cNts6d2otw==}
@@ -9146,7 +9146,7 @@ packages:
 
   react-native-vector-icons@10.3.0:
     resolution: {integrity: sha512-IFQ0RE57819hOUdFvgK4FowM5aMXg7C7XKsuGLevqXkkIJatc3QopN0wYrb2IrzUgmdpfP+QVIbI3S6h7M0btw==}
-    deprecated: react-native-vector-icons package has moved to a new model of per-icon-family packages. See the https://github.com/oblador/react-native-vector-icons/blob/master/MIGRATION.md on how to migrate
+    deprecated: react-native-vector-icons package has moved to a new model of per-icon-family libs. See the https://github.com/oblador/react-native-vector-icons/blob/master/MIGRATION.md on how to migrate
     hasBin: true
 
   react-native-web@0.19.13:

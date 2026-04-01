@@ -23,13 +23,13 @@
     "resolveJsonModule": true,
     "paths": {
       "@libs/types": [
-        "packages/types/src"
+        "libs/types/src"
       ],
       "@libs/utils": [
-        "packages/utils/src"
+        "libs/utils/src"
       ],
       "@libs/react-shared": [
-        "packages/react-shared/src"
+        "libs/react-shared/src"
       ]
     }
   },

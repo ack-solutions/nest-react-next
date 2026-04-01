@@ -1,0 +1,114 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    image: inbox-army-api:latest
+    container_name: inbox-army-api
+    env_file:
+      - apps/api/.env-local
+    environment:
+      - DATABASE_HOST=host.docker.internal
+      - REDIS_HOST=redis
+    ports:
+      - '4041:3333'
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - inbox-army-sitemaps:/app/sitemaps
+    restart: unless-stopped
+    shm_size: '2gb'
+    depends_on:
+      - redis
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_INBOX_ARMY_URL: https://staging.inboxarmy.com
+        NEXT_PUBLIC_BASE_PATH:
+        NEXT_PUBLIC_APP_API_URL: http://localhost:3333
+        NEXT_PUBLIC_APP_FRONT_URL: http://localhost:3000
+        NEXT_PUBLIC_APP_DESIGN_URL: http://localhost:3001
+        NEXT_PUBLIC_APP_ADMIN_URL: http://localhost:4200
+        SERVER_APP_API_URL: http://inbox-army-api:3333
+    image: inbox-army-web:latest
+    container_name: inbox-army-web
+    environment:
+      - NEXT_PUBLIC_INBOX_ARMY_URL=https://staging.inboxarmy.com
+      - NEXT_PUBLIC_BASE_PATH=
+      - NEXT_PUBLIC_APP_API_URL=http://localhost:3333
+      - NEXT_PUBLIC_APP_FRONT_URL=http://localhost:3000
+      - NEXT_PUBLIC_APP_ADMIN_URL=http://localhost:4200
+      - NEXT_PUBLIC_APP_DESIGN_URL=http://localhost:3001
+      - SERVER_APP_API_URL=http://inbox-army-api:3333
+    depends_on:
+      - api
+    ports:
+      - '4042:3000'
+    restart: unless-stopped
+
+  design:
+    build:
+      context: .
+      dockerfile: apps/design/Dockerfile
+      args:
+        NEXT_PUBLIC_INBOX_ARMY_URL: https://staging.inboxarmy.com
+        NEXT_PUBLIC_BASE_PATH: /
+        NEXT_PUBLIC_APP_API_URL: http://localhost:3333
+        NEXT_PUBLIC_APP_FRONT_URL: http://localhost:3000
+        NEXT_PUBLIC_APP_DESIGN_URL: http://localhost:3001
+        NEXT_PUBLIC_APP_DESIGN_FRONT_URL: http://localhost:3001
+        SERVER_APP_API_URL: http://inbox-army-api:3333
+    image: inbox-army-design:latest
+    container_name: inbox-army-design
+    environment:
+      - NEXT_PUBLIC_INBOX_ARMY_URL=https://staging.inboxarmy.com
+      - NEXT_PUBLIC_BASE_PATH=/
+      - NEXT_PUBLIC_APP_API_URL=http://localhost:3333
+      - NEXT_PUBLIC_APP_FRONT_URL=http://localhost:3000
+      - NEXT_PUBLIC_APP_ADMIN_URL=http://localhost:4200
+      - NEXT_PUBLIC_APP_DESIGN_FRONT_URL=http://localhost:3001
+      - SERVER_APP_API_URL=http://inbox-army-api:3333
+    volumes:
+      - inbox-army-sitemaps:/app/public/sitemaps
+    depends_on:
+      - api
+    ports:
+      - '4044:3001'
+    restart: unless-stopped
+
+  admin:
+    build:
+      context: .
+      dockerfile: apps/admin/Dockerfile
+      args:
+        VITE_API_URL: http://localhost:3333
+        VITE_FRONT_URL: http://localhost:3000
+        VITE_ADMIN_URL: http://localhost:4200
+        VITE_DESIGN_FRONT_URL: http://localhost:3001
+    image: inbox-army-admin:latest
+    container_name: inbox-army-admin
+    environment:
+      - VITE_API_URL=http://localhost:3333
+      - VITE_FRONT_URL=http://localhost:3000
+      - VITE_ADMIN_URL=http://localhost:4200
+      - VITE_DESIGN_FRONT_URL=http://localhost:3001
+    depends_on:
+      - api
+    ports:
+      - '4043:80'
+    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    container_name: inbox-army-redis
+    restart: always
+    volumes:
+      - inbox-army-redis-data:/data
+
+volumes:
+  inbox-army-redis-data:
+  inbox-army-sitemaps:
+  inbox-army-data:

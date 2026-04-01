@@ -76,10 +76,10 @@ export async function injectAppModule(rootDir: string, meta: GeneratorMeta, opti
 }
 
 /**
- * Inject Export into packages/types/src/index.ts
+ * Inject Export into libs/types/src/index.ts
  */
 export async function injectTypesExport(rootDir: string, meta: GeneratorMeta, options: GeneratorOptions): Promise<GeneratedFile[]> {
-    const basePath = 'packages/types/src';
+    const basePath = 'libs/types/src';
 
     const filePath = path.join(rootDir, basePath, 'index.ts');
     try {

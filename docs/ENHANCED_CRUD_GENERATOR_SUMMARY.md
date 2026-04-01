@@ -212,7 +212,7 @@ nx g @libs/generators:crud product
 - ✅ Familiar codebase
 
 ### **Option 2: Migrate to @ackplus/nest-crud**
-1. Install packages:
+1. Install libs:
    ```bash
    npm install @ackplus/nest-crud @ackplus/crud-typeorm
    ```

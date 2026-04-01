@@ -1,0 +1,75 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    image: template-api:latest
+    container_name: template-api
+    env_file:
+      - apps/api/.env-prod
+    ports:
+      - '3333:3333'
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    restart: unless-stopped
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+        max-file: '3'
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_INBOX_ARMY_URL:
+        NEXT_PUBLIC_BASE_PATH:
+        NEXT_PUBLIC_APP_API_URL:
+        NEXT_PUBLIC_APP_FRONT_URL:
+        NEXT_PUBLIC_APP_ADMIN_URL:
+        SERVER_APP_API_URL:
+    image: template-web:latest
+    container_name: template-web
+    environment:
+      - NEXT_PUBLIC_INBOX_ARMY_URL=
+      - NEXT_PUBLIC_BASE_PATH=
+      - NEXT_PUBLIC_APP_API_URL=
+      - NEXT_PUBLIC_APP_FRONT_URL=
+      - NEXT_PUBLIC_APP_ADMIN_URL=
+      - SERVER_APP_API_URL=
+    depends_on:
+      - api
+    ports:
+      - '4042:3000'
+    restart: unless-stopped
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+        max-file: '3'
+
+  admin:
+    build:
+      context: .
+      dockerfile: apps/admin/Dockerfile
+      args:
+        VITE_API_URL:
+        VITE_FRONT_URL:
+        VITE_ADMIN_URL:
+    image: template-admin:latest
+    container_name: template-admin
+    environment:
+      - VITE_API_URL=
+      - VITE_FRONT_URL=
+      - VITE_ADMIN_URL=
+    depends_on:
+      - api
+    ports:
+      - '4200:80'
+    restart: unless-stopped
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+        max-file: '3'

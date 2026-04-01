@@ -15,9 +15,9 @@ export default defineConfig({
     resolve: {
         dedupe: ['react', 'react-dom'],
         alias: {
-            '@libs/react-shared': fileURLToPath(new URL('../../packages/react-shared/src/index.ts', import.meta.url)),
-            '@libs/utils': fileURLToPath(new URL('../../packages/utils/src/index.ts', import.meta.url)),
-            '@libs/types': fileURLToPath(new URL('../../packages/types/src/index.ts', import.meta.url)),
+            '@libs/react-shared': fileURLToPath(new URL('../../libs/react-shared/src/index.ts', import.meta.url)),
+            '@libs/utils': fileURLToPath(new URL('../../libs/utils/src/index.ts', import.meta.url)),
+            '@libs/types': fileURLToPath(new URL('../../libs/types/src/index.ts', import.meta.url)),
             '@admin': fileURLToPath(new URL('./src', import.meta.url)),
         },
     },

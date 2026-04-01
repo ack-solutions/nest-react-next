@@ -13,7 +13,7 @@ const customJestConfig = {
         '^@web/(.*)$': '<rootDir>/src/$1',
         '^@ui/(.*)$': '<rootDir>/src/components/ui/$1',
         '^@sections/(.*)$': '<rootDir>/src/sections/$1',
-        '^@libs/(.*)$': '<rootDir>/../../packages/$1/src',
+        '^@libs/(.*)$': '<rootDir>/../../libs/$1/src',
     },
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
     coverageDirectory: '../../coverage/apps/web',

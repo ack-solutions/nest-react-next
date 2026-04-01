@@ -3,7 +3,10 @@
     "compilerOptions": {
         "outDir": "../../dist/out-tsc",
         "module": "commonjs",
-        "types": ["jest", "node"]
+        "types": [
+            "jest",
+            "node"
+        ]
     },
     "include": [
         "jest.config.ts",
@@ -13,10 +16,10 @@
     ],
     "references": [
         {
-            "path": "../../packages/types/tsconfig.lib.json"
+            "path": "../../libs/types/tsconfig.lib.json"
         },
         {
-            "path": "../../packages/utils/tsconfig.lib.json"
+            "path": "../../libs/utils/tsconfig.lib.json"
         }
     ]
 }

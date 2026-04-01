@@ -122,7 +122,7 @@ export async function generateCrud(
 
         // Type interface
         const typeContent = await renderTemplate('types/interface.ts.ejs', meta);
-        results.push(writeFile(rootDir, `packages/types/src/lib/${meta.entityFile}.ts`, typeContent, options));
+        results.push(writeFile(rootDir, `libs/types/src/lib/${meta.entityFile}.ts`, typeContent, options));
 
         // Entity
         const entityContent = await renderTemplate('api/entity.ts.ejs', meta);
@@ -148,19 +148,19 @@ export async function generateCrud(
         results.push(writeFile(rootDir, `${apiBaseDir}/dto/update-${meta.entityFile}.dto.ts`, updateDtoContent, options));
 
         // Update exports
-        results.push(appendLineIfMissing(rootDir, 'packages/types/src/index.ts', `export * from './lib/${meta.entityFile}';`, options));
+        results.push(appendLineIfMissing(rootDir, 'libs/types/src/index.ts', `export * from './lib/${meta.entityFile}';`, options));
     }
 
     // React Files
     if (outputApps.admin || outputApps.web) {
         const reactServiceContent = await renderTemplate('react/service.ts.ejs', meta);
-        results.push(writeFile(rootDir, `packages/react-shared/src/services/${meta.entityFile}.service.ts`, reactServiceContent, options));
+        results.push(writeFile(rootDir, `libs/react-shared/src/services/${meta.entityFile}.service.ts`, reactServiceContent, options));
 
         const hooksContent = await renderTemplate('react/hooks.ts.ejs', meta);
-        results.push(writeFile(rootDir, `packages/react-shared/src/query-hooks/use-${meta.entityFile}.ts`, hooksContent, options));
+        results.push(writeFile(rootDir, `libs/react-shared/src/query-hooks/use-${meta.entityFile}.ts`, hooksContent, options));
 
-        results.push(appendLineIfMissing(rootDir, 'packages/react-shared/src/services/index.ts', `export * from './${meta.entityFile}.service';`, options));
-        results.push(appendLineIfMissing(rootDir, 'packages/react-shared/src/query-hooks/index.ts', `export * from './use-${meta.entityFile}';`, options));
+        results.push(appendLineIfMissing(rootDir, 'libs/react-shared/src/services/index.ts', `export * from './${meta.entityFile}.service';`, options));
+        results.push(appendLineIfMissing(rootDir, 'libs/react-shared/src/query-hooks/index.ts', `export * from './use-${meta.entityFile}';`, options));
     }
 
     // Admin Files

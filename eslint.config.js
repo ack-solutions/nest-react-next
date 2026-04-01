@@ -39,7 +39,7 @@ module.exports = tseslint.config(
             'no-restricted-imports': [
                 'error',
                 {
-                    patterns: ['libs/*', 'apps/*'], // Disallow imports starting with 'packages'
+                    patterns: ['libs/*', 'apps/*'], // Disallow imports starting with 'libs'
                 },
             ],
             '@typescript-eslint/ban-ts-comment': 'off',
