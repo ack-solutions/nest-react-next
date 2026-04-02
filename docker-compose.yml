@@ -1,114 +1,163 @@
 services:
+  # -----------------------
+  # PostgreSQL (Persistent)
+  # -----------------------
+  db:
+    image: postgres:16
+    container_name: ${APP_NAME}-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: template
+      POSTGRES_USER: template
+      POSTGRES_PASSWORD: i962oOk1WGA9Xr5RD
+    ports:
+      - '5432:5432' # optional; remove if only internal use
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U template -d template']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-net
+
+  # -----------------------
+  # MinIO (S3) (Persistent)
+  # -----------------------
+  minio:
+    image: minio/minio:latest
+    container_name: ${APP_NAME}-minio
+    restart: unless-stopped
+    ports:
+      - '9000:9000' # S3 API
+      - '9001:9001' # Console
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: i962oOk1WGA9Xr5RD
+    volumes:
+      - ./data/minio:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-net
+
+  # -----------------------
+  # API (NestJS)
+  # -----------------------
   api:
     build:
       context: .
-      dockerfile: apps/api/Dockerfile.dev
-    image: ${APP_NAME}-api:dev
+      dockerfile: apps/api/Dockerfile
+    image: ${APP_NAME}-api:latest
     container_name: ${APP_NAME}-api
     env_file:
-      - path: apps/api/.env-docker
+      - path: apps/api/.env-prod
         required: true
-      - path: apps/api/.env-local
-        required: false
+    environment:
+      # DB connection for docker network
+      DATABASE_HOST: db
+      DATABASE_USERNAME: template
+      DATABASE_PASSWORD: i962oOk1WGA9Xr5RD
+      DATABASE_NAME: template
+      DATABASE_PORT: '5432'
+
+      # MinIO S3 settings (update keys to match your code/env names)
+      AWS_S3_ENDPOINT: http://minio:9000
+      AWS_S3_ACCESS_KEY_ID: minioadmin
+      AWS_S3_SECRET_ACCESS_KEY: i962oOk1WGA9Xr5RD
+      AWS_S3_REGION: us-east-1
+      AWS_S3_BUCKET: template
+      AWS_CDN_URL:
+      # Only if public bucket (otherwise use presigned URLs):
+      # S3_PUBLIC_BASE_URL: https://s3.badacup.com/badacup
     ports:
       - '3333:3333'
     extra_hosts:
       - 'host.docker.internal:host-gateway'
-    volumes:
-      - ./package.json:/app/package.json:ro
-      - ./pnpm-lock.yaml:/app/pnpm-lock.yaml:ro
-      - ./pnpm-workspace.yaml:/app/pnpm-workspace.yaml:ro
-      - ./tsconfig.base.json:/app/tsconfig.base.json:ro
-      - ./libs:/app/libs
-      - ./apps/api:/app/apps/api
     restart: unless-stopped
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+        max-file: '3'
     networks:
       - app-net
-    command: ['pnpm', '--filter', './apps/api', 'dev']
+    command: ['./start.sh']
 
+  # -----------------------
+  # Web (Next.js)
+  # -----------------------
   web:
     build:
       context: .
-      dockerfile: apps/web/Dockerfile.dev
+      dockerfile: apps/web/Dockerfile
       args:
+        NEXT_PUBLIC_INBOX_ARMY_URL:
         NEXT_PUBLIC_BASE_PATH:
-        NEXT_PUBLIC_APP_API_URL: ${APP_API_URL}
-        NEXT_PUBLIC_APP_FRONT_URL: ${APP_FRONT_URL}
-        NEXT_PUBLIC_APP_ADMIN_URL: ${APP_ADMIN_URL}
-        SERVER_APP_API_URL: http://${APP_NAME}-api:3333
-    image: ${APP_NAME}-web:dev
+        NEXT_PUBLIC_APP_API_URL:
+        NEXT_PUBLIC_APP_FRONT_URL:
+        NEXT_PUBLIC_APP_ADMIN_URL:
+        SERVER_APP_API_URL:
+    image: ${APP_NAME}-web:latest
     container_name: ${APP_NAME}-web
     environment:
-      HOSTNAME: 0.0.0.0
-      NEXT_PUBLIC_BASE_PATH:
-      NEXT_PUBLIC_APP_API_URL: ${APP_API_URL}
-      NEXT_PUBLIC_APP_FRONT_URL: ${APP_FRONT_URL}
-      NEXT_PUBLIC_APP_ADMIN_URL: ${APP_ADMIN_URL}
-      SERVER_APP_API_URL: http://${APP_NAME}-api:3333
-    volumes:
-      - .:/app
-      - web-node-modules:/app/node_modules
-      - web-app-node-modules:/app/apps/web/node_modules
-      - web-packages-types-node-modules:/app/packages/types/node_modules
-      - web-packages-utils-node-modules:/app/packages/utils/node_modules
-      - web-packages-react-shared-node-modules:/app/packages/react-shared/node_modules
-    ports:
-      - '3000:3000'
+      - NEXT_PUBLIC_INBOX_ARMY_URL=
+      - NEXT_PUBLIC_BASE_PATH=
+      - NEXT_PUBLIC_APP_API_URL=
+      - NEXT_PUBLIC_APP_FRONT_URL=
+      - NEXT_PUBLIC_APP_ADMIN_URL=
+      - SERVER_APP_API_URL=
     depends_on:
       - api
+    ports:
+      - '4042:3000'
     restart: unless-stopped
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+        max-file: '3'
     networks:
       - app-net
-    command: ['pnpm', '--filter', './apps/web', 'dev']
+    command: ['node', 'apps/web/server.js']
 
+  # -----------------------
+  # Admin (Vite -> Nginx static usually)
+  # -----------------------
   admin:
     build:
       context: .
-      dockerfile: apps/admin/Dockerfile.dev
+      dockerfile: apps/admin/Dockerfile
       args:
-        VITE_API_URL: ${APP_API_URL}
-        VITE_FRONT_URL: ${APP_FRONT_URL}
-        VITE_ADMIN_URL: ${APP_ADMIN_URL}
-    image: ${APP_NAME}-admin:dev
+        VITE_API_URL:
+        VITE_FRONT_URL:
+        VITE_ADMIN_URL:
+    image: ${APP_NAME}-admin:latest
     container_name: ${APP_NAME}-admin
     environment:
-      VITE_API_URL: ${APP_API_URL}
-      VITE_FRONT_URL: ${APP_FRONT_URL}
-      VITE_ADMIN_URL: ${APP_ADMIN_URL}
-    volumes:
-      - .:/app
-      - admin-node-modules:/app/node_modules
-      - admin-app-node-modules:/app/apps/admin/node_modules
-      - admin-packages-types-node-modules:/app/packages/types/node_modules
-      - admin-packages-utils-node-modules:/app/packages/utils/node_modules
-      - admin-packages-react-shared-node-modules:/app/packages/react-shared/node_modules
-    ports:
-      - '4200:4200'
+      - VITE_API_URL=
+      - VITE_FRONT_URL=
+      - VITE_ADMIN_URL=
     depends_on:
       - api
+    ports:
+      - '4200:80'
     restart: unless-stopped
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+        max-file: '3'
     networks:
       - app-net
-    command: ['pnpm', '--filter', './apps/admin', 'dev']
+    command: ['nginx', '-g', 'daemon off;']
 
 networks:
   app-net:
     name: ${APP_NAME}-net
     driver: bridge
-
-volumes:
-  api-node-modules:
-  api-app-node-modules:
-  api-packages-types-node-modules:
-  api-packages-utils-node-modules:
-  api-packages-react-shared-node-modules:
-  web-node-modules:
-  web-app-node-modules:
-  web-packages-types-node-modules:
-  web-packages-utils-node-modules:
-  web-packages-react-shared-node-modules:
-  admin-node-modules:
-  admin-app-node-modules:
-  admin-packages-types-node-modules:
-  admin-packages-utils-node-modules:
-  admin-packages-react-shared-node-modules:
