@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestAuthUser, IAuthModuleOptions, IAuthModuleOptionsFactory, NestAuthMFAMethodEnum, ERROR_CODES, TenantModeEnum } from '@ackplus/nest-auth';
+import { NestAuthUser, IAuthModuleOptions, IAuthModuleOptionsFactory, NestAuthMFAMethodEnum, ERROR_CODES, TenantModeEnum, NestAuthUserAccess, INestAuthRole } from '@ackplus/nest-auth';
 import { IAppConfig } from "../../config/app";
 import { DebugLogLevel } from '@ackplus/nest-auth';
 import { RoleGuardEnum, RoleNameEnum } from '@libs/types';
@@ -11,103 +11,6 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
     constructor(
         private readonly configService: ConfigService,
     ) { }
-
-    /**
-     * Get guard from request origin/headers
-     */
-    private getGuardFromRequest(request: any): RoleGuardEnum | null {
-        if (!request) return null;
-
-        // Get origin from headers (prefer origin, then extract from referer)
-        let origin = request.headers?.origin;
-
-        // If no origin, try to extract from referer
-        if (!origin && request.headers?.referer) {
-            try {
-                const refererUrl = new URL(request.headers.referer);
-                origin = refererUrl.origin;
-            } catch (e) {
-                // If referer is not a valid URL, use it as is
-                origin = request.headers.referer;
-            }
-        }
-        // Check for mobile app header (can be x-platform, x-app-platform, or x-client-type)
-        const platform = request.headers?.['x-platform'] || request.headers?.['X-Platform']
-        if (!origin && (platform === 'mobile' || platform === 'app')) {
-            // Mobile app can use either guard, but we'll default to WEB
-            // You can customize this logic based on your needs
-            // For mobile, you might want to check a specific header for guard preference
-            const mobileGuard = request.headers?.['x-mobile-guard'] || request.headers?.['X-Mobile-Guard'];
-            if (mobileGuard === RoleGuardEnum.ADMIN || mobileGuard === RoleGuardEnum.WEB) {
-                return mobileGuard as RoleGuardEnum;
-            }
-            return RoleGuardEnum.WEB;
-        }
-
-        if (!origin) return null;
-
-        const frontUrl = this.configService.get<string>('FRONT_URL');
-        const adminUrl = this.configService.get<string>('ADMIN_URL');
-
-        // Normalize URLs for comparison (remove protocol, trailing slashes, www)
-        const normalizeUrl = (url: string) => {
-            if (!url) return '';
-            return url.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '').toLowerCase();
-        };
-
-        const normalizedOrigin = normalizeUrl(origin);
-        const normalizedFrontUrl = normalizeUrl(frontUrl || '');
-        const normalizedAdminUrl = normalizeUrl(adminUrl || '');
-
-        // Check admin URL first (more specific match should be checked first)
-        // This prevents cases where admin.dev.badacup.com matches dev.badacup.com first
-        if (normalizedAdminUrl) {
-            // Exact match
-            if (normalizedOrigin === normalizedAdminUrl) {
-                console.log('return admin (exact match)');
-                return RoleGuardEnum.ADMIN;
-            }
-            // Substring match (for cases like ports or paths, though normalized shouldn't have them)
-            if (normalizedOrigin.includes(normalizedAdminUrl)) {
-                console.log('return admin (substring match)');
-                return RoleGuardEnum.ADMIN;
-            }
-        }
-
-        // Check front URL only if admin didn't match
-        if (normalizedFrontUrl) {
-            // Exact match
-            if (normalizedOrigin === normalizedFrontUrl) {
-                console.log('return web (exact match)');
-                return RoleGuardEnum.WEB;
-            }
-            // Substring match
-            if (normalizedOrigin.includes(normalizedFrontUrl)) {
-                console.log('return web (substring match)');
-                return RoleGuardEnum.WEB;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Validate user has roles with the specified guard
-     */
-    private async validateUserGuard(user: NestAuthUser, requiredGuard: RoleGuardEnum): Promise<boolean> {
-        // Reload user with roles if not already loaded
-        const userRoles = (user.userAccesses || []).map((userAccess: any) => userAccess.roles).flat().filter(Boolean);
-        if (!userRoles || userRoles.length === 0) {
-            const userWithRoles = await NestAuthUser.findOne({
-                where: { id: user.id },
-                relations: ['userAccesses', 'userAccesses.roles'],
-            });
-            if (!userWithRoles) return false;
-            return (userWithRoles.userAccesses || []).some((userAccess: any) => userAccess.roles.some((role: any) => role.guard === requiredGuard));
-        }
-
-        return user.roles.some((role: any) => role.guard === requiredGuard);
-    }
 
     createAuthModuleOptions(): IAuthModuleOptions {
         const authConfig = this.configService.get<INestAuthEnvConfig>('nest_auth');
@@ -140,16 +43,6 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
                 enabled: true,
                 allowSignUp: true,
             },
-            // google: {
-            //     clientId: this.configService.getOrThrow<string>('sso.google.clientId'),
-            //     clientSecret: this.configService.getOrThrow<string>('sso.google.clientSecret'),
-            //     redirectUri: this.configService.getOrThrow<string>('sso.google.redirectUri'),
-            // },
-            // facebook: {
-            //     appId: this.configService.getOrThrow<string>('sso.facebook.appId'),
-            //     appSecret: this.configService.getOrThrow<string>('sso.facebook.appSecret'),
-            //     redirectUri: this.configService.getOrThrow<string>('sso.facebook.oauthRedirectUri'),
-            // },
             adminConsole: {
                 enabled: true,
                 secretKey: authConfig.adminUIsecretKey,
@@ -174,96 +67,208 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
                 },
             },
             registrationHooks: {
-                beforeSignup: async (input: any, context: { request: any }) => {
-                    const request = context?.request;
-                    const guardFromInput = input?.guard as RoleGuardEnum;
-                    const guardFromOrigin = this.getGuardFromRequest(request);
+                beforeSignup: async (input: any, context?: { request?: any }) => {
+                    const requestGuard = this.resolveGuardFromRequest(context?.request);
+                    const inputGuard = this.parseGuard(input?.guard);
 
-                    // Validate origin matches guard
-                    if (guardFromOrigin) {
-                        if (guardFromInput && guardFromInput !== guardFromOrigin) {
-                            throw new BadRequestException(
-                                `Guard mismatch: Request origin requires "${guardFromOrigin}" guard, but "${guardFromInput}" was provided.`
-                            );
-                        }
-                    }
+                    this.validateGuardConsistency({
+                        requestGuard,
+                        inputGuard,
+                        allowMissing: true,
+                    });
 
-                    // // Validate referral code if provided
-                    // if (input?.referralCode) {
-                    //     const normalizedCode = normalizeReferralCode(input.referralCode);
-                    //     // Import User entity dynamically to avoid circular dependency
-                    //     const { User } = await import('../../modules/user/user.entity');
-
-                    //     const referrer = await User.findOne({
-                    //         where: { referralCode: normalizedCode },
-                    //         select: ['id', 'referralCode'],
-                    //     });
-
-                    //     if (!referrer) {
-                    //         throw new BadRequestException('Invalid referral code. Please check and try again.');
-                    //     }
-                    // }
                     return input;
                 },
-                onSignup: async (user: NestAuthUser, input: any, context?: { request?: any }) => {
-                    // Reload user to ensure we have the latest data
+
+                onSignup: async (user: NestAuthUser, input: any) => {
                     const latestAuthUser = await NestAuthUser.findOne({
                         where: { id: user.id }
                     });
                     if (!latestAuthUser) {
                         throw new Error(`Auth user not found: ${user.id}`);
                     }
-
                     // Assign role with the determined guard
                     await latestAuthUser.assignRoles([RoleNameEnum.USER], input?.guard || RoleGuardEnum.WEB);
                     await latestAuthUser.save();
-                }
+                },
             },
             loginHooks: {
-                onLogin: async (user: NestAuthUser, input: any, context?: { request?: any; provider?: any }) => {
-                    const request = context?.request;
-                    const guardFromInput = input?.guard as RoleGuardEnum;
-                    const guardFromOrigin = this.getGuardFromRequest(request);
-                    // Determine required guard (priority: input > origin)
-                    const requiredGuard = guardFromInput || guardFromOrigin;
+                onLogin: async (
+                    user: NestAuthUser,
+                    input: any,
+                    context?: { request?: any; provider?: any },
+                ) => {
+                    const requestGuard = this.resolveGuardFromRequest(context?.request);
+                    const inputGuard = this.parseGuard(input?.guard);
 
-                    console.log('requiredGuard', requiredGuard);
+                    this.validateGuardConsistency({
+                        requestGuard,
+                        inputGuard,
+                        allowMissing: false,
+                    });
 
+                    const requiredGuard = inputGuard ?? requestGuard;
                     if (!requiredGuard) {
-                        // If no guard specified, allow login (for backward compatibility or mobile)
-                        // But you might want to throw an error here instead
-                        return user;
+                        throw new UnauthorizedException({
+                            message: 'Login requires a valid guard.',
+                            code: ERROR_CODES.INVALID_CREDENTIALS,
+                        });
                     }
 
-                    // Validate user has roles with the required guard
-                    const hasRequiredGuard = await this.validateUserGuard(user, requiredGuard);
-
-                    if (!hasRequiredGuard) {
+                    const hasAccess = await this.userHasGuardAccess(user, requiredGuard);
+                    if (!hasAccess) {
                         throw new UnauthorizedException({
                             message: 'Invalid credentials',
                             code: ERROR_CODES.INVALID_CREDENTIALS,
                         });
                     }
 
-                    // Validate origin matches guard if both are present
-                    if (guardFromOrigin && guardFromInput && guardFromInput !== guardFromOrigin) {
-                        throw new BadRequestException({
-                            message: 'Invalid request',
-                            code: ERROR_CODES.GUARD_MISMATCH,
-                        });
-                    }
-
                     return user;
-                }
+                },
             },
+
             user: {
-                beforeCreate: async (userData: Partial<NestAuthUser>, input: any) => {
-                    return userData;
-                },
-                async afterCreate(user, input) {
-                },
-            }
+                beforeCreate: async (userData: Partial<NestAuthUser>) => userData,
+                afterCreate: async () => { },
+            },
         };
-        return config
+
+        return config;
+    }
+
+    private parseGuard(value?: unknown): RoleGuardEnum | null {
+        if (!value || typeof value !== 'string') {
+            return null;
+        }
+
+        return Object.values(RoleGuardEnum).includes(value as RoleGuardEnum)
+            ? (value as RoleGuardEnum)
+            : null;
+    }
+
+    private resolveGuardFromRequest(request?: any): RoleGuardEnum | null {
+        if (!request) {
+            return null;
+        }
+
+        const mobileGuard = this.resolveMobileGuard(request);
+        if (mobileGuard) {
+            return mobileGuard;
+        }
+
+        const origin = this.extractRequestOrigin(request);
+        if (!origin) {
+            return null;
+        }
+
+        const normalizedOrigin = this.normalizeUrl(origin);
+        const adminUrl = this.normalizeUrl(this.configService.get<string>('ADMIN_URL'));
+        const frontUrl = this.normalizeUrl(this.configService.get<string>('FRONT_URL'));
+
+        if (adminUrl && normalizedOrigin.includes(adminUrl)) {
+            return RoleGuardEnum.ADMIN;
+        }
+
+        if (frontUrl && normalizedOrigin.includes(frontUrl)) {
+            return RoleGuardEnum.WEB;
+        }
+
+        return null;
+    }
+
+    private resolveMobileGuard(request?: any): RoleGuardEnum | null {
+        const platform =
+            request?.headers?.['x-platform'] ??
+            request?.headers?.['X-Platform'] ??
+            request?.headers?.['x-app-platform'] ??
+            request?.headers?.['x-client-type'];
+
+        if (platform !== 'mobile' && platform !== 'app') {
+            return null;
+        }
+
+        const mobileGuard =
+            request?.headers?.['x-mobile-guard'] ??
+            request?.headers?.['X-Mobile-Guard'];
+
+        const parsedGuard = this.parseGuard(mobileGuard);
+        return parsedGuard ?? RoleGuardEnum.WEB;
+    }
+
+    private extractRequestOrigin(request?: any): string | null {
+        const origin = request?.headers?.origin;
+        if (origin) {
+            return origin;
+        }
+
+        const referer = request?.headers?.referer;
+        if (!referer) {
+            return null;
+        }
+
+        try {
+            return new URL(referer).origin;
+        } catch {
+            return referer;
+        }
+    }
+
+    private normalizeUrl(value?: string): string {
+        if (!value) {
+            return '';
+        }
+
+        return value
+            .replace(/^https?:\/\//, '')
+            .replace(/^www\./, '')
+            .replace(/\/$/, '')
+            .toLowerCase();
+    }
+
+    private validateGuardConsistency(params: {
+        requestGuard: RoleGuardEnum | null;
+        inputGuard: RoleGuardEnum | null;
+        allowMissing: boolean;
+    }): void {
+        const { requestGuard, inputGuard, allowMissing } = params;
+
+        if (requestGuard && inputGuard && requestGuard !== inputGuard) {
+            throw new BadRequestException({
+                message: 'Invalid request',
+                code: ERROR_CODES.GUARD_MISMATCH,
+            });
+        }
+
+        if (!allowMissing && !requestGuard && !inputGuard) {
+            throw new UnauthorizedException({
+                message: 'Login requires a valid guard.',
+                code: ERROR_CODES.INVALID_CREDENTIALS,
+            });
+        }
+    }
+
+    private async userHasGuardAccess(
+        user: NestAuthUser,
+        requiredGuard: RoleGuardEnum,
+    ): Promise<boolean> {
+        const roles =
+            user?.userAccesses?.flatMap((access: any) => access?.roles ?? []) ?? [];
+
+        if (roles.length > 0) {
+            return roles.some(
+                (role: Partial<INestAuthRole>) => role.guard === requiredGuard,
+            );
+        }
+
+        const access = await NestAuthUserAccess.findOne({
+            where: {
+                userId: user.id,
+                roles: {
+                    guard: requiredGuard,
+                },
+            },
+        });
+
+        return !!access;
     }
 }
