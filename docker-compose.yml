@@ -15,9 +15,12 @@ services:
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     volumes:
-      - .:/app
-      - node-modules:/app/node_modules
-      - pnpm-store:/root/.local/share/pnpm/store
+      - ./package.json:/app/package.json:ro
+      - ./pnpm-lock.yaml:/app/pnpm-lock.yaml:ro
+      - ./pnpm-workspace.yaml:/app/pnpm-workspace.yaml:ro
+      - ./tsconfig.base.json:/app/tsconfig.base.json:ro
+      - ./libs:/app/libs
+      - ./apps/api:/app/apps/api
     restart: unless-stopped
     networks:
       - app-net
@@ -44,8 +47,11 @@ services:
       SERVER_APP_API_URL: http://${APP_NAME}-api:3333
     volumes:
       - .:/app
-      - node-modules:/app/node_modules
-      - pnpm-store:/root/.local/share/pnpm/store
+      - web-node-modules:/app/node_modules
+      - web-app-node-modules:/app/apps/web/node_modules
+      - web-packages-types-node-modules:/app/packages/types/node_modules
+      - web-packages-utils-node-modules:/app/packages/utils/node_modules
+      - web-packages-react-shared-node-modules:/app/packages/react-shared/node_modules
     ports:
       - '3000:3000'
     depends_on:
@@ -71,8 +77,11 @@ services:
       VITE_ADMIN_URL: ${APP_ADMIN_URL}
     volumes:
       - .:/app
-      - node-modules:/app/node_modules
-      - pnpm-store:/root/.local/share/pnpm/store
+      - admin-node-modules:/app/node_modules
+      - admin-app-node-modules:/app/apps/admin/node_modules
+      - admin-packages-types-node-modules:/app/packages/types/node_modules
+      - admin-packages-utils-node-modules:/app/packages/utils/node_modules
+      - admin-packages-react-shared-node-modules:/app/packages/react-shared/node_modules
     ports:
       - '4200:4200'
     depends_on:
@@ -88,5 +97,18 @@ networks:
     driver: bridge
 
 volumes:
-  pnpm-store:
-  node-modules:
+  api-node-modules:
+  api-app-node-modules:
+  api-packages-types-node-modules:
+  api-packages-utils-node-modules:
+  api-packages-react-shared-node-modules:
+  web-node-modules:
+  web-app-node-modules:
+  web-packages-types-node-modules:
+  web-packages-utils-node-modules:
+  web-packages-react-shared-node-modules:
+  admin-node-modules:
+  admin-app-node-modules:
+  admin-packages-types-node-modules:
+  admin-packages-utils-node-modules:
+  admin-packages-react-shared-node-modules:

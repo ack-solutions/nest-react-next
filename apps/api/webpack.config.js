@@ -4,9 +4,19 @@ const path = require('path');
 
 module.exports = function (options) {
   const rootNodeModules = path.resolve(__dirname, '../../node_modules');
+  const appNodeModules = path.join(__dirname, 'node_modules');
 
   return {
     ...options,
+
+    entry: {
+      main: path.resolve(__dirname, 'src/main.ts'),
+    },
+
+    output: {
+      ...options.output,
+      filename: '[name].js',
+    },
 
     // Make sure webpack is in "node" mode
     target: 'node',
@@ -15,8 +25,8 @@ module.exports = function (options) {
     resolve: {
       ...options.resolve,
 
-      // IMPORTANT: pnpm monorepo - include root node_modules
-      modules: ['node_modules', rootNodeModules],
+      // IMPORTANT: pnpm monorepo - include root + local node_modules
+      modules: ['node_modules', rootNodeModules, appNodeModules],
 
       extensions: ['.ts', '.tsx', '.js', '.jsx'],
 
@@ -28,6 +38,7 @@ module.exports = function (options) {
       // Externalize all node_modules (so native .node files are NOT bundled)
       nodeExternals({
         modulesDir: rootNodeModules,
+        additionalModuleDirs: [appNodeModules],
         allowlist: ['webpack/hot/poll?100', /^@libs\/.*/],
       }),
 

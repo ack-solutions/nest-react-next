@@ -39,7 +39,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
             database: isTestEnv ? `${database?.name}_test` : database?.name,
             port: database?.port,
             entities: ALL_ENTITIES,
-            synchronize: true,
+            synchronize: false,
             logging: !appConfig?.isProd,
             logger: 'file',
             uuidExtension: 'pgcrypto',

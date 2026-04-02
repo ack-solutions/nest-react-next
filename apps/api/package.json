@@ -8,10 +8,10 @@
         "build": "nest build --webpack",
         "seed": "node -r ts-node/register -r tsconfig-paths/register ./node_modules/@ackplus/nest-seeder/dist/cli.js -c ./src/seeder.config.ts",
         "seed:refresh": "node -r ts-node/register -r tsconfig-paths/register ./node_modules/@ackplus/nest-seeder/dist/cli.js -c ./src/seeder.config.ts -r",
-        "migration:create": "ts-node -r tsconfig-paths/register --project ./tsconfig.app.json  ../../node_modules/typeorm/cli.js migration:create src/migrations/migration -t",
-        "migration:generate": "ts-node -r tsconfig-paths/register --project ./tsconfig.app.json  ../../node_modules/typeorm/cli.js migration:generate src/migrations/migration -d ./src/orm-config.ts",
-        "migration:run": "ts-node -r tsconfig-paths/register --project ./tsconfig.app.json  ../../node_modules/typeorm/cli.js migration:run -d ./src/orm-config.ts",
-        "migration:rollback": "ts-node -r tsconfig-paths/register --project ./tsconfig.app.json  ../../node_modules/typeorm/cli.js migration:revert -d ./src/orm-config.ts"
+        "migration:create": "ts-node -r tsconfig-paths/register --project ./tsconfig.app.json  ./node_modules/typeorm/cli.js migration:create src/migrations/migration -t",
+        "migration:generate": "ts-node -r tsconfig-paths/register --project ./tsconfig.app.json  ./node_modules/typeorm/cli.js migration:generate src/migrations/migration -d ./src/orm-config.ts",
+        "migration:run": "ts-node -r tsconfig-paths/register --project ./tsconfig.app.json  ./node_modules/typeorm/cli.js migration:run -d ./src/orm-config.ts",
+        "migration:rollback": "ts-node -r tsconfig-paths/register --project ./tsconfig.app.json  ./node_modules/typeorm/cli.js migration:revert -d ./src/orm-config.ts"
     },
     "dependencies": {
         "@ackplus/nest-auth": "catalog:",

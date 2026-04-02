@@ -1,5 +1,5 @@
 # API dev Dockerfile: hot reload (NestJS), no production build.
-# Build context: repo root. Source + node_modules are mounted from host at runtime.
+# Source directories are bind-mounted from the host while node_modules stays in the image.
 FROM node:20-alpine
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -16,5 +16,4 @@ RUN pnpm install
 
 COPY apps/api ./apps/api
 
-WORKDIR /app
 EXPOSE 3333
