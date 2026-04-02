@@ -23,7 +23,9 @@ export default defineConfig({
     },
     server: {
         port: 4200,
-        host: 'localhost',
+        // Docker needs the dev server to listen on all interfaces.
+        // For local development this is fine as well.
+        host: '0.0.0.0',
         fs: { allow: ['..'] },
     },
     build: {
