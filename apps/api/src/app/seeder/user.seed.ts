@@ -1,4 +1,4 @@
-import { NestAuthUser, TenantService, UserService } from '@ackplus/nest-auth';
+import { NestAuthRole, NestAuthUser, TenantService, UserService } from '@ackplus/nest-auth';
 import { RoleGuardEnum, RoleNameEnum } from '@libs/types';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -20,15 +20,17 @@ export class UserSeeder implements Seeder {
         private userService: UserService,
         @InjectRepository(User)
         private userRepository: BaseRepository<User>,
-
-        private tenantService: TenantService,
-
-        private configService: ConfigService,
     ) { }
 
     async seed() {
         const existingUser = await this.userRepository.find({
-            relations: ['authUser', 'authUser.roles'],
+            relations: ['authUser'],
+        });
+
+        const roles = await NestAuthRole.find({
+            where: {
+                guard: RoleGuardEnum.ADMIN,
+            },
         });
         this.existingUserByEmail = keyBy(existingUser, 'authUser.email');
 
@@ -65,9 +67,11 @@ export class UserSeeder implements Seeder {
             },
         ];
 
-        await this.createUser(portalUsers, RoleGuardEnum.ADMIN);
+        await this.createUser(portalUsers, roles, RoleGuardEnum.ADMIN);
     }
-    async createUser(users: any[], guard: RoleGuardEnum) {
+    async createUser(users: any[], roles: NestAuthRole[], guard: RoleGuardEnum) {
+        const roleByName = keyBy(roles, 'name');
+
         for (let index = 0; index < users.length; index++) {
             const user = users[index];
 
@@ -84,8 +88,9 @@ export class UserSeeder implements Seeder {
                 authUser = await this.userService.getUserByEmail(user.email, user.tenantId);
             }
 
+            const rolesIds = user.roles.map((role: string) => roleByName[role]?.id);
             await authUser.setPassword(user.password);
-            await authUser.assignRoles(user.roles, guard);
+            await authUser.assignRoles(rolesIds, guard);
             await authUser.findOrCreateIdentity('email', user.email);
             await authUser.save();
 
