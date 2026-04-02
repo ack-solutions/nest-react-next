@@ -70,7 +70,7 @@ export class UsersController {
         },
     })
     currentUser(): Promise<IUser | null> {
-        return RequestContext.currentUser({ relations: ['authUser', 'authUser.roles'] });
+        return RequestContext.currentUser({ relations: ['authUser', 'authUser.userAccesses', 'authUser.userAccesses.roles'] });
     }
 
     @HttpCode(HttpStatus.ACCEPTED)

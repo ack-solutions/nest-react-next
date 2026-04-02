@@ -1,7 +1,6 @@
 import { NestAuthRole, NestAuthUser, TenantService, UserService } from '@ackplus/nest-auth';
 import { RoleGuardEnum, RoleNameEnum } from '@libs/types';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { keyBy } from 'lodash';
 
@@ -67,9 +66,9 @@ export class UserSeeder implements Seeder {
             },
         ];
 
-        await this.createUser(portalUsers, roles, RoleGuardEnum.ADMIN);
+        await this.createUser(portalUsers, roles);
     }
-    async createUser(users: any[], roles: NestAuthRole[], guard: RoleGuardEnum) {
+    async createUser(users: any[], roles: NestAuthRole[]) {
         const roleByName = keyBy(roles, 'name');
 
         for (let index = 0; index < users.length; index++) {
@@ -90,7 +89,7 @@ export class UserSeeder implements Seeder {
 
             const rolesIds = user.roles.map((role: string) => roleByName[role]?.id);
             await authUser.setPassword(user.password);
-            await authUser.assignRoles(rolesIds, guard);
+            await authUser.assignRoles(rolesIds, user.tenantId);
             await authUser.findOrCreateIdentity('email', user.email);
             await authUser.save();
 

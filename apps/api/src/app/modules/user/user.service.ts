@@ -79,11 +79,13 @@ export class UserService extends BaseService<User> {
     protected override async beforeUpdate(entity: Partial<UpdateUserDTO>) {
 
         // Check if the roles are valid for the user
-        if (has(entity, 'roles') && entity.roles) {
-            const { authUserId } = entity;
-            const authUser = await this.nestAuthUserService.getUserById(authUserId);
-            await authUser.assignRoles(entity.roles, RoleGuardEnum.ADMIN) as any; // TODO: change to the correct guard
-            await authUser.save();
+        if (has(entity, 'userAccesses') && entity.userAccesses) {
+            for (const userAccess of entity.userAccesses) {
+                const { authUserId } = userAccess;
+                const authUser = await this.nestAuthUserService.getUserById(authUserId);
+                await authUser.assignRoles(userAccess.roles, userAccess.tenantId) as any; // TODO: change to the correct guard
+                await authUser.save();
+            }
         }
         return super.beforeUpdate(entity);
     }
@@ -152,7 +154,7 @@ export class UserService extends BaseService<User> {
 
     async findCurrentUser() {
         const user = await RequestContext.currentUser({
-            relations: ['authUser', 'authUser.roles'],
+            relations: ['authUser', 'authUser.userAccesses', 'authUser.userAccesses.roles'],
         });
         return user;
     }
@@ -192,7 +194,6 @@ export class UserService extends BaseService<User> {
     async updateProfile(entity: IUpdateProfileInput): Promise<IUser> {
         const user = await RequestContext.currentUser();
         const userEntity = omit(entity, [
-            'roles',
             'phoneNumber',
             'phoneCountryCode',
             'phoneIsoCode',
