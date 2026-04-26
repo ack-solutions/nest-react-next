@@ -1,4 +1,4 @@
-import { MfaService, UserService as NestAuthUserService, TenantService } from '@ackplus/nest-auth';
+import { MfaService, UserService as NestAuthUserService, RequestContext, TenantService } from '@ackplus/nest-auth';
 import { ID, PaginationResponse, IFindOneOptions } from '@ackplus/nest-crud';
 import {
     IChangeEmailInput,
@@ -152,7 +152,9 @@ export class UserService extends BaseService<User> {
     }
 
     async findCurrentUser() {
-        const user = await AuthHelper.getAppUser(['authUser', 'authUser.roles']);
+        const user = await RequestContext.currentUser({
+            relations: ['authUser', 'authUser.userAccesses', 'authUser.userAccesses.roles'],
+        });
         return user;
     }
 
@@ -192,7 +194,6 @@ export class UserService extends BaseService<User> {
     async updateProfile(entity: IUpdateProfileInput): Promise<IUser> {
         const user = await AuthHelper.getAppUser();
         const userEntity = omit(entity, [
-            'roles',
             'phoneNumber',
             'phoneCountryCode',
             'phoneIsoCode',

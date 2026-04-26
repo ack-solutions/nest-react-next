@@ -95,7 +95,7 @@ export class UsersController {
         },
     })
     currentUser(): Promise<IUser | null> {
-        return AuthHelper.getAppUser(['authUser', 'authUser.roles']);
+        return AuthHelper.getAppUser(['authUser', 'authUser.userAccesses', 'authUser.userAccesses.roles']);
     }
 
     @HttpCode(HttpStatus.ACCEPTED)

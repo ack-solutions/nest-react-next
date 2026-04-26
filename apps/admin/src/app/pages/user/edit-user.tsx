@@ -37,14 +37,21 @@ function EditUser() {
     const { currentTab, onChangeTab } = useTabs('general');
 
     const { data: userData, isLoading, error } = useGetUserById(userId, {
-        relations: ['authUser', 'authUser.roles'],
+        relations: ['authUser', 'authUser.userAccesses', 'authUser.userAccesses.roles'],
     });
 
     const handleSubmit = useCallback(
         async (values: IUser) => {
             if (values?.id) {
-                if (values?.authUser?.roles?.length === 0) {
-                    values.authUser.roles = null;
+                if (values?.authUser?.userAccesses?.length === 0) {
+                    values.authUser.userAccesses = null;
+                } else {
+                    values.authUser.userAccesses = values.authUser.userAccesses.map((userAccess: any) => {
+                        return {
+                            ...userAccess,
+                            roles: userAccess.roles.map((role: any) => role.id),
+                        };
+                    });
                 }
 
                 updateUser(values)

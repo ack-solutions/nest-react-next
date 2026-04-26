@@ -182,7 +182,8 @@ function UsersList() {
             }
 
             queryBuilder.addRelation('authUser');
-            queryBuilder.addRelation('authUser.roles');
+            queryBuilder.addRelation('authUser.userAccesses');
+            queryBuilder.addRelation('authUser.userAccesses.roles');
             return queryBuilder;
         },
         [tableFilter?.status],

@@ -2,6 +2,7 @@ import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsArray, IsBoolean, IsOptional, IsString } from 'class-validator';
 
 import { User } from '../user.entity';
+import { NestAuthUserAccess } from '@ackplus/nest-auth';
 
 
 export class UpdateUserDTO extends PartialType(User) {
