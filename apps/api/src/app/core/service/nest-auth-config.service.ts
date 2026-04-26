@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestAuthUser, IAuthModuleOptions, IAuthModuleOptionsFactory, NestAuthMFAMethodEnum, ERROR_CODES, TenantModeEnum, NestAuthUserAccess, INestAuthRole } from '@ackplus/nest-auth';
+import { NestAuthUser, IAuthModuleOptions, IAuthModuleOptionsFactory, NestAuthMFAMethodEnum, ERROR_CODES, TenantModeEnum, NestAuthUserAccess, INestAuthRole, NestAuthRole } from '@ackplus/nest-auth';
 import { IAppConfig } from "../../config/app";
 import { DebugLogLevel } from '@ackplus/nest-auth';
 import { RoleGuardEnum, RoleNameEnum } from '@libs/types';
@@ -18,6 +18,22 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
         const config: IAuthModuleOptions = {
             appName: process.env.APP_NAME || 'Template',
             roleGuards: [RoleGuardEnum.ADMIN, RoleGuardEnum.WEB],
+            platformAccess: {
+                enabled: true,
+                validate: async (request: Request) => {
+                    const origin = this.extractRequestOrigin(request);
+                    if (!origin) {
+                        return false;
+                    }
+
+                    const normalizedOrigin = this.normalizeUrl(origin);
+                    const adminUrl = this.normalizeUrl(
+                        this.configService.get<string>('ADMIN_URL'),
+                    );
+
+                    return !!(adminUrl && normalizedOrigin.includes(adminUrl));
+                },
+            },
             tenant: {
                 enabled: false,
                 mode: TenantModeEnum.SHARED,
@@ -79,57 +95,79 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
 
                     return input;
                 },
+                onSignup: async (user: NestAuthUser, input: any, context?: { userAccess?: NestAuthUserAccess }) => {
+                    if (input?.tenantId) {
+                        const userAccess = await user.getUserAccess(input?.tenantId, true);
 
-                onSignup: async (user: NestAuthUser, input: any) => {
-                    const latestAuthUser = await NestAuthUser.findOne({
-                        where: { id: user.id }
-                    });
-                    if (!latestAuthUser) {
-                        throw new Error(`Auth user not found: ${user.id}`);
+                        if (userAccess) {
+                            const role = await NestAuthRole.findOne({
+                                where: {
+                                    name: RoleNameEnum.USER,
+                                    guard: input?.guard || RoleGuardEnum.WEB,
+                                    isSystem: true,
+                                },
+                                select: ['id'],
+                            });
+                            const roleIds = role ? [role.id] : [];
+
+                            await userAccess.assignRoles(roleIds);
+                        }
                     }
-                    // Assign role with the determined guard
-                    await latestAuthUser.assignRoles([RoleNameEnum.USER], input?.guard || RoleGuardEnum.WEB);
-                    await latestAuthUser.save();
                 },
             },
             loginHooks: {
                 onLogin: async (
                     user: NestAuthUser,
                     input: any,
-                    context?: { request?: any; provider?: any },
+                    context?: { userAccess?: any, platformAccess?: any, request?: any; provider?: any },
                 ) => {
-                    const requestGuard = this.resolveGuardFromRequest(context?.request);
-                    const inputGuard = this.parseGuard(input?.guard);
+                    if (input?.tenantId || context?.platformAccess) {
+                        let roles = [];
 
-                    this.validateGuardConsistency({
-                        requestGuard,
-                        inputGuard,
-                        allowMissing: false,
-                    });
+                        if (context?.userAccess) {
+                            roles = context?.userAccess.roles;
+                        }
+                        if (context?.platformAccess) {
+                            roles = context?.platformAccess.roles;
+                        }
+                        const requestGuard = this.resolveGuardFromRequest(context?.request);
+                        const inputGuard = this.parseGuard(input?.guard);
 
-                    const requiredGuard = inputGuard ?? requestGuard;
-                    if (!requiredGuard) {
-                        throw new UnauthorizedException({
-                            message: 'Login requires a valid guard.',
-                            code: ERROR_CODES.INVALID_CREDENTIALS,
+                        this.validateGuardConsistency({
+                            requestGuard,
+                            inputGuard,
+                            allowMissing: false,
                         });
-                    }
 
-                    const hasAccess = await this.userHasGuardAccess(user, requiredGuard);
-                    if (!hasAccess) {
-                        throw new UnauthorizedException({
-                            message: 'Invalid credentials',
-                            code: ERROR_CODES.INVALID_CREDENTIALS,
-                        });
-                    }
+                        const requiredGuard = inputGuard ?? requestGuard;
+                        if (!requiredGuard) {
+                            throw new UnauthorizedException({
+                                message: 'Login requires a valid guard.',
+                                code: ERROR_CODES.INVALID_CREDENTIALS,
+                            });
+                        }
 
-                    return user;
+                        const hasAccess = await this.userHasGuardAccess(user, roles, requiredGuard);
+                        if (!hasAccess) {
+                            throw new UnauthorizedException({
+                                message: 'Invalid credentials',
+                                code: ERROR_CODES.INVALID_CREDENTIALS,
+                            });
+                        }
+                    }
                 },
             },
 
             user: {
                 beforeCreate: async (userData: Partial<NestAuthUser>) => userData,
                 afterCreate: async () => { },
+                getSessionUserData: async (user: NestAuthUser & { appUser?: User }) => {
+                    const appUser = await User.findOne({ where: { authUserId: user.id } });
+                    if (appUser) {
+                        user.appUser = { ...appUser, authUser: Object.assign({}, user) } as any;
+                    }
+                    return user;
+                },
             },
         };
 
@@ -249,11 +287,9 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
 
     private async userHasGuardAccess(
         user: NestAuthUser,
+        roles: NestAuthRole[],
         requiredGuard: RoleGuardEnum,
     ): Promise<boolean> {
-        const roles =
-            user?.userAccesses?.flatMap((access: any) => access?.roles ?? []) ?? [];
-
         if (roles.length > 0) {
             return roles.some(
                 (role: Partial<INestAuthRole>) => role.guard === requiredGuard,

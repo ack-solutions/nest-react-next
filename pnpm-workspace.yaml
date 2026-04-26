@@ -9,9 +9,9 @@ catalog:
   react-dom: 19.2.3
 
   # Ackplus
-  "@ackplus/nest-auth": 2.0.0-beta.9
-  "@ackplus/nest-auth-client": 2.0.0-beta.9
-  "@ackplus/nest-auth-react": 2.0.0-beta.9
+  "@ackplus/nest-auth": 2.0.0-beta.18
+  "@ackplus/nest-auth-client": 2.0.0-beta.18
+  "@ackplus/nest-auth-react": 2.0.0-beta.18
   "@ackplus/nest-crud": ^1.1.34
   "@ackplus/nest-crud-request": ^1.1.34
   "@ackplus/nest-dynamic-templates": ^1.1.16

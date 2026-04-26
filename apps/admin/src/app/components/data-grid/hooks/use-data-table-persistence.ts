@@ -6,7 +6,10 @@ import {
     DataTableApi,
     TableFilters,
 } from '@ackplus/react-tanstack-data-table';
-import { DataTableLayoutState, useDataTableState } from '@admin/app/contexts/datatable-state-context';
+import {
+    DataTableLayoutState,
+    useDataTableState,
+} from '../context/datatable-state-context';
 
 interface UseDataTablePersistenceOptions {
     stateKey?: string;
@@ -41,6 +44,8 @@ export function useDataTablePersistence({
         return {
             pagination: { pageIndex: 0, pageSize: 50 },
             columnVisibility: defaultColumnVisibility,
+            columnOrder: initialState?.columnOrder || [],
+            columnSizing: initialState?.columnSizing || {},
             ...initialState,
             columnPinning: {
                 left: [
@@ -70,20 +75,14 @@ export function useDataTablePersistence({
 
             ctx.saveLayout(layoutOnly);
             onLayoutChange?.(layoutOnly);
-        }, 700);
+        }, 1000);
     }, [ctx, onLayoutChange, tableRef]);
 
     const handleTableStateChange = useCallback(
         (state: TableFilters) => {
             onDataStateChange?.(state);
-
-            // If you want to store session table state here, do it outside (CrudDataGrid already does).
-            // This hook focuses on layout persistence.
-            if (ctx && !isRestoringRef.current) {
-                debouncedSaveLayout();
-            }
         },
-        [ctx, debouncedSaveLayout, onDataStateChange],
+        [onDataStateChange],
     );
 
     const handleLayoutChange = useCallback(() => {
@@ -93,7 +92,8 @@ export function useDataTablePersistence({
 
     // Restore layout once on mount
     useEffect(() => {
-        if (!savedLayout || isLayoutRestoredRef.current || !tableRef.current) return;
+        if (!savedLayout || isLayoutRestoredRef.current || !tableRef.current)
+            return;
 
         isRestoringRef.current = true;
 
@@ -118,6 +118,7 @@ export function useDataTablePersistence({
     useEffect(() => {
         return () => debouncedSaveLayout.cancel();
     }, [debouncedSaveLayout]);
+
 
     return {
         initialState: computedInitialState,

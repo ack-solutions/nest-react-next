@@ -7,7 +7,7 @@ import { Injectable } from '@nestjs/common';
 
 import { CreateTemplateLayoutDto } from './dto/create-template-layout.dto';
 import { UpdateTemplateLayoutDto } from './dto/update-template-layout.dto';
-import { RequestContext } from '../../core/request-context/request-context';
+import { AuthHelper } from '../../core/auth/auth.helper';
 
 
 @Injectable()
@@ -27,7 +27,7 @@ export class TemplateLayoutService {
 
 
     async getTemplateLayouts(filter: TemplateLayoutFilterDto) {
-        const isSuperAdmin = RequestContext.isSuperAdmin();
+        const isSuperAdmin = AuthHelper.isSuperAdmin();
 
         if (isSuperAdmin) {
             filter.scope = filter.scopeId ? 'organization' : 'system';
@@ -55,7 +55,7 @@ export class TemplateLayoutService {
     }
 
     async updateTemplateLayout(id: string, entity: UpdateTemplateLayoutDto) {
-        const canSystemUpdate = RequestContext.isSuperAdmin();
+        const canSystemUpdate = AuthHelper.isSuperAdmin();
         if (entity.scopeId) {
             entity.scope = 'organization';
             delete (entity as any).name;
@@ -69,7 +69,7 @@ export class TemplateLayoutService {
     }
 
     async deleteTemplateLayout(id: string) {
-        const canSystemDelete = RequestContext.isSuperAdmin();
+        const canSystemDelete = AuthHelper.isSuperAdmin();
         return this.nestTemplateLayoutService.deleteTemplateLayout(id, canSystemDelete);
     }
 

@@ -1,5 +1,5 @@
-import { useCallback } from 'react';
-import { errorMessage } from '@libs/utils';
+import {useCallback, useMemo} from 'react';
+import {errorMessage} from '@libs/utils';
 
 interface Options {
     crudName: string;
@@ -32,45 +32,74 @@ export function useCrudTableActions({
 }: Options) {
     const clearAndReload = useCallback(() => {
         datatableRef.current?.selection?.deselectAll?.();
-        datatableRef.current?.data?.reload?.();
     }, [datatableRef]);
 
     const handleDelete = useCallback(
         (row: any) => {
-            confirmDialog({ message: `Are you sure you want to delete this ${crudName}?` })
+            confirmDialog({
+                message: `Are you sure you want to delete this ${crudName}?`,
+            })
                 .then(() =>
                     deleteItem?.(row.id)
                         .then(() => {
                             clearAndReload();
-                            showToasty(`The ${crudName} has been successfully deleted`);
+                            showToasty(
+                                `The ${crudName} has been successfully deleted`,
+                            );
                             onAction?.('deleted');
                         })
                         .catch((err: any) => {
-                            showToasty(err || `Oops! Something went wrong while trying to delete the ${crudName}. Please try again.`, 'error');
+                            showToasty(
+                                err ||
+                                    `Oops! Something went wrong while trying to delete the ${crudName}. Please try again.`,
+                                'error',
+                            );
                         }),
                 )
-                .catch(() => { });
+                .catch(() => {});
         },
-        [confirmDialog, crudName, deleteItem, clearAndReload, showToasty, onAction],
+        [
+            confirmDialog,
+            crudName,
+            deleteItem,
+            clearAndReload,
+            showToasty,
+            onAction,
+        ],
     );
 
     const handleRestore = useCallback(
         (row: any) => {
-            confirmDialog({ message: `Are you sure you want to restore this ${crudName}?` })
+            confirmDialog({
+                message: `Are you sure you want to restore this ${crudName}?`,
+            })
                 .then(() =>
                     restoreItem?.(row.id)
                         .then(() => {
                             clearAndReload();
-                            showToasty(`The ${crudName} has been successfully restored`);
+                            showToasty(
+                                `The ${crudName} has been successfully restored`,
+                            );
                             onAction?.('restored');
                         })
                         .catch((err: any) => {
-                            showToasty(err || `Oops! Something went wrong while trying to restore the ${crudName}. Please try again.`, 'error');
+                            showToasty(
+                                err ||
+                                    `Oops! Something went wrong while trying to restore the ${crudName}. Please try again.`,
+                                'error',
+                            );
                         }),
                 )
-                .catch(() => { });
+                .catch(() => {});
         },
-        [confirmDialog, crudName, restoreItem, clearAndReload, showToasty, onAction],
+        [
+            confirmDialog,
+            crudName,
+            restoreItem,
+            clearAndReload,
+            showToasty,
+            onAction,
+        ],
     );
 
     const handleDeleteForever = useCallback(
@@ -82,54 +111,97 @@ export function useCrudTableActions({
                     deleteForeverItem?.(row.id)
                         .then(() => {
                             clearAndReload();
-                            showToasty(`The ${crudName} has been successfully deleted permanently`);
+                            showToasty(
+                                `The ${crudName} has been successfully deleted permanently`,
+                            );
                             onAction?.('deleteForever');
                         })
                         .catch((err: any) => {
-                            showToasty(err || `Oops! Something went wrong while trying to delete the ${crudName}. Please try again.`, 'error');
+                            showToasty(
+                                err ||
+                                    `Oops! Something went wrong while trying to delete the ${crudName}. Please try again.`,
+                                'error',
+                            );
                         }),
                 )
-                .catch(() => { });
+                .catch(() => {});
         },
-        [confirmDialog, crudName, deleteForeverItem, clearAndReload, showToasty, onAction],
+        [
+            confirmDialog,
+            crudName,
+            deleteForeverItem,
+            clearAndReload,
+            showToasty,
+            onAction,
+        ],
     );
 
     const handleBulkDelete = useCallback(
         (ids: string[]) => {
-            confirmDialog({ message: `Are you sure you want to delete this ${crudName}?` })
+            confirmDialog({
+                message: `Are you sure you want to delete this ${crudName}?`,
+            })
                 .then(() =>
                     bulkDeleteItems?.(ids)
                         .then(() => {
                             clearAndReload();
-                            showToasty(`The ${crudName} has been successfully deleted`);
+                            showToasty(
+                                `The ${crudName} has been successfully deleted`,
+                            );
                             onAction?.('bulkDelete');
                         })
                         .catch((err: any) => {
-                            showToasty(err || `Oops! Something went wrong while trying to delete the ${crudName}. Please try again.`, 'error');
+                            showToasty(
+                                err ||
+                                    `Oops! Something went wrong while trying to delete the ${crudName}. Please try again.`,
+                                'error',
+                            );
                         }),
                 )
-                .catch(() => { });
+                .catch(() => {});
         },
-        [confirmDialog, crudName, bulkDeleteItems, clearAndReload, showToasty, onAction],
+        [
+            confirmDialog,
+            crudName,
+            bulkDeleteItems,
+            clearAndReload,
+            showToasty,
+            onAction,
+        ],
     );
 
     const handleBulkRestore = useCallback(
         (ids: string[]) => {
-            confirmDialog({ message: `Are you sure you want to restore this ${crudName}?` })
+            confirmDialog({
+                message: `Are you sure you want to restore this ${crudName}?`,
+            })
                 .then(() =>
                     bulkRestoreItems?.(ids)
                         .then(() => {
                             clearAndReload();
-                            showToasty(`The ${crudName} has been successfully restored`);
+                            showToasty(
+                                `The ${crudName} has been successfully restored`,
+                            );
                             onAction?.('bulkRestore');
                         })
                         .catch((err: any) => {
-                            showToasty(err || `Oops! Something went wrong while trying to restore the ${crudName}. Please try again.`, 'error');
+                            showToasty(
+                                err ||
+                                    `Oops! Something went wrong while trying to restore the ${crudName}. Please try again.`,
+                                'error',
+                            );
                         }),
                 )
-                .catch(() => { });
+                .catch(() => {});
         },
-        [confirmDialog, crudName, bulkRestoreItems, clearAndReload, showToasty, onAction],
+        [
+            confirmDialog,
+            crudName,
+            bulkRestoreItems,
+            clearAndReload,
+            showToasty,
+            onAction,
+        ],
     );
 
     const handleBulkDeleteForever = useCallback(
@@ -141,25 +213,51 @@ export function useCrudTableActions({
                     bulkDeleteForeverItems?.(ids)
                         .then(() => {
                             clearAndReload();
-                            showToasty(`The ${crudName} has been successfully deleted permanently`);
+                            showToasty(
+                                `The ${crudName} has been successfully deleted permanently`,
+                            );
                             onAction?.('bulkDeleteRestore');
                         })
                         .catch((err: any) => {
-                            showToasty(errorMessage(err, `Oops! Something went wrong while trying to delete the ${crudName}. Please try again.`), 'error');
+                            showToasty(
+                                errorMessage(
+                                    err,
+                                    `Oops! Something went wrong while trying to delete the ${crudName}. Please try again.`,
+                                ),
+                                'error',
+                            );
                         }),
                 )
-                .catch(() => { });
+                .catch(() => {});
         },
-        [confirmDialog, crudName, bulkDeleteForeverItems, clearAndReload, showToasty, onAction],
+        [
+            confirmDialog,
+            crudName,
+            bulkDeleteForeverItems,
+            clearAndReload,
+            showToasty,
+            onAction,
+        ],
     );
 
-    return {
-        clearAndReload,
-        handleDelete,
-        handleRestore,
-        handleDeleteForever,
-        handleBulkDelete,
-        handleBulkRestore,
-        handleBulkDeleteForever,
-    };
+    return useMemo(
+        () => ({
+            clearAndReload,
+            handleDelete,
+            handleRestore,
+            handleDeleteForever,
+            handleBulkDelete,
+            handleBulkRestore,
+            handleBulkDeleteForever,
+        }),
+        [
+            clearAndReload,
+            handleDelete,
+            handleRestore,
+            handleDeleteForever,
+            handleBulkDelete,
+            handleBulkRestore,
+            handleBulkDeleteForever,
+        ],
+    );
 }

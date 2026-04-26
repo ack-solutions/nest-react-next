@@ -1,7 +1,7 @@
 // table-to-qb.ts
 import { QueryBuilder, OrderDirectionEnum } from "@ackplus/nest-crud-request";
 import type { TableState } from "@ackplus/react-tanstack-data-table";
-import { buildColumnFilterGroup } from "./column-filter-to-query";
+import { applyColumnFilterToQueryBuilder, type ColumnFilterRuleForQuery } from "./column-filter-to-query";
 
 export async function buildQBFromTableState<T>(opts: {
     columns: any[];
@@ -11,7 +11,8 @@ export async function buildQBFromTableState<T>(opts: {
 }) {
     const { columns, filters, isTrash, mapQuery } = opts;
 
-    let qb = new QueryBuilder({});
+    let qb = new QueryBuilder();
+
     // pagination
     if (filters?.pagination) {
         const pageIndex = filters.pagination.pageIndex ?? 0;
@@ -44,23 +45,11 @@ export async function buildQBFromTableState<T>(opts: {
 
     // column filters
     if (filters?.columnFilter?.filters?.length) {
-
-        const logic = filters.columnFilter?.logic ?? "AND";
-
-        const conditions = buildColumnFilterGroup(filters.columnFilter?.filters);
-        if (conditions?.length > 0) {
-            qb.andWhere((sqb) => {
-                if (logic === "AND") {
-                    conditions.forEach((condition) => {
-                        sqb.andWhere(condition);
-                    });
-                } else {
-                    conditions.forEach((condition) => {
-                        sqb.orWhere(condition);
-                    });
-                }
-            });
-        }
+        const { filters: columnFilters, logic } = filters.columnFilter;
+        applyColumnFilterToQueryBuilder(qb, {
+            filters: columnFilters as ColumnFilterRuleForQuery[],
+            logic: logic ?? "AND",
+        });
     }
 
     // trash

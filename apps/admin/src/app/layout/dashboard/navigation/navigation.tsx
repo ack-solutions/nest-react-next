@@ -1,22 +1,22 @@
 import {
+    Avatar,
     Box,
     Drawer,
     Stack,
     Typography,
-    IconButton,
     styled,
 } from '@mui/material';
-import { useMemo } from 'react';
 
 import NavigationGroupComponent from './navigation-group';
 import { useNavigation } from './use-navigation';
-import { Icon } from '../../../components/icons/icon';
-import { IconEnum } from '../../../components/icons/icons';
-import { Logo } from '../../../components/logo';
-import { useSettingsContext } from '../../../contexts/settings-provider';
-import { useResponsive } from '../../../hook/use-responsive';
-import { NAV } from '../../config';
 
+import { config } from '@libs/react-shared';
+import { useAuth } from '@libs/react-shared';
+import { NAV } from '../../config';
+import { useResponsive } from '@admin/app/hook';
+import { useSettingsContext } from '@admin/app/contexts';
+
+const version = config.version;
 
 interface NavigationProps {
     openNav?: boolean;
@@ -26,91 +26,44 @@ interface NavigationProps {
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
     '& .MuiDrawer-paper': {
         width: NAV.W_VERTICAL,
-        borderRight: `dashed 1px ${theme.palette.divider}`,
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.palette.background.paper,
+        borderRight: `1px solid ${theme.palette.divider}`,
+        overflowX: 'hidden',
     },
 }));
 
 const StyledMiniDrawer = styled(Drawer)(({ theme }) => ({
     '& .MuiDrawer-paper': {
         width: NAV.W_MINI,
-        borderRight: `dashed 1px ${theme.palette.divider}`,
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.palette.background.paper,
+        borderRight: `1px solid ${theme.palette.divider}`,
+        overflowX: 'hidden',
     },
 }));
 
-const ToggleButton = styled(IconButton)(({ theme }) => ({
-    position: 'fixed',
-    top: 20,
-    left: NAV.W_VERTICAL - 12,
-    zIndex: theme.zIndex.drawer + 1,
-    width: 24,
-    height: 24,
-    padding: 0,
-    border: `dashed 1px ${theme.palette.divider}`,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[2],
-    '&:hover': {
-        backgroundColor: theme.palette.background.default,
-        boxShadow: theme.shadows[4],
-    },
-}));
-
-const MiniToggleButton = styled(IconButton)(({ theme }) => ({
-    position: 'fixed',
-    top: 20,
-    left: NAV.W_MINI - 12,
-    zIndex: theme.zIndex.drawer + 1,
-    width: 24,
-    height: 24,
-    padding: 0,
-    border: `dashed 1px ${theme.palette.divider}`,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[2],
-    '&:hover': {
-        backgroundColor: theme.palette.background.default,
-        boxShadow: theme.shadows[4],
-    },
-}));
-
-import { config } from '@libs/react-shared';
-
-const version = config.version;
-
-export default function Navigation({ openNav = false, onCloseNav }: NavigationProps) {
+export default function Navigation({
+    openNav = false,
+    onCloseNav,
+}: NavigationProps) {
     const { navigation, isItemActive } = useNavigation();
-    const { navLayout, onUpdate } = useSettingsContext();
+    const { navLayout } = useSettingsContext();
     const isDesktop = useResponsive('up', 'md');
-    const isLaptopSize = useResponsive('between', 'md', 'lg');
+    const { currentUser } = useAuth();
 
-    const isCompactMode = useMemo(
-        () => navLayout === 'mini' && isDesktop,
-        [navLayout, isDesktop],
-    );
+    const isCompactMode = navLayout === 'mini' && isDesktop;
 
-    const handleToggleNav = () => {
-        onUpdate('navLayout', navLayout === 'vertical' ? 'mini' : 'vertical');
-    };
-
-    const renderContent = (
-        <>
-            <Logo
-                small={isCompactMode}
-                disabledLink
-                sx={{
-                    my: 2,
-                    display: 'block',
-                    mx: 'auto',
-                    ...(isCompactMode && {
-                        width: 50,
-                    }),
-                }}
-            />
-
+    const content = (
+        <Stack
+            sx={{
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+            }}
+        >
             <Stack
                 sx={{
                     flex: 1,
-                    flexShrink: 0,
+                    minHeight: 0,
                     overflow: 'auto',
                     '&::-webkit-scrollbar': {
                         display: 'none',
@@ -128,59 +81,94 @@ export default function Navigation({ openNav = false, onCloseNav }: NavigationPr
                 ))}
             </Stack>
 
-
             {!isCompactMode && (
-                <Box
-                    sx={{
-                        py: 2,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}
-                >
-                    <Typography variant="caption" color="text.secondary">
-                        Version {version}
-                    </Typography>
-                </Box>
+                <>
+                    <Box
+                        sx={{
+                            p: 2,
+                            borderTop: 1,
+                            borderColor: 'divider',
+                        }}
+                    >
+                        <Stack direction="row" alignItems="center" spacing={1.5}>
+                            <Avatar
+                                sx={{
+                                    width: 36,
+                                    height: 36,
+                                    bgcolor: 'grey.200',
+                                    color: 'text.secondary',
+                                    fontSize: 14,
+                                    fontWeight: 600,
+                                }}
+                            >
+                                {currentUser?.name?.charAt(0)?.toUpperCase() || 'U'}
+                            </Avatar>
+
+                            <Box sx={{ minWidth: 0, flex: 1 }}>
+                                <Typography
+                                    variant="body2"
+                                    noWrap
+                                    sx={{
+                                        color: 'text.primary',
+                                        fontWeight: 600,
+                                        fontSize: '0.82rem',
+                                    }}
+                                >
+                                    {currentUser?.name || 'User'}
+                                </Typography>
+                                <Typography
+                                    variant="caption"
+                                    noWrap
+                                    sx={{
+                                        color: 'text.secondary',
+                                        fontSize: '0.7rem',
+                                    }}
+                                >
+                                    Portal
+                                </Typography>
+                            </Box>
+                        </Stack>
+                    </Box>
+
+                    <Box
+                        sx={{
+                            pb: 1.5,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Typography
+                            variant="caption"
+                            sx={{
+                                color: 'text.disabled',
+                                fontSize: '0.65rem',
+                            }}
+                        >
+                            v{version}
+                        </Typography>
+                    </Box>
+                </>
             )}
-        </>
+        </Stack>
     );
 
     if (isCompactMode) {
         return (
-            <>
-                <StyledMiniDrawer
-                    variant="permanent"
-                    open={true}
-                >
-                    {renderContent}
-                </StyledMiniDrawer>
-                {isDesktop && (
-                    <MiniToggleButton onClick={handleToggleNav}>
-                        <Icon icon={IconEnum.ChevronRight} size="x-small" />
-                    </MiniToggleButton>
-                )}
-            </>
+            <StyledMiniDrawer variant="permanent" open>
+                {content}
+            </StyledMiniDrawer>
         );
     }
 
     return (
-        <>
-            <StyledDrawer
-                open={openNav}
-                onClose={onCloseNav}
-                variant={isDesktop ? 'permanent' : 'temporary'}
-                ModalProps={{
-                    keepMounted: true,
-                }}
-            >
-                {renderContent}
-            </StyledDrawer>
-            {isDesktop && (
-                <ToggleButton onClick={handleToggleNav}>
-                    <Icon icon={IconEnum.ChevronLeft} size="x-small" />
-                </ToggleButton>
-            )}
-        </>
+        <StyledDrawer
+            open={openNav}
+            onClose={onCloseNav}
+            variant={isDesktop ? 'permanent' : 'temporary'}
+            ModalProps={{ keepMounted: true }}
+        >
+            {content}
+        </StyledDrawer>
     );
 }

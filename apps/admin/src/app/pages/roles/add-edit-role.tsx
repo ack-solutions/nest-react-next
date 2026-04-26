@@ -24,7 +24,7 @@ import { useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import PermissionSelector from '../../sections/permission/permission-selector';
 import NotFound from '../error/not-found';
-import { withRequirePermission } from '@ackplus/nest-auth-react';
+import { withRequirePermissionFallback } from '../../hoc/with-require-permission-fallback';
 
 type RoleFormValues = {
     name: string;
@@ -242,6 +242,6 @@ function AddEditRole() {
     );
 }
 
-export default withRequirePermission(AddEditRole, {
+export default withRequirePermissionFallback(AddEditRole, {
     permission: [PermissionsEnum.CREATE_ROLES, PermissionsEnum.UPDATE_ROLES],
 });

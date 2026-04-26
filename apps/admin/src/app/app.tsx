@@ -11,8 +11,8 @@ import { SettingsProvider } from './contexts/settings-provider';
 import { ThemeProvider } from './theme/theme-provider';
 import { AuthClient, LocalStorageAdapter, createAxiosAdapter } from '@ackplus/nest-auth-client';
 import { AuthProvider, config, instanceApi } from '@libs/react-shared';
-import { DataTableStateProvider } from './contexts/datatable-state-context';
 import { useEffect } from 'react';
+import { DataTableStateProvider } from './components/data-grid';
 
 const MINUTE = 60 * 1000;
 const queryClient = new QueryClient({

@@ -14,10 +14,11 @@ import {
 } from '../../components';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import AddEditPageDialog from '../../sections/pages/add-edit-page-dialog';
-import { useHasPermission, withRequirePermission } from '@ackplus/nest-auth-react';
+import { useHasPermission } from '@ackplus/nest-auth-react';
+import { withRequirePermissionFallback } from '../../hoc/with-require-permission-fallback';
 import CrudDataGrid from '@admin/app/components/data-grid/crud-data-grid';
 import { DataTableApi, DataTableColumn } from '@ackplus/react-tanstack-data-table';
-import { useDataTableState } from '@admin/app/contexts/datatable-state-context';
+import { useDataTableState } from '@admin/app/components/data-grid';
 import { startCase } from 'lodash';
 
 
@@ -265,6 +266,6 @@ function PageList() {
     );
 }
 
-export default withRequirePermission(PageList, {
+export default withRequirePermissionFallback(PageList, {
     permission: PermissionsEnum.ACCESS_PAGES,
 });

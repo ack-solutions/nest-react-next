@@ -75,9 +75,11 @@ function safeParse<T>(value: string | null): T | null {
 
 function readSessionCache(): Record<string, DataTableState> {
     if (typeof window === 'undefined') return {};
-    return safeParse<Record<string, DataTableState>>(
-        sessionStorage.getItem(SESSION_STORAGE_KEY),
-    ) ?? {};
+    return (
+        safeParse<Record<string, DataTableState>>(
+            sessionStorage.getItem(SESSION_STORAGE_KEY),
+        ) ?? {}
+    );
 }
 
 function writeSessionCache(cache: Record<string, DataTableState>) {
@@ -92,10 +94,9 @@ export function DataTableStateProvider({
     children,
     stateStorage = 'memory',
 }: DataTableStateProviderProps) {
-    const [stateCache, setStateCache] = useState<Record<string, DataTableState>>(
-        () =>
-            stateStorage === 'session' ? readSessionCache() : {},
-    );
+    const [stateCache, setStateCache] = useState<
+        Record<string, DataTableState>
+    >(() => (stateStorage === 'session' ? readSessionCache() : {}));
 
     useEffect(() => {
         if (typeof window === 'undefined' || stateStorage !== 'session') return;
@@ -107,15 +108,35 @@ export function DataTableStateProvider({
         [stateCache],
     );
 
-    const setState = useCallback((key: string, state: Partial<DataTableState>) => {
-        setStateCache(prev => ({
-            ...prev,
-            [key]: {
-                ...prev[key],
-                ...state,
-            },
-        }));
-    }, []);
+    const setState = useCallback(
+        (key: string, state: Partial<DataTableState>) => {
+            setStateCache(prev => {
+                const currentState = prev[key] ?? {};
+                const entries = Object.entries(state);
+
+                if (entries.length === 0) {
+                    return prev;
+                }
+
+                const hasChanges = entries.some(([field, value]) => {
+                    return !Object.is((currentState as any)[field], value);
+                });
+
+                if (!hasChanges) {
+                    return prev;
+                }
+
+                return {
+                    ...prev,
+                    [key]: {
+                        ...currentState,
+                        ...state,
+                    },
+                };
+            });
+        },
+        [],
+    );
 
     const clearState = useCallback((key: string) => {
         setStateCache(prev => {
@@ -130,28 +151,37 @@ export function DataTableStateProvider({
     }, []);
 
     // Layout localStorage methods
-    const getLayout = useCallback((key: string): DataTableLayoutState | null => {
-        try {
-            const stored = localStorage.getItem(LAYOUT_STORAGE_KEY);
-            if (!stored) return null;
-            const layouts = JSON.parse(stored);
-            return layouts[key] || null;
-        } catch (error) {
-            console.error('Error reading layout from localStorage:', error);
-            return null;
-        }
-    }, []);
+    const getLayout = useCallback(
+        (key: string): DataTableLayoutState | null => {
+            try {
+                const stored = localStorage.getItem(LAYOUT_STORAGE_KEY);
+                if (!stored) return null;
+                const layouts = JSON.parse(stored);
+                return layouts[key] || null;
+            } catch (error) {
+                console.error('Error reading layout from localStorage:', error);
+                return null;
+            }
+        },
+        [],
+    );
 
-    const saveLayout = useCallback((key: string, layout: DataTableLayoutState) => {
-        try {
-            const stored = localStorage.getItem(LAYOUT_STORAGE_KEY);
-            const layouts = stored ? JSON.parse(stored) : {};
-            layouts[key] = layout;
-            localStorage.setItem(LAYOUT_STORAGE_KEY, JSON.stringify(layouts));
-        } catch (error) {
-            console.error('Error saving layout to localStorage:', error);
-        }
-    }, []);
+    const saveLayout = useCallback(
+        (key: string, layout: DataTableLayoutState) => {
+            try {
+                const stored = localStorage.getItem(LAYOUT_STORAGE_KEY);
+                const layouts = stored ? JSON.parse(stored) : {};
+                layouts[key] = layout;
+                localStorage.setItem(
+                    LAYOUT_STORAGE_KEY,
+                    JSON.stringify(layouts),
+                );
+            } catch (error) {
+                console.error('Error saving layout to localStorage:', error);
+            }
+        },
+        [],
+    );
 
     const clearLayout = useCallback((key: string) => {
         try {
@@ -175,7 +205,15 @@ export function DataTableStateProvider({
             saveLayout,
             clearLayout,
         }),
-        [getState, setState, clearState, clearAllStates, getLayout, saveLayout, clearLayout],
+        [
+            getState,
+            setState,
+            clearState,
+            clearAllStates,
+            getLayout,
+            saveLayout,
+            clearLayout,
+        ],
     );
 
     return (
@@ -188,20 +226,24 @@ export function DataTableStateProvider({
 export function useDataTableState(key: string) {
     const context = useContext(DataTableStateContext);
     if (!context) {
-        throw new Error('useDataTableState must be used within DataTableStateProvider');
+        throw new Error(
+            'useDataTableState must be used within DataTableStateProvider',
+        );
     }
 
     return useMemo(
         () => ({
             // sessionStorage-backed
             state: context.getState(key),
-            setState: (state: Partial<DataTableState>) => context.setState(key, state),
+            setState: (state: Partial<DataTableState>) =>
+                context.setState(key, state),
             clearState: () => context.clearState(key),
             clearAllStates: context.clearAllStates,
 
             // localStorage-backed
             layout: context.getLayout(key),
-            saveLayout: (layout: DataTableLayoutState) => context.saveLayout(key, layout),
+            saveLayout: (layout: DataTableLayoutState) =>
+                context.saveLayout(key, layout),
             clearLayout: () => context.clearLayout(key),
             getLayout: context.getLayout,
         }),

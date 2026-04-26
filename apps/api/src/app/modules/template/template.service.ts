@@ -5,14 +5,13 @@ import {
     TemplateFilterDto
 } from '@ackplus/nest-dynamic-templates';
 import { Injectable } from '@nestjs/common';
-
-import { RequestContext } from '../../core/request-context/request-context';
+import { AuthHelper } from '../../core/auth/auth.helper';
 
 
 @Injectable()
 export class TemplateService {
 
-    private excludeNames = [];
+    private excludeNames: string[] = [];
 
     constructor(
         public readonly nestTemplateService: NestTemplateService,
@@ -26,7 +25,7 @@ export class TemplateService {
 
 
     async getTemplates(filter: TemplateFilterDto) {
-        const isSuperAdmin = RequestContext.isSuperAdmin();
+        const isSuperAdmin = AuthHelper.isSuperAdmin();
 
         if (isSuperAdmin) {
             filter.scope = filter.scopeId ? 'organization' : 'system';
@@ -54,7 +53,7 @@ export class TemplateService {
     }
 
     async updateTemplate(id: string, entity: CreateTemplateDto) {
-        const canSystemUpdate = RequestContext.isSuperAdmin();
+        const canSystemUpdate = AuthHelper.isSuperAdmin();
         if (entity.scopeId) {
             entity.scope = 'organization';
             return this.nestTemplateService.overwriteSystemTemplate(id, entity);
@@ -66,7 +65,7 @@ export class TemplateService {
     }
 
     async deleteTemplate(id: string) {
-        const canSystemDelete = RequestContext.isSuperAdmin();
+        const canSystemDelete = AuthHelper.isSuperAdmin();
         return this.nestTemplateService.deleteTemplate(id, canSystemDelete);
     }
 

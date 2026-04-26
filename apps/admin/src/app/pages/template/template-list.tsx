@@ -12,7 +12,8 @@ import { StatusChip, getStatusConfig } from '../../components';
 import { TableActionMenu } from '../../components/data-table';
 import { useConfirm } from '../../contexts/confirm-dialog-context';
 import { PATH_DASHBOARD } from '../../routes/paths';
-import { useHasPermission, withRequirePermission } from '@ackplus/nest-auth-react';
+import { useHasPermission } from '@ackplus/nest-auth-react';
+import { withRequirePermissionFallback } from '../../hoc/with-require-permission-fallback';
 import DataGrid from '@admin/app/components/data-grid/data-grid';
 import { DataTableApi, DataTableColumn } from '@ackplus/react-tanstack-data-table';
 import { HEADER } from '@admin/app/layout/config';
@@ -169,6 +170,6 @@ function TemplateList({ organizationId }: TemplateListProps) {
     );
 }
 
-export default withRequirePermission(TemplateList, {
+export default withRequirePermissionFallback(TemplateList, {
     permission: PermissionsEnum.ACCESS_TEMPLATES,
 });

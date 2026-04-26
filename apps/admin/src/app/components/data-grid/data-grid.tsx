@@ -3,7 +3,7 @@ import {
     DataTableApi,
     DataTableProps,
 } from '@ackplus/react-tanstack-data-table';
-import { forwardRef, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
 import { useDataTablePersistence } from './hooks/use-data-table-persistence';
 
 interface DataGridProps<T> extends DataTableProps<T> {
@@ -37,6 +37,13 @@ const DataGrid = forwardRef<DataTableApi<any>, DataGridProps<any>>(
                 initialState: initialStateProp,
                 onDataStateChange,
             });
+        const mergedSlotProps = useMemo(() => {
+            return {
+                pagination: { rowsPerPageOptions: [10, 50, 100, 500, 1000] },
+                toolbar: { sx: { minHeight: '48px !important' } },
+                ...props.slotProps,
+            };
+        }, [props.slotProps]);
 
         return (
             <DataTable
@@ -60,12 +67,9 @@ const DataGrid = forwardRef<DataTableApi<any>, DataGridProps<any>>(
                 onColumnPinningChange={handleLayoutChange}
                 onColumnSizingChange={handleLayoutChange}
                 initialState={initialState}
+                skeletonRows={10}
                 {...props}
-                slotProps={{
-                    pagination: { rowsPerPageOptions: [10, 25, 50, 100, 200] },
-                    toolbar: { sx: { minHeight: '48px !important' } },
-                    ...props.slotProps,
-                }}
+                slotProps={mergedSlotProps}
             />
         );
     },

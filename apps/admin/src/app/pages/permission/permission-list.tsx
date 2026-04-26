@@ -26,10 +26,8 @@ import {
 import { useToasty } from '@admin/app/hook';
 import { useConfirm } from '@admin/app/contexts';
 import { HEADER } from '@admin/app/layout/config';
-import {
-    withRequirePermission,
-    useHasPermission,
-} from '@ackplus/nest-auth-react';
+import { useHasPermission } from '@ackplus/nest-auth-react';
+import { withRequirePermissionFallback } from '../../hoc/with-require-permission-fallback';
 import PermissionForm from '@admin/app/sections/permission/permission-form';
 
 function PermissionList() {
@@ -253,6 +251,6 @@ function PermissionList() {
     );
 }
 
-export default withRequirePermission(PermissionList, {
+export default withRequirePermissionFallback(PermissionList, {
     permission: PermissionsEnum.ACCESS_ROLES,
 });

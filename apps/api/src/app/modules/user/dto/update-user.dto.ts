@@ -25,5 +25,5 @@ export class UpdateUserDTO extends PartialType(User) {
     })
     @IsArray()
     @IsOptional()
-    roles?: string[];
+    rolesIds?: string[];
 }

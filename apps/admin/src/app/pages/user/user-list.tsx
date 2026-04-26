@@ -13,16 +13,17 @@ import { IconEnum } from '../../components/icons/icons';
 import UserStatusDropdown from '../../components/user/user-status-dropdown';
 import UserStatusLabel from '../../components/user/user-status-label';
 import UserWithAvatar from '../../components/user/user-with-avatar';
-import { useHasPermission, withRequirePermission } from '@ackplus/nest-auth-react';
+import { useHasPermission } from '@ackplus/nest-auth-react';
+import { withRequirePermissionFallback } from '../../hoc/with-require-permission-fallback';
 import { useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import ResetPasswordDialog from '../../sections/user/reset-password-dialog';
 import UserMfaDialog from '../../sections/user/user-mfa-dialog';
 import CrudDataGrid from '@admin/app/components/data-grid/crud-data-grid';
 import { DataTableApi, DataTableColumn } from '@ackplus/react-tanstack-data-table';
-import { useDataTableState } from '@admin/app/contexts/datatable-state-context';
 import { searchBySplitName } from '@admin/app/utils/builder';
 import { toDisplayPhone } from '@admin/app/utils/phone';
+import { useDataTableState } from '@admin/app/components/data-grid';
 
 
 export interface IUserTableFilter {
@@ -433,6 +434,6 @@ function UsersList() {
     );
 }
 
-export default withRequirePermission(UsersList, {
+export default withRequirePermissionFallback(UsersList, {
     permission: PermissionsEnum.ACCESS_USERS,
 });

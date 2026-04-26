@@ -116,7 +116,6 @@ function BridgeAuthProvider({
     storage?: IStorageAdapter;
 }) {
     const auth = useNestAuth();
-    console.log(auth)
     const [authUser, setAuthUser] = useState<INestAuthUser | null>(null);
     const [isInitialized, setIsInitialized] = useState(false);
     const [currentUser, setCurrentUser] = useState<IUser | null>(null);

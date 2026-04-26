@@ -13,7 +13,7 @@ import { DataTable, TableActionMenu } from '../../components/data-table';
 import { useConfirm } from '../../contexts/confirm-dialog-context';
 import { useToasty } from '../../hook';
 import { PATH_DASHBOARD } from '../../routes/paths';
-import { withRequirePermission } from '@ackplus/nest-auth-react';
+import { withRequirePermissionFallback } from '../../hoc/with-require-permission-fallback';
 
 
 function EmailTemplateList() {
@@ -212,6 +212,6 @@ function EmailTemplateList() {
     );
 }
 
-export default withRequirePermission(EmailTemplateList, {
+export default withRequirePermissionFallback(EmailTemplateList, {
     permission: PermissionsEnum.ACCESS_EMAIL_TEMPLATES,
 });

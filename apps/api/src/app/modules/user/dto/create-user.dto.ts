@@ -26,6 +26,6 @@ export class CreateUserDTO extends PartialType(User) {
     })
     @IsArray()
     @IsOptional()
-    roles?: string[];
+    rolesIds?: string[];
 
 }

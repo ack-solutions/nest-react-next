@@ -3,7 +3,8 @@ import { Box, Tab, Tabs } from '@mui/material';
 import { useState } from 'react';
 
 import { Page } from '../../components';
-import { withRequirePermission, useHasRole } from '@ackplus/nest-auth-react';
+import { useHasRole } from '@ackplus/nest-auth-react';
+import { withRequirePermissionFallback } from '../../hoc/with-require-permission-fallback';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import GeneralSetting from '../../sections/setting/general-setting';
 import DatabaseSeederSetting from '../../sections/setting/database-seeder-setting';
@@ -77,6 +78,6 @@ function Settings() {
     );
 }
 
-export default withRequirePermission(Settings, {
+export default withRequirePermissionFallback(Settings, {
     permission: PermissionsEnum.ACCESS_SETTINGS,
 });

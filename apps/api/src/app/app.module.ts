@@ -10,7 +10,6 @@ import { DataSource } from 'typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Configs } from './config';
-import { RequestContextMiddleware } from './core/request-context/request-context.middleware';
 import { TypeOrmConfigService } from './core/service/typeorm-config.service';
 import { CmsModule } from './modules/cms/cms.module';
 import { CountryModule } from './modules/country/country.module';
@@ -92,10 +91,4 @@ import { FileStorageConfigService } from './core/service/file-storage-config.ser
     controllers: [AppController],
     providers: [AppService],
 })
-export class AppModule {
-
-    configure(consumer: MiddlewareConsumer) {
-        consumer.apply(RequestContextMiddleware).forRoutes('*');
-    }
-
-}
+export class AppModule { }

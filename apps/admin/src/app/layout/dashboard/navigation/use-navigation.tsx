@@ -1,105 +1,123 @@
-import { PermissionsEnum, RoleNameEnum } from '@libs/types';
+import { hasAnyAccess, ISessionUserData } from '@ackplus/nest-auth-client';
+import { useAuth } from '@libs/react-shared';
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { NAVIGATION_ITEMS, NavigationGroup, NavigationItem } from './navigation-config';
-import { hasPermission } from '@ackplus/nest-auth-client';
-import { useHasPermission, useHasRole } from '@ackplus/nest-auth-react';
+import {
+    NAVIGATION_ITEMS,
+    NavigationGroup,
+    NavigationItem,
+    NavigationItemChildItem,
+} from './navigation-config';
 
+function hasAccess(
+    item: {
+        permissions?: string[];
+        roles?: string[];
+    },
+    sessionData: ISessionUserData | null | undefined,
+): boolean {
+    return hasAnyAccess(sessionData, {
+        permissions: item?.permissions || [],
+        roles: item?.roles || [],
+    });
+}
+
+function getVisibleChildren(
+    item: NavigationItem,
+    sessionData: ISessionUserData | null,
+): NavigationItemChildItem[] | undefined {
+    if (!item.children?.length) {
+        return undefined;
+    }
+
+    const visibleChildren = item.children.filter((child) =>
+        hasAccess(child, sessionData),
+    );
+
+    return visibleChildren.length ? visibleChildren : undefined;
+}
+
+function canViewItem(
+    item: NavigationItem,
+    sessionData: ISessionUserData | null | undefined,
+): boolean {
+    if (hasAccess(item, sessionData)) {
+        return true;
+    }
+
+    return !!getVisibleChildren(item, sessionData)?.length;
+}
+
+function toVisibleItem(
+    item: NavigationItem,
+    sessionData: ISessionUserData | null | undefined,
+): NavigationItem | null {
+    if (!canViewItem(item, sessionData)) {
+        return null;
+    }
+
+    return {
+        ...item,
+        children: getVisibleChildren(item, sessionData),
+    };
+}
+
+function isPathActive(
+    item: Pick<NavigationItem, 'path' | 'activePaths' | 'children'>,
+    pathname: string,
+): boolean {
+    if (item.path && pathname === item.path) {
+        return true;
+    }
+
+    if (item.activePaths?.some((path) => pathname.startsWith(path))) {
+        return true;
+    }
+
+    return !!item.children?.some((child) => {
+        if (child.path === pathname) {
+            return true;
+        }
+
+        return !!child.activePaths?.some((path) => pathname.startsWith(path));
+    });
+}
 
 export function useNavigation() {
     const { pathname } = useLocation();
+    const { sessionData } = useAuth();
 
-    // Filter items based on permissions and roles
     const visibleItems = useMemo(() => {
         return NAVIGATION_ITEMS
-        // .filter((item) => {
-        //     // Super Admin has access to everything
-        //     const isSuperAdmin = useHasRole([RoleNameEnum.SUPER_ADMIN]);
-        //     if (isSuperAdmin) {
-        //         return true;
-        //     }
+            .map((item) => toVisibleItem(item, sessionData))
+            .filter((item): item is NavigationItem => item !== null);
+    }, [sessionData]);
 
-        //     // If no permissions or roles are specified, item is visible
-        //     if (!item.permissions?.length && !item.roles?.length) {
-        //         return true;
-        //     }
+    const navigation = useMemo(() => {
+        const groups = new Map<string, NavigationItem[]>();
 
-        //     // Check permissions and roles
-        //     const hasPermission = item.permissions?.length
-        //         ? useHasPermission(item.permissions)
-        //         : true;
-        //     const hasRequiredRole = item.roles?.length
-        //         ? useHasRole(item.roles)
-        //         : true;
+        for (const item of visibleItems) {
+            const groupItems = groups.get(item.group) ?? [];
+            groupItems.push(item);
+            groups.set(item.group, groupItems);
+        }
 
-        //     return hasPermission || hasRequiredRole;
-        // });
-    }, []);
-
-    // Group items by their group property
-    const groupedNavigation = useMemo(() => {
-        const groups: Record<string, { permissions: PermissionsEnum[], roles: RoleNameEnum[], items: NavigationItem[] }> = {};
-
-        visibleItems.forEach((item) => {
-            if (!groups[item.group]) {
-                groups[item.group] = { permissions: [], items: [], roles: [] };
-            }
-            groups[item.group].items.push(item);
-            // Aggregate permissions and roles from all items in the group
-            if (Array.isArray(item.permissions)) {
-                groups[item.group].permissions = [
-                    ...new Set([...groups[item.group].permissions, ...item.permissions])
-                ];
-            }
-            if (Array.isArray(item.roles)) {
-                groups[item.group].roles = [
-                    ...new Set([...groups[item.group].roles, ...item.roles])
-                ];
-            }
-        });
-
-        return Object.entries(groups).map(([label, data]): NavigationGroup => ({
-            label,
-            items: data.items,
-            permissions: data.permissions,
-            roles: data.roles,
-        }));
+        return Array.from(groups.entries()).map(
+            ([label, items]): NavigationGroup => ({
+                label,
+                items,
+                permissions: [],
+                roles: [],
+            }),
+        );
     }, [visibleItems]);
 
-    // Check if a navigation item is active
-    const isItemActive = useMemo(() => {
-        return (item: NavigationItem): boolean => {
-            // Check exact path match
-            if (item.path && pathname === item.path) {
-                return true;
-            }
-
-            // Check active paths
-            if (item.activePaths?.length) {
-                return item.activePaths.some(path => pathname.startsWith(path));
-            }
-
-            // Check if any child items are active (for parent highlighting)
-            if (item.children?.length) {
-                return item.children.some(child => {
-                    if (child.path && pathname === child.path) {
-                        return true;
-                    }
-                    if (child.activePaths?.length) {
-                        return child.activePaths.some(path => pathname.startsWith(path));
-                    }
-                    return false;
-                });
-            }
-
-            return false;
-        };
-    }, [pathname]);
+    const isItemActive = (item: NavigationItem) => isPathActive(item, pathname);
 
     return {
-        navigation: groupedNavigation,
-        isItemActive,
+        navigation,
         visibleItems,
+        isItemActive,
     };
 }

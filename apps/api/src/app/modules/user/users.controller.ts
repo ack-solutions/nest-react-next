@@ -33,7 +33,10 @@ import { User } from './user.entity';
 import { UserService } from './user.service';
 import { SuccessDTO } from '../../core/dto/success.dto';
 import { RequestDataTypeInterceptor } from '../../core/interceptors/request-data-type.interceptor';
-import { RequestContext } from '../../core/request-context/request-context';
+import { FileStorageInterceptor } from '@ackplus/nest-file-storage';
+import { projectPreUploadValidation } from '../../core/file-validation.config';
+import path from 'path';
+import { AuthHelper } from '../../core/auth/auth.helper';
 
 
 @ApiTags('User')
@@ -51,6 +54,28 @@ import { RequestContext } from '../../core/request-context/request-context';
         counts: {
             enabled: true,
             interceptors: [new RequestDataTypeInterceptor()],
+        },
+        create: {
+            interceptors: [
+                FileStorageInterceptor('photo', {
+                    fileName: (file, req) => file.originalname,
+                    fileDist: (file, req) => path.join('users', 'avatars'),
+                    prefix: 'gate',
+                    ...projectPreUploadValidation('images', 5),
+                }),
+                new RequestDataTypeInterceptor(),
+            ],
+        },
+        update: {
+            interceptors: [
+                FileStorageInterceptor('photo', {
+                    fileName: (file, req) => file.originalname,
+                    fileDist: (file, req) => path.join('users', 'avatars'),
+                    prefix: 'gate',
+                    ...projectPreUploadValidation('images', 5),
+                }),
+                new RequestDataTypeInterceptor(),
+            ],
         },
     },
 })
@@ -70,11 +95,16 @@ export class UsersController {
         },
     })
     currentUser(): Promise<IUser | null> {
-        return RequestContext.currentUser({ relations: ['authUser', 'authUser.roles'] });
+        return AuthHelper.getAppUser(['authUser', 'authUser.roles']);
     }
 
     @HttpCode(HttpStatus.ACCEPTED)
     @UseInterceptors(
+        FileStorageInterceptor('avatar', {
+            fileName: (file, req) => file.originalname,
+            fileDist: (file, req) => path.join('users', 'avatars'),
+            ...projectPreUploadValidation('images', 5)
+        }),
         RequestDataTypeInterceptor,
     )
     @Put('update/profile')

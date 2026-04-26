@@ -1,7 +1,20 @@
 import { QueryBuilder, WhereOperatorEnum, WhereLogicalOperatorEnum } from '@ackplus/nest-crud-request';
-import { ColumnFilterRule } from '@ackplus/react-tanstack-data-table';
 
+/**
+ * Frontend column filter rule (matches table.types ColumnFilterState.filters items).
+ * We use only filters + logic; pendingFilters and pendingLogic are not sent to the server.
+ */
+export interface ColumnFilterRuleForQuery {
+    columnId: string;
+    operator: string;
+    value: any;
+    columnType?: string;
+}
 
+export interface ColumnFilterStateForQuery {
+    filters: ColumnFilterRuleForQuery[];
+    logic: 'AND' | 'OR';
+}
 
 /**
  * Maps frontend filter operator + columnType to backend condition object
@@ -106,13 +119,18 @@ export function mapFilterRuleToCondition(
  * using multiple orWhere for one $or group).
  */
 export function buildColumnFilterGroup(
-    columnFilter: ColumnFilterRule[] | undefined | null
-): Record<string, unknown>[] | null {
-    if (!columnFilter?.length) return null;
+    columnFilter: ColumnFilterStateForQuery | undefined | null
+): Record<string, unknown> | null {
+    if (!columnFilter?.filters?.length) return null;
+
+    const activeFilters = columnFilter.filters.filter(
+        (f): f is ColumnFilterRuleForQuery => Boolean(f?.columnId && f?.operator)
+    );
+    if (activeFilters.length === 0) return null;
 
     const conditions: Record<string, unknown>[] = [];
 
-    columnFilter.forEach((filter) => {
+    activeFilters.forEach((filter) => {
         const condition = mapFilterRuleToCondition(
             filter.operator,
             filter.value,
@@ -122,18 +140,22 @@ export function buildColumnFilterGroup(
 
         conditions.push({ [filter.columnId]: condition } as Record<string, unknown>);
     });
-    return conditions;
+
+    if (conditions.length === 0) return null;
+
+    const logic = columnFilter.logic === 'OR' ? WhereLogicalOperatorEnum.OR : WhereLogicalOperatorEnum.AND;
+    return { [logic]: conditions };
 }
 
-// /**
-//  * Applies column filter state (filters + logic only; pendingFilters are ignored)
-//  * to the given QueryBuilder as a single group (like global search), so it is
-//  * combined with the rest of the query via andWhere.
-//  */
-// export function applyColumnFilterToQueryBuilder(
-//     qb: QueryBuilder,
-//     columnFilter: ColumnFilterStateForQuery | undefined | null
-// ): void {
-//     const group = buildColumnFilterGroup(columnFilter);
-//     if (group) qb.andWhere(group);
-// }
+/**
+ * Applies column filter state (filters + logic only; pendingFilters are ignored)
+ * to the given QueryBuilder as a single group (like global search), so it is
+ * combined with the rest of the query via andWhere.
+ */
+export function applyColumnFilterToQueryBuilder(
+    qb: QueryBuilder,
+    columnFilter: ColumnFilterStateForQuery | undefined | null
+): void {
+    const group = buildColumnFilterGroup(columnFilter);
+    if (group) qb.andWhere(group);
+}

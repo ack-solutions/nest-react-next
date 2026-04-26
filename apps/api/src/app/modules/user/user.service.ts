@@ -7,7 +7,6 @@ import {
     ISetPasswordInput,
     IUpdateProfileInput,
     IUser,
-    RoleGuardEnum,
     UserStatusEnum,
 } from '@libs/types';
 import {
@@ -25,7 +24,7 @@ import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { User } from './user.entity';
 import { SuccessDTO } from '../../core/dto/success.dto';
-import { RequestContext } from '../../core/request-context/request-context';
+import { AuthHelper } from '../../core/auth/auth.helper';
 import { BaseService } from '../../core/service/base-service';
 import { BaseRepository } from '../../core/typeorm/base-repository';
 import { IAppConfig } from '../../config/app';
@@ -79,10 +78,12 @@ export class UserService extends BaseService<User> {
     protected override async beforeUpdate(entity: Partial<UpdateUserDTO>) {
 
         // Check if the roles are valid for the user
-        if (has(entity, 'roles') && entity.roles) {
+        if (has(entity, 'rolesIds') && entity.rolesIds) {
+            const tenantId = await AuthHelper.getTenantId();
             const { authUserId } = entity;
             const authUser = await this.nestAuthUserService.getUserById(authUserId);
-            await authUser.assignRoles(entity.roles, RoleGuardEnum.ADMIN) as any; // TODO: change to the correct guard
+            const access = await authUser.getUserAccess(tenantId, true); // TODO: change to the correct guard
+            await access.assignRoles(entity.rolesIds);
             await authUser.save();
         }
         return super.beforeUpdate(entity);
@@ -151,9 +152,7 @@ export class UserService extends BaseService<User> {
     }
 
     async findCurrentUser() {
-        const user = await RequestContext.currentUser({
-            relations: ['authUser', 'authUser.roles'],
-        });
+        const user = await AuthHelper.getAppUser(['authUser', 'authUser.roles']);
         return user;
     }
 
@@ -174,8 +173,9 @@ export class UserService extends BaseService<User> {
         });
 
         await authUser.setPassword(entity.password);
-        if (entity.roles?.length > 0) {
-            await authUser.assignRoles(entity.roles, RoleGuardEnum.ADMIN); // TODO: change to the correct guard
+        if (entity.rolesIds?.length > 0) {
+            const access = await authUser.getUserAccess(null, true); // TODO: change to the correct guard
+            await access.assignRoles(entity.rolesIds);
         }
         if (entity.phoneNumber) {
             await authUser.findOrCreateIdentity('phone', `${entity.phoneCountryCode}${entity.phoneNumber}`);
@@ -190,7 +190,7 @@ export class UserService extends BaseService<User> {
     }
 
     async updateProfile(entity: IUpdateProfileInput): Promise<IUser> {
-        const user = await RequestContext.currentUser();
+        const user = await AuthHelper.getAppUser();
         const userEntity = omit(entity, [
             'roles',
             'phoneNumber',
@@ -206,14 +206,14 @@ export class UserService extends BaseService<User> {
     }
 
     async changeEmail(entity: IChangeEmailInput): Promise<SuccessDTO> {
-        const authUser = await RequestContext.getTokenPayload();
+        const authUser = await AuthHelper.getTokenPayload();
 
         await this.nestAuthUserService.updateUser(authUser?.sub, { email: entity?.email });
         return new SuccessDTO({ message: 'Email updated successfully' });
     }
 
     async changePhone(entity: ChangePhoneInputDTO): Promise<SuccessDTO> {
-        const user = await RequestContext.currentUser();
+        const user = await AuthHelper.getAppUser();
 
         await this.nestAuthUserService.updateUser(user.authUserId, { phone: `${entity?.phoneCountryCode}${entity?.phoneNumber}` });
 
@@ -227,7 +227,7 @@ export class UserService extends BaseService<User> {
 
     // Change password for own account
     async changePassword(entity: IChangePasswordInput) {
-        const authUser = await RequestContext.getTokenPayload();
+        const authUser = await AuthHelper.getTokenPayload();
 
         const user = await this.nestAuthUserService.getUserById(authUser.sub);
 
@@ -258,7 +258,7 @@ export class UserService extends BaseService<User> {
     }
 
     async deleteAccount(request: IDeleteAccountInput) {
-        const user = await RequestContext.currentUser();
+        const user = await AuthHelper.getAppUser();
 
         const authUser = await this.nestAuthUserService.getUserById(user.authUserId);
         const isPasswordMatch = await authUser.validatePassword(request.password);

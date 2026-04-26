@@ -1,26 +1,47 @@
-import React, { forwardRef, useCallback, useMemo, useRef, useImperativeHandle, useState, useEffect } from 'react';
+import React, {
+    forwardRef,
+    useCallback,
+    useMemo,
+    useRef,
+    useImperativeHandle,
+    useState,
+} from 'react';
 import { FormControlLabel, Switch } from '@mui/material';
 import { QueryBuilder } from '@ackplus/nest-crud-request';
-import { DataFetchMeta, DataTableApi, DataTableProps, TableFilters, TableState } from '@ackplus/react-tanstack-data-table';
+import {
+    DataTable,
+    DataTableApi,
+    DataTableProps,
+    TableFilters,
+    TableState,
+} from '@ackplus/react-tanstack-data-table';
 
 import { useCrudOperations } from '@libs/react-shared';
-import { useToasty } from '@admin/app/hook';
-import { useConfirm } from '@admin/app/contexts';
-import { useDataTableState } from '@admin/app/contexts/datatable-state-context';
-import { HEADER } from '@admin/app/layout/config';
+import { useToasty } from '../../hook';
+import { useConfirm } from '../../contexts';
+import { useDataTableState } from './context/datatable-state-context';
+import { HEADER } from '../../layout/config';
 import { IFindOptions, PermissionsEnum } from '@libs/types';
 
-import DataGrid from './data-grid';
+import { useLatestRef } from './hooks/use-latest-ref';
 import { useExportToasts } from './hooks/use-export-toasts';
 import { useCrudTableActions } from './hooks/use-crud-table-actions';
 
-import { TableAction, TableActionMenu, TableActionMenuProps, TableBulkActionMenu } from '../data-table';
-import { buildQBFromTableState } from './ table-to-qb';
 import { UseQueryResult } from '@tanstack/react-query';
-import { useLatestRef } from './hooks/use-latest-ref';
+import { buildQBFromTableState } from './utils';
+import { useDataTablePersistence } from './hooks/use-data-table-persistence';
+import _ from 'lodash';
+import { TableActionMenu } from './components/table-action-menu';
+import { TableBulkActionMenu } from './components/table-bulk-action-menu';
+import { TableAction, TableActionMenuProps } from './components/table-action-menu';
 
 export interface CrudDataGridProps<T>
-    extends Partial<Omit<DataTableProps<T>, 'data' | 'ref' | 'onFetchData' | 'bulkActions' | 'onRowClick'>> {
+    extends Partial<
+        Omit<
+            DataTableProps<T>,
+            'data' | 'ref' | 'onFetchData' | 'bulkActions' | 'onRowClick'
+        >
+    > {
     crudOperationHooks: {
         useGetMany: any;
     } & Partial<
@@ -45,7 +66,11 @@ export interface CrudDataGridProps<T>
     onRowClick?: (row: Partial<T>) => void;
     onEdit?: (row: Partial<T>) => void;
 
-    bulkActions?: (rowIds: string[]) => TableAction[];
+    /** Receives selected ids and optional context (e.g. isTrash). Return custom bulk actions; when isTrash is true you may return [] or custom actions for deleted data. */
+    bulkActions?: (
+        rowIds: string[],
+        context?: { isTrash?: boolean },
+    ) => TableAction[];
     onAction?: (
         type:
             | 'created'
@@ -60,11 +85,21 @@ export interface CrudDataGridProps<T>
 
     onToggleTrashData?: (checked: boolean) => void;
 
-    tableActionMenuProps?: (row?: any) => TableActionMenuProps;
+    /** Receives row and optional context (e.g. isDeleted). Return custom menu props; when isDeleted you may return { actions: [] } or custom actions for deleted rows. */
+    tableActionMenuProps?: (
+        row?: any,
+        context?: { isDeleted?: boolean },
+    ) => TableActionMenuProps;
 
-    dataTableApiRequestMap?: (queryBuilder?: QueryBuilder, filter?: Partial<TableState>) => Promise<QueryBuilder> | QueryBuilder;
+    dataTableApiRequestMap?: (
+        queryBuilder?: QueryBuilder,
+        filter?: Partial<TableState>,
+    ) => Promise<QueryBuilder> | QueryBuilder;
 
-    onFetchData?: (queryBuilder?: QueryBuilder, filters?: Partial<TableState>) => Promise<{ data: T[]; total: number }>;
+    onFetchData?: (
+        queryBuilder?: QueryBuilder,
+        filters?: Partial<TableState>,
+    ) => Promise<{ data: T[]; total: number }>;
 
     permissionsKey?: {
         delete?: PermissionsEnum;
@@ -95,13 +130,13 @@ function CrudDataGridInner<T>(
         tableActionMenuProps,
         onFetchData,
         maxHeight,
-        initialState,
+        initialState: initialStateProp,
         permissionsKey,
         ...props
     }: CrudDataGridProps<T>,
     ref: React.Ref<DataTableApi<T>>,
 ) {
-    const { showToasty, dismissToasty } = useToasty();
+    const { showToasty } = useToasty();
     const confirmDialog = useConfirm();
     const datatableRef = useRef<DataTableApi<any>>(null);
 
@@ -111,10 +146,25 @@ function CrudDataGridInner<T>(
     // state persistence (sessionStorage now)
     const ctx = stateKey ? useDataTableState(stateKey) : null;
     const cached = ctx?.state;
-
-    const [isTrash, setIsTrash] = useState<boolean>(cached?.showDeleted || false);
-    const [rows, setRows] = useState<T[]>([]);
-    const [total, setTotal] = useState<number>(0);
+    const [queryObj, setQueryObj] = useState<IFindOptions | undefined>(
+        undefined,
+    );
+    const [isTrash, setIsTrash] = useState<boolean>(
+        cached?.showDeleted || false,
+    );
+    const mappedFiltersRef = useRef<Partial<TableFilters> | undefined>(
+        undefined,
+    );
+    const queryBuildSeqRef = useRef(0);
+    const queryObjKeyRef = useRef('');
+    const persistedTableStateKeyRef = useRef(
+        JSON.stringify({
+            sorting: cached?.sorting,
+            pagination: cached?.pagination,
+            globalFilter: cached?.globalFilter,
+            columnFilter: cached?.columnFilter,
+        }),
+    );
 
     // CRUD hooks
     const {
@@ -130,24 +180,60 @@ function CrudDataGridInner<T>(
 
     const { mutateAsync: deleteItem } = useDelete?.() || ({} as any);
     const { mutateAsync: restoreItem } = useRestore?.() || ({} as any);
-    const { mutateAsync: deleteForeverItem } = useDeleteForever?.() || ({} as any);
+    const { mutateAsync: deleteForeverItem } =
+        useDeleteForever?.() || ({} as any);
     const { mutateAsync: bulkDeleteItems } = useBulkDelete?.() || ({} as any);
     const { mutateAsync: bulkRestoreItems } = useBulkRestore?.() || ({} as any);
-    const { mutateAsync: bulkDeleteForeverItems } = useBulkDeleteForever?.() || ({} as any);
+    const { mutateAsync: bulkDeleteForeverItems } =
+        useBulkDeleteForever?.() || ({} as any);
 
-    const [mappedQuery, setMappedQuery] = useState<QueryBuilder | undefined>(undefined);
     const mapQueryRef = useLatestRef(dataTableApiRequestMap);
-
-    const queryObj = useMemo(
-        () => mappedQuery?.toObject() as IFindOptions | undefined,
-        [mappedQuery]
+    const isTrashRef = useLatestRef(isTrash);
+    const columnsRef = useLatestRef(initialColumns);
+    const { data, refetch, isFetching }: UseQueryResult<any, any> = useGetMany(
+        queryObj,
+        {
+            enabled: !!queryObj,
+            placeholderData: (prev) => {
+                console.log('placeholderData', _.cloneDeep(prev))
+                return prev;
+            }
+        },
     );
+    const { initialState, handleTableStateChange, handleLayoutChange } =
+        useDataTablePersistence({
+            stateKey,
+            tableRef: datatableRef,
+            defaultHiddenColumns,
+            initialState: initialStateProp,
+            onDataStateChange: (state) => {
+                if (!stateKey || !ctx) return;
+                const nextState = {
+                    sorting: state.sorting,
+                    pagination: state.pagination,
+                    globalFilter: state.globalFilter,
+                    columnFilter: state.columnFilter,
+                };
+                const nextPersistKey = JSON.stringify(nextState);
 
-    const { data, error, isSuccess, refetch, isFetching, ...q }: UseQueryResult<any, any> = useGetMany(queryObj, {
-        enabled: !!queryObj,
-    });
+                if (nextPersistKey === persistedTableStateKeyRef.current) {
+                    return;
+                }
 
-    const crudActions = useCrudTableActions({
+                persistedTableStateKeyRef.current = nextPersistKey;
+                ctx.setState(nextState);
+            },
+        });
+
+
+    const {
+        handleDelete,
+        handleRestore,
+        handleDeleteForever,
+        handleBulkDelete,
+        handleBulkRestore,
+        handleBulkDeleteForever,
+    } = useCrudTableActions({
         crudName,
         confirmDialog,
         showToasty,
@@ -173,7 +259,6 @@ function CrudDataGridInner<T>(
         };
     }, [cached, initialState]);
 
-
     // row click adapter
     const adaptedOnRowClick = useMemo(() => {
         if (!onRowClick) return undefined;
@@ -193,166 +278,237 @@ function CrudDataGridInner<T>(
                 hideInExport: true,
                 maxSize: 120,
                 size: 80,
-                cell: ({ row }: any) => (
-                    <TableActionMenu
-                        {...((row.original as any).deletedAt
-                            ? {
-                                onDeleteForever: () => crudActions.handleDeleteForever(row.original),
-                                onRestore: () => crudActions.handleRestore(row.original),
-                            }
-                            : {
-                                onDelete: () => crudActions.handleDelete(row.original),
+                cell: ({ row }: any) => {
+                    const isDeleted = !!(row.original as any).deletedAt;
+                    return (
+                        <TableActionMenu
+                            permissionsKeys={permissionsKey}
+                            {...(isDeleted
+                                ? {
+                                    onDeleteForever: () =>
+                                        handleDeleteForever(row.original),
+                                    onRestore: () =>
+                                        handleRestore(row.original),
+                                }
+                                : {
+                                    onDelete: () =>
+                                        handleDelete(row.original),
+                                })}
+                            {...(onEdit &&
+                                !isDeleted && {
+                                onEdit: () => onEdit(row.original),
                             })}
-                        {...(onEdit && !(row.original as any)?.deletedAt && {
-                            onEdit: () => onEdit(row.original),
-                        })}
-                        {...(onView && !(row.original as any)?.deletedAt && {
-                            onView: () => onView(row.original),
-                        })}
-                        {...tableActionMenuProps?.(row.original)}
-                    />
-                ),
+                            {...(onView &&
+                                !isDeleted && {
+                                onView: () => onView(row.original),
+                            })}
+                            {...tableActionMenuProps?.(row.original, {
+                                isDeleted,
+                            })}
+                        />
+                    );
+                },
             },
         ];
-    }, [initialColumns, permissionsKey, crudActions, onEdit, onView, tableActionMenuProps]);
+    }, [
+        handleDelete,
+        handleDeleteForever,
+        handleRestore,
+        initialColumns,
+        onEdit,
+        onView,
+        permissionsKey,
+        tableActionMenuProps,
+    ]);
 
-    // server fetch builder
-    // const { fetchData } = useServerQueryBuilder<T>({
-    //     columns,
-    //     fetchMany,
-    //     onFetchData: onFetchData
-    //         ? async (qb, filters) => onFetchData(qb, filters)
-    //         : undefined,
-    //     mapQuery: dataTableApiRequestMap
-    //         ? async (qb, filters) => dataTableApiRequestMap(qb, filters)
-    //         : undefined,
-    //     isTrash,
-    // });
+    const handleQueryObjectChange = useCallback(
+        async (params: {
+            filters?: Partial<TableFilters>;
+            isTrash?: boolean;
+        }) => {
+            const buildId = queryBuildSeqRef.current + 1;
+            queryBuildSeqRef.current = buildId;
+
+            const qb = await buildQBFromTableState({
+                columns: columnsRef.current,
+                filters: params.filters,
+                isTrash: params.isTrash ?? false,
+                mapQuery: mapQueryRef.current
+                    ? async (queryBuilder, filters) => {
+                        const mapQuery = mapQueryRef.current;
+                        return mapQuery
+                            ? mapQuery(queryBuilder, filters)
+                            : queryBuilder;
+                    }
+                    : undefined,
+            });
+
+            if (buildId !== queryBuildSeqRef.current) {
+                return;
+            }
+
+            const nextQueryObj = qb.toObject() as IFindOptions;
+            const nextQueryKey = JSON.stringify(nextQueryObj || {});
+
+            if (nextQueryKey === queryObjKeyRef.current) {
+                return;
+            }
+
+            queryObjKeyRef.current = nextQueryKey;
+            setQueryObj(nextQueryObj);
+        },
+        [columnsRef, mapQueryRef],
+    );
 
     const handleChangeSoftDelete = useCallback(
         (_e: any, checked: boolean) => {
             onToggleTrashData?.(checked);
             setIsTrash(checked);
-
+            datatableRef.current?.selection?.deselectAll?.();
             if (stateKey && ctx) {
                 ctx.setState({ showDeleted: checked });
             }
-            setMappedQuery((prev) => {
-                if (!prev) return prev;
-                const next = new QueryBuilder(prev.toObject());
-                next.setOnlyDeleted(checked);
-                return next;
+            void handleQueryObjectChange({
+                filters: mappedFiltersRef.current,
+                isTrash: checked,
             });
         },
-        [onToggleTrashData, stateKey, ctx, mappedQuery],
+        [onToggleTrashData, stateKey, ctx, handleQueryObjectChange],
     );
 
     const handleServerExportData = useCallback(
         async (filters?: Partial<TableFilters>) => {
-            // return fetchData(filters as any);
             const qb = await buildQBFromTableState({
-                columns: initialColumns,
+                columns: columnsRef.current,
                 filters,
-                isTrash,
+                isTrash: isTrashRef.current,
                 mapQuery: mapQueryRef.current
-                    ? async (qb, f) => mapQueryRef.current!(qb, f)
+                    ? async (queryBuilder, currentFilters) => {
+                        const mapQuery = mapQueryRef.current;
+                        return mapQuery
+                            ? mapQuery(queryBuilder, currentFilters)
+                            : queryBuilder;
+                    }
                     : undefined,
             });
 
-            const q = await fetchMany(qb.toObject() as IFindOptions);
+            if (onFetchData) {
+                return onFetchData(qb, filters as Partial<TableState>);
+            }
+
+            const q = fetchMany
+                ? await fetchMany(qb.toObject() as IFindOptions)
+                : null;
             return {
                 data: q?.items || [],
                 total: q?.total || 0,
             };
         },
-        [],
+        [columnsRef, fetchMany, isTrashRef, mapQueryRef, onFetchData],
     );
 
-    const { onExportProgress, onExportComplete, onExportError, onCancelExport } = useExportToasts({ showToasty, dismissToasty });
-
+    const { onExportProgress, onExportComplete, onExportError, onCancelExport } = useExportToasts(showToasty);
 
     const handleFetchRequestGeneration = useCallback(
-        async (filters: Partial<TableFilters>, meta?: DataFetchMeta) => {
-            const qb = await buildQBFromTableState({
-                columns: initialColumns,
+        (filters: Partial<TableFilters>) => {
+            console.log('handleFetchRequestGeneration', filters?.pagination)
+            mappedFiltersRef.current = filters;
+            handleQueryObjectChange({
                 filters,
-                isTrash,
-                mapQuery: mapQueryRef.current
-                    ? async (qb, f) => mapQueryRef.current!(qb, f)
-                    : undefined,
-            });
-            setMappedQuery(qb);
-        },
-        [initialColumns, isTrash, mapQueryRef],
-    );
-    // save table session state (sorting/pagination/globalFilter/columnFilter)
-    const handleTableStateChange = useCallback(
-        (state: Partial<TableState>) => {
-            if (!stateKey || !ctx) return;
-            ctx.setState({
-                sorting: state.sorting,
-                pagination: state.pagination,
-                globalFilter: state.globalFilter,
-                columnFilter: state.columnFilter,
+                isTrash: isTrashRef.current,
             });
         },
-        [stateKey, ctx],
+        [handleQueryObjectChange, isTrashRef],
     );
 
-    useEffect(() => {
-        if (!isSuccess) {
-            setRows(data?.items || []);
-            setTotal(data?.total || 0);
-            return;
-        }
-        if (data) {
-            setRows(data?.items || []);
-            setTotal(data?.total || 0);
-        }
-    }, [data]);
+    const renderBulkActions = useCallback(
+        (selectedState: any) => {
+            const ids: string[] = selectedState.ids;
+            const showOnlyTrashActions = hasSoftDelete && isTrash;
+
+            return (
+                <TableBulkActionMenu
+                    permissionsKeys={permissionsKey}
+                    {...(showOnlyTrashActions
+                        ? {
+                            onRestore: () => handleBulkRestore(ids),
+                            onDeleteForever: () =>
+                                handleBulkDeleteForever(ids),
+                        }
+                        : {
+                            onDelete: () => handleBulkDelete(ids),
+                        })}
+                    actions={bulkActions?.(ids, { isTrash }) ?? []}
+                />
+            );
+        },
+        [
+            bulkActions,
+            handleBulkDelete,
+            handleBulkDeleteForever,
+            handleBulkRestore,
+            hasSoftDelete,
+            isTrash,
+            permissionsKey,
+        ],
+    );
+
+    const toolbarRefresh = useCallback(() => {
+        refetch();
+        props.slotProps?.toolbar?.refreshButtonProps?.onRefresh?.();
+    }, [props.slotProps, refetch]);
+
+    const mergedSlotProps = useMemo(() => {
+        return {
+            pagination: { rowsPerPageOptions: [10, 50, 100, 500, 1000] },
+            ...props.slotProps,
+            toolbar: {
+                toolbar: { sx: { minHeight: '48px !important' } },
+                ...props.slotProps?.toolbar,
+                refreshButtonProps: {
+                    ...props.slotProps?.toolbar?.refreshButtonProps,
+                    onRefresh: toolbarRefresh,
+                },
+            },
+        };
+    }, [props.slotProps, toolbarRefresh]);
+
+
     return (
-        <DataGrid
-            idKey={idKey as keyof T}
-            data={rows}
-            totalRow={total}
-            loading={isFetching}
+        <DataTable
             ref={datatableRef}
-            stateKey={stateKey}
-            defaultHiddenColumns={defaultHiddenColumns}
-            // onFetchData={fetchData}
-            onFetchStateChange={handleFetchRequestGeneration}
-            initialLoadData
+            idKey={idKey as string}
+            data={data?.items ?? []}
+            totalRow={data?.total ?? 0}
+            columns={columns}
+            loading={isFetching}
             dataMode="server"
-            extraFilter={extraFilter}
-            maxHeight={maxHeight || `calc(100svh - ${HEADER.H_DESKTOP}px  - ${280}px)`}
-            footerFilter={
-                hasSoftDelete ? (
-                    <FormControlLabel
-                        control={<Switch checked={isTrash} onChange={handleChangeSoftDelete} />}
-                        label="Show Deleted"
-                        slotProps={{ typography: { noWrap: true } }}
-                    />
-                ) : null
-            }
-            columns={columns as any}
-            enableBulkActions
-            bulkActions={(selectedState: any) => {
-                const ids: string[] = selectedState.ids;
-
-                return (
-                    <TableBulkActionMenu
-                        {...(hasSoftDelete && isTrash
-                            ? {
-                                onRestore: () => crudActions.handleBulkRestore(ids),
-                                onDeleteForever: () => crudActions.handleBulkDeleteForever(ids),
-                            }
-                            : {
-                                onDelete: () => crudActions.handleBulkDelete(ids),
-                            })}
-                        actions={bulkActions?.(ids) || []}
-                    />
-                );
+            stateKey={stateKey}
+            onFetchStateChange={(request: Partial<TableState>) => {
+                handleFetchRequestGeneration(request as Partial<TableFilters>)
             }}
+            onDataStateChange={handleTableStateChange}
+            onColumnVisibilityChange={handleLayoutChange}
+            onColumnDragEnd={handleLayoutChange}
+            onColumnPinningChange={handleLayoutChange}
+            onColumnSizingChange={handleLayoutChange}
+            onRowClick={adaptedOnRowClick}
+            defaultHiddenColumns={defaultHiddenColumns}
+
+            enableStickyHeaderOrFooter
+            enablePagination
+            enableRowSelection
+            enableRefresh
+            enableColumnDragging
+            enableGlobalFilter
+            enableColumnFilter
+            enableSorting
+            enableHover
+            enableColumnResizing
+            enableColumnPinning
+            enableBulkActions
+            enableStripes
+
             enableExport
             onExportProgress={onExportProgress}
             onExportComplete={onExportComplete}
@@ -360,30 +516,32 @@ function CrudDataGridInner<T>(
             onExportCancel={onCancelExport}
             onServerExport={handleServerExportData}
 
-            enablePagination
-            enableRowSelection
-            enableRefresh
-            enableStickyHeaderOrFooter
             initialState={mergedInitialState}
-            onRowClick={adaptedOnRowClick}
-            onDataStateChange={handleTableStateChange}
-            slotProps={{
-                toolbar: {
-                    refreshButtonProps: {
-                        loading: isFetching,
-                        showSpinnerWhileLoading: true,
-                        onRefresh: () => {
-                            refetch();
+            bulkActions={renderBulkActions}
+            maxHeight={maxHeight || `calc(100svh - ${HEADER.H_DESKTOP}px  - ${280}px)`}
+            skeletonRows={10}
+            extraFilter={extraFilter}
+            footerFilter={
+                hasSoftDelete ? (
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={isTrash}
+                                onChange={handleChangeSoftDelete}
+                            />
                         }
-                    }
-                }
-            }}
+                        label="Show Deleted"
+                        slotProps={{ typography: { noWrap: true } }}
+                    />
+                ) : null
+            }
             {...props}
+            slotProps={mergedSlotProps}
         />
     );
 }
 
-export const CrudDataGrid = forwardRef(CrudDataGridInner) as unknown as <T>(
+export const CrudDataGrid = forwardRef(CrudDataGridInner) as <T>(
     props: CrudDataGridProps<T> & { ref?: React.Ref<DataTableApi<T>> },
 ) => React.ReactElement;
 
