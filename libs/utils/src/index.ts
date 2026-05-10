@@ -10,3 +10,4 @@ export * from './lib/url';
 export * from './lib/patterns';
 export * from './lib/phone';
 export * from './lib/storage';
+export * from './lib/date-time';

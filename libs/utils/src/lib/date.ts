@@ -52,29 +52,3 @@ export function toDisplayDateRange(
 
     return label;
 }
-
-export function convertMsToTime(
-    duration: number,
-    type: 'milliseconds' | 'seconds' = 'milliseconds',
-) {
-    const padTo2Digits = (num: number) => num.toString().padStart(2, '0');
-    let seconds = 0;
-    let minutes = 0;
-    let hours = 0;
-    if (type === 'milliseconds') {
-        seconds = Math.floor(duration / 1000);
-    }
-    if (type === 'seconds') {
-        seconds = duration;
-    }
-
-    minutes = Math.floor(seconds / 60);
-    hours = Math.floor(minutes / 60);
-
-    seconds %= 60;
-    minutes %= 60;
-
-    return `${padTo2Digits(hours)}:${padTo2Digits(minutes)}:${padTo2Digits(
-        seconds,
-    )}`;
-}
