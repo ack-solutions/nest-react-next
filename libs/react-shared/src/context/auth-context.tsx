@@ -8,23 +8,23 @@ import React, {
     useMemo,
     useRef,
     useState,
-    ReactNode,
+    type ReactNode,
 } from 'react';
-import { IMessageResponse, IMfaDevice, IMfaStatusResponse, IToggleMfaRequest, ITotpSetupResponse, IUser, IVerifyTotpSetupRequest } from '@libs/types';
-import { AuthProvider as NestAuthClientProvider, AuthProviderProps as NestAuthClientProviderProps, useNestAuth } from '@ackplus/nest-auth-react';
-import type { AuthClient } from '@ackplus/nest-auth-react';
-import { UserService } from '../services';
-import { INestAuthUser } from '@ackplus/nest-auth-client';
-import { instanceApi } from '../config';
-import { IStorageAdapter } from '@libs/utils';
+import type {
+    AxiosError,
+    InternalAxiosRequestConfig,
+} from 'axios';
+import type {
+    IUser,
+} from '@libs/types';
+import {
+    AuthProvider as NestAuthClientProvider,
+    type AuthProviderProps as NestAuthClientProviderProps,
+    useNestAuth,
+} from '@ackplus/nest-auth-react';
+import type { AuthClient } from '@ackplus/nest-auth-client';
+import { instanceApi, normalizeAxiosError } from '../config';
 
-const userService = UserService.getInstance<UserService>();
-
-/**
- * -----------------------------
- * useEvent (stable alternative to useEffectEvent)
- * -----------------------------
- */
 function useEvent<T extends (...args: any[]) => any>(fn: T): T {
     const fnRef = useRef(fn);
 
@@ -35,186 +35,122 @@ function useEvent<T extends (...args: any[]) => any>(fn: T): T {
     return useCallback(((...args: any[]) => fnRef.current(...args)) as T, []);
 }
 
-/**
- * -----------------------------
- * Context Types
- * -----------------------------
- */
 type NestAuth = ReturnType<typeof useNestAuth>;
 
-export interface AuthContextValue {
-    // Nest Auth properties
-    status: NestAuth['status'];
-    authUser: NestAuth['user'];
-    session: NestAuth['session'];
-    isLoading: boolean;
-    isAuthenticated: boolean;
-    error: NestAuth['error'];
-    client: NestAuth['client'];
-
-    // App User
+export interface AuthContextValue extends NestAuth {
     currentUser: IUser | null;
     isInitialized: boolean;
+    logout: () => Promise<void>;
+    refetchUser: () => Promise<IUser | null>;
+    authErrorStatus?: number | string | null;
 
-    // Organization (optional, for admin)
     organizationId?: string | null;
     setOrganization?: (orgId: string | null) => void;
-
-    // Auth methods
-    login: NestAuth['login'];
-    signup: NestAuth['signup'];
-    logout: () => Promise<void>;
-    refresh: NestAuth['refresh'];
-    forgotPassword: NestAuth['forgotPassword'];
-    verifyForgotPasswordOtp: NestAuth['verifyForgotPasswordOtp'];
-    resetPassword: NestAuth['resetPassword'];
-    changePassword: NestAuth['changePassword'];
-    send2fa: NestAuth['send2fa'];
-    verify2fa: NestAuth['verify2fa'];
-    resetMfa: NestAuth['resetMfa'];
-
-    // TOTP / MFA Management
-    setupTotp: NestAuth['setupTotp'];
-    verifyTotpSetup: NestAuth['verifyTotpSetup'];
-    getMfaStatus: NestAuth['getMfaStatus'];
-    listTotpDevices: NestAuth['listTotpDevices'];
-    removeTotpDevice: NestAuth['removeTotpDevice'];
-    toggleMfa: NestAuth['toggleMfa'];
-    generateRecoveryCode: NestAuth['generateRecoveryCode'];
-
-    // User management
-    refetchUser: () => Promise<IUser | null>;
-
-    // Error status
-    authErrorStatus?: number | string | null;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-/**
- * -----------------------------
- * Auth Provider Props
- * -----------------------------
- */
 export interface AuthProviderProps extends NestAuthClientProviderProps {
     children: React.ReactNode;
     client: AuthClient;
-    initialAuthState?: any; // Transformed auth state from createInitialState
-    storage?: IStorageAdapter;
+    initialAuthState?: any;
 }
 
-/**
- * -----------------------------
- * Bridge Auth Provider (internal)
- * -----------------------------
- */
+type RetryableAxiosRequestConfig = InternalAxiosRequestConfig & {
+    _retry?: boolean;
+    skipAuthRefresh?: boolean;
+};
+
+function useAuthRefreshInterceptor(params: {
+    runRefresh: () => Promise<any>;
+    logoutAndClear: () => Promise<void>;
+    onUnauthenticated?: () => void;
+    setAuthErrorStatus: React.Dispatch<React.SetStateAction<number | string | null>>;
+}) {
+    const {
+        runRefresh,
+        logoutAndClear,
+        onUnauthenticated,
+        setAuthErrorStatus,
+    } = params;
+
+    useEffect(() => {
+        const interceptorId = instanceApi.interceptors.response.use(
+            (response) => response,
+            async (error: AxiosError) => {
+                console.log('error', error);
+                const originalRequest = error.config as RetryableAxiosRequestConfig | undefined;
+                const status = error?.status;
+
+                if (!originalRequest) {
+                    return Promise.reject(normalizeAxiosError(error));
+                }
+
+                if (
+                    status !== 401 ||
+                    originalRequest._retry ||
+                    originalRequest.skipAuthRefresh
+                ) {
+                    return Promise.reject(normalizeAxiosError(error));
+                }
+
+                try {
+                    originalRequest._retry = true;
+                    setAuthErrorStatus(401);
+
+                    await runRefresh();
+
+                    setAuthErrorStatus(null);
+
+                    return instanceApi(originalRequest);
+                } catch (refreshError: any) {
+                    const refreshStatus =
+                        refreshError?.response?.status ??
+                        refreshError?.status ??
+                        401;
+
+                    setAuthErrorStatus(refreshStatus);
+
+                    if (refreshStatus === 401) {
+                        await logoutAndClear();
+                        onUnauthenticated?.();
+                    }
+
+                    return Promise.reject(normalizeAxiosError(refreshError));
+                }
+            }
+        );
+
+        return () => {
+            instanceApi.interceptors.response.eject(interceptorId);
+        };
+    }, [runRefresh, logoutAndClear, onUnauthenticated, setAuthErrorStatus]);
+}
+
 function BridgeAuthProvider({
     children,
-    storage,
+    onUnauthenticated,
 }: {
     children: ReactNode;
-    storage?: IStorageAdapter;
+    onUnauthenticated?: () => void;
 }) {
     const auth = useNestAuth();
-    const [authUser, setAuthUser] = useState<INestAuthUser | null>(null);
+
     const [isInitialized, setIsInitialized] = useState(false);
-    const [currentUser, setCurrentUser] = useState<IUser | null>(null);
-    const [isLoadingUser, setIsLoadingUser] = useState(false);
     const [authErrorStatus, setAuthErrorStatus] = useState<number | string | null>(null);
-    /**
-     * Mark initialized once auth lib finishes booting.
-     */
+
+    const refreshPromiseRef = useRef<Promise<any> | null>(null);
+
     useEffect(() => {
-        const initializeAuth = async () => {
-            if (!auth.isLoading && !isInitialized) {
-                const tokenStorage = storage ? storage : localStorage;
-                let accessToken = await tokenStorage.getItem('nest_auth_access_token');
-                if (!accessToken) {
-                    accessToken = await tokenStorage.getItem('access_token');
-                }
-                if (accessToken) {
-                    instanceApi.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-                }
-                setIsInitialized(true);
-            }
-        };
-
-        initializeAuth();
-    }, [auth.isLoading, auth.status, isInitialized, storage]);
-
-
-    /**
-     * Fetch current user
-     */
-    const fetchUser = useCallback(async (): Promise<IUser | null> => {
-        if (auth.status !== 'authenticated') {
-            setCurrentUser(null);
-            setAuthUser(null);
-            return null;
+        if (!auth.isLoading && !isInitialized) {
+            setIsInitialized(true);
         }
+    }, [auth.isLoading, isInitialized]);
 
-        setIsLoadingUser(true);
-        setAuthErrorStatus(null);
-
-        try {
-            const user = await userService.getMe();
-            setCurrentUser(user);
-            setAuthUser(user?.authUser || null);
-            setAuthErrorStatus(null);
-            return user;
-        } catch (err: any) {
-            const status = err?.status ?? err?.response?.status;
-
-            if (status === 401) {
-                console.warn('[Auth] 401 - Logging out');
-                await auth.logout();
-                return null;
-            }
-
-            console.error('[Auth] Fetch user error:', status || 'network');
-            if (!status) {
-                setAuthErrorStatus('api-stopped');
-            } else {
-                setAuthErrorStatus(status);
-            }
-
-            return null;
-        } finally {
-            setIsLoadingUser(false);
-        }
-    }, [auth.status, auth.logout]);
-
-    /**
-     * Fetch user when auth status changes to authenticated
-     */
-    useEffect(() => {
-        if (isInitialized && auth.status === 'authenticated') {
-            fetchUser();
-        } else if (auth.status === 'unauthenticated') {
-            setCurrentUser(null);
-            setAuthUser(null);
-        }
-    }, [isInitialized, auth.status, fetchUser]);
-
-    /**
-     * Force fetch /me
-     */
-    const refetchUser = useCallback(async (): Promise<IUser | null> => {
-        return await fetchUser();
-    }, [fetchUser]);
-
-    /**
-     * Clear app state
-     */
     const clearAppState = useEvent(async () => {
-        setCurrentUser(null);
-        setAuthUser(null);
         setAuthErrorStatus(null);
     });
 
-    /**
-     * Logout + cleanup
-     */
     const logoutAndClear = useEvent(async () => {
         try {
             await auth.logout();
@@ -224,92 +160,50 @@ function BridgeAuthProvider({
             await clearAppState();
         }
     });
-    /**
-     * Memo context value
-     */
-    const value = useMemo<AuthContextValue>(
-        () => ({
-            status: auth.status,
-            authUser,
-            session: auth.session,
-            isLoading: auth.isLoading || isLoadingUser,
+
+    const runRefresh = useEvent(async () => {
+        if (!refreshPromiseRef.current) {
+            refreshPromiseRef.current = auth
+                .refresh()
+                .finally(() => {
+                    refreshPromiseRef.current = null;
+                });
+        }
+
+        return refreshPromiseRef.current;
+    });
+
+    const refetchUser = useEvent(async (): Promise<IUser | null> => {
+        const sessionData = await auth.getSessionData();
+        return sessionData?.appUser || null;
+    });
+
+    useAuthRefreshInterceptor({
+        runRefresh,
+        logoutAndClear,
+        onUnauthenticated,
+        setAuthErrorStatus,
+    });
+
+    const value = useMemo<AuthContextValue>(() => {
+        return {
+            ...auth,
             isAuthenticated: auth.status === 'authenticated',
-            error: auth.error,
-            client: auth.client,
-
-            currentUser,
+            currentUser: auth.sessionData?.appUser || null,
             isInitialized,
-
-            login: auth.login,
-            signup: auth.signup,
             logout: logoutAndClear,
-            refresh: auth.refresh,
-            forgotPassword: auth.forgotPassword,
-            verifyForgotPasswordOtp: auth.verifyForgotPasswordOtp,
-            resetPassword: auth.resetPassword,
-            changePassword: auth.changePassword,
-            send2fa: auth.send2fa,
-            verify2fa: auth.verify2fa,
-            resetMfa: auth.resetMfa,
-
-            // TOTP / MFA Management
-            setupTotp: auth.setupTotp,
-            verifyTotpSetup: auth.verifyTotpSetup,
-            getMfaStatus: auth.getMfaStatus,
-            listTotpDevices: auth.listTotpDevices,
-            removeTotpDevice: auth.removeTotpDevice,
-            toggleMfa: auth.toggleMfa,
-            generateRecoveryCode: auth.generateRecoveryCode,
-
             refetchUser,
             authErrorStatus,
-        }),
-        [
-            auth.status,
-            authUser,
-            auth.session,
-            auth.isLoading,
-            isLoadingUser,
-            auth.error,
-            auth.client,
-            currentUser,
-            isInitialized,
-            auth.login,
-            auth.signup,
-            logoutAndClear,
-            auth.refresh,
-            auth.forgotPassword,
-            auth.verifyForgotPasswordOtp,
-            auth.resetPassword,
-            auth.changePassword,
-            auth.send2fa,
-            auth.verify2fa,
-            auth.setupTotp,
-            auth.verifyTotpSetup,
-            auth.getMfaStatus,
-            auth.listTotpDevices,
-            auth.removeTotpDevice,
-            auth.toggleMfa,
-            auth.resetMfa,
-            auth.generateRecoveryCode,
-            refetchUser,
-            authErrorStatus,
-        ]
-    );
+        };
+    }, [auth, isInitialized, logoutAndClear, refetchUser, authErrorStatus]);
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-/**
- * -----------------------------
- * Main Auth Provider
- * -----------------------------
- */
 export function AuthProvider({
     children,
     client,
     initialAuthState,
-    storage,
     ...props
 }: AuthProviderProps) {
     const NestProvider = NestAuthClientProvider as React.ComponentType<{
@@ -320,22 +214,20 @@ export function AuthProvider({
 
     return (
         <NestProvider client={client} initialState={initialAuthState} {...props}>
-            <BridgeAuthProvider storage={storage} >
+            <BridgeAuthProvider>
                 {children}
             </BridgeAuthProvider>
         </NestProvider>
     );
 }
 
-
-/**
- * -----------------------------
- * Hook
- * -----------------------------
- */
 export function useAuth(): AuthContextValue {
     const ctx = useContext(AuthContext);
-    if (!ctx) throw new Error('useAuth must be used within AuthProvider');
+
+    if (!ctx) {
+        throw new Error('useAuth must be used within AuthProvider');
+    }
+
     return ctx;
 }
 

@@ -1,17 +1,11 @@
 // axios-instance.ts
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
-import moment from 'moment';
+import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
 import { config } from './config';
 import { UploadedFile } from '@libs/utils';
 
 const isBrowser = typeof window !== 'undefined';
 
-/**
- * ----------------------------------------
- * Base URL resolver
- * ----------------------------------------
- */
 const getApiBaseUrl = (): string => {
     let url = '';
 
@@ -29,11 +23,9 @@ const getApiBaseUrl = (): string => {
 
     if (!url) {
         url = isBrowser ? 'http://localhost:3333' : 'http://api:3333';
-        // eslint-disable-next-line no-console
         console.warn('[axios] API base URL is not set, using default:', url);
     }
 
-    // Ensure URL ends with /api/
     if (url.endsWith('/api/')) return url;
     if (url.endsWith('/api')) return url + '/';
     return url + '/api/';
@@ -46,44 +38,35 @@ const getApiBaseUrl = (): string => {
  */
 const isFileLike = (val: any): boolean => {
     if (!val) return false;
-
-    // UploadedFile (your custom type)
     if (val instanceof UploadedFile) return true;
-
-    // Browser file types
     if (typeof File !== 'undefined' && val instanceof File) return true;
     if (typeof Blob !== 'undefined' && val instanceof Blob) return true;
-
-    // Node/binary
     if (val instanceof ArrayBuffer) return true;
-
     return false;
 };
 
+
 /**
  * ----------------------------------------
- * Deep transform: Moment -> ISO string
+ * Deep transform: Dayjs/Moment-like -> ISO string
  * - Non-mutating (returns a new structure)
  * - Leaves File/Blob/ArrayBuffer/Date as-is
  * ----------------------------------------
  */
-const convertMomentToISO = (input: any): any => {
-    if (moment.isMoment(input)) {
-        // ✅ consistent JSON-friendly string
-        return input.toISOString();
-    }
-
+const convertDateLikeToISO = (input: any): any => {
     if (input instanceof Date) return input;
     if (isFileLike(input)) return input;
+    if (typeof FormData !== 'undefined' && input instanceof FormData) return input;
+    if (typeof URLSearchParams !== 'undefined' && input instanceof URLSearchParams) return input;
 
     if (Array.isArray(input)) {
-        return input.map(convertMomentToISO);
+        return input.map(convertDateLikeToISO);
     }
 
     if (input !== null && typeof input === 'object') {
         const out: any = {};
         for (const key of Object.keys(input)) {
-            out[key] = convertMomentToISO(input[key]);
+            out[key] = convertDateLikeToISO(input[key]);
         }
         return out;
     }
@@ -103,15 +86,16 @@ export type ApiError = {
     data?: any;
     url?: string;
     method?: string;
+    config?: any;
+    originalError?: any;
 };
 
-const normalizeAxiosError = (err: any): ApiError => {
+export const normalizeAxiosError = (err: any): ApiError => {
     const axiosErr = err as AxiosError<any>;
 
     const status = axiosErr.response?.status;
     const data = axiosErr.response?.data;
 
-    // Try best message extraction
     const message =
         (typeof data === 'string' && data) ||
         data?.message ||
@@ -125,8 +109,23 @@ const normalizeAxiosError = (err: any): ApiError => {
         data,
         url: axiosErr.config?.url,
         method: axiosErr.config?.method?.toUpperCase(),
+        config: axiosErr.config,
+        originalError: err,
     };
 };
+
+
+
+/**
+ * ----------------------------------------
+ * Create Nest Auth axios instance
+ * ----------------------------------------
+ */
+export const instanceNestAuth: AxiosInstance = axios.create({
+    baseURL: getApiBaseUrl(),
+    withCredentials: true, // set true only if you use cookie-based auth (nest-auth)
+    timeout: 30000,
+});
 
 /**
  * ----------------------------------------
@@ -135,7 +134,7 @@ const normalizeAxiosError = (err: any): ApiError => {
  */
 export const instanceApi: AxiosInstance = axios.create({
     baseURL: getApiBaseUrl(),
-    withCredentials: true, // set true only if you use cookie-based auth
+    withCredentials: true, // set true only if you use cookie-based auth (nest-auth)
     timeout: 30000,
 });
 
@@ -143,17 +142,14 @@ export const instanceApi: AxiosInstance = axios.create({
  * ----------------------------------------
  * Request interceptor
  * - baseURL set dynamically (optional)
- * - attach bearer token in browser
- * - transform params/data (moment -> ISO)
+ * - transform params/data (Dayjs -> ISO)
  * ----------------------------------------
  */
-instanceApi.interceptors.request.use((req: AxiosRequestConfig & any) => {
-    // If you really need dynamic baseURL each request:
+instanceApi.interceptors.request.use((req: InternalAxiosRequestConfig) => {
     req.baseURL = getApiBaseUrl();
 
-    // Transform params / body safely (non-mutating)
-    if (req.params) req.params = convertMomentToISO(req.params);
-    if (req.data) req.data = convertMomentToISO(req.data);
+    if (req.params) req.params = convertDateLikeToISO(req.params);
+    if (req.data) req.data = convertDateLikeToISO(req.data);
 
     return req;
 });

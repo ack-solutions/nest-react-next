@@ -1,7 +1,6 @@
 import { DataTableApi, DataTableColumn } from '@ackplus/react-tanstack-data-table';
 import {
     Page,
-    TableActionMenu,
 } from '@admin/app/components';
 import { useConfirm } from '@admin/app/contexts';
 import { useToasty } from '@admin/app/hook';
@@ -17,6 +16,7 @@ import AddEditPermissionDialog from '../../sections/permission/add-edit-permissi
 import DataGrid from '@admin/app/components/data-grid/data-grid';
 import { HEADER } from '@admin/app/layout/config';
 import { withRequirePermissionFallback } from '@admin/app/hoc/with-require-permission-fallback';
+import { TableActionMenu } from '@admin/app/components/data-grid';
 
 
 type GuardFilter = 'all' | RoleGuardEnum;
@@ -160,6 +160,10 @@ function PermissionList() {
                 maxSize: 80,
                 cell: ({ row }) => (
                     <TableActionMenu
+                        permissionsKeys={{
+                            edit: PermissionsEnum.UPDATE_ROLES,
+                            delete: PermissionsEnum.DELETE_ROLES,
+                        }}
                         row={row.original}
                         onEdit={() => handleOpenEdit(row.original)}
                         onDelete={handleDelete(row.original)}
