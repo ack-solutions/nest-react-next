@@ -2,7 +2,7 @@ import { WhereOperatorEnum } from '@ackplus/nest-crud-request';
 import { QueryBuilder } from '@ackplus/nest-crud-request';
 import { useAuth, UserService, useUser } from '@libs/react-shared';
 import { IUser, PermissionsEnum, RoleNameEnum, UserStatusEnum } from '@libs/types';
-import { toDisplayDateTime } from '@libs/utils';
+import { Datetime } from '@libs/utils';
 import { Button, Card } from '@mui/material';
 import { filter, get, isEmpty, includes, startCase } from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -284,7 +284,7 @@ function UsersList() {
             header: 'Created Date',
             enableSorting: true,
             type: 'date',
-            accessorFn: (row) => toDisplayDateTime(row.createdAt),
+            accessorFn: (row) => Datetime.toDisplayDateTime(row.createdAt),
         },
     ];
 

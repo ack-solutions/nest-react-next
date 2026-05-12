@@ -1,4 +1,5 @@
-import moment, { Moment } from 'moment';
+import type { Dayjs } from 'dayjs';
+import { dayjs } from '@libs/utils';
 import { useFormContext, Controller } from 'react-hook-form';
 
 import { TimePicker, TimePickerProps } from '../fields/time-picker';
@@ -6,7 +7,7 @@ import { TimePicker, TimePickerProps } from '../fields/time-picker';
 
 export interface RHFTimeFieldProps extends Omit<TimePickerProps, 'value' | 'onChange' | 'error'> {
     name: string;
-    onChange?: (value: Moment | null) => void;
+    onChange?: (value: Dayjs | null) => void;
 }
 
 export function RHFTimeField({
@@ -23,7 +24,7 @@ export function RHFTimeField({
             render={({ field, fieldState: { error } }) => (
                 <TimePicker
                     {...field}
-                    value={field.value ? moment(field.value) : null}
+                    value={field.value ? dayjs(field.value) : null}
                     onChange={(newValue) => {
                         field.onChange(newValue);
                         if (onChange) {

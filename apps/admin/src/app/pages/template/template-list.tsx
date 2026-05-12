@@ -2,7 +2,7 @@ import { Page } from '@admin/app/components/page';
 import { useBoolean, useToasty } from '@admin/app/hook';
 import { useTemplate } from '@libs/react-shared';
 import { ITemplate, PermissionsEnum } from '@libs/types';
-import { toDisplayDate } from '@libs/utils';
+import { Datetime } from '@libs/utils';
 import { Button, Card } from '@mui/material';
 import { useCallback, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -105,7 +105,7 @@ function TemplateList({ organizationId }: TemplateListProps) {
             accessorKey: 'createdAt',
             header: 'Created At',
             enableSorting: true,
-            cell: ({ row }) => toDisplayDate(row.original.createdAt),
+            cell: ({ row }) => Datetime.toDisplayDate(row.original.createdAt),
         },
         {
             id: 'action',

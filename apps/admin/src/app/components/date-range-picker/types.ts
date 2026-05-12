@@ -1,9 +1,10 @@
 import React from 'react';
+import type { Dayjs } from 'dayjs';
 
 
 export interface DateRange {
-    startDate?: moment.Moment;
-    endDate?: moment.Moment;
+    startDate?: Dayjs;
+    endDate?: Dayjs;
 }
 
 export type Setter<T> =
@@ -16,7 +17,7 @@ export enum NavigationAction {
 }
 
 export type DefinedRange = {
-    startDate: moment.Moment;
-    endDate: moment.Moment;
+    startDate: Dayjs;
+    endDate: Dayjs;
     label: string;
 };

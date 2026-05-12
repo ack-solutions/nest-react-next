@@ -1,7 +1,7 @@
 import { QueryBuilder, WhereOperatorEnum } from '@ackplus/nest-crud-request';
 import { usePage } from '@libs/react-shared';
 import { IPage, PermissionsEnum, PageStatusEnum } from '@libs/types';
-import { toDisplayDate, toDisplayDateTime } from '@libs/utils';
+import { Datetime } from '@libs/utils';
 import { Card, Button } from '@mui/material';
 import { useCallback, useRef, useState, useMemo, useEffect } from 'react';
 
@@ -172,14 +172,14 @@ function PageList() {
             header: 'Created At',
             enableSorting: true,
             type: 'date',
-            accessorFn: (row) => toDisplayDateTime(row.createdAt),
+            accessorFn: (row) => Datetime.toDisplayDateTime(row.createdAt),
         },
         {
             accessorKey: 'updatedAt',
             header: 'Updated At',
             enableSorting: true,
             type: 'date',
-            accessorFn: (row) => toDisplayDateTime(row.updatedAt),
+            accessorFn: (row) => Datetime.toDisplayDateTime(row.updatedAt),
         },
     ];
 

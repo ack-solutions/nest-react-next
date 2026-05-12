@@ -1,10 +1,10 @@
-import { toDisplayDate } from '@libs/utils';
+import { Datetime } from '@libs/utils';
 import {
     IconButton,
     TextField,
     TextFieldProps,
 } from '@mui/material';
-import { Moment } from 'moment';
+import type { Dayjs } from 'dayjs';
 import { useCallback, useMemo } from 'react';
 
 import DateRangePicker, {
@@ -17,8 +17,8 @@ import { MenuDropdown } from '../menu-dropdown/menu-drop-down';
 
 
 export interface IDateRange {
-    startDate?: Moment;
-    endDate?: Moment;
+    startDate?: Dayjs;
+    endDate?: Dayjs;
 }
 
 export interface DateRangePickerDialogProps extends DateRangePickerProps {
@@ -58,7 +58,7 @@ function DateRangePickerDialog({
 
     const displayValue = useMemo(() => {
         if (range?.startDate && range?.endDate) {
-            return `${toDisplayDate(range.startDate.toDate())} - ${toDisplayDate(range.endDate.toDate())}`;
+            return `${Datetime.toDisplayDate(range.startDate)} - ${Datetime.toDisplayDate(range.endDate)}`;
         }
         return '';
     }, [range?.startDate, range?.endDate]);

@@ -27,7 +27,7 @@ import { Icon } from '../../components';
 import { IconEnum } from '../../components/icons/icons';
 import { useToasty } from '../../hook';
 import { IUser } from '@libs/types';
-import { toDisplayDate } from '@libs/utils';
+import { Datetime } from '@libs/utils';
 
 
 interface UserMfaDialogProps {
@@ -238,7 +238,7 @@ export default function UserMfaDialog({
                                                     <TableCell>
                                                         <Typography variant="body2" color="text.secondary">
                                                             {device.lastUsedAt
-                                                                ? toDisplayDate(device.lastUsedAt)
+                                                                ? Datetime.toDisplayDate(device.lastUsedAt)
                                                                 : 'Never'
                                                             }
                                                         </Typography>

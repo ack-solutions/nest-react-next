@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import Sticky from 'react-stickynode';
-import { toDisplayDate } from "@libs/utils";
+import { Datetime } from "@libs/utils";
 import { Icon } from "@web/components/ui/icons";
 import { Button } from "@web/components/ui/button";
 import { useAuth } from "@libs/react-shared";
@@ -107,7 +107,7 @@ export default function AccountSidebar({
                         <div className="flex items-center justify-center gap-1 mt-2">
                             <Icon icon={Calendar} size="xs" color="grey" />
                             <Typography variant="caption" color="text-secondary">
-                                Member since {toDisplayDate(currentUser?.createdAt)}
+                                Member since {Datetime.toDisplayDate(currentUser?.createdAt)}
                             </Typography>
                         </div>
                     </div>

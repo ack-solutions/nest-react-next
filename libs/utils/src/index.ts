@@ -5,7 +5,6 @@ export * from './lib/str-to-slug';
 export * from './lib/parse-boolean';
 export * from './lib/format-message';
 export * from './lib/form';
-export * from './lib/date';
 export * from './lib/url';
 export * from './lib/patterns';
 export * from './lib/phone';

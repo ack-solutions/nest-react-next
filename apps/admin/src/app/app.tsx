@@ -1,5 +1,5 @@
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
@@ -10,7 +10,7 @@ import { PromptDialogProvider } from './contexts/prompt-dialog-context';
 import { SettingsProvider } from './contexts/settings-provider';
 import { ThemeProvider } from './theme/theme-provider';
 import { AuthClient, LocalStorageAdapter, createAxiosAdapter } from '@ackplus/nest-auth-client';
-import { AuthProvider, config, instanceApi } from '@libs/react-shared';
+import { AuthProvider, config, instanceApi, instanceNestAuth } from '@libs/react-shared';
 import { useEffect } from 'react';
 import { DataTableStateProvider } from './components/data-grid';
 
@@ -31,9 +31,24 @@ const queryClient = new QueryClient({
 // Create auth client for admin
 const authClient = new AuthClient({
     baseUrl: config.apiUrl + '/api',
-    accessTokenType: 'header' as const,
+    accessTokenType: 'header',
     storage: new LocalStorageAdapter(),
-    httpAdapter: createAxiosAdapter(instanceApi),
+    httpAdapter: createAxiosAdapter(instanceNestAuth),
+
+    logger: {
+        warn: (message: string) => {
+            console.warn(message);
+        },
+        info: (message: string) => {
+            console.info(message);
+        },
+        debug: (message: string) => {
+            console.debug(message);
+        },
+        error: (message: string) => {
+            console.error(message);
+        },
+    },
 });
 const handleTokenSet = (tokens: { accessToken: string; refreshToken: string, trustToken?: string }) => {
     if (tokens?.accessToken) {
@@ -46,17 +61,22 @@ const handleTokenRemoved = () => {
 };
 
 
+
 function App() {
+
     useEffect(() => {
         const accessToken = localStorage.getItem('nest_auth_access_token');
         const refreshToken = localStorage.getItem('nest_auth_refresh_token');
         if (accessToken) {
-            handleTokenSet({ accessToken, refreshToken });
+            handleTokenSet({
+                accessToken,
+                refreshToken,
+            });
         }
     }, []);
 
     return (
-        <LocalizationProvider dateAdapter={AdapterMoment}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
             <QueryClientProvider client={queryClient}>
                 <SettingsProvider>
                     <ThemeProvider>

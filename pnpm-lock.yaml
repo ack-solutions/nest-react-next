@@ -7,14 +7,14 @@ settings:
 catalogs:
   default:
     '@ackplus/nest-auth':
-      specifier: 2.0.0-beta.18
-      version: 2.0.0-beta.18
+      specifier: 2.0.0-beta.26
+      version: 2.0.0-beta.26
     '@ackplus/nest-auth-client':
-      specifier: 2.0.0-beta.18
-      version: 2.0.0-beta.18
+      specifier: 2.0.0-beta.26
+      version: 2.0.0-beta.26
     '@ackplus/nest-auth-react':
-      specifier: 2.0.0-beta.18
-      version: 2.0.0-beta.18
+      specifier: 2.0.0-beta.26
+      version: 2.0.0-beta.26
     '@ackplus/nest-crud':
       specifier: ^1.1.34
       version: 1.1.39
@@ -72,12 +72,12 @@ catalogs:
     clsx:
       specifier: ^2.1.1
       version: 2.1.1
+    dayjs:
+      specifier: ^1.11.13
+      version: 1.11.20
     lodash:
       specifier: ^4.17.21
       version: 4.18.1
-    moment:
-      specifier: ^2.30.1
-      version: 2.30.1
     nprogress:
       specifier: ^0.2.0
       version: 0.2.0
@@ -142,10 +142,10 @@ importers:
     dependencies:
       '@ackplus/nest-auth-client':
         specifier: 'catalog:'
-        version: 2.0.0-beta.18
+        version: 2.0.0-beta.26
       '@ackplus/nest-auth-react':
         specifier: 'catalog:'
-        version: 2.0.0-beta.18(react@19.2.3)
+        version: 2.0.0-beta.26(react@19.2.3)
       '@ackplus/nest-crud-request':
         specifier: 'catalog:'
         version: 1.1.39
@@ -206,6 +206,9 @@ importers:
       axios:
         specifier: 'catalog:'
         version: 1.14.0
+      dayjs:
+        specifier: 'catalog:'
+        version: 1.11.20
       fantasticon:
         specifier: ^3.0.0
         version: 3.0.0
@@ -221,9 +224,6 @@ importers:
       mjml-browser:
         specifier: ^4.18.0
         version: 4.18.0
-      moment:
-        specifier: 'catalog:'
-        version: 2.30.1
       monaco-editor:
         specifier: ^0.55.1
         version: 0.55.1
@@ -305,7 +305,7 @@ importers:
     dependencies:
       '@ackplus/nest-auth':
         specifier: 'catalog:'
-        version: 2.0.0-beta.18(12c2766bbf688753b67cd05dfe3d0605)
+        version: 2.0.0-beta.26(e1faa6b1120a5bde274535c37fb5fed9)
       '@ackplus/nest-crud':
         specifier: 'catalog:'
         version: 1.1.39(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(@nestjs/platform-express@11.1.17)(@nestjs/swagger@11.2.6(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2))(@nestjs/typeorm@11.0.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3))))(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3)))
@@ -411,9 +411,6 @@ importers:
       mjml-browser:
         specifier: ^4.18.0
         version: 4.18.0
-      moment:
-        specifier: 'catalog:'
-        version: 2.30.1
       nunjucks:
         specifier: ^3.2.4
         version: 3.2.4(chokidar@4.0.3)
@@ -498,10 +495,10 @@ importers:
     dependencies:
       '@ackplus/nest-auth-client':
         specifier: 'catalog:'
-        version: 2.0.0-beta.18
+        version: 2.0.0-beta.26
       '@ackplus/nest-auth-react':
         specifier: 'catalog:'
-        version: 2.0.0-beta.18(react@18.3.1)
+        version: 2.0.0-beta.26(react@18.3.1)
       '@babel/runtime':
         specifier: ^7.28.4
         version: 7.29.2
@@ -637,10 +634,10 @@ importers:
     dependencies:
       '@ackplus/nest-auth-client':
         specifier: 'catalog:'
-        version: 2.0.0-beta.18
+        version: 2.0.0-beta.26
       '@ackplus/nest-auth-react':
         specifier: 'catalog:'
-        version: 2.0.0-beta.18(react@19.2.3)
+        version: 2.0.0-beta.26(react@19.2.3)
       '@hookform/resolvers':
         specifier: ^5.0.1
         version: 5.2.2(react-hook-form@7.72.0(react@19.2.3))
@@ -742,11 +739,11 @@ importers:
   libs/react-shared:
     dependencies:
       '@ackplus/nest-auth-client':
-        specifier: ^1.1.64
-        version: 1.1.68
+        specifier: 'catalog:'
+        version: 2.0.0-beta.26
       '@ackplus/nest-auth-react':
-        specifier: ^1.1.64
-        version: 1.1.68(react@18.3.1)
+        specifier: 'catalog:'
+        version: 2.0.0-beta.26(react@18.3.1)
       '@libs/types':
         specifier: workspace:*
         version: link:../types
@@ -762,9 +759,6 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.18.1
-      moment:
-        specifier: ^2.30.1
-        version: 2.30.1
       react:
         specifier: ^18.0.0 || ^19.0.0
         version: 18.3.1
@@ -789,7 +783,7 @@ importers:
     dependencies:
       '@ackplus/nest-auth':
         specifier: 'catalog:'
-        version: 2.0.0-beta.18(12c2766bbf688753b67cd05dfe3d0605)
+        version: 2.0.0-beta.26(e1faa6b1120a5bde274535c37fb5fed9)
       '@ackplus/nest-crud-request':
         specifier: 'catalog:'
         version: 1.1.39
@@ -814,12 +808,12 @@ importers:
       class-transformer:
         specifier: ^0.5.1
         version: 0.5.1
+      dayjs:
+        specifier: 'catalog:'
+        version: 1.11.20
       lodash:
         specifier: 'catalog:'
         version: 4.18.1
-      moment:
-        specifier: 'catalog:'
-        version: 2.30.1
       tslib:
         specifier: 'catalog:'
         version: 2.8.1
@@ -834,30 +828,19 @@ packages:
       graphql:
         optional: true
 
-  '@ackplus/nest-auth-client@1.1.68':
-    resolution: {integrity: sha512-kVEeCNXG/cdqZq2CdmuLQsX5b6HpeplPpxmz6uJX0swIjn6S3WndySMdPcyNFHp3LwCIlDn6tVy2t9UU7wTV0A==}
+  '@ackplus/nest-auth-client@2.0.0-beta.26':
+    resolution: {integrity: sha512-kFTACfJwkfL2BJadLYOzApIj18w7ENucjUN/TgtUbRaqKsIFwKKq4CO5Yt5dUPbbD9/yePzt1OvkNFZ1l05rhA==}
 
-  '@ackplus/nest-auth-client@2.0.0-beta.18':
-    resolution: {integrity: sha512-SMG+n4qjse6QfOZEhcGQACuFsXUbSDgJDoeEB0j4wv4in/bNu/9ckVDfchPvPL5RcqQhpy6WHpuLJT7ddInMhw==}
+  '@ackplus/nest-auth-contracts@2.0.0-beta.26':
+    resolution: {integrity: sha512-F9rLqps7RE0ZtuP43HjDwBW8PhilPiu5xcsMH7L5XyVICjxe0B2e1vCrc8Kb06jhPin4pZhB+/3ia8TWsqATTQ==}
 
-  '@ackplus/nest-auth-contracts@1.1.68':
-    resolution: {integrity: sha512-Y0sajFhByXXOEP2KC0XLCLMSIP8l7uDihgrKR1LCcGenbFavI9Q4GsC8nWcPOmdDZanNGBDK4Z7wXnkSyBt7nQ==}
-
-  '@ackplus/nest-auth-contracts@2.0.0-beta.18':
-    resolution: {integrity: sha512-6SnQ58yQqPzXcIgbnqKBj49jOiI3uD8CkI+YWe8ff6zyQ3llQ6B4jatYTWXzVKyMj/HkS4mplg/ujVrVIOpbCA==}
-
-  '@ackplus/nest-auth-react@1.1.68':
-    resolution: {integrity: sha512-Ld9o1wBdlEMdeXoS0AhSrN9cNsXCGAOG4CzF3LlY7BwU/gMiQY41n+dOaaarBFKpEtvlvLHOZupEpZoE9N4bOw==}
+  '@ackplus/nest-auth-react@2.0.0-beta.26':
+    resolution: {integrity: sha512-QEPQObGuKCTKf4ubLSIGMX0DgOH2WFmmCmgbZVU7gxvGOeNeJwd25E/kyJ95uYhsDPRLVsur3QpzqXKAFKO6Ww==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
 
-  '@ackplus/nest-auth-react@2.0.0-beta.18':
-    resolution: {integrity: sha512-JpMSYnlLTeZDT6Dbvs9VfcC7w/O3BspP+7BRZEW8wEvx6qQ58f8BfAMJTfUsHjJA1wElNct8ejMRjtKzZmQYMg==}
-    peerDependencies:
-      react: ^18.0.0 || ^19.0.0
-
-  '@ackplus/nest-auth@2.0.0-beta.18':
-    resolution: {integrity: sha512-h+XVexqDoUWAC7UFWItxa0Dx2MfIg1eZr9hkCeqhcv+pe1xrdW7zgN79vE5LDZ6w28KX/eeHQNL67KnSBKq62w==}
+  '@ackplus/nest-auth@2.0.0-beta.26':
+    resolution: {integrity: sha512-3klk4ZPqOv04ZY43O2x8QBHVG2WQkJ/V7HPlLxDAKQWzoVz+Txt8gMuxA7WJ+kZoNDC0cWLssg+bY0wrKloRtg==}
     peerDependencies:
       '@nestjs/common': ^10 || ^11
       '@nestjs/core': ^10 || ^11
@@ -871,7 +854,6 @@ packages:
       express: ^4 || ^5
       fb: '*'
       google-auth-library: '*'
-      moment: ^2.29.0
       reflect-metadata: ^0.1.13 || ^0.2.0
       rxjs: ^7.8.0
       typeorm: ^0.3.21
@@ -10797,40 +10779,27 @@ snapshots:
 
   '@0no-co/graphql.web@1.2.0': {}
 
-  '@ackplus/nest-auth-client@1.1.68':
+  '@ackplus/nest-auth-client@2.0.0-beta.26':
     dependencies:
-      '@ackplus/nest-auth-contracts': 1.1.68
+      '@ackplus/nest-auth-contracts': 2.0.0-beta.26
       jwt-decode: 4.0.0
       tslib: 2.8.1
 
-  '@ackplus/nest-auth-client@2.0.0-beta.18':
+  '@ackplus/nest-auth-contracts@2.0.0-beta.26': {}
+
+  '@ackplus/nest-auth-react@2.0.0-beta.26(react@18.3.1)':
     dependencies:
-      '@ackplus/nest-auth-contracts': 2.0.0-beta.18
-      jwt-decode: 4.0.0
-      tslib: 2.8.1
-
-  '@ackplus/nest-auth-contracts@1.1.68': {}
-
-  '@ackplus/nest-auth-contracts@2.0.0-beta.18': {}
-
-  '@ackplus/nest-auth-react@1.1.68(react@18.3.1)':
-    dependencies:
-      '@ackplus/nest-auth-client': 1.1.68
+      '@ackplus/nest-auth-client': 2.0.0-beta.26
       react: 18.3.1
 
-  '@ackplus/nest-auth-react@2.0.0-beta.18(react@18.3.1)':
+  '@ackplus/nest-auth-react@2.0.0-beta.26(react@19.2.3)':
     dependencies:
-      '@ackplus/nest-auth-client': 2.0.0-beta.18
-      react: 18.3.1
-
-  '@ackplus/nest-auth-react@2.0.0-beta.18(react@19.2.3)':
-    dependencies:
-      '@ackplus/nest-auth-client': 2.0.0-beta.18
+      '@ackplus/nest-auth-client': 2.0.0-beta.26
       react: 19.2.3
 
-  '@ackplus/nest-auth@2.0.0-beta.18(12c2766bbf688753b67cd05dfe3d0605)':
+  '@ackplus/nest-auth@2.0.0-beta.26(e1faa6b1120a5bde274535c37fb5fed9)':
     dependencies:
-      '@ackplus/nest-auth-contracts': 2.0.0-beta.18
+      '@ackplus/nest-auth-contracts': 2.0.0-beta.26
       '@nestjs/common': 11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.17(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/event-emitter': 3.0.1(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)
@@ -10844,7 +10813,6 @@ snapshots:
       express: 5.2.1
       jsonwebtoken: 9.0.3
       lodash: 4.18.1
-      moment: 2.30.1
       ms: 2.1.3
       pluralize: 8.0.0
       qrcode: 1.5.4

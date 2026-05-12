@@ -4,7 +4,7 @@ import { FormContainer, RHFSelect, RHFTextField } from '@admin/app/form';
 import { useToasty } from '@admin/app/hook';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSetting } from '@libs/react-shared';
-import { toDisplayDate, toDisplayTime } from '@libs/utils';
+import { Datetime } from '@libs/utils';
 import { Button, Card, CardActions, CardContent, Grid, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -30,27 +30,27 @@ const validationSchema = yupResolver(
 const dateFormatOptions = [
     {
         format: 'DD MMM, YYYY',
-        label: toDisplayDate(new Date(), 'DD MMM, YYYY'),
+        label: Datetime.toDisplayDate(new Date(), 'DD MMM, YYYY'),
     },
     {
         format: 'MM/DD/YYYY',
-        label: toDisplayDate(new Date(), 'MM/DD/YYYY'),
+        label: Datetime.toDisplayDate(new Date(), 'MM/DD/YYYY'),
     },
     {
         format: 'DD/MM/YYYY',
-        label: toDisplayDate(new Date(), 'DD/MM/YYYY'),
+        label: Datetime.toDisplayDate(new Date(), 'DD/MM/YYYY'),
     },
     {
         format: 'YYYY-MM-DD',
-        label: toDisplayDate(new Date(), 'YYYY-MM-DD'),
+        label: Datetime.toDisplayDate(new Date(), 'YYYY-MM-DD'),
     },
     {
         format: 'DD-MM-YYYY',
-        label: toDisplayDate(new Date(), 'DD-MM-YYYY'),
+        label: Datetime.toDisplayDate(new Date(), 'DD-MM-YYYY'),
     },
     {
         format: 'MMM DD, YYYY',
-        label: toDisplayDate(new Date(), 'MMM DD, YYYY'),
+        label: Datetime.toDisplayDate(new Date(), 'MMM DD, YYYY'),
     },
 ];
 
@@ -58,19 +58,19 @@ const dateFormatOptions = [
 const timeFormatOptions = [
     {
         format: 'hh:mm A',
-        label: toDisplayTime(new Date(), 'hh:mm A'),
+        label: Datetime.toDisplayTime(new Date(), 'hh:mm A'),
     },
     {
         format: 'HH:mm',
-        label: toDisplayTime(new Date(), 'HH:mm'),
+        label: Datetime.toDisplayTime(new Date(), 'HH:mm'),
     },
     {
         format: 'HH:mm:ss',
-        label: toDisplayTime(new Date(), 'HH:mm:ss'),
+        label: Datetime.toDisplayTime(new Date(), 'HH:mm:ss'),
     },
     {
         format: 'hh:mm:ss A',
-        label: toDisplayTime(new Date(), 'hh:mm:ss A'),
+        label: Datetime.toDisplayTime(new Date(), 'hh:mm:ss A'),
     },
 ];
 

@@ -1,53 +1,55 @@
-import moment from 'moment';
+import { Datetime } from '@libs/utils';
+import { Dayjs } from 'dayjs';
 
 import { DefinedRange } from './types';
 
 
 export const getDefaultRanges = (): DefinedRange[] => {
+    const now = Datetime.now();
     return [
         {
             label: 'Today',
-            startDate: moment().startOf('day'),
-            endDate: moment().endOf('day'),
+            startDate: now.startOf('day'),
+            endDate: now.endOf('day'),
         },
         {
             label: 'Yesterday',
-            startDate: moment().subtract(1, 'day').startOf('day'),
-            endDate: moment().subtract(1, 'day').endOf('day'),
+            startDate: now.subtract(1, 'day').startOf('day'),
+            endDate: now.subtract(1, 'day').endOf('day'),
         },
         {
             label: 'This Week',
-            startDate: moment().startOf('isoWeek'),
-            endDate: moment().endOf('isoWeek'),
+            startDate: now.startOf('isoWeek'),
+            endDate: now.endOf('isoWeek'),
         },
         {
             label: 'Last Week',
-            startDate: moment().subtract(1, 'week').startOf('isoWeek'),
-            endDate: moment().subtract(1, 'week').endOf('isoWeek'),
+            startDate: now.subtract(1, 'week').startOf('isoWeek'),
+            endDate: now.subtract(1, 'week').endOf('isoWeek'),
         },
         {
             label: 'This Month',
-            startDate: moment().startOf('month'),
-            endDate: moment().endOf('month'),
+            startDate: now.startOf('month'),
+            endDate: now.endOf('month'),
         },
         {
             label: 'Last Month',
-            startDate: moment().subtract(1, 'month').startOf('month'),
-            endDate: moment().subtract(1, 'month').endOf('month'),
+            startDate: now.subtract(1, 'month').startOf('month'),
+            endDate: now.subtract(1, 'month').endOf('month'),
         },
         {
             label: 'This Financial Year',
-            ...getFinancialYearRange(moment()),
+            ...getFinancialYearRange(Datetime.now()),
         },
         {
             label: 'Last Financial Year',
-            ...getFinancialYearRange(moment().subtract(1, 'year')),
+            ...getFinancialYearRange(Datetime.now().subtract(1, 'year')),
         },
     ];
 };
 
-function getFinancialYearRange(date) {
-    const inputDate = moment(date);
+function getFinancialYearRange(date: Dayjs) {
+    const inputDate = date;
     const year = inputDate.year();
     const month = inputDate.month() + 1; // months are zero indexed
 
@@ -64,8 +66,8 @@ function getFinancialYearRange(date) {
         endYear = year;
     }
 
-    const startDate = moment(`${startYear}-04-01`);
-    const endDate = moment(`${endYear}-03-31`);
+    const startDate = Datetime.toDayjs(`${startYear}-04-01`)!;
+    const endDate = Datetime.toDayjs(`${endYear}-03-31`)!;
 
     return {
         startDate: startDate,

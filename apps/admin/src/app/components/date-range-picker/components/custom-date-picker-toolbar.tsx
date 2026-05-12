@@ -1,11 +1,14 @@
-import { toDisplayDate } from '@libs/utils';
+
 import { Divider, Stack, Typography } from '@mui/material';
 import { DatePickerToolbarProps } from '@mui/x-date-pickers';
 import clsx from 'clsx';
 
+import { Dayjs } from 'dayjs';
+import { Datetime } from '@libs/utils';
+
 
 export interface CustomDatePickerToolbarProps extends DatePickerToolbarProps {
-    selectedDates?: Date[];
+    selectedDates?: Dayjs[];
 }
 
 export function CustomDatePickerToolbar({
@@ -40,7 +43,7 @@ export function CustomDatePickerToolbar({
                         flexShrink: 1,
                     }}
                 >
-                    {selectedDates && selectedDates[0] ? toDisplayDate(selectedDates[0], 'DD MMM YYYY') : 'Start Date'}
+                    {selectedDates && selectedDates[0] ? Datetime.toDisplayDate(selectedDates[0], 'DD MMM YYYY') : 'Start Date'}
                     {' '}
                 </Typography>
                 <Divider
@@ -63,7 +66,7 @@ export function CustomDatePickerToolbar({
                     }}
                 >
 
-                    {selectedDates && selectedDates[1] ? toDisplayDate(selectedDates[1], 'DD MMM YYYY') : 'End Date'}
+                    {selectedDates && selectedDates[1] ? Datetime.toDisplayDate(selectedDates[1], 'DD MMM YYYY') : 'End Date'}
                 </Typography>
             </Stack>
             <Divider />

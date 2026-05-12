@@ -1,4 +1,4 @@
-import { toDisplayDateRange } from '@libs/utils';
+import { Datetime } from '@libs/utils';
 import { Box, Stack, Button, Divider, Chip } from '@mui/material';
 import type { Theme, SxProps } from '@mui/material/styles';
 import { isArray, startCase } from 'lodash';
@@ -67,7 +67,7 @@ export function DataTableFilters({
     const getDisplayValue = useCallback((key: string, value: any) => {
         switch (key) {
             case 'customer': return value.name;
-            case 'dateRange': return toDisplayDateRange(value.startDate, value.endDate);
+            case 'dateRange': return Datetime.toDisplayDateRange(value.startDate, value.endDate);
             case 'status': return isArray(value) ? value.map((v: any) => startCase(v)).join(', ') : startCase(value);
             case 'categories':
             case 'brands':

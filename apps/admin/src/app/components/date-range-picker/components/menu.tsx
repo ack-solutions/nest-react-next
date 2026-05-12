@@ -1,17 +1,18 @@
 import { Divider, Paper, Stack } from '@mui/material';
-import { Moment } from 'moment';
 import { useCallback } from 'react';
 
 import DefinedRanges from './defined-ranges';
 import { DateRange, DefinedRange } from '../types';
 import CustomStaticDateRangePicker from './static-date-range-picker';
 
+import { Dayjs } from 'dayjs';
+
 
 interface MenuProps {
     value: DateRange;
     onChange: (value: DateRange) => void;
-    minDate: Moment;
-    maxDate: Moment;
+    minDate: Dayjs;
+    maxDate: Dayjs;
     ranges?: DefinedRange[];
 }
 
@@ -19,7 +20,7 @@ function Menu(props: MenuProps) {
     const { value, onChange, minDate, maxDate, ranges } = props;
 
     const handleDateRangeChange = useCallback(
-        (value) => {
+        (value: DateRange) => {
             onChange(value);
         },
         [onChange],

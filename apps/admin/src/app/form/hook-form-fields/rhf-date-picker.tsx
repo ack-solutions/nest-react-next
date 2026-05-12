@@ -1,12 +1,14 @@
-import moment, { Moment } from 'moment';
 import { useFormContext, Controller } from 'react-hook-form';
 
+import { Datetime } from '@libs/utils';
+
 import { DatePicker, DatePickerProps } from '../fields/date-picker';
+import { Dayjs } from 'dayjs';
 
 
 export interface RHFDateFieldProps extends Omit<DatePickerProps, 'value' | 'onChange' | 'error'> {
     name: string;
-    onChange?: (value: Moment | null) => void;
+    onChange?: (value: Dayjs | null) => void;
 }
 
 export function RHFDateField({
@@ -23,7 +25,7 @@ export function RHFDateField({
             render={({ field, fieldState: { error } }) => (
                 <DatePicker
                     {...field}
-                    value={field.value ? moment(field.value) : null}
+                    value={field.value ? Datetime.toDayjs(field.value) : null}
                     onChange={(newValue) => {
                         field.onChange(newValue);
                         if (onChange) {

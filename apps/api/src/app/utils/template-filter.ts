@@ -1,11 +1,11 @@
-import { toDisplayDate, toDisplayDateTime, toDisplayTime, toFormattedPhone } from '@libs/utils';
+import { Datetime, toFormattedPhone } from '@libs/utils';
 import { get, isNil, startCase, trim } from 'lodash';
 
 
 export const templateFilters = {
-    date: toDisplayDate,
-    time: toDisplayTime,
-    dateTime: toDisplayDateTime,
+    date: Datetime.toDisplayDate,
+    time: Datetime.toDisplayTime,
+    dateTime: Datetime.toDisplayDateTime,
     phone: toFormattedPhone,
     startCase: startCase,
     get: get,

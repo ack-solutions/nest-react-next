@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 import { CustomDatePickerToolbar } from './custom-date-picker-toolbar';
 import { CustomDay } from './custom-day';
 import { DateRange } from '../types';
+import { Dayjs } from 'dayjs';
 
 
 export interface StaticDateRangePickerProps extends Omit<StaticDatePickerProps, 'value' | 'onChange'> {
@@ -19,7 +20,7 @@ function StaticDateRangePicker({
     const [hoverDay, setHoverDay] = useState(null);
 
     const handleDateChange = useCallback(
-        (date) => {
+        (date: Dayjs) => {
             const newValue: DateRange = {};
 
             if (!value?.startDate || (value?.startDate && value?.endDate)) {
@@ -37,11 +38,11 @@ function StaticDateRangePicker({
         [onChange, value],
     );
 
-    const handleHoverIn = useCallback((day) => {
+    const handleHoverIn = useCallback((day: Dayjs) => {
         setHoverDay(day);
     }, []);
 
-    const handleHoverOut = useCallback((_day) => {
+    const handleHoverOut = useCallback((_day: Dayjs) => {
         setHoverDay(null);
     }, []);
 

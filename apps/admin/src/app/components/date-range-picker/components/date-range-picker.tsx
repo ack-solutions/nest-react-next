@@ -1,5 +1,7 @@
-import moment, { Moment } from 'moment';
 import { useCallback, useState } from 'react';
+
+import { Datetime } from '@libs/utils';
+import { Dayjs } from 'dayjs';
 
 import { getDefaultRanges } from '../defaults';
 import { DateRange, DefinedRange } from '../types';
@@ -11,8 +13,8 @@ export interface DateRangePickerProps {
     open?: boolean;
     initialDateRange?: DateRange;
     definedRanges?: DefinedRange[];
-    minDate?: Moment | string;
-    maxDate?: Moment | string;
+    minDate?: Dayjs | string;
+    maxDate?: Dayjs | string;
     onChange?: (dateRange: DateRange) => void;
 }
 
@@ -24,10 +26,10 @@ function DateRangePicker({
     maxDate,
     definedRanges = getDefaultRanges(),
 }: DateRangePickerProps) {
-    const today = moment();
+    const today = Datetime.now();
 
-    const minDateValid = parseOptionalDate(minDate, today.clone().subtract(10, 'years'));
-    const maxDateValid = parseOptionalDate(maxDate, today.clone().add(10, 'years'));
+    const minDateValid = parseOptionalDate(minDate, Datetime.subtract(today, 10, 'years') ?? today);
+    const maxDateValid = parseOptionalDate(maxDate, Datetime.add(today, 10, 'years') ?? today);
     const [dateRange, setDateRange] = useState<DateRange>({
         ...initialDateRange,
     });

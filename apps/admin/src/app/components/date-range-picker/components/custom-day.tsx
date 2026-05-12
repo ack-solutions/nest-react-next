@@ -1,20 +1,19 @@
 import { Box, alpha } from '@mui/material';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers';
 import clsx from 'clsx';
-import { Moment } from 'moment';
 import { useCallback, useMemo } from 'react';
-
+import { Dayjs } from 'dayjs';
 
 export interface CustomDayProps
     extends Omit<PickersDayProps, 'onMouseEnter' | 'onMouseOut'> {
-    hoverDay?: Moment;
-    selectedDates?: Moment[];
-    onMouseEnter?: (date?: Moment) => void;
-    onMouseOut?: (date?: Moment) => void;
+    hoverDay?: Dayjs;
+    selectedDates?: Dayjs[];
+    onMouseEnter?: (date?: Dayjs) => void;
+    onMouseOut?: (date?: Dayjs) => void;
 }
 
-function normalizeDate(date: Moment | undefined) {
-    return date ? date.clone().startOf('day') : null;
+function normalizeDate(date: Dayjs | undefined) {
+    return date ? date.startOf('day') : null;
 }
 
 export function CustomDay({
@@ -95,7 +94,7 @@ export function CustomDay({
     }, [day, onClick]);
 
     const handleHoverIn = useCallback(
-        (_event) => {
+        (_event: any) => {
             if (onMouseEnter) {
                 onMouseEnter(day);
             }
@@ -104,7 +103,7 @@ export function CustomDay({
     );
 
     const handleHoverOut = useCallback(
-        (_event) => {
+        (_event: any) => {
             if (onMouseOut) {
                 onMouseOut(day);
             }
