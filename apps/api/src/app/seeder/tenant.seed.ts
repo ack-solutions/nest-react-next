@@ -22,7 +22,7 @@ export class TenantSeeder implements Seeder {
         if (!tenant) {
             await this.tenantService.createTenant({
                 name: startCase(defaultTenantName),
-                domain: defaultTenantName,
+                slug: defaultTenantName,
             });
         }
     }

@@ -21,7 +21,7 @@ function ResetPassword() {
         async (value: { otp: string }, setError: any) => {
             try {
                 const response = await verifyForgotPasswordOtp({
-                    otp: value.otp,
+                    code: value.otp,
                     ...(email && { email }),
                 });
                 const token = response?.resetToken || response?.token;

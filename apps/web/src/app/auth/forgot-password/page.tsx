@@ -98,7 +98,7 @@ export default function ForgotPasswordPage() {
         setError(null);
 
         try {
-            const response = await verifyForgotPasswordOtp({ email, otp });
+            const response = await verifyForgotPasswordOtp({ email, code: otp });
             const token = (response as any)?.resetToken || (response as any)?.token;
 
             if (token) {

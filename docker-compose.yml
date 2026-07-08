@@ -97,7 +97,6 @@ services:
       context: .
       dockerfile: apps/web/Dockerfile
       args:
-        NEXT_PUBLIC_INBOX_ARMY_URL:
         NEXT_PUBLIC_BASE_PATH:
         NEXT_PUBLIC_APP_API_URL:
         NEXT_PUBLIC_APP_FRONT_URL:
@@ -106,7 +105,6 @@ services:
     image: ${APP_NAME}-web:latest
     container_name: ${APP_NAME}-web
     environment:
-      - NEXT_PUBLIC_INBOX_ARMY_URL=
       - NEXT_PUBLIC_BASE_PATH=
       - NEXT_PUBLIC_APP_API_URL=
       - NEXT_PUBLIC_APP_FRONT_URL=

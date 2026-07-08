@@ -17,7 +17,8 @@ export interface IUser extends IBaseEntity {
   authUser?: NestAuthUser;
   name?: string;
   avatarUrl?: string;
-  razorpayCustomerId?: string
+  razorpayCustomerId?: string;
+  rolesIds?: string[];
   // read only
   formattedPhone?: string;
   isMfaEnabled?: boolean;
@@ -32,7 +33,7 @@ export interface ICreateUserInput {
   phoneCountryCode: string;
   password: string;
   status: UserStatusEnum;
-  roles: string[];
+  rolesIds: string[];
   locationIds: string[];
   avatar?: string;
 }
@@ -70,7 +71,7 @@ export interface IVerifyOtpInput {
 export interface IVerifyForgotPasswordOtpInput {
   email?: string;
   phone?: string;
-  otp: string;
+  code: string;
 }
 
 export interface IVerifyResetPasswordWithTokenResponse {

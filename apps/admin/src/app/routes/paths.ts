@@ -59,8 +59,6 @@ export const PATH_DASHBOARD = {
         create: path(ROOTS_DASHBOARD, '/users/create'),
         roles: {
             root: path(ROOTS_DASHBOARD, '/users/roles'),
-            edit: (roleId: string) => path(ROOTS_DASHBOARD, `/users/roles/edit/${roleId}`),
-            add: path(ROOTS_DASHBOARD, '/users/roles/create'),
         },
         permissions: path(ROOTS_DASHBOARD, '/users/permissions'),
     },

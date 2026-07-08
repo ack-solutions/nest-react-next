@@ -7,32 +7,32 @@ settings:
 catalogs:
   default:
     '@ackplus/nest-auth':
-      specifier: 2.0.0-beta.26
-      version: 2.0.0-beta.26
+      specifier: 2.7.0
+      version: 2.7.0
     '@ackplus/nest-auth-client':
-      specifier: 2.0.0-beta.26
-      version: 2.0.0-beta.26
+      specifier: 2.7.0
+      version: 2.7.0
     '@ackplus/nest-auth-react':
-      specifier: 2.0.0-beta.26
-      version: 2.0.0-beta.26
+      specifier: 2.7.0
+      version: 2.7.0
     '@ackplus/nest-crud':
-      specifier: ^1.1.34
-      version: 1.1.39
+      specifier: ^2.0.1
+      version: 2.0.1
     '@ackplus/nest-crud-request':
-      specifier: ^1.1.34
-      version: 1.1.39
+      specifier: ^2.0.1
+      version: 2.0.1
     '@ackplus/nest-dynamic-templates':
-      specifier: ^1.1.16
-      version: 1.1.16
+      specifier: ^2.0.0
+      version: 2.0.0
     '@ackplus/nest-file-storage':
-      specifier: ^1.1.19
-      version: 1.1.20
+      specifier: ^2.0.2
+      version: 2.0.2
     '@ackplus/nest-seeder':
-      specifier: ^1.1.17
-      version: 1.1.17
+      specifier: ^2.1.0
+      version: 2.1.0
     '@ackplus/react-tanstack-data-table':
-      specifier: ^1.1.16
-      version: 1.1.21
+      specifier: ^1.1.22
+      version: 1.1.22
     '@emotion/react':
       specifier: ^11.14.0
       version: 11.14.0
@@ -142,16 +142,16 @@ importers:
     dependencies:
       '@ackplus/nest-auth-client':
         specifier: 'catalog:'
-        version: 2.0.0-beta.26
+        version: 2.7.0
       '@ackplus/nest-auth-react':
         specifier: 'catalog:'
-        version: 2.0.0-beta.26(react@19.2.3)
+        version: 2.7.0(react@19.2.3)
       '@ackplus/nest-crud-request':
         specifier: 'catalog:'
-        version: 1.1.39
+        version: 2.0.1
       '@ackplus/react-tanstack-data-table':
         specifier: 'catalog:'
-        version: 1.1.21(7fe2558bc9fef475383e8214b93d2f44)
+        version: 1.1.22(7fe2558bc9fef475383e8214b93d2f44)
       '@emotion/react':
         specifier: 'catalog:'
         version: 11.14.0(@types/react@19.2.7)(react@19.2.3)
@@ -305,22 +305,22 @@ importers:
     dependencies:
       '@ackplus/nest-auth':
         specifier: 'catalog:'
-        version: 2.0.0-beta.26(e1faa6b1120a5bde274535c37fb5fed9)
+        version: 2.7.0(e1faa6b1120a5bde274535c37fb5fed9)
       '@ackplus/nest-crud':
         specifier: 'catalog:'
-        version: 1.1.39(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(@nestjs/platform-express@11.1.17)(@nestjs/swagger@11.2.6(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2))(@nestjs/typeorm@11.0.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3))))(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3)))
+        version: 2.0.1(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(@nestjs/platform-express@11.1.17)(@nestjs/swagger@11.2.6(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2))(@nestjs/typeorm@11.0.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3))))(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3)))
       '@ackplus/nest-crud-request':
         specifier: 'catalog:'
-        version: 1.1.39
+        version: 2.0.1
       '@ackplus/nest-dynamic-templates':
         specifier: 'catalog:'
-        version: 1.1.16(@faker-js/faker@10.4.0)(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(@nestjs/swagger@11.2.6(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2))(@nestjs/typeorm@11.0.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3))))(handlebars@4.7.9)(htmlparser2@9.1.0)(nunjucks@3.2.4(chokidar@4.0.3))(pug@3.0.4)(reflect-metadata@0.2.2)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3))(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3)))(typescript@5.9.3)
+        version: 2.0.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(@nestjs/swagger@11.2.6(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2))(@nestjs/typeorm@11.0.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3))))(handlebars@4.7.9)(marked@14.0.0)(nunjucks@3.2.4(chokidar@4.0.3))(pug@3.0.4)(reflect-metadata@0.2.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3)))
       '@ackplus/nest-file-storage':
         specifier: 'catalog:'
-        version: 1.1.20(@aws-sdk/client-s3@3.1022.0)(@aws-sdk/s3-request-presigner@3.1022.0)(@azure/storage-blob@12.31.0)(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(multer@2.1.1)(reflect-metadata@0.2.2)
+        version: 2.0.2(@aws-sdk/client-s3@3.1022.0)(@aws-sdk/s3-request-presigner@3.1022.0)(@azure/storage-blob@12.31.0)(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(multer@2.1.1)(reflect-metadata@0.2.2)
       '@ackplus/nest-seeder':
         specifier: 'catalog:'
-        version: 1.1.17(@faker-js/faker@10.4.0)(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(reflect-metadata@0.2.2)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3))(typescript@5.9.3)
+        version: 2.1.0(@faker-js/faker@10.4.0)(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(reflect-metadata@0.2.2)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3))(typescript@5.9.3)
       '@aws-sdk/client-s3':
         specifier: ^3.962.0
         version: 3.1022.0
@@ -495,10 +495,10 @@ importers:
     dependencies:
       '@ackplus/nest-auth-client':
         specifier: 'catalog:'
-        version: 2.0.0-beta.26
+        version: 2.7.0
       '@ackplus/nest-auth-react':
         specifier: 'catalog:'
-        version: 2.0.0-beta.26(react@18.3.1)
+        version: 2.7.0(react@18.3.1)
       '@babel/runtime':
         specifier: ^7.28.4
         version: 7.29.2
@@ -634,10 +634,10 @@ importers:
     dependencies:
       '@ackplus/nest-auth-client':
         specifier: 'catalog:'
-        version: 2.0.0-beta.26
+        version: 2.7.0
       '@ackplus/nest-auth-react':
         specifier: 'catalog:'
-        version: 2.0.0-beta.26(react@19.2.3)
+        version: 2.7.0(react@19.2.3)
       '@hookform/resolvers':
         specifier: ^5.0.1
         version: 5.2.2(react-hook-form@7.72.0(react@19.2.3))
@@ -740,10 +740,10 @@ importers:
     dependencies:
       '@ackplus/nest-auth-client':
         specifier: 'catalog:'
-        version: 2.0.0-beta.26
+        version: 2.7.0
       '@ackplus/nest-auth-react':
         specifier: 'catalog:'
-        version: 2.0.0-beta.26(react@18.3.1)
+        version: 2.7.0(react@18.3.1)
       '@libs/types':
         specifier: workspace:*
         version: link:../types
@@ -783,13 +783,13 @@ importers:
     dependencies:
       '@ackplus/nest-auth':
         specifier: 'catalog:'
-        version: 2.0.0-beta.26(e1faa6b1120a5bde274535c37fb5fed9)
+        version: 2.7.0(e1faa6b1120a5bde274535c37fb5fed9)
       '@ackplus/nest-crud-request':
         specifier: 'catalog:'
-        version: 1.1.39
+        version: 2.0.1
       '@ackplus/nest-file-storage':
         specifier: 'catalog:'
-        version: 1.1.20(@aws-sdk/client-s3@3.1022.0)(@aws-sdk/s3-request-presigner@3.1022.0)(@azure/storage-blob@12.31.0)(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(multer@2.1.1)(reflect-metadata@0.2.2)
+        version: 2.0.2(@aws-sdk/client-s3@3.1022.0)(@aws-sdk/s3-request-presigner@3.1022.0)(@azure/storage-blob@12.31.0)(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(multer@2.1.1)(reflect-metadata@0.2.2)
       '@nestjs/swagger':
         specifier: ^11.2.0
         version: 11.2.6(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
@@ -828,19 +828,19 @@ packages:
       graphql:
         optional: true
 
-  '@ackplus/nest-auth-client@2.0.0-beta.26':
-    resolution: {integrity: sha512-kFTACfJwkfL2BJadLYOzApIj18w7ENucjUN/TgtUbRaqKsIFwKKq4CO5Yt5dUPbbD9/yePzt1OvkNFZ1l05rhA==}
+  '@ackplus/nest-auth-client@2.7.0':
+    resolution: {integrity: sha512-dFbNtm9s+yux9RQfcUGT250TonPpMPap/ADWPvsHMFWG5DibFqX5rjx7UiKjR0+SVmlvj/f3lbeAHM2fFfC13g==}
 
-  '@ackplus/nest-auth-contracts@2.0.0-beta.26':
-    resolution: {integrity: sha512-F9rLqps7RE0ZtuP43HjDwBW8PhilPiu5xcsMH7L5XyVICjxe0B2e1vCrc8Kb06jhPin4pZhB+/3ia8TWsqATTQ==}
+  '@ackplus/nest-auth-contracts@2.7.0':
+    resolution: {integrity: sha512-3IfTir3EZOU+52/1btFtRXUZdzxV+kBTfDuxOUsskIOTgI7ujn1YS+7XCyyrBbmoFX2tfwQnrvPKMqCD7H4hgw==}
 
-  '@ackplus/nest-auth-react@2.0.0-beta.26':
-    resolution: {integrity: sha512-QEPQObGuKCTKf4ubLSIGMX0DgOH2WFmmCmgbZVU7gxvGOeNeJwd25E/kyJ95uYhsDPRLVsur3QpzqXKAFKO6Ww==}
+  '@ackplus/nest-auth-react@2.7.0':
+    resolution: {integrity: sha512-Pjj8VJIPwll6P9EUk/OQFESrA320ewSm6Rvt4c7YcrPBl8ILPWMJoR1DojTjI/RbGcOA65PiHaSw25mpaediww==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
 
-  '@ackplus/nest-auth@2.0.0-beta.26':
-    resolution: {integrity: sha512-3klk4ZPqOv04ZY43O2x8QBHVG2WQkJ/V7HPlLxDAKQWzoVz+Txt8gMuxA7WJ+kZoNDC0cWLssg+bY0wrKloRtg==}
+  '@ackplus/nest-auth@2.7.0':
+    resolution: {integrity: sha512-3BNh2aEhtY/z5tzdZ2bplzQSFPhrN9gIVpkXnd9Ti9zHbiKW4MiGie9r6dBsCEJBTafPVK+m1Lcg8/3uZTzHOQ==}
     peerDependencies:
       '@nestjs/common': ^10 || ^11
       '@nestjs/core': ^10 || ^11
@@ -865,11 +865,11 @@ packages:
       google-auth-library:
         optional: true
 
-  '@ackplus/nest-crud-request@1.1.39':
-    resolution: {integrity: sha512-Q9Uth/P+Pa4ZnxAwrRQGMclj/nyQarEIiP4LjrHcF6eEEsg/ISOAaYx5QBP/Q5TE+CutwL0lIMYpt7ZFS3pTmg==}
+  '@ackplus/nest-crud-request@2.0.1':
+    resolution: {integrity: sha512-2f44kM8lLrH5z/Kzg7UXK5uFOHoyBG0AK0Q9Jw16ovnfAT7yGC6cSXZrcleakJyyw4auIGvf3ZBYmfWeX3pd+w==}
 
-  '@ackplus/nest-crud@1.1.39':
-    resolution: {integrity: sha512-J9i8FxowYC8ZvC6+SZGX6Fpzn/tdIFd61xUO4sk1xgMI1TFJYI6g+LGQj04MIjrZx4WN6B5Cu+BhwTG14V0npQ==}
+  '@ackplus/nest-crud@2.0.1':
+    resolution: {integrity: sha512-y4om5+JH5jVHpP9ADrqiuiuhzrLK1ohgx1coGQLmlB2hHp78qhmh9llJgiUq6vzcpsLORrmjhlvlRic2sFCogg==}
     peerDependencies:
       '@nestjs/common': ^10 || ^11
       '@nestjs/core': ^10 || ^11
@@ -878,27 +878,24 @@ packages:
       '@nestjs/typeorm': ^10 || ^11
       class-transformer: ^0.5.1
       class-validator: ^0.14.1
-      reflect-metadata: ^0.1.13
+      reflect-metadata: ^0.1.13 || ^0.2.0
       typeorm: ^0.3.21
 
-  '@ackplus/nest-dynamic-templates@1.1.16':
-    resolution: {integrity: sha512-6KHlSL9Cq9m+70lWSVoIcAjji9rm/qD2lcwyhn5f4fRsaELoOXX6ziky2e8dCR+BVTwg/QzI98VWGxdzjjhp7A==}
+  '@ackplus/nest-dynamic-templates@2.0.0':
+    resolution: {integrity: sha512-Cj1tGSIeLltRH/QZujJFbzU5+Uc7x8MUoZRxw0vEvLVVVIFCkGOBN4fL7pdTBgtebLID1lZA71anAIvfLCbAKw==}
     peerDependencies:
-      '@faker-js/faker': ^9.0.0 || ^10.0.0
       '@nestjs/common': ^10.0.0 || ^11.0.0
       '@nestjs/core': ^10.0.0 || ^11.0.0
       '@nestjs/swagger': ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
       '@nestjs/typeorm': ^10.0.0 || ^11.0.0
       ejs: ^3.1.0
       handlebars: ^4.7.0
-      htmlparser2: ^9.0.0
+      marked: ^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0
       mjml: ^4.14.0
       nunjucks: ^3.2.0
       pug: ^3.0.0
       reflect-metadata: ^0.2
-      ts-node: '*'
       typeorm: ^0.3.0
-      typescript: '*'
     peerDependenciesMeta:
       '@nestjs/swagger':
         optional: true
@@ -908,7 +905,7 @@ packages:
         optional: true
       handlebars:
         optional: true
-      htmlparser2:
+      marked:
         optional: true
       mjml:
         optional: true
@@ -916,15 +913,11 @@ packages:
         optional: true
       pug:
         optional: true
-      ts-node:
-        optional: true
       typeorm:
         optional: true
-      typescript:
-        optional: true
 
-  '@ackplus/nest-file-storage@1.1.20':
-    resolution: {integrity: sha512-EjzOqevMZoFFEYyNiEqHgl3vSt3gpIEd5x8LMJfw5wxq815l33w/qby85A7DDlr4Cl0JEEdErfQP8JrBKePYBQ==}
+  '@ackplus/nest-file-storage@2.0.2':
+    resolution: {integrity: sha512-rABtQWWYnWOz2rEhXbFhj6uvmVRcjBlYmBft4bzQbweLXC2DYPKS4SVCtq9AFlr7msF53KgsFxhrPXy65/WQFw==}
     peerDependencies:
       '@aws-sdk/client-s3': '*'
       '@aws-sdk/s3-request-presigner': '*'
@@ -941,14 +934,15 @@ packages:
       '@azure/storage-blob':
         optional: true
 
-  '@ackplus/nest-seeder@1.1.17':
-    resolution: {integrity: sha512-3lTzLrkwaP/7FXOQHqikxAwCLeUL7OgK79bwdDgPWXo+51x0khzwnMuMS/zYRHSzXUk+4br86HxTanYm/SRBrw==}
+  '@ackplus/nest-seeder@2.1.0':
+    resolution: {integrity: sha512-eNNXSrsowMQFL97hMXmR/DBjsXj+hNXhN3DUv2ocMrGL75a/68mfI+sW1MKr8BDQoByAwn6AYn60G6dsUHiIWg==}
+    engines: {node: '>=18'}
     hasBin: true
     peerDependencies:
-      '@faker-js/faker': ^9.0.0
+      '@faker-js/faker': ^9.0.0 || ^10
       '@nestjs/common': ^10.0.0 || ^11.0.0
       '@nestjs/core': ^10.0.0 || ^11.0.0
-      reflect-metadata: ^0.2.2
+      reflect-metadata: ^0.2
       ts-node: '*'
       typescript: '*'
     peerDependenciesMeta:
@@ -957,8 +951,8 @@ packages:
       typescript:
         optional: true
 
-  '@ackplus/react-tanstack-data-table@1.1.21':
-    resolution: {integrity: sha512-8HeAv3qZ+nbF60xm3+lCO+4xEPdSozB545wBUAc6Kmw9qbcc9DKkbdeWjfhGWFceBmI3uY9HTeEQhz4vrzZvKg==}
+  '@ackplus/react-tanstack-data-table@1.1.22':
+    resolution: {integrity: sha512-A7jen3DdMXGq2oi422DqvophkSRs4BbqRX8dYPh5+GajnQwAE5HDaKqMZWwRsC+blI35fg86W6Ra0llI9hdqdQ==}
     peerDependencies:
       '@emotion/react': '>=11.0.0'
       '@emotion/styled': '>=11.0.0'
@@ -10779,27 +10773,27 @@ snapshots:
 
   '@0no-co/graphql.web@1.2.0': {}
 
-  '@ackplus/nest-auth-client@2.0.0-beta.26':
+  '@ackplus/nest-auth-client@2.7.0':
     dependencies:
-      '@ackplus/nest-auth-contracts': 2.0.0-beta.26
+      '@ackplus/nest-auth-contracts': 2.7.0
       jwt-decode: 4.0.0
       tslib: 2.8.1
 
-  '@ackplus/nest-auth-contracts@2.0.0-beta.26': {}
+  '@ackplus/nest-auth-contracts@2.7.0': {}
 
-  '@ackplus/nest-auth-react@2.0.0-beta.26(react@18.3.1)':
+  '@ackplus/nest-auth-react@2.7.0(react@18.3.1)':
     dependencies:
-      '@ackplus/nest-auth-client': 2.0.0-beta.26
+      '@ackplus/nest-auth-client': 2.7.0
       react: 18.3.1
 
-  '@ackplus/nest-auth-react@2.0.0-beta.26(react@19.2.3)':
+  '@ackplus/nest-auth-react@2.7.0(react@19.2.3)':
     dependencies:
-      '@ackplus/nest-auth-client': 2.0.0-beta.26
+      '@ackplus/nest-auth-client': 2.7.0
       react: 19.2.3
 
-  '@ackplus/nest-auth@2.0.0-beta.26(e1faa6b1120a5bde274535c37fb5fed9)':
+  '@ackplus/nest-auth@2.7.0(e1faa6b1120a5bde274535c37fb5fed9)':
     dependencies:
-      '@ackplus/nest-auth-contracts': 2.0.0-beta.26
+      '@ackplus/nest-auth-contracts': 2.7.0
       '@nestjs/common': 11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.17(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/event-emitter': 3.0.1(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)
@@ -10826,11 +10820,11 @@ snapshots:
       fb: 2.0.0
       google-auth-library: 10.6.2
 
-  '@ackplus/nest-crud-request@1.1.39':
+  '@ackplus/nest-crud-request@2.0.1':
     dependencies:
       tslib: 2.8.1
 
-  '@ackplus/nest-crud@1.1.39(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(@nestjs/platform-express@11.1.17)(@nestjs/swagger@11.2.6(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2))(@nestjs/typeorm@11.0.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3))))(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3)))':
+  '@ackplus/nest-crud@2.0.1(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(@nestjs/platform-express@11.1.17)(@nestjs/swagger@11.2.6(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2))(@nestjs/typeorm@11.0.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3))))(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3)))':
     dependencies:
       '@nestjs/common': 11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.17(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -10846,34 +10840,28 @@ snapshots:
       reflect-metadata: 0.2.2
       typeorm: 0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3))
 
-  ? '@ackplus/nest-dynamic-templates@1.1.16(@faker-js/faker@10.4.0)(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(@nestjs/swagger@11.2.6(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2))(@nestjs/typeorm@11.0.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3))))(handlebars@4.7.9)(htmlparser2@9.1.0)(nunjucks@3.2.4(chokidar@4.0.3))(pug@3.0.4)(reflect-metadata@0.2.2)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3))(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3)))(typescript@5.9.3)'
-  : dependencies:
-      '@faker-js/faker': 10.4.0
+  '@ackplus/nest-dynamic-templates@2.0.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(@nestjs/swagger@11.2.6(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2))(@nestjs/typeorm@11.0.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3))))(handlebars@4.7.9)(marked@14.0.0)(nunjucks@3.2.4(chokidar@4.0.3))(pug@3.0.4)(reflect-metadata@0.2.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3)))':
+    dependencies:
       '@nestjs/common': 11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.17(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       class-transformer: 0.5.1
       class-validator: 0.14.4
-      deepmerge: 4.3.1
       lodash: 4.18.1
       reflect-metadata: 0.2.2
-      yargs: 17.7.2
     optionalDependencies:
       '@nestjs/swagger': 11.2.6(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
       '@nestjs/typeorm': 11.0.0(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3)))
       handlebars: 4.7.9
-      htmlparser2: 9.1.0
+      marked: 14.0.0
       nunjucks: 3.2.4(chokidar@4.0.3)
       pug: 3.0.4
-      ts-node: 10.9.2(@types/node@25.5.0)(typescript@5.9.3)
       typeorm: 0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.10.1)(pg@8.20.0)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3))
-      typescript: 5.9.3
 
-  '@ackplus/nest-file-storage@1.1.20(@aws-sdk/client-s3@3.1022.0)(@aws-sdk/s3-request-presigner@3.1022.0)(@azure/storage-blob@12.31.0)(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(multer@2.1.1)(reflect-metadata@0.2.2)':
+  '@ackplus/nest-file-storage@2.0.2(@aws-sdk/client-s3@3.1022.0)(@aws-sdk/s3-request-presigner@3.1022.0)(@azure/storage-blob@12.31.0)(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(multer@2.1.1)(reflect-metadata@0.2.2)':
     dependencies:
       '@nestjs/common': 11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.17(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       concat-stream: 2.0.0
-      moment: 2.30.1
       multer: 2.1.1
       reflect-metadata: 0.2.2
       uuid: 11.1.0
@@ -10882,7 +10870,7 @@ snapshots:
       '@aws-sdk/s3-request-presigner': 3.1022.0
       '@azure/storage-blob': 12.31.0
 
-  '@ackplus/nest-seeder@1.1.17(@faker-js/faker@10.4.0)(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(reflect-metadata@0.2.2)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3))(typescript@5.9.3)':
+  '@ackplus/nest-seeder@2.1.0(@faker-js/faker@10.4.0)(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(reflect-metadata@0.2.2)(ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@faker-js/faker': 10.4.0
       '@nestjs/common': 11.1.17(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -10893,7 +10881,7 @@ snapshots:
       ts-node: 10.9.2(@types/node@25.5.0)(typescript@5.9.3)
       typescript: 5.9.3
 
-  '@ackplus/react-tanstack-data-table@1.1.21(7fe2558bc9fef475383e8214b93d2f44)':
+  '@ackplus/react-tanstack-data-table@1.1.22(7fe2558bc9fef475383e8214b93d2f44)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.2.7)(react@19.2.3)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3)

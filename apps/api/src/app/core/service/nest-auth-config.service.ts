@@ -5,6 +5,7 @@ import { IAppConfig } from "../../config/app";
 import { DebugLogLevel } from '@ackplus/nest-auth';
 import { RoleGuardEnum, RoleNameEnum } from '@libs/types';
 import { INestAuthEnvConfig } from '../../config/nest_auth';
+import { User } from '../../modules/user/user.entity';
 
 @Injectable()
 export class NestAuthConfigService implements IAuthModuleOptionsFactory {
@@ -19,8 +20,8 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
             appName: process.env.APP_NAME || 'Template',
             roleGuards: [RoleGuardEnum.ADMIN, RoleGuardEnum.WEB],
             platformAccess: {
-                enabled: true,
-                validate: async (request: Request) => {
+                enabled: false,
+                validate: async (request: Express.Request) => {
                     const origin = this.extractRequestOrigin(request);
                     if (!origin) {
                         return false;
@@ -95,7 +96,7 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
 
                     return input;
                 },
-                onSignup: async (user: NestAuthUser, input: any, context?: { userAccess?: NestAuthUserAccess }) => {
+                onSignup: async (user: NestAuthUser, input: any, context?: { request?: any }) => {
                     if (input?.tenantId) {
                         const userAccess = await user.getUserAccess(input?.tenantId, true);
 
@@ -121,40 +122,44 @@ export class NestAuthConfigService implements IAuthModuleOptionsFactory {
                     input: any,
                     context?: { userAccess?: any, platformAccess?: any, request?: any; provider?: any },
                 ) => {
-                    if (input?.tenantId || context?.platformAccess) {
-                        let roles = [];
+                    console.log('context', context);
+                    console.log('input', input);
+                    console.log('user', user);
 
-                        if (context?.userAccess) {
-                            roles = context?.userAccess.roles;
-                        }
-                        if (context?.platformAccess) {
-                            roles = context?.platformAccess.roles;
-                        }
-                        const requestGuard = this.resolveGuardFromRequest(context?.request);
-                        const inputGuard = this.parseGuard(input?.guard);
+                    // if (input?.tenantId || context?.platformAccess) {
+                    //     let roles = [];
 
-                        this.validateGuardConsistency({
-                            requestGuard,
-                            inputGuard,
-                            allowMissing: false,
-                        });
+                    //     if (context?.userAccess) {
+                    //         roles = context?.userAccess.roles;
+                    //     }
+                    //     if (context?.platformAccess) {
+                    //         roles = context?.platformAccess.roles;
+                    //     }
+                    //     const requestGuard = this.resolveGuardFromRequest(context?.request);
+                    //     const inputGuard = this.parseGuard(input?.guard);
 
-                        const requiredGuard = inputGuard ?? requestGuard;
-                        if (!requiredGuard) {
-                            throw new UnauthorizedException({
-                                message: 'Login requires a valid guard.',
-                                code: ERROR_CODES.INVALID_CREDENTIALS,
-                            });
-                        }
+                    //     this.validateGuardConsistency({
+                    //         requestGuard,
+                    //         inputGuard,
+                    //         allowMissing: false,
+                    //     });
 
-                        const hasAccess = await this.userHasGuardAccess(user, roles, requiredGuard);
-                        if (!hasAccess) {
-                            throw new UnauthorizedException({
-                                message: 'Invalid credentials',
-                                code: ERROR_CODES.INVALID_CREDENTIALS,
-                            });
-                        }
-                    }
+                    //     const requiredGuard = inputGuard ?? requestGuard;
+                    //     if (!requiredGuard) {
+                    //         throw new UnauthorizedException({
+                    //             message: 'Login requires a valid guard.',
+                    //             code: ERROR_CODES.INVALID_CREDENTIALS,
+                    //         });
+                    //     }
+
+                    //     const hasAccess = await this.userHasGuardAccess(user, roles, requiredGuard);
+                    //     if (!hasAccess) {
+                    //         throw new UnauthorizedException({
+                    //             message: 'Invalid credentials',
+                    //             code: ERROR_CODES.INVALID_CREDENTIALS,
+                    //         });
+                    //     }
+                    // }
                 },
             },
 

@@ -9,15 +9,15 @@ catalog:
   react-dom: 19.2.3
 
   # Ackplus
-  "@ackplus/nest-auth": 2.0.0-beta.26
-  "@ackplus/nest-auth-client": 2.0.0-beta.26
-  "@ackplus/nest-auth-react": 2.0.0-beta.26
-  "@ackplus/nest-crud": ^1.1.34
-  "@ackplus/nest-crud-request": ^1.1.34
-  "@ackplus/nest-dynamic-templates": ^1.1.16
-  "@ackplus/nest-file-storage": ^1.1.19
-  "@ackplus/nest-seeder": ^1.1.17
-  "@ackplus/react-tanstack-data-table": ^1.1.16
+  "@ackplus/nest-auth": 2.7.0
+  "@ackplus/nest-auth-client": 2.7.0
+  "@ackplus/nest-auth-react": 2.7.0
+  "@ackplus/nest-crud": ^2.0.1
+  "@ackplus/nest-crud-request": ^2.0.1
+  "@ackplus/nest-dynamic-templates": ^2.0.0
+  "@ackplus/nest-file-storage": ^2.0.2
+  "@ackplus/nest-seeder": ^2.1.0
+  "@ackplus/react-tanstack-data-table": ^1.1.22
 
   # MUI (admin)
   "@mui/material": ^7.3.6

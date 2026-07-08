@@ -83,7 +83,7 @@ export default function ForgotPasswordScreen() {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await verifyForgotPasswordOtp({ email, otp });
+            const response = await verifyForgotPasswordOtp({ email, code: otp });
             // Extract resetToken from response
             const token = (response as any)?.resetToken || (response as any)?.token;
             if (token) {

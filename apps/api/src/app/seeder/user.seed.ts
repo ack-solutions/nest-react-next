@@ -87,12 +87,19 @@ export class UserSeeder implements Seeder {
                 authUser = await this.userService.getUserByEmail(user.email, user.tenantId);
             }
 
-            const rolesIds = user.roles.map((role: string) => roleByName[role]?.id);
+            const rolesIds = user.roles
+                .map((role: string) => roleByName[role]?.id)
+                .filter(Boolean);
             await authUser.setPassword(user.password);
-            await authUser.assignRoles(rolesIds, user.tenantId);
             await authUser.findOrCreateIdentity('email', user.email);
             await authUser.save();
 
+            // v2: roles are assigned through the user's access, not the user directly.
+            const userAccess = await authUser.getUserAccess(user.tenantId, true);
+            await userAccess.assignRoles(rolesIds);
+            console.log('rolesIds', rolesIds);
+            console.log('userAccess', userAccess);
+            console.log('authUser', authUser);
             const userData = this.userRepository.create({
                 ...user,
                 authUserId: authUser.id,

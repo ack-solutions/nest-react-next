@@ -43,18 +43,9 @@ function EditUser() {
     const handleSubmit = useCallback(
         async (values: IUser) => {
             if (values?.id) {
-                if (values?.authUser?.userAccesses?.length === 0) {
-                    values.authUser.userAccesses = null;
-                } else {
-                    values.authUser.userAccesses = values.authUser.userAccesses.map((userAccess: any) => {
-                        return {
-                            ...userAccess,
-                            roles: userAccess.roles.map((role: any) => role.id),
-                        };
-                    });
-                }
+                const { authUser, ...updatePayload } = values;
 
-                updateUser(values)
+                updateUser(updatePayload)
                     .then(() => {
                         showToasty('User updated successfully');
                         navigate(PATH_DASHBOARD.users.root);

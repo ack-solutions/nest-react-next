@@ -37,7 +37,7 @@ const defaultValues: Partial<ICreateUserInput> = {
     phoneIsoCode: '',
     phoneCountryCode: '',
     status: UserStatusEnum.ACTIVE,
-    roles: [],
+    rolesIds: [],
 };
 
 const validationSchema = yupResolver(
@@ -46,7 +46,7 @@ const validationSchema = yupResolver(
         lastName: string().trim().required().label('Last Name'),
         email: schemaHelper.email().label('Email').required(),
         phoneNumber: schemaHelper.phoneNumber().label('Phone Number'),
-        roles: array().min(1, 'Please select at least one role').label('Roles'),
+        rolesIds: array().min(1, 'Please select at least one role').label('Roles'),
         password: string()
             .label('Password')
             .when('id', {
@@ -84,7 +84,7 @@ function AddEditUserForm({ onSubmit, values }: AddEditUserFormProps) {
             ...defaultValues,
             ...values,
             email: values?.authUser?.email || '',
-            roles: (values?.authUser?.roles || [])?.map((role: IRole) => role?.name),
+            rolesIds: (values?.authUser?.roles || [])?.map((role: IRole) => role?.id),
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values]);
@@ -246,9 +246,9 @@ function AddEditUserForm({ onSubmit, values }: AddEditUserFormProps) {
                             <RHFSelect
                                 fullWidth
                                 required
-                                name="roles"
+                                name="rolesIds"
                                 label="Roles"
-                                valueKey="name"
+                                valueKey="id"
                                 labelKey="name"
                                 options={roleData || []}
                                 isMultiple
