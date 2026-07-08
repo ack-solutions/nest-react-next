@@ -84,10 +84,11 @@ function FilterDrawer({
             >
                 <Stack
                     direction="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    sx={{ px: 3.5 }}
-                >
+                    sx={{
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        px: 3.5
+                    }}>
                     <Typography variant="h4">{title}</Typography>
                     <IconButton onClick={onClose}>
                         <Icon icon={IconEnum.X} />
@@ -129,8 +130,10 @@ function FilterDrawer({
                         <Divider sx={{ my: 2 }} />
                         <Stack
                             direction="row"
-                            alignItems="center"
                             spacing={2}
+                            sx={{
+                                alignItems: "center"
+                            }}
                         >
                             <Button
                                 fullWidth

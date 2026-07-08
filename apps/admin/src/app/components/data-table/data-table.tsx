@@ -463,9 +463,10 @@ export const DataTable = forwardRef<DataTableHandle, DataTableProps>(({
     return (
         <Box
             className="data-table"
-            width="100%"
             {...props}
-        >
+            sx={[{
+                width: "100%"
+            }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]}>
             {detailRowTitle ? (
                 <>
                     {/* <Stack
@@ -499,13 +500,15 @@ export const DataTable = forwardRef<DataTableHandle, DataTableProps>(({
                             sm: 'row',
                         }}
                         spacing={2}
-                        justifyContent="space-between"
-                        width="100%"
-                        alignItems={{
-                            xs: 'flex-end',
-                            sm: 'center',
-                        }}
-                    >
+                        sx={{
+                            justifyContent: "space-between",
+                            width: "100%",
+
+                            alignItems: {
+                                xs: 'flex-end',
+                                sm: 'center',
+                            }
+                        }}>
                         {hideSearch ? <Box /> : (
                             <SearchInput
                                 value={search}
@@ -523,18 +526,19 @@ export const DataTable = forwardRef<DataTableHandle, DataTableProps>(({
                         <Stack
                             spacing={2}
                             direction="row"
-                            justifyContent={{
-                                xs: 'space-between',
-                                sm: 'end',
-                            }}
-                            alignItems="center"
-                        >
+                            sx={{
+                                justifyContent: {
+                                    xs: 'space-between',
+                                    sm: 'end',
+                                },
+
+                                alignItems: "center"
+                            }}>
                             {extraFilter}
                         </Stack>
                     </Stack>
                 </StyledToolbar>
             ) : null}
-
             {(filters && Object?.keys(filters)?.length > 0) || (isShowSearchFilter && searchText) ? (
                 <StyledToolbar sx={{ pt: 0 }}>
                     <DataTableFilters
@@ -547,7 +551,6 @@ export const DataTable = forwardRef<DataTableHandle, DataTableProps>(({
                     />
                 </StyledToolbar>
             ) : null}
-
             {selected?.length > 0 && (
                 <>
                     <Divider />
@@ -570,7 +573,6 @@ export const DataTable = forwardRef<DataTableHandle, DataTableProps>(({
                     </StyledToolbar>
                 </>
             )}
-
             <TableContainer>
                 <Table size={size}>
                     <TableHead>
@@ -809,7 +811,9 @@ export const DataTable = forwardRef<DataTableHandle, DataTableProps>(({
                                             gutterBottom
                                             align="center"
                                             variant="subtitle1"
-                                            py={3}
+                                            sx={{
+                                                py: 3
+                                            }}
                                         >
                                             {noOptionsText}
                                         </Typography>
@@ -847,13 +851,13 @@ export const DataTable = forwardRef<DataTableHandle, DataTableProps>(({
                 </Table>
             </TableContainer>
             {/* </Scrollbar> */}
-
             <Stack
                 direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                pl={3}
-            >
+                sx={{
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    pl: 3
+                }}>
                 {tableActions}
                 {showPagination && totalRow > 0 ? (
                     <TablePagination

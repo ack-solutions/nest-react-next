@@ -55,7 +55,9 @@ export default function AuthLayout({ children, title }: AuthLayoutProps) {
                     </Box>
                     <Typography
                         variant="h1"
-                        maxWidth={300}
+                        sx={{
+                            maxWidth: 300
+                        }}
                     >
                         {title}
                     </Typography>

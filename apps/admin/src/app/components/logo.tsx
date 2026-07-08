@@ -29,12 +29,12 @@ export const Logo = forwardRef<HTMLDivElement, LogoProps>(
         const LogoIcon = () => (
             <Box
                 component="img"
-                width={logoWidth}
-                height={logoHeight || 'auto'}
                 src={path}
                 alt="logo"
-                sx={sx}
-            />
+                sx={[{
+                    width: logoWidth,
+                    height: logoHeight || 'auto'
+                }, ...(Array.isArray(sx) ? sx : [sx])]} />
         );
 
         if (disabledLink) {

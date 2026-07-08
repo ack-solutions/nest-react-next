@@ -53,9 +53,9 @@ const StyledListItemButton = styled(ListItemButton, {
         flexDirection: isCompact ? 'column' : 'row',
         justifyContent: isCompact ? 'center' : 'flex-start',
         transition: 'all 0.15s ease-in-out',
-        ...isOpen ? {
+        ...(isOpen ? {
             backgroundColor: alpha(theme.palette.grey[500], 0.14),
-        } : {},
+        } : {}),
         ...(highlight &&
             !isChild && {
             backgroundColor: alpha(theme.palette.primary.main, isOpen ? 0.14 : 0.1),
@@ -217,12 +217,14 @@ export default function NavigationParentItem({
                     slotProps={{
                         primary: {
                             variant: 'body2',
-                            lineHeight: 1.2,
-                            ...isCompact ? {
-                                textAlign: 'center',
-                                fontSize: '0.65rem',
-                            } : {},
-                            fontWeight: isActive || open ? (isChild ? 700 : 600) : 400,
+                            sx: {
+                                lineHeight: 1.2,
+                                ...(isCompact ? {
+                                    textAlign: 'center',
+                                    fontSize: '0.65rem',
+                                } : {}),
+                                fontWeight: isActive || open ? (isChild ? 700 : 600) : 400,
+                            },
                         },
                     }}
                 />
@@ -252,7 +254,6 @@ export default function NavigationParentItem({
                     </Box>
                 )}
             </StyledListItemButton>
-
             {!isCompact && (
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
@@ -270,7 +271,6 @@ export default function NavigationParentItem({
                     </List>
                 </Collapse>
             )}
-
             {isCompact && (
                 <Popover
                     open={popoverOpen}

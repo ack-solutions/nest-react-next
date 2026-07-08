@@ -174,7 +174,6 @@ export function RHFMJMLSplitEditor({
                     </FormLabel>
                 </Box>
             ) : null}
-
             <Box
                 sx={{
                     flex: 1,
@@ -203,9 +202,10 @@ export function RHFMJMLSplitEditor({
                     >
                         <Typography
                             variant="subtitle2"
-                            fontWeight="medium"
-                            color="text.primary"
-                        >
+                            sx={{
+                                fontWeight: "medium",
+                                color: "text.primary"
+                            }}>
                             {title || 'Editor'}
                         </Typography>
 
@@ -228,7 +228,9 @@ export function RHFMJMLSplitEditor({
                                 label={(
                                     <Typography
                                         variant="caption"
-                                        color="text.secondary"
+                                        sx={{
+                                            color: "text.secondary"
+                                        }}
                                     >
                                         Auto Reload
                                     </Typography>
@@ -317,7 +319,6 @@ export function RHFMJMLSplitEditor({
                     />
                 </Box>
             </Box>
-
             {error ? (
                 <FormHelperText
                     sx={{

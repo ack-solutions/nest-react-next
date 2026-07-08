@@ -2,7 +2,7 @@ import {
     DataTable,
     DataTableApi,
     DataTableProps,
-} from '@ackplus/react-tanstack-data-table';
+} from '@ackplus/mui-tanstack-data-grid';
 import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
 import { useDataTablePersistence } from './hooks/use-data-table-persistence';
 
@@ -47,7 +47,7 @@ const DataGrid = forwardRef<DataTableApi<any>, DataGridProps<any>>(
 
         return (
             <DataTable
-                ref={tableRef}
+                apiRef={tableRef}
                 columns={columns}
                 idKey={idKey}
                 totalRow={totalRow}

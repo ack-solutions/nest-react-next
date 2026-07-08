@@ -66,19 +66,22 @@ function UserChangeEmail() {
             <Box sx={{ mb: 2 }}>
                 <Typography
                     variant="subtitle1"
-                    fontWeight="600"
                     gutterBottom
+                    sx={{
+                        fontWeight: "600"
+                    }}
                 >
                     Email Address
                 </Typography>
                 <Typography
                     variant="body2"
-                    color="text.secondary"
+                    sx={{
+                        color: "text.secondary"
+                    }}
                 >
                     Update your email address for account notifications
                 </Typography>
             </Box>
-
             <FormContainer
                 formContext={formContext}
                 validationSchema={validationSchema}

@@ -30,7 +30,12 @@ function FlagFallback({ iso }: { iso?: string }) {
                 backgroundColor: 'grey.200',
             }}
         >
-            <Typography variant="caption" color="text.secondary" fontWeight="bold">
+            <Typography
+                variant="caption"
+                sx={{
+                    color: "text.secondary",
+                    fontWeight: "bold"
+                }}>
                 {iso?.toUpperCase() ?? '??'}
             </Typography>
         </Box>
@@ -66,15 +71,16 @@ function FlagImageComponent({ iso }: FlagImageProps) {
         <StyledBgFlag component="span">
             <Box
                 component="img"
-                width="100%"
-                height="100%"
                 src={flagSrc}
                 alt={`${iso.toUpperCase()} flag`}
                 loading="lazy"
                 onError={() => setImageError(true)}
                 onLoad={() => setImageError(false)}
-                sx={{ objectFit: 'contain' }}
-            />
+                sx={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: 'contain'
+                }} />
         </StyledBgFlag>
     );
 }

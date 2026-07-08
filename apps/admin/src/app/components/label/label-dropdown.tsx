@@ -1,4 +1,4 @@
-import { MenuItem } from '@mui/material';
+import { MenuItem, MenuList } from '@mui/material';
 import { startCase } from 'lodash';
 import { ReactNode } from 'react';
 
@@ -44,36 +44,39 @@ export function LabelDropdown({
                 )
             }
         >
-            {({ handleClose }) => options?.map((option) => renderOption ? (
-                <MenuItem
-                    key={option}
-                    onClick={(event) => {
-                        event?.preventDefault();
-                        event?.stopPropagation();
-                        onChange(option);
-                        handleClose();
-                    }}
-                    sx={{
-                        justifyContent: 'center',
-                    }}
-                >
-                    {renderOption(option)}
-                </MenuItem>
-            ) : (
-                <MenuItem
-                    key={option}
-                    selected={selected === option}
-                    onClick={(event) => {
-                        event?.preventDefault();
-                        event?.stopPropagation();
-                        onChange(option);
-                        handleClose();
-                    }}
-                >
-                    {startCase(option)}
-                </MenuItem>
-            ))
-            }
+            {({ handleClose }) => (
+                <MenuList disablePadding>
+                    {options?.map((option) => renderOption ? (
+                        <MenuItem
+                            key={option}
+                            onClick={(event) => {
+                                event?.preventDefault();
+                                event?.stopPropagation();
+                                onChange(option);
+                                handleClose();
+                            }}
+                            sx={{
+                                justifyContent: 'center',
+                            }}
+                        >
+                            {renderOption(option)}
+                        </MenuItem>
+                    ) : (
+                        <MenuItem
+                            key={option}
+                            selected={selected === option}
+                            onClick={(event) => {
+                                event?.preventDefault();
+                                event?.stopPropagation();
+                                onChange(option);
+                                handleClose();
+                            }}
+                        >
+                            {startCase(option)}
+                        </MenuItem>
+                    ))}
+                </MenuList>
+            )}
         </MenuDropdown>
     );
 }

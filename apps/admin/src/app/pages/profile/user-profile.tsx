@@ -135,10 +135,11 @@ function UserProfile() {
 
                 {/* Profile Header */}
                 <Stack
-                    alignItems="center"
                     spacing={2}
-                    sx={{ mb: 3 }}
-                >
+                    sx={{
+                        alignItems: "center",
+                        mb: 3
+                    }}>
                     <Avatar
                         src={currentUser?.avatarUrl}
                         sx={{
@@ -147,16 +148,22 @@ function UserProfile() {
                         }}
                     />
 
-                    <Box textAlign="center">
+                    <Box sx={{
+                        textAlign: "center"
+                    }}>
                         <Typography
                             variant="h6"
-                            fontWeight="600"
+                            sx={{
+                                fontWeight: "600"
+                            }}
                         >
                             {currentUser?.name}
                         </Typography>
                         <Typography
                             variant="body2"
-                            color="text.secondary"
+                            sx={{
+                                color: "text.secondary"
+                            }}
                         >
                             {authUser?.email}
                         </Typography>
@@ -258,7 +265,9 @@ function UserProfile() {
                     lg: 'row',
                 }}
                 spacing={2}
-                alignItems="flex-start"
+                sx={{
+                    alignItems: "flex-start"
+                }}
             >
                 <Box
                     sx={{
@@ -281,7 +290,6 @@ function UserProfile() {
                     {renderContent}
                 </Box>
             </Stack>
-
             <BasicInfoEditDialog
                 open={openEditDialog}
                 onClose={handleCloseEditDialog}

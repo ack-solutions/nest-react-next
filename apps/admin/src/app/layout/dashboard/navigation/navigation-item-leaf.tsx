@@ -75,9 +75,9 @@ export default function NavigationLeafItem({
                 alignItems: 'center',
                 justifyContent: isCompact ? 'center' : 'flex-start',
                 transition: 'all 0.15s ease-in-out',
-                ...isChild ? {
+                ...(isChild ? {
                     marginLeft: theme.spacing(1.5),
-                } : {},
+                } : {}),
 
                 ...(isActive &&
                     !isChild && {
@@ -109,19 +109,20 @@ export default function NavigationLeafItem({
             >
                 {isChild ? null : item.icon}
             </StyledListItemIcon>
-
             {/* {!isCompact && ( */}
             <StyledListItemText
                 primary={item.title}
                 slotProps={{
                     primary: {
                         variant: 'body2',
-                        lineHeight: 1.2,
-                        ...isCompact ? {
-                            textAlign: 'center',
-                            fontSize: '0.65rem',
-                        } : {},
-                        fontWeight: isActive ? (isChild ? 700 : 600) : 400,
+                        sx: {
+                            lineHeight: 1.2,
+                            ...(isCompact ? {
+                                textAlign: 'center',
+                                fontSize: '0.65rem',
+                            } : {}),
+                            fontWeight: isActive ? (isChild ? 700 : 600) : 400,
+                        },
                     },
                 }}
             />

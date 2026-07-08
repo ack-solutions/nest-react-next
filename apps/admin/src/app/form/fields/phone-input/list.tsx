@@ -143,12 +143,11 @@ export function CountryListPopover({ isoCode, onClickCountry }: CountryListProps
 
                     <Typography
                         variant="body2"
-                        color="text.secondary"
                         sx={{
+                            color: "text.secondary",
                             fontSize: '0.875rem',
-                            fontWeight: 500,
-                        }}
-                    >
+                            fontWeight: 500
+                        }}>
                         +
                         {selectedCountry?.code || '+91'}
                     </Typography>

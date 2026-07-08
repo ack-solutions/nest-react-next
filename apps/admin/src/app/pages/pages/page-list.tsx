@@ -17,7 +17,7 @@ import AddEditPageDialog from '../../sections/pages/add-edit-page-dialog';
 import { useHasPermission } from '@ackplus/nest-auth-react';
 import { withRequirePermissionFallback } from '../../hoc/with-require-permission-fallback';
 import CrudDataGrid from '@admin/app/components/data-grid/crud-data-grid';
-import { DataTableApi, DataTableColumn } from '@ackplus/react-tanstack-data-table';
+import { DataTableApi, DataTableColumn } from '@ackplus/mui-tanstack-data-grid';
 import { useDataTableState } from '@admin/app/components/data-grid';
 import { startCase } from 'lodash';
 

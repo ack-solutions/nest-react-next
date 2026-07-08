@@ -53,7 +53,14 @@ export default function SettingsDrawer() {
             <Typography variant="subtitle2" sx={{ mb: 2 }}>
                 Theme Colors
             </Typography>
-            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ mb: 2 }}>
+            <Stack
+                direction="row"
+                spacing={1}
+                useFlexGap
+                sx={{
+                    flexWrap: "wrap",
+                    mb: 2
+                }}>
                 {primaryPresets.map((preset) => {
                     const isSelected = settings.primaryColor === preset.name;
                     return (
@@ -92,7 +99,9 @@ export default function SettingsDrawer() {
                     );
                 })}
             </Stack>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{
+                color: "text.secondary"
+            }}>
                 Choose your preferred color scheme
             </Typography>
         </Card>
@@ -114,10 +123,13 @@ export default function SettingsDrawer() {
                         }
                         label="Dark Mode"
                     />
-                    <Typography variant="caption" color="text.secondary" sx={{
-                        display: 'block',
-                        ml: 4,
-                    }}>
+                    <Typography
+                        variant="caption"
+                        sx={{
+                            color: "text.secondary",
+                            display: 'block',
+                            ml: 4
+                        }}>
                         Switch between light and dark themes
                     </Typography>
                 </Box>
@@ -132,10 +144,13 @@ export default function SettingsDrawer() {
                         }
                         label="High Contrast"
                     />
-                    <Typography variant="caption" color="text.secondary" sx={{
-                        display: 'block',
-                        ml: 4,
-                    }}>
+                    <Typography
+                        variant="caption"
+                        sx={{
+                            color: "text.secondary",
+                            display: 'block',
+                            ml: 4
+                        }}>
                         Increase contrast for better accessibility
                     </Typography>
                 </Box>
@@ -150,10 +165,13 @@ export default function SettingsDrawer() {
                         }
                         label="Compact Layout"
                     />
-                    <Typography variant="caption" color="text.secondary" sx={{
-                        display: 'block',
-                        ml: 4,
-                    }}>
+                    <Typography
+                        variant="caption"
+                        sx={{
+                            color: "text.secondary",
+                            display: 'block',
+                            ml: 4
+                        }}>
                         Reduce spacing and component sizes
                     </Typography>
                 </Box>
@@ -230,22 +248,19 @@ export default function SettingsDrawer() {
         >
             <Stack
                 direction="row"
-                alignItems="center"
-                justifyContent="space-between"
                 sx={{
+                    alignItems: "center",
+                    justifyContent: "space-between",
                     py: 2,
                     pr: 1,
-                    pl: 2.5,
-                }}
-            >
+                    pl: 2.5
+                }}>
                 <Typography variant="h6">Settings</Typography>
                 <IconButton onClick={settings.onClose}>
                     <Icon icon={IconEnum.X} />
                 </IconButton>
             </Stack>
-
             <Divider />
-
             <Box sx={{
                 p: 2,
                 height: 1,
@@ -258,7 +273,6 @@ export default function SettingsDrawer() {
                     {renderLayoutOptions}
                 </Stack>
             </Box>
-
             <Box sx={{ p: 2 }}>
                 <Button
                     fullWidth

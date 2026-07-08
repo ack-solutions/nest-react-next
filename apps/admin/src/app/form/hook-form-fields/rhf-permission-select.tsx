@@ -156,9 +156,11 @@ export function RHFPermissionSelect({
                                 sm: 'row',
                             }}
                             spacing={2}
-                            width={{
-                                xs: '100%',
-                                md: 'unset',
+                            sx={{
+                                width: {
+                                    xs: '100%',
+                                    md: 'unset',
+                                }
                             }}
                         >
                             <TextField
@@ -199,9 +201,10 @@ export function RHFPermissionSelect({
                             [...Array(10)].map((index) => (
                                 <Grid key={index} size={12 / column}>
                                     <Box
-                                        display="flex"
-                                        alignItems="center"
-                                    >
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center"
+                                        }}>
                                         <Skeleton
                                             variant="rectangular"
                                             height={20}

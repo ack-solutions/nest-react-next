@@ -52,15 +52,16 @@ export default function Header({ onOpenNav }: Props) {
             />
 
             <Stack
-                flexGrow={1}
                 direction="row"
-                alignItems="center"
-                justifyContent="flex-end"
                 spacing={{
                     xs: 1,
                     sm: 2,
                 }}
-            >
+                sx={{
+                    flexGrow: 1,
+                    alignItems: "center",
+                    justifyContent: "flex-end"
+                }}>
                 <Tooltip title="Notifications">
                     <IconButton>
                         <Icon icon={IconEnum.Bell} />

@@ -73,9 +73,13 @@ function EmailTemplateList() {
             flex: 1,
             minWidth: 200,
             renderCell: (params: any) => (
-                <Stack direction="row" spacing={1} alignItems="center">
+                <Stack direction="row" spacing={1} sx={{
+                    alignItems: "center"
+                }}>
                     <EmailIcon color="primary" fontSize="small" />
-                    <Typography variant="body2" fontWeight="medium">
+                    <Typography variant="body2" sx={{
+                        fontWeight: "medium"
+                    }}>
                         {params.row.displayName}
                     </Typography>
                 </Stack>
@@ -88,7 +92,9 @@ function EmailTemplateList() {
             flex: 1,
             minWidth: 200,
             renderCell: (params: any) => (
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                }}>
                     {params.row.subject || 'No subject'}
                 </Typography>
             ),
@@ -110,7 +116,9 @@ function EmailTemplateList() {
             headerName: 'Layout',
             width: 150,
             renderCell: (params: any) => (
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                }}>
                     {params.row.templateLayoutName || 'No layout'}
                 </Typography>
             ),
@@ -134,7 +142,9 @@ function EmailTemplateList() {
             headerName: 'Created',
             width: 150,
             renderCell: (params: any) => (
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                }}>
                     {new Date(params.row.createdAt).toLocaleDateString()}
                 </Typography>
             ),
@@ -184,11 +194,20 @@ function EmailTemplateList() {
                         totalRow={templates?.length || 0}
                         showPagination={false}
                         noOptionsText={(
-                            <Stack spacing={2} alignItems="center" sx={{ py: 4 }}>
-                                <Typography variant="h6" color="text.secondary">
+                            <Stack
+                                spacing={2}
+                                sx={{
+                                    alignItems: "center",
+                                    py: 4
+                                }}>
+                                <Typography variant="h6" sx={{
+                                    color: "text.secondary"
+                                }}>
                                     No email templates found
                                 </Typography>
-                                <Typography variant="body2" color="text.secondary">
+                                <Typography variant="body2" sx={{
+                                    color: "text.secondary"
+                                }}>
                                     Create your first email template to get started.
                                 </Typography>
                                 <Button
@@ -203,7 +222,6 @@ function EmailTemplateList() {
                     />
                 </CardContent>
             </Card>
-
             <AddEditEmailTemplateDialog
                 open={isCreateDialogOpen}
                 onClose={handleCloseCreateDialog}

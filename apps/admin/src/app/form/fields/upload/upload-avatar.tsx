@@ -125,16 +125,16 @@ export function UploadAvatar({
                     >
                         <Typography
                             variant="caption"
-                            textAlign="center"
+                            sx={{
+                                textAlign: "center"
+                            }}
                         >
                             Upload
                         </Typography>
                     </PlaceholderStyle>
                 </DropZoneStyle>
             </RootStyle>
-
             {helperText || null}
-
             {error ? (
                 <FormHelperText
                     error
@@ -146,7 +146,6 @@ export function UploadAvatar({
                     {error}
                 </FormHelperText>
             ) : null}
-
             {fileRejections.length > 0 && (
                 <RejectionFiles
                     fileRejections={fileRejections as FileRejection[]}

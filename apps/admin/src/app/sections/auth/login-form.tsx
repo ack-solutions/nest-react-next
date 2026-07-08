@@ -74,16 +74,14 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
                     label="Password"
                 />
             </Stack>
-
             <Stack
                 direction="row"
-                alignItems="center"
-                justifyContent="end"
                 sx={{
+                    alignItems: "center",
+                    justifyContent: "end",
                     my: 2,
-                    marginLeft: '4px',
-                }}
-            >
+                    marginLeft: '4px'
+                }}>
                 <Link
                     component={RouterLink}
                     to={PATH_AUTH.forgotPassword}
@@ -94,7 +92,6 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
                     Forgot password?
                 </Link>
             </Stack>
-
             <Button
                 fullWidth
                 type="submit"

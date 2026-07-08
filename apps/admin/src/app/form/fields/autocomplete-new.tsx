@@ -204,9 +204,10 @@ export function AutocompleteNew({
                     direction="row"
                     spacing={0.5}
                     component="li"
-                    alignItems="center"
                     {...props}
-                >
+                    sx={[{
+                        alignItems: "center"
+                    }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]}>
                     <Box
                         sx={{
                             flexShrink: 0,
@@ -276,7 +277,9 @@ export function AutocompleteNew({
                         <Stack
                             direction="row"
                             spacing={1}
-                            alignItems="center"
+                            sx={{
+                                alignItems: "center"
+                            }}
                         >
                             <Avatar
                                 alt={getOptionLabel(value)}

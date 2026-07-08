@@ -230,12 +230,21 @@ export default function TotpManagement() {
                 <CardContent>
                     <Stack
                         direction="row"
-                        alignItems="center"
-                        justifyContent="space-between"
-                    >
+                        sx={{
+                            alignItems: "center",
+                            justifyContent: "space-between"
+                        }}>
                         <Box>
-                            <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 0.5 }}>
-                                <Typography variant="subtitle1" fontWeight={600}>
+                            <Stack
+                                direction="row"
+                                spacing={1}
+                                sx={{
+                                    alignItems: "center",
+                                    mb: 0.5
+                                }}>
+                                <Typography variant="subtitle1" sx={{
+                                    fontWeight: 600
+                                }}>
                                     Two-Factor Authentication
                                 </Typography>
                                 {isMfaEnabled && (
@@ -254,7 +263,9 @@ export default function TotpManagement() {
                                     />
                                 )}
                             </Stack>
-                            <Typography variant="body2" color="text.secondary">
+                            <Typography variant="body2" sx={{
+                                color: "text.secondary"
+                            }}>
                                 {isMfaRequired
                                     ? 'Two-factor authentication is required for your account.'
                                     : 'Add an extra layer of security to your account by requiring a verification code in addition to your password.'}
@@ -272,18 +283,20 @@ export default function TotpManagement() {
                     </Stack>
                 </CardContent>
             </Card>
-
             {/* Authenticator App Section - Only show when MFA is enabled AND TOTP is a configured method */}
             {showTotpSection && (
                 <Card>
                     <CardContent>
                         <Stack
                             direction="row"
-                            alignItems="center"
-                            justifyContent="space-between"
-                            sx={{ mb: 2 }}
-                        >
-                            <Stack direction="row" alignItems="center" spacing={2}>
+                            sx={{
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                mb: 2
+                            }}>
+                            <Stack direction="row" spacing={2} sx={{
+                                alignItems: "center"
+                            }}>
                                 <Box
                                     sx={{
                                         p: 1.5,
@@ -297,10 +310,14 @@ export default function TotpManagement() {
                                     <Icon icon={IconEnum.Shield} color='primary' width={24} height={24} />
                                 </Box>
                                 <Box>
-                                    <Typography variant="subtitle1" fontWeight={600}>
+                                    <Typography variant="subtitle1" sx={{
+                                        fontWeight: 600
+                                    }}>
                                         Authenticator App
                                     </Typography>
-                                    <Typography variant="body2" color="text.secondary">
+                                    <Typography variant="body2" sx={{
+                                        color: "text.secondary"
+                                    }}>
                                         Use an authenticator app like Google Authenticator or Authy
                                     </Typography>
                                 </Box>
@@ -332,10 +349,14 @@ export default function TotpManagement() {
                                     size={40}
                                     sx={{ mb: 1 }}
                                 />
-                                <Typography color="text.secondary">
+                                <Typography sx={{
+                                    color: "text.secondary"
+                                }}>
                                     No authenticator devices configured
                                 </Typography>
-                                <Typography variant="body2" color="text.disabled">
+                                <Typography variant="body2" sx={{
+                                    color: "text.disabled"
+                                }}>
                                     Add a device to use authenticator app for verification
                                 </Typography>
                             </Box>
@@ -375,7 +396,9 @@ export default function TotpManagement() {
                                         </ListItemIcon>
                                         <ListItemText
                                             primary={
-                                                <Stack direction="row" spacing={1} alignItems="center">
+                                                <Stack direction="row" spacing={1} sx={{
+                                                    alignItems: "center"
+                                                }}>
                                                     <Typography variant="subtitle2">
                                                         {device.deviceName || 'Authenticator Device'}
                                                     </Typography>
@@ -398,10 +421,14 @@ export default function TotpManagement() {
                                             }
                                             secondary={
                                                 <Stack direction="row" spacing={2}>
-                                                    <Typography variant="caption" color="text.secondary">
+                                                    <Typography variant="caption" sx={{
+                                                        color: "text.secondary"
+                                                    }}>
                                                         Added: {formatDate(device.createdAt)}
                                                     </Typography>
-                                                    <Typography variant="caption" color="text.secondary">
+                                                    <Typography variant="caption" sx={{
+                                                        color: "text.secondary"
+                                                    }}>
                                                         Last used: {formatDate(device.lastUsedAt)}
                                                     </Typography>
                                                 </Stack>
@@ -414,29 +441,34 @@ export default function TotpManagement() {
                     </CardContent>
                 </Card>
             )}
-
             {/* Recovery Code Section - Only show when MFA is enabled */}
             {isMfaEnabled && (
                 <Card>
                     <CardContent>
                         <Stack
                             direction="row"
-                            alignItems="center"
-                            justifyContent="space-between"
-                        >
+                            sx={{
+                                alignItems: "center",
+                                justifyContent: "space-between"
+                            }}>
                             <Box>
-                                <Typography variant="subtitle1" fontWeight={600}>
+                                <Typography variant="subtitle1" sx={{
+                                    fontWeight: 600
+                                }}>
                                     Recovery Code
                                 </Typography>
-                                <Typography variant="body2" color="text.secondary">
+                                <Typography variant="body2" sx={{
+                                    color: "text.secondary"
+                                }}>
                                     Generate a recovery code to regain access to your account if you lose your authenticator device.
                                     {mfaStatus?.hasRecoveryCode && (
                                         <Typography
                                             component="span"
                                             variant="body2"
-                                            color="success.main"
-                                            sx={{ ml: 1 }}
-                                        >
+                                            sx={{
+                                                color: "success.main",
+                                                ml: 1
+                                            }}>
                                             ✓ Active
                                         </Typography>
                                     )}
@@ -459,14 +491,12 @@ export default function TotpManagement() {
                     </CardContent>
                 </Card>
             )}
-
             {/* TOTP Setup Dialog */}
             <TotpSetupDialog
                 open={isTotpSetupOpen}
                 onClose={() => setIsTotpSetupOpen(false)}
                 onComplete={handleTotpSetupComplete}
             />
-
             {/* Recovery Code Dialog */}
             <Dialog
                 open={isRecoveryDialogOpen}
@@ -478,7 +508,9 @@ export default function TotpManagement() {
                 fullWidth
             >
                 <DialogTitle>
-                    <Stack direction="row" alignItems="center" spacing={1}>
+                    <Stack direction="row" spacing={1} sx={{
+                        alignItems: "center"
+                    }}>
                         <Icon icon={IconEnum.Key} />
                         <Typography variant="h6">Your Recovery Code</Typography>
                     </Stack>

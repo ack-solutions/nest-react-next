@@ -228,7 +228,12 @@ export function EnhancedTemplateEditor({
                     minHeight: 48,
                 }}
             >
-                <Typography variant="subtitle2" fontWeight="medium" color="text.primary">
+                <Typography
+                    variant="subtitle2"
+                    sx={{
+                        fontWeight: "medium",
+                        color: "text.primary"
+                    }}>
                     Preview
                 </Typography>
             </Box>
@@ -310,11 +315,18 @@ export function EnhancedTemplateEditor({
                     bgcolor: 'grey.50',
                 }}
             >
-                <Typography variant="h6" fontWeight="medium" color="text.primary">
+                <Typography
+                    variant="h6"
+                    sx={{
+                        fontWeight: "medium",
+                        color: "text.primary"
+                    }}>
                     {title}
                 </Typography>
 
-                <Stack direction="row" spacing={2} alignItems="center">
+                <Stack direction="row" spacing={2} sx={{
+                    alignItems: "center"
+                }}>
                     {/* View Mode Toggle */}
                     <TemplateEditorViewModes
                         viewMode={viewMode}
@@ -337,7 +349,9 @@ export function EnhancedTemplateEditor({
                                     />
                                 }
                                 label={
-                                    <Typography variant="caption" color="text.secondary">
+                                    <Typography variant="caption" sx={{
+                                        color: "text.secondary"
+                                    }}>
                                         Auto Render
                                     </Typography>
                                 }
@@ -377,7 +391,6 @@ export function EnhancedTemplateEditor({
                     )}
                 </Stack>
             </Box>
-
             {/* Error Alert */}
             {renderError && (
                 <Alert
@@ -404,7 +417,6 @@ export function EnhancedTemplateEditor({
                     </Typography>
                 </Alert>
             )}
-
             {/* Main Content */}
             <Box
                 sx={{

@@ -130,9 +130,10 @@ export default function BasicInfoEditDialog({ open, onClose, user }: BasicInfoEd
                         />
                         <Typography
                             variant="body2"
-                            color="text.secondary"
-                            sx={{ mt: 1 }}
-                        >
+                            sx={{
+                                color: "text.secondary",
+                                mt: 1
+                            }}>
                             Click to upload a new profile picture
                         </Typography>
                     </Box>

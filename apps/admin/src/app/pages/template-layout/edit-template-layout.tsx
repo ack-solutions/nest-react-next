@@ -187,14 +187,17 @@ function EditTemplateLayout() {
                                         <Box>
                                             <Typography
                                                 variant="caption"
-                                                color="text.secondary"
-                                                display="block"
-                                            >
+                                                sx={{
+                                                    color: "text.secondary",
+                                                    display: "block"
+                                                }}>
                                                 Display Name
                                             </Typography>
                                             <Typography
                                                 variant="body2"
-                                                fontWeight="medium"
+                                                sx={{
+                                                    fontWeight: "medium"
+                                                }}
                                             >
                                                 {templateLayoutValues?.displayName}
                                             </Typography>
@@ -211,14 +214,17 @@ function EditTemplateLayout() {
                                         <Box>
                                             <Typography
                                                 variant="caption"
-                                                color="text.secondary"
-                                                display="block"
-                                            >
+                                                sx={{
+                                                    color: "text.secondary",
+                                                    display: "block"
+                                                }}>
                                                 Type
                                             </Typography>
                                             <Typography
                                                 variant="body2"
-                                                fontWeight="medium"
+                                                sx={{
+                                                    fontWeight: "medium"
+                                                }}
                                             >
                                                 {templateLayoutValues?.type}
                                             </Typography>
@@ -235,14 +241,17 @@ function EditTemplateLayout() {
                                         <Box>
                                             <Typography
                                                 variant="caption"
-                                                color="text.secondary"
-                                                display="block"
-                                            >
+                                                sx={{
+                                                    color: "text.secondary",
+                                                    display: "block"
+                                                }}>
                                                 Language
                                             </Typography>
                                             <Typography
                                                 variant="body2"
-                                                fontWeight="medium"
+                                                sx={{
+                                                    fontWeight: "medium"
+                                                }}
                                             >
                                                 {templateLayoutValues?.language}
                                             </Typography>
@@ -259,14 +268,17 @@ function EditTemplateLayout() {
                                         <Box>
                                             <Typography
                                                 variant="caption"
-                                                color="text.secondary"
-                                                display="block"
-                                            >
+                                                sx={{
+                                                    color: "text.secondary",
+                                                    display: "block"
+                                                }}>
                                                 Status
                                             </Typography>
                                             <Typography
                                                 variant="body2"
-                                                fontWeight="medium"
+                                                sx={{
+                                                    fontWeight: "medium"
+                                                }}
                                             >
                                                 {templateLayoutValues?.isActive ? 'Active' : 'Inactive'}
                                             </Typography>
@@ -416,7 +428,9 @@ function EditTemplateLayout() {
                                                         >
                                                             <Typography
                                                                 variant="subtitle1"
-                                                                fontWeight="medium"
+                                                                sx={{
+                                                                    fontWeight: "medium"
+                                                                }}
                                                             >
                                                                 Template Layout Preview
                                                             </Typography>

@@ -14,14 +14,13 @@ export function TitleTextView({ label, value, fallback = '-', labelProps, valueP
         <Box sx={{ mb: 1 }}>
             <Typography
                 variant="caption"
-                color="text.secondary"
-                sx={{
+                {...labelProps}
+                sx={[{
+                    color: "text.secondary",
                     fontWeight: 600,
                     fontSize: '0.75rem',
-                    ...labelProps?.sx,
-                }}
-                {...labelProps}
-            >
+                    ...labelProps?.sx
+                }, ...(Array.isArray(labelProps.sx) ? labelProps.sx : [labelProps.sx])]}>
                 {label}
             </Typography>
             <Typography

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { FileStorageEnum, FileStorageModuleOptions, FileStorageOptionsFactory } from '@ackplus/nest-file-storage';
+import { FileStorageEnum, FileStorageModuleOptionsInput, FileStorageOptionsFactory } from '@ackplus/nest-file-storage';
 import path from 'path';
 import { IStorageConfig } from '../../config/storage';
 import { IAppConfig } from '../../config/app';
@@ -8,7 +8,7 @@ import { IAppConfig } from '../../config/app';
 export class FileStorageConfigService implements FileStorageOptionsFactory {
     constructor(private readonly configService: ConfigService) { }
 
-    createFileStorageOptions(): FileStorageModuleOptions {
+    createFileStorageOptions(): FileStorageModuleOptionsInput {
         const config = this.configService.get<IStorageConfig>('storage');
         const appConfig = this.configService.get<IAppConfig>('app');
 

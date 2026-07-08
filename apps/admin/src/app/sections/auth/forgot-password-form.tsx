@@ -70,16 +70,21 @@ function ForgotPasswordForm({ onSubmit }: ForgotPasswordFormProps) {
 
                 <Typography
                     variant="h4"
-                    textAlign="center"
                     gutterBottom
+                    sx={{
+                        textAlign: "center"
+                    }}
                 >
                     Forgot your password?
                 </Typography>
-                <Typography textAlign="center" color="text.secondary">
+                <Typography
+                    sx={{
+                        textAlign: "center",
+                        color: "text.secondary"
+                    }}>
                     Enter your email address and we'll send you a verification code to reset your password.
                 </Typography>
             </Box>
-
             <FormContainer
                 formProps={{
                     id: 'forgot-password-form',
@@ -114,11 +119,12 @@ function ForgotPasswordForm({ onSubmit }: ForgotPasswordFormProps) {
                     </Button>
                 </Stack>
             </FormContainer>
-
             <Stack
                 direction="row"
                 spacing={0.5}
-                justifyContent="center"
+                sx={{
+                    justifyContent: "center"
+                }}
             >
                 <Button
                     component={RouterLink}

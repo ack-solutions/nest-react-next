@@ -6,6 +6,7 @@ import {
     Stack,
     Tooltip,
     Button,
+    MenuList,
 } from '@mui/material';
 import { useMemo } from 'react';
 
@@ -130,7 +131,9 @@ export function TableBulkActionMenu({
             <Stack
                 spacing={0.5}
                 direction="row"
-                alignItems="center"
+                sx={{
+                    alignItems: "center"
+                }}
             >
                 {crudActions.map((action) => (
                     <Tooltip
@@ -166,35 +169,35 @@ export function TableBulkActionMenu({
             )}
         >
             {({ handleClose }: { handleClose: () => void }) => (
-                <>
-                    {crudActions.map((action, _index) => (
-                        <MenuItem
-                            key={action?.title}
-                            onClick={(event) => {
-                                event.stopPropagation();
-                                if (action.onClick) {
-                                    action.onClick(event);
-                                }
-                                handleClose();
-                            }}
-                        >
-                            {action?.icon ? (
-                                <ListItemIcon sx={{ mr: 0 }}>
-                                    {action?.icon}
-                                </ListItemIcon>
-                            ) : null}
-                            <ListItemText
-                                primary={action?.title}
-                                slotProps={{
-                                    primary: {
-                                        variant: 'body2',
-                                    },
+                <MenuList disablePadding>
+                        {crudActions.map((action, _index) => (
+                            <MenuItem
+                                key={action?.title}
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    if (action.onClick) {
+                                        action.onClick(event);
+                                    }
+                                    handleClose();
                                 }}
-                            />
-                        </MenuItem>
-                    ))}
-                    {children}
-                </>
+                            >
+                                {action?.icon ? (
+                                    <ListItemIcon sx={{ mr: 0 }}>
+                                        {action?.icon}
+                                    </ListItemIcon>
+                                ) : null}
+                                <ListItemText
+                                    primary={action?.title}
+                                    slotProps={{
+                                        primary: {
+                                            variant: 'body2',
+                                        },
+                                    }}
+                                />
+                            </MenuItem>
+                        ))}
+                        {children}
+                    </MenuList>
             )}
         </MenuDropdown>
     );

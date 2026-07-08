@@ -168,7 +168,9 @@ export default function AddEditRoleDialog({
                 validationSchema={validationSchema}
                 onSuccess={handleSubmitForm}
             >
-                <Stack spacing={1.5} width={1}>
+                <Stack spacing={1.5} sx={{
+                    width: 1
+                }}>
                     <RHFTextField
                         label="Name"
                         name="name"

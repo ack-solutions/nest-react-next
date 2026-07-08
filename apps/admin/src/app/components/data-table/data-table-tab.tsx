@@ -40,7 +40,9 @@ export function DataTableTab({
                         <Stack
                             spacing={1}
                             direction="row"
-                            alignItems="center"
+                            sx={{
+                                alignItems: "center"
+                            }}
                         >
                             <Label color={tab.color}>
                                 {' '}

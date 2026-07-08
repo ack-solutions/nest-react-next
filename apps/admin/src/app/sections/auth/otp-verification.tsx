@@ -86,25 +86,32 @@ function OtpVerification({
 
                 <Typography
                     variant="h4"
-                    textAlign="center"
                     gutterBottom
+                    sx={{
+                        textAlign: "center"
+                    }}
                 >
                     Check your email
                 </Typography>
-                <Typography textAlign="center" color="text.secondary">
+                <Typography
+                    sx={{
+                        textAlign: "center",
+                        color: "text.secondary"
+                    }}>
                     We sent a verification code to your email. Enter the code below to continue.
                 </Typography>
                 {values?.email && (
                     <Typography
                         variant="body2"
-                        textAlign="center"
-                        sx={{ mt: 1, fontWeight: 600 }}
-                    >
+                        sx={{
+                            textAlign: "center",
+                            mt: 1,
+                            fontWeight: 600
+                        }}>
                         {values.email}
                     </Typography>
                 )}
             </Box>
-
             <FormContainer
                 formProps={{
                     id: 'otp-verification-form',
@@ -121,19 +128,24 @@ function OtpVerification({
                     ) : null}
 
                     <Box
-                        display="flex"
-                        justifyContent="center"
-                        sx={{ pt: 2 }}
-                    >
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            pt: 2
+                        }}>
                         <RHFOtpInput name="otp" numInputs={6} />
                     </Box>
 
                     <Stack
                         direction="row"
                         spacing={0.5}
-                        justifyContent="center"
+                        sx={{
+                            justifyContent: "center"
+                        }}
                     >
-                        <Typography color="text.secondary">
+                        <Typography sx={{
+                            color: "text.secondary"
+                        }}>
                             Didn't receive the code?
                         </Typography>
                         <Button
@@ -166,7 +178,9 @@ function OtpVerification({
                     {onGoBack && (
                         <Stack
                             direction="row"
-                            justifyContent="center"
+                            sx={{
+                                justifyContent: "center"
+                            }}
                         >
                             <Button
                                 component={RouterLink}

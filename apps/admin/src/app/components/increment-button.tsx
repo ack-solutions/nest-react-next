@@ -36,16 +36,15 @@ function IncrementButton({
     return (
         <Stack
             direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{
+            {...other}
+            sx={[{
+                alignItems: "center",
+                justifyContent: "space-between",
                 minWidth: 100,
                 borderRadius: 1,
                 border: (theme) => `solid 1px ${alpha(theme.palette.grey[500], 0.2)}`,
-                ...sx,
-            }}
-            {...other}
-        >
+                ...sx
+            }, ...(Array.isArray(other.sx) ? other.sx : [other.sx])]}>
             <IconButton
                 onClick={onDecrease}
                 disabled={disabledDecrease}

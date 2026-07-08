@@ -5,6 +5,7 @@ import {
     ListItemText,
     Stack,
     Tooltip,
+    MenuList,
 } from '@mui/material';
 import { ReactNode, useMemo } from 'react';
 
@@ -160,35 +161,35 @@ export function TableActionMenu({
             )}
         >
             {({ handleClose }: { handleClose: () => void }) => (
-                <>
-                    {crudActions.map((action) => (
-                        <MenuItem
-                            key={action?.title}
-                            onClick={(event) => {
-                                event.stopPropagation();
-                                if (action.onClick) {
-                                    action.onClick(event);
-                                }
-                                handleClose();
-                            }}
-                        >
-                            {action?.icon ? (
-                                <ListItemIcon sx={{ mr: 0 }}>
-                                    {action?.icon}
-                                </ListItemIcon>
-                            ) : null}
-                            <ListItemText
-                                primary={action?.title}
-                                slotProps={{
-                                    primary: {
-                                        variant: 'body2',
-                                    },
+                <MenuList disablePadding>
+                        {crudActions.map((action) => (
+                            <MenuItem
+                                key={action?.title}
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    if (action.onClick) {
+                                        action.onClick(event);
+                                    }
+                                    handleClose();
                                 }}
-                            />
-                        </MenuItem>
-                    ))}
-                    {children}
-                </>
+                            >
+                                {action?.icon ? (
+                                    <ListItemIcon sx={{ mr: 0 }}>
+                                        {action?.icon}
+                                    </ListItemIcon>
+                                ) : null}
+                                <ListItemText
+                                    primary={action?.title}
+                                    slotProps={{
+                                        primary: {
+                                            variant: 'body2',
+                                        },
+                                    }}
+                                />
+                            </MenuItem>
+                        ))}
+                        {children}
+                    </MenuList>
             )}
         </MenuDropdown>
     );

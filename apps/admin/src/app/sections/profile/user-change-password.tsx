@@ -73,18 +73,21 @@ function UserChangePassword() {
         <Stack spacing={2}>
             <Typography
                 variant="h6"
-                fontWeight="600"
                 gutterBottom
+                sx={{
+                    fontWeight: "600"
+                }}
             >
                 Change Password
             </Typography>
             <Typography
                 variant="body2"
-                color="text.secondary"
+                sx={{
+                    color: "text.secondary"
+                }}
             >
                 Update your password to keep your account secure
             </Typography>
-
             <Alert
                 severity="info"
                 sx={{
@@ -96,7 +99,6 @@ function UserChangePassword() {
             >
                 Your password must be at least 8 characters long and include uppercase letters, lowercase letters, numbers, and special characters.
             </Alert>
-
             <FormContainer
                 formProps={{
                     id: 'change-password-form',

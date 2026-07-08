@@ -12,9 +12,10 @@ import {
     DataTable,
     DataTableApi,
     DataTableProps,
+    ExportRequest,
     TableFilters,
     TableState,
-} from '@ackplus/react-tanstack-data-table';
+} from '@ackplus/mui-tanstack-data-grid';
 
 import { useCrudOperations } from '@libs/react-shared';
 import { useToasty } from '../../hook';
@@ -377,7 +378,14 @@ function CrudDataGridInner<T>(
     );
 
     const handleServerExportData = useCallback(
-        async (filters?: Partial<TableFilters>) => {
+        async (request: ExportRequest, _signal?: AbortSignal) => {
+            // v2 grid passes an ExportRequest descriptor instead of raw filters.
+            // Rebuild the TableState-shaped filters (global + column + sort) it carries,
+            // without pagination so the export covers all matching rows.
+            const filters = {
+                ...((request?.filters as Partial<TableFilters>) ?? {}),
+                sorting: request?.sorting,
+            } as Partial<TableFilters>;
             const qb = await buildQBFromTableState({
                 columns: columnsRef.current,
                 filters,
@@ -400,7 +408,7 @@ function CrudDataGridInner<T>(
                 ? await fetchMany(qb.toObject() as IFindOptions)
                 : null;
             return {
-                data: q?.items || [],
+                data: (q?.items || []) as T[],
                 total: q?.total || 0,
             };
         },
@@ -455,7 +463,7 @@ function CrudDataGridInner<T>(
 
     const toolbarRefresh = useCallback(() => {
         refetch();
-        props.slotProps?.toolbar?.refreshButtonProps?.onRefresh?.();
+        (props.slotProps?.toolbar?.refreshButton as any)?.onRefresh?.();
     }, [props.slotProps, refetch]);
 
     const mergedSlotProps = useMemo(() => {
@@ -465,8 +473,8 @@ function CrudDataGridInner<T>(
             toolbar: {
                 toolbar: { sx: { minHeight: '48px !important' } },
                 ...props.slotProps?.toolbar,
-                refreshButtonProps: {
-                    ...props.slotProps?.toolbar?.refreshButtonProps,
+                refreshButton: {
+                    ...props.slotProps?.toolbar?.refreshButton,
                     onRefresh: toolbarRefresh,
                 },
             },
@@ -476,8 +484,8 @@ function CrudDataGridInner<T>(
 
     return (
         <DataTable
-            ref={datatableRef}
-            idKey={idKey as string}
+            apiRef={datatableRef}
+            idKey={idKey}
             data={data?.items ?? []}
             totalRow={data?.total ?? 0}
             columns={columns}
@@ -488,12 +496,11 @@ function CrudDataGridInner<T>(
                 handleFetchRequestGeneration(request as Partial<TableFilters>)
             }}
             onDataStateChange={handleTableStateChange}
-            onColumnVisibilityChange={handleLayoutChange}
-            onColumnDragEnd={handleLayoutChange}
-            onColumnPinningChange={handleLayoutChange}
-            onColumnSizingChange={handleLayoutChange}
+            // onColumnVisibilityChange={handleLayoutChange}
+            // onColumnDragEnd={handleLayoutChange}
+            // onColumnPinningChange={handleLayoutChange}
+            // onColumnSizingChange={handleLayoutChange}
             onRowClick={adaptedOnRowClick}
-            defaultHiddenColumns={defaultHiddenColumns}
 
             enableStickyHeaderOrFooter
             enablePagination
@@ -541,7 +548,7 @@ function CrudDataGridInner<T>(
     );
 }
 
-export const CrudDataGrid = forwardRef(CrudDataGridInner) as <T>(
+export const CrudDataGrid = forwardRef(CrudDataGridInner) as unknown as <T>(
     props: CrudDataGridProps<T> & { ref?: React.Ref<DataTableApi<T>> },
 ) => React.ReactElement;
 

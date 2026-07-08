@@ -186,16 +186,26 @@ function EditEmailTemplate() {
                                 }}
                             >
                                 <Box>
-                                    <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
+                                    <Stack
+                                        direction="row"
+                                        spacing={1}
+                                        sx={{
+                                            alignItems: "center",
+                                            mb: 0.5
+                                        }}>
                                         <EmailIcon color="primary" />
                                         <Typography
                                             variant="h6"
-                                            fontWeight="bold"
+                                            sx={{
+                                                fontWeight: "bold"
+                                            }}
                                         >
                                             {templateValues?.displayName || 'New Email Template'}
                                         </Typography>
                                     </Stack>
-                                    <Stack direction="row" spacing={1} alignItems="center">
+                                    <Stack direction="row" spacing={1} sx={{
+                                        alignItems: "center"
+                                    }}>
                                         <Chip
                                             label="EMAIL"
                                             size="small"
@@ -248,14 +258,17 @@ function EditEmailTemplate() {
                                     <Box>
                                         <Typography
                                             variant="caption"
-                                            color="text.secondary"
-                                            display="block"
-                                        >
+                                            sx={{
+                                                color: "text.secondary",
+                                                display: "block"
+                                            }}>
                                             Subject Line
                                         </Typography>
                                         <Typography
                                             variant="body2"
-                                            fontWeight="medium"
+                                            sx={{
+                                                fontWeight: "medium"
+                                            }}
                                         >
                                             {subjectValue || templateValues?.subject}
                                         </Typography>
@@ -269,9 +282,10 @@ function EditEmailTemplate() {
                                     <Divider />
                                     <Typography
                                         variant="body2"
-                                        color="text.secondary"
-                                        sx={{ fontStyle: 'italic' }}
-                                    >
+                                        sx={{
+                                            color: "text.secondary",
+                                            fontStyle: 'italic'
+                                        }}>
                                         {templateValues.description}
                                     </Typography>
                                 </>
@@ -366,7 +380,9 @@ function EditEmailTemplate() {
                                         },
                                     }}
                                 >
-                                    <Typography variant="subtitle1" fontWeight="medium">
+                                    <Typography variant="subtitle1" sx={{
+                                        fontWeight: "medium"
+                                    }}>
                                         Test Data for Email Preview
                                     </Typography>
                                 </AccordionSummary>

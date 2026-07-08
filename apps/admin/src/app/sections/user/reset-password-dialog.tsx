@@ -114,7 +114,9 @@ export default function ResetPasswordDialog({
                 onSuccess={handleSubmitForm}
             >
                 <Stack spacing={3}>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                    }}>
                         Setting a new password for <strong>{user?.name}</strong>
                     </Typography>
 

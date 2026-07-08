@@ -23,12 +23,13 @@ export function FiltersResult({ onReset, sx, children }: FiltersResultProps) {
     return (
         <Box sx={sx}>
             <Box
-                flexGrow={1}
-                gap={1}
-                display="flex"
-                flexWrap="wrap"
-                alignItems="center"
-            >
+                sx={{
+                    flexGrow: 1,
+                    gap: 1,
+                    display: "flex",
+                    flexWrap: "wrap",
+                    alignItems: "center"
+                }}>
                 {children}
 
                 <Button

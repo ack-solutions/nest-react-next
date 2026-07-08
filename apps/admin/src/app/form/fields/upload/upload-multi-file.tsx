@@ -154,9 +154,7 @@ export function UploadMultiFile({
                     </Typography>
                 </Box>
             </DropZoneStyle>
-
             {fileRejections?.length > 0 && <RejectionFiles fileRejections={fileRejections as any} />}
-
             <List
                 disablePadding
                 sx={{ ...(hasFile && { my: 3 }) }}
@@ -268,11 +266,12 @@ export function UploadMultiFile({
                     );
                 })}
             </List>
-
             {hasFile && onRemoveAll ? (
                 <Stack
                     direction="row"
-                    justifyContent="flex-end"
+                    sx={{
+                        justifyContent: "flex-end"
+                    }}
                 >
                     <Button
                         onClick={onRemoveAll}

@@ -137,7 +137,9 @@ export default function UploadSingleFile({
                 <>
                     <Typography
                         variant="subtitle2"
-                        mb={2}
+                        sx={{
+                            mb: 2
+                        }}
                     >
                         {label}
                     </Typography>
@@ -145,7 +147,9 @@ export default function UploadSingleFile({
                     {previewUrl ? (
                         <Stack
                             direction="row"
-                            alignItems="center"
+                            sx={{
+                                alignItems: "center"
+                            }}
                         >
                             {isVideo ? (
                                 <Box
@@ -182,7 +186,9 @@ export default function UploadSingleFile({
                             <Stack
                                 spacing={2}
                                 direction="row"
-                                m={1}
+                                sx={{
+                                    m: 1
+                                }}
                             >
                                 {isRemove ? (
                                     <Button
@@ -309,7 +315,6 @@ export default function UploadSingleFile({
                     ) : null}
                 </DropZoneStyle>
             )}
-
             {fileRejections.length > 0 && <ShowRejectionItems fileRejections={fileRejections as FileRejection[]} />}
         </Box>
     );

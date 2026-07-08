@@ -21,16 +21,15 @@ export function FiltersBlock({ label, children, isShow, sx }: FilterBlockProps) 
 
     return (
         <Box
-            gap={1}
-            display="flex"
             sx={{
+                gap: 1,
+                display: "flex",
                 p: 1,
                 borderRadius: 1,
                 overflow: 'hidden',
                 border: (theme) => `dashed 1px ${theme.palette.divider}`,
-                ...sx,
-            }}
-        >
+                ...sx
+            }}>
             {memoizedLabel ? (
                 <Box
                     component="span"
@@ -46,10 +45,11 @@ export function FiltersBlock({ label, children, isShow, sx }: FilterBlockProps) 
                 </Box>
             ) : null}
             <Box
-                gap={1}
-                display="flex"
-                flexWrap="wrap"
-            >
+                sx={{
+                    gap: 1,
+                    display: "flex",
+                    flexWrap: "wrap"
+                }}>
                 {children}
             </Box>
         </Box>

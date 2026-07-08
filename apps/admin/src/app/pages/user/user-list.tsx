@@ -20,7 +20,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import ResetPasswordDialog from '../../sections/user/reset-password-dialog';
 import UserMfaDialog from '../../sections/user/user-mfa-dialog';
 import CrudDataGrid from '@admin/app/components/data-grid/crud-data-grid';
-import { DataTableApi, DataTableColumn } from '@ackplus/react-tanstack-data-table';
+import { DataTableApi, DataTableColumn } from '@ackplus/mui-tanstack-data-grid';
 import { searchBySplitName } from '@admin/app/utils/builder';
 import { toDisplayPhone } from '@admin/app/utils/phone';
 import { useDataTableState } from '@admin/app/components/data-grid';

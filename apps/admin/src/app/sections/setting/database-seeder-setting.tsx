@@ -126,7 +126,13 @@ const DatabaseSeederSetting = () => {
 
     if (loading) {
         return (
-            <Box display="flex" justifyContent="center" alignItems="center" minHeight={200}>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    minHeight: 200
+                }}>
                 <CircularProgress />
             </Box>
         );
@@ -143,10 +149,18 @@ const DatabaseSeederSetting = () => {
     return (
         <Card>
             <CardContent>
-                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+                <Stack
+                    direction="row"
+                    sx={{
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mb: 2
+                    }}>
                     <Box>
                         <Typography variant="h6">Database Seeders</Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{
+                            color: "text.secondary"
+                        }}>
                             Run database seeders to populate initial data. Use with caution in production.
                         </Typography>
                     </Box>
@@ -182,11 +196,17 @@ const DatabaseSeederSetting = () => {
                         >
                             <ListItemText
                                 primary={
-                                    <Stack direction="row" alignItems="center" spacing={1}>
-                                        <Typography variant="subtitle1" fontWeight={600}>
+                                    <Stack direction="row" spacing={1} sx={{
+                                        alignItems: "center"
+                                    }}>
+                                        <Typography variant="subtitle1" sx={{
+                                            fontWeight: 600
+                                        }}>
                                             {seeder.name}
                                         </Typography>
-                                        <Typography variant="caption" color="text.secondary">
+                                        <Typography variant="caption" sx={{
+                                            color: "text.secondary"
+                                        }}>
                                             ({seeder.key})
                                         </Typography>
                                     </Stack>
@@ -194,7 +214,9 @@ const DatabaseSeederSetting = () => {
                                 secondary={seeder.description}
                             />
                             <ListItemSecondaryAction>
-                                <Stack direction="row" alignItems="center" spacing={1}>
+                                <Stack direction="row" spacing={1} sx={{
+                                    alignItems: "center"
+                                }}>
                                     {seeder.hasDrop && (
                                         <Tooltip title="Truncate existing data before seeding">
                                             <FormControlLabel
@@ -207,7 +229,9 @@ const DatabaseSeederSetting = () => {
                                                     />
                                                 }
                                                 label={
-                                                    <Typography variant="caption" color="text.secondary">
+                                                    <Typography variant="caption" sx={{
+                                                        color: "text.secondary"
+                                                    }}>
                                                         Truncate
                                                     </Typography>
                                                 }

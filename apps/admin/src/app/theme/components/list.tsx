@@ -30,13 +30,15 @@ const MuiListItemButton: Components<Theme>['MuiListItemButton'] = {
 
 const MuiListItemText: Components<Theme>['MuiListItemText'] = {
     defaultProps: {
-        primaryTypographyProps: {
-            typography: 'subtitle2',
-            color: 'text.primary',
-        },
-        secondaryTypographyProps: {
-            typography: 'caption',
-            color: 'text.secondary',
+        slotProps: {
+            primary: {
+                typography: 'subtitle2',
+                color: 'text.primary',
+            },
+            secondary: {
+                typography: 'caption',
+                color: 'text.secondary',
+            },
         },
     },
     styleOverrides: {

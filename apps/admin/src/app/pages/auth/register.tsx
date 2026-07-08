@@ -36,20 +36,23 @@ function Register() {
                 <Typography variant="h4" gutterBottom>
                     Create your account
                 </Typography>
-                <Typography color="text.secondary">
+                <Typography sx={{
+                    color: "text.secondary"
+                }}>
                     Get started with your free account today
                 </Typography>
             </Stack>
-
             <RegisterForm onSubmit={handleRegister} />
-
             <Stack
                 direction="row"
                 spacing={0.5}
-                justifyContent="center"
-                mt={2}
-            >
-                <Typography color="text.secondary">
+                sx={{
+                    justifyContent: "center",
+                    mt: 2
+                }}>
+                <Typography sx={{
+                    color: "text.secondary"
+                }}>
                     Already have an account?
                 </Typography>
                 <Link

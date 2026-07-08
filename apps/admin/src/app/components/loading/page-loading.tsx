@@ -249,9 +249,10 @@ function PageLoading({
                         <motion.div variants={itemVariants as any}>
                             <Typography
                                 variant="h6"
-                                color="text.secondary"
-                                sx={{ fontWeight: 500 }}
-                            >
+                                sx={{
+                                    color: "text.secondary",
+                                    fontWeight: 500
+                                }}>
                                 {message}
                             </Typography>
                         </motion.div>
@@ -304,12 +305,11 @@ function PageLoading({
                     <motion.div variants={itemVariants as any}>
                         <Typography
                             variant="body1"
-                            color="text.secondary"
                             sx={{
+                                color: "text.secondary",
                                 fontWeight: 500,
-                                textAlign: 'center',
-                            }}
-                        >
+                                textAlign: 'center'
+                            }}>
                             {message}
                         </Typography>
                     </motion.div>
@@ -393,12 +393,11 @@ function PageLoading({
                     <motion.div variants={itemVariants as any}>
                         <Typography
                             variant="h6"
-                            color="text.secondary"
                             sx={{
+                                color: "text.secondary",
                                 textAlign: 'center',
-                                fontWeight: 500,
-                            }}
-                        >
+                                fontWeight: 500
+                            }}>
                             {message}
                         </Typography>
                     </motion.div>

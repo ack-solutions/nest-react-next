@@ -40,17 +40,12 @@ function PermissionSelector({
     const filteredPermissions = useMemo(() => {
         if (search) {
             const findText = search.toString().toLowerCase();
-            return (
-                allPermissions?.filter((item) => {
-                    return (
-                        item.name
-                            ?.toLowerCase()
-                            .replace(/-/g, ' ')
-                            .includes(findText) ||
-                        item.category?.toLowerCase().includes(findText)
-                    );
-                }) || []
-            );
+            return (allPermissions?.filter((item) => {
+                return (item.name
+                    ?.toLowerCase()
+                    .replace(/-/g, ' ')
+                    .includes(findText) || item.category?.toLowerCase().includes(findText));
+            }) || []);
         }
         return allPermissions || [];
     }, [allPermissions, search]);
@@ -212,7 +207,9 @@ function PermissionSelector({
                         )}
                         sx={{ mr: 0 }}
                     />
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                    }}>
                         (
                         {allSelectedData.selectedCount}
                         /
@@ -233,9 +230,7 @@ function PermissionSelector({
                     }}
                 />
             </Box>
-
             <Divider sx={{ my: 1 }} />
-
             <Box>
                 {groupedPermissions.map(({ category, permissions }) => {
                     const categoryState =
@@ -306,7 +301,9 @@ function PermissionSelector({
                                     </Typography>
                                     <Typography
                                         variant="caption"
-                                        color="text.secondary"
+                                        sx={{
+                                            color: "text.secondary"
+                                        }}
                                     >
                                         (
                                         {categoryState.selectedCount}
@@ -377,7 +374,9 @@ function PermissionSelector({
                         py: 4,
                         textAlign: 'center',
                     }}>
-                        <Typography color="text.secondary">
+                        <Typography sx={{
+                            color: "text.secondary"
+                        }}>
                             {search
                                 ? 'No permissions match your search'
                                 : 'No permissions available'}

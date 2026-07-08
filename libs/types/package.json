@@ -7,10 +7,10 @@
     "@ackplus/nest-auth": "catalog:",
     "@ackplus/nest-crud-request": "catalog:",
     "@ackplus/nest-file-storage": "catalog:",
-    "@nestjs/swagger": "^11.2.0",
-    "class-validator": "^0.14.2",
+    "@nestjs/swagger": "^11.4.5",
+    "class-validator": "^0.14.4",
     "tslib": "catalog:",
-    "typeorm": "^0.3.27"
+    "typeorm": "^0.3.30"
   },
   "private": true
 }

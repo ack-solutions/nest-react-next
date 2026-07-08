@@ -99,16 +99,21 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 
                 <Typography
                     variant="h4"
-                    textAlign="center"
                     gutterBottom
+                    sx={{
+                        textAlign: "center"
+                    }}
                 >
                     Create new password
                 </Typography>
-                <Typography textAlign="center" color="text.secondary">
+                <Typography
+                    sx={{
+                        textAlign: "center",
+                        color: "text.secondary"
+                    }}>
                     Your new password must be different from your previous password.
                 </Typography>
             </Stack>
-
             <FormContainer
                 formProps={{
                     id: 'reset-password',

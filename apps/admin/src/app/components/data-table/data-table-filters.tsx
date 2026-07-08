@@ -136,7 +136,9 @@ export function DataTableFilters({
                                     minWidth: 80,
                                 }}
                             >
-                                <Stack gap={1}>
+                                <Stack sx={{
+                                    gap: 1
+                                }}>
                                     {values.slice(2).map((value: any) => (
                                         <Chip
                                             key={`${key}-popover-chip`}
@@ -195,12 +197,11 @@ export function DataTableFilters({
             return (
                 <Stack
                     direction="row"
-                    gap={1}
-                    flexWrap="wrap"
                     sx={{
-                        alignItems: 'center',
-                    }}
-                >
+                        gap: 1,
+                        flexWrap: "wrap",
+                        alignItems: 'center'
+                    }}>
                     {renderFilterChips(key, value)}
                 </Stack>
             );

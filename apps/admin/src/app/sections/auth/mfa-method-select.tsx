@@ -105,7 +105,9 @@ export default function MfaMethodSelect({
                 }}
             >
                 <CircularProgress />
-                <Typography color="text.secondary">
+                <Typography sx={{
+                    color: "text.secondary"
+                }}>
                     Preparing verification...
                 </Typography>
             </Box>
@@ -122,9 +124,10 @@ export default function MfaMethodSelect({
                     Verification Required
                 </Typography>
                 <Typography
-                    color="text.secondary"
-                    sx={{ mt: 2 }}
-                >
+                    sx={{
+                        color: "text.secondary",
+                        mt: 2
+                    }}>
                     No verification methods are available. Please contact support.
                 </Typography>
                 {onBack && (
@@ -152,11 +155,12 @@ export default function MfaMethodSelect({
                 >
                     Verify your identity
                 </Typography>
-                <Typography color="text.secondary">
+                <Typography sx={{
+                    color: "text.secondary"
+                }}>
                     Choose how you would like to receive your verification code
                 </Typography>
             </Stack>
-
             <Stack spacing={2}>
                 {methodsToShow.map((method) => {
                     const methodInfo = getMethodInfo(method);
@@ -182,7 +186,9 @@ export default function MfaMethodSelect({
                                 <Stack
                                     direction="row"
                                     spacing={2}
-                                    alignItems="center"
+                                    sx={{
+                                        alignItems: "center"
+                                    }}
                                 >
                                     <Box
                                         sx={{
@@ -202,10 +208,14 @@ export default function MfaMethodSelect({
                                         />
                                     </Box>
                                     <Box sx={{ flexGrow: 1 }}>
-                                        <Stack direction="row" spacing={1} alignItems="center">
+                                        <Stack direction="row" spacing={1} sx={{
+                                            alignItems: "center"
+                                        }}>
                                             <Typography
                                                 variant="subtitle1"
-                                                fontWeight={600}
+                                                sx={{
+                                                    fontWeight: 600
+                                                }}
                                             >
                                                 {methodInfo.label}
                                             </Typography>
@@ -227,7 +237,9 @@ export default function MfaMethodSelect({
                                         </Stack>
                                         <Typography
                                             variant="body2"
-                                            color="text.secondary"
+                                            sx={{
+                                                color: "text.secondary"
+                                            }}
                                         >
                                             {methodInfo.displayText}
                                         </Typography>
@@ -243,7 +255,6 @@ export default function MfaMethodSelect({
                     );
                 })}
             </Stack>
-
             {onBack && (
                 <Box sx={{ mt: 3, textAlign: 'center' }}>
                     <Button

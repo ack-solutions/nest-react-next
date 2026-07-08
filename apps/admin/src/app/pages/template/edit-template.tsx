@@ -187,12 +187,15 @@ function EditTemplate() {
                                 <Box>
                                     <Typography
                                         variant="h6"
-                                        fontWeight="bold"
-                                        sx={{ mb: 0.5 }}
-                                    >
+                                        sx={{
+                                            fontWeight: "bold",
+                                            mb: 0.5
+                                        }}>
                                         {templateValues?.displayName}
                                     </Typography>
-                                    <Stack direction="row" spacing={1} alignItems="center">
+                                    <Stack direction="row" spacing={1} sx={{
+                                        alignItems: "center"
+                                    }}>
                                         <Chip
                                             label={templateValues?.type}
                                             size="small"
@@ -244,9 +247,10 @@ function EditTemplate() {
                                     <Divider />
                                     <Typography
                                         variant="body2"
-                                        color="text.secondary"
-                                        sx={{ fontStyle: 'italic' }}
-                                    >
+                                        sx={{
+                                            color: "text.secondary",
+                                            fontStyle: 'italic'
+                                        }}>
                                         {templateValues.description}
                                     </Typography>
                                 </>
@@ -331,7 +335,9 @@ function EditTemplate() {
                                         },
                                     }}
                                 >
-                                    <Typography variant="subtitle1" fontWeight="medium">
+                                    <Typography variant="subtitle1" sx={{
+                                        fontWeight: "medium"
+                                    }}>
                                         JSON Context for Preview
                                     </Typography>
                                 </AccordionSummary>

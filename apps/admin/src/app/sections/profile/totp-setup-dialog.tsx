@@ -176,7 +176,9 @@ export default function TotpSetupDialog({
             }}
         >
             <DialogTitle>
-                <Stack direction="row" alignItems="center" spacing={2}>
+                <Stack direction="row" spacing={2} sx={{
+                    alignItems: "center"
+                }}>
                     <Box
                         sx={{
                             p: 1,
@@ -193,7 +195,6 @@ export default function TotpSetupDialog({
                     <Typography variant="h6">Set Up Authenticator App</Typography>
                 </Stack>
             </DialogTitle>
-
             <DialogContent>
                 {/* Stepper */}
                 <Stepper activeStep={activeStep} sx={{ py: 3 }}>
@@ -216,7 +217,9 @@ export default function TotpSetupDialog({
                 {/* Step 1: Scan QR Code */}
                 {activeStep === 0 && (
                     <Stack spacing={3}>
-                        <Typography color="text.secondary">
+                        <Typography sx={{
+                            color: "text.secondary"
+                        }}>
                             Scan the QR code below with your authenticator app (Google Authenticator, Authy, etc.)
                         </Typography>
 
@@ -263,7 +266,9 @@ export default function TotpSetupDialog({
                                     <Typography variant="body2" sx={{ mb: 1 }}>
                                         Can't scan the QR code? Enter this secret key manually:
                                     </Typography>
-                                    <Stack direction="row" alignItems="center" spacing={1}>
+                                    <Stack direction="row" spacing={1} sx={{
+                                        alignItems: "center"
+                                    }}>
                                         <TextField
                                             size="small"
                                             value={setupData.secret}
@@ -305,7 +310,9 @@ export default function TotpSetupDialog({
                         onSuccess={handleVerify}
                     >
                         <Stack spacing={3}>
-                            <Typography color="text.secondary">
+                            <Typography sx={{
+                                color: "text.secondary"
+                            }}>
                                 Enter the 6-digit verification code from your authenticator app to complete the setup.
                             </Typography>
 
@@ -325,7 +332,6 @@ export default function TotpSetupDialog({
                     </FormContainer>
                 )}
             </DialogContent>
-
             <DialogActions sx={{ px: 3, pb: 3 }}>
                 <Button
                     onClick={handleClose}

@@ -89,13 +89,12 @@ function ViewDetail({
         >
             <Stack
                 direction="row"
-                alignItems="center"
                 spacing={2}
                 sx={{
+                    alignItems: "center",
                     flex: 0,
-                    ...labelSxProp,
-                }}
-            >
+                    ...labelSxProp
+                }}>
                 {icon ? (
                     <Box
                         sx={{
@@ -118,7 +117,6 @@ function ViewDetail({
                     </Typography>
                 ) : null}
             </Stack>
-
             {variant === 'inline' && (
                 <Typography
                     color="textSecondary"
@@ -130,7 +128,6 @@ function ViewDetail({
                     :
                 </Typography>
             )}
-
             <Box
                 sx={{
                     ...valueSxProp,

@@ -127,9 +127,10 @@ function AddEditUserForm({ onSubmit, values }: AddEditUserFormProps) {
                             </Typography>
                             <Typography
                                 variant="body2"
-                                color="text.secondary"
-                                sx={{ mb: 2 }}
-                            >
+                                sx={{
+                                    color: "text.secondary",
+                                    mb: 2
+                                }}>
                                 Upload a profile photo for this user
                             </Typography>
                             <RHFLabelDropdown

@@ -101,11 +101,10 @@ export function Maintenance() {
                     {/* Main Message */}
                     <Typography
                         variant="body1"
-                        color="text.secondary"
                         sx={{
-                            mb: 4,
-                        }}
-                    >
+                            color: "text.secondary",
+                            mb: 4
+                        }}>
                         Our system is currently undergoing scheduled maintenance to improve your experience.
                         We expect to be back online soon. Thank you for your patience and understanding.
                     </Typography>
@@ -113,11 +112,10 @@ export function Maintenance() {
                     {/* Contact Information */}
                     <Typography
                         variant="body1"
-                        color="text.secondary"
                         sx={{
-                            mb: 4,
-                        }}
-                    >
+                            color: "text.secondary",
+                            mb: 4
+                        }}>
                         If you need immediate assistance, please contact your administrator.
                     </Typography>
 

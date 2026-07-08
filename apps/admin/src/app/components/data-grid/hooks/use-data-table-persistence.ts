@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { debounce } from 'lodash';
 import {
-    DEFAULT_EXPANDING_COLUMN_NAME,
-    DEFAULT_SELECTION_COLUMN_NAME,
+    DEFAULT_EXPAND_COLUMN_ID,
+    DEFAULT_SELECTION_COLUMN_ID,
     DataTableApi,
     TableFilters,
-} from '@ackplus/react-tanstack-data-table';
+} from '@ackplus/mui-tanstack-data-grid';
 import {
     DataTableLayoutState,
     useDataTableState,
@@ -42,22 +42,22 @@ export function useDataTablePersistence({
         });
 
         return {
-            pagination: { pageIndex: 0, pageSize: 50 },
-            columnVisibility: defaultColumnVisibility,
-            columnOrder: initialState?.columnOrder || [],
-            columnSizing: initialState?.columnSizing || {},
-            ...initialState,
-            columnPinning: {
-                left: [
-                    DEFAULT_EXPANDING_COLUMN_NAME,
-                    DEFAULT_SELECTION_COLUMN_NAME,
-                    ...(initialState?.columnPinning?.left || []),
-                ],
-                right: [
-                    'action',
-                    ...(initialState?.columnPinning?.right || []),
-                ],
-            },
+            // pagination: { pageIndex: 0, pageSize: 50 },
+            // columnVisibility: defaultColumnVisibility,
+            // columnOrder: initialState?.columnOrder || [],
+            // columnSizing: initialState?.columnSizing || {},
+            // ...initialState,
+            // columnPinning: {
+            //     left: [
+            //         DEFAULT_EXPAND_COLUMN_ID,
+            //         DEFAULT_SELECTION_COLUMN_ID,
+            //         ...(initialState?.columnPinning?.left || []),
+            //     ],
+            //     right: [
+            //         'action',
+            //         ...(initialState?.columnPinning?.right || []),
+            //     ],
+            // },
         };
     }, [defaultHiddenColumns, initialState]);
 

@@ -100,10 +100,11 @@ export function CustomBreadcrumbs({
         <Box sx={sx}>
             <Stack
                 direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                flexWrap="wrap"
-            >
+                sx={{
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    flexWrap: "wrap"
+                }}>
                 <Box>
                     <Box
                         sx={{
@@ -198,11 +199,12 @@ export function CustomBreadcrumbs({
                 {action ? (
                     <Stack
                         direction="row"
-                        alignItems="center"
                         spacing={1}
-                        flexShrink={0}
                         {...slotProps?.action}
-                    >
+                        sx={{
+                            alignItems: "center",
+                            flexShrink: 0
+                        }}>
                         {action}
                     </Stack>
                 ) : null}

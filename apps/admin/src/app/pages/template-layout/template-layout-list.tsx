@@ -15,7 +15,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import { useHasPermission } from '@ackplus/nest-auth-react';
 import { withRequirePermissionFallback } from '../../hoc/with-require-permission-fallback';
 import DataGrid from '@admin/app/components/data-grid/data-grid';
-import { DataTableApi, DataTableColumn } from '@ackplus/react-tanstack-data-table';
+import { DataTableApi, DataTableColumn } from '@ackplus/mui-tanstack-data-grid';
 import { HEADER } from '@admin/app/layout/config';
 
 
@@ -56,7 +56,7 @@ function TemplateLayoutList() {
         refetch,
     ]);
 
-    const handleRowClick = useCallback((_event: React.MouseEvent<HTMLTableRowElement>, row: any) => {
+    const handleRowClick = useCallback((_event: React.MouseEvent<HTMLDivElement>, row: any) => {
         if (canUpdate) {
             handleEditTemplateLayout(row.original);
         }

@@ -41,7 +41,9 @@ export default function ThemePreview() {
                                 border: `1px solid ${theme.palette.divider}`,
                             }}
                         />
-                        <Stack spacing={0.5} flex={1}>
+                        <Stack spacing={0.5} sx={{
+                            flex: 1
+                        }}>
                             <Box
                                 sx={{
                                     height: 4,
@@ -84,10 +86,13 @@ export default function ThemePreview() {
                     />
                 </Stack>
             </Box>
-            <Typography variant="caption" color="text.secondary" sx={{
-                mt: 1,
-                display: 'block',
-            }}>
+            <Typography
+                variant="caption"
+                sx={{
+                    color: "text.secondary",
+                    mt: 1,
+                    display: 'block'
+                }}>
                 Current: {theme.palette.mode} mode
             </Typography>
         </Card>

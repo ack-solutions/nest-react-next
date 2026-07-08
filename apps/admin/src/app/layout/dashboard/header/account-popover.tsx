@@ -4,6 +4,7 @@ import {
     Typography,
     Stack,
     MenuItem,
+    MenuList,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
@@ -80,7 +81,7 @@ export default function AccountPopover() {
 
                     <Divider sx={{ borderStyle: 'dashed' }} />
 
-                    <Stack sx={{ p: 1 }}>
+                    <MenuList sx={{ p: 1 }}>
                         {OPTIONS.map((option) => (
                             <MenuItem
                                 key={option.label}
@@ -92,16 +93,15 @@ export default function AccountPopover() {
                                 {option.label}
                             </MenuItem>
                         ))}
-                    </Stack>
 
-                    <Divider sx={{ borderStyle: 'dashed' }} />
+                        <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
-                    <MenuItem
-                        onClick={handleLogout}
-                        sx={{ m: 1 }}
-                    >
-                        Logout
-                    </MenuItem>
+                        <MenuItem
+                            onClick={handleLogout}
+                        >
+                            Logout
+                        </MenuItem>
+                    </MenuList>
                 </Box>
             )}
         </MenuDropdown>

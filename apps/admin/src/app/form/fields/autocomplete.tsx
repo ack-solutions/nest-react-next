@@ -202,9 +202,10 @@ export function Autocomplete({
                     direction="row"
                     spacing={0.5}
                     component="li"
-                    alignItems="center"
                     {...props}
-                >
+                    sx={[{
+                        alignItems: "center"
+                    }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]}>
                     <Box
                         sx={{
                             flexShrink: 0,

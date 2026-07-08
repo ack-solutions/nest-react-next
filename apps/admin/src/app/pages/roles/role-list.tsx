@@ -1,6 +1,6 @@
 import { INestAuthPermission, INestAuthRole } from '@ackplus/nest-auth-client';
 import { useHasPermission } from '@ackplus/nest-auth-react';
-import { DataTableApi, DataTableColumn } from '@ackplus/react-tanstack-data-table';
+import { DataTableApi, DataTableColumn } from '@ackplus/mui-tanstack-data-grid';
 import { useRole } from '@libs/react-shared';
 import { PermissionsEnum, RoleGuardEnum } from '@libs/types';
 import { Datetime } from '@libs/utils';
@@ -102,7 +102,7 @@ function RoleList() {
     );
 
     const handleRowClick = useCallback(
-        (_event: React.MouseEvent<HTMLTableRowElement>, row: any) => {
+        (_event: React.MouseEvent<HTMLDivElement>, row: any) => {
             if (!canEdit) {
                 return;
             }
@@ -128,9 +128,10 @@ function RoleList() {
                     const list = getRolePermissionNames(row.original as any);
                     if (list.length === 0) {
                         return (
-                            <Typography variant="body2" component="span" color="text.secondary">
-                                —
-                            </Typography>
+                            <Typography variant="body2" component="span" sx={{
+                                color: "text.secondary"
+                            }}>—
+                                                            </Typography>
                         );
                     }
                     return (

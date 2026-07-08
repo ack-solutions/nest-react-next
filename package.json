@@ -11,24 +11,24 @@
         "build": "pnpm -C apps/api build && pnpm -C apps/web build && pnpm -C apps/admin build",
         "test": "pnpm -r test",
         "lint": "pnpm -r run lint",
-        "update-ackplus": "pnpm -r up --latest @ackplus/nest-auth @ackplus/nest-auth-client @ackplus/nest-auth-react @ackplus/nest-crud @ackplus/nest-crud-request @ackplus/nest-dynamic-templates @ackplus/react-tanstack-data-table @ackplus/nest-file-storage @ackplus/nest-seeder",
+        "update-ackplus": "pnpm -r up --latest @ackplus/nest-auth @ackplus/nest-auth-client @ackplus/nest-auth-react @ackplus/nest-crud @ackplus/nest-crud-request @ackplus/nest-dynamic-templates @ackplus/mui-tanstack-data-grid @ackplus/nest-file-storage @ackplus/nest-seeder",
         "g:crud": "cd tools/generators/crud && pnpm install --silent && pnpm run dev"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@types/lodash": "^4.17.21",
-        "@types/node": "^20.11.0",
-        "@typescript-eslint/eslint-plugin": "^8.49.0",
-        "@typescript-eslint/parser": "^8.49.0",
-        "eslint": "^9.39.2",
+        "@types/lodash": "^4.17.24",
+        "@types/node": "^26.1.1",
+        "@typescript-eslint/eslint-plugin": "^8.63.0",
+        "@typescript-eslint/parser": "^8.63.0",
+        "eslint": "^9.39.4",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-react": "^7.37.5",
-        "eslint-plugin-react-hooks": "^7.0.1",
-        "prettier": "^2.6.2",
-        "ts-loader": "^9.5.4",
-        "typescript": "^5.9.3"
+        "eslint-plugin-react-hooks": "^7.1.1",
+        "prettier": "^3.9.4",
+        "ts-loader": "^9.6.2",
+        "typescript": "^6.0.3"
     },
     "packageManager": "pnpm@10.21.0+sha512.da3337267e400fdd3d479a6c68079ac6db01d8ca4f67572083e722775a796788a7a9956613749e000fac20d424b594f7a791a5f4e2e13581c5ef947f26968a40"
 }

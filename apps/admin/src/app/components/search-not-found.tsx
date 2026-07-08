@@ -21,12 +21,11 @@ export function SearchNotFound({ query, title, action, sx, ...other }: SearchNot
             >
                 <Typography
                     variant="body2"
-                    textAlign="center"
                     sx={{
+                        textAlign: "center",
                         mb: 1,
-                        typography: 'h6',
-                    }}
-                >
+                        typography: 'h6'
+                    }}>
                     {title || 'No Result Found'}
                 </Typography>
                 {action}

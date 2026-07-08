@@ -35,9 +35,10 @@ function Login() {
                 <>
                     <Stack
                         direction="row"
-                        alignItems="center"
-                        sx={{ mb: 4 }}
-                    >
+                        sx={{
+                            alignItems: "center",
+                            mb: 4
+                        }}>
                         <Box sx={{ flexGrow: 1 }}>
                             <Typography
                                 variant="h4"
@@ -45,7 +46,9 @@ function Login() {
                             >
                                 Welcome back
                             </Typography>
-                            <Typography color="text.secondary">
+                            <Typography sx={{
+                                color: "text.secondary"
+                            }}>
                                 Sign in to your account to continue
                             </Typography>
                         </Box>
@@ -54,10 +57,13 @@ function Login() {
                     <Stack
                         direction="row"
                         spacing={0.5}
-                        justifyContent="center"
-                        mt={2}
-                    >
-                        <Typography color="text.secondary">
+                        sx={{
+                            justifyContent: "center",
+                            mt: 2
+                        }}>
+                        <Typography sx={{
+                            color: "text.secondary"
+                        }}>
                             Don't have an account?
                         </Typography>
                         <Link
@@ -73,7 +79,6 @@ function Login() {
                     </Stack>
                 </>
             )}
-
             {step === 'mfa-method' && (
                 <MfaMethodSelect
                     onSelect={handleMfaMethodSelect}
@@ -84,7 +89,6 @@ function Login() {
                     isLoading={isLoading}
                 />
             )}
-
             {step === 'mfa-verify' && selectedMfaMethod && (
                 <MfaOtpForm
                     method={selectedMfaMethod}

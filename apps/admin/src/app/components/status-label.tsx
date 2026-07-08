@@ -1,4 +1,4 @@
-import { MenuItem } from '@mui/material';
+import { MenuItem, MenuList } from '@mui/material';
 import { startCase } from 'lodash';
 import { ReactNode } from 'react';
 
@@ -214,39 +214,43 @@ export function StatusLabel({
                 </Label>
             )}
         >
-            {({ handleClose }) => options.map((option) => {
-                const optionNormalized = option.toLowerCase();
-                const optionConfig = statusConfig?.[optionNormalized];
-                const optionColor = optionConfig?.color || defaultColor;
-                const optionVariant = optionConfig?.variant || defaultVariant;
-                const optionLabel = optionConfig?.label || startCase(option);
+            {({ handleClose }) => (
+                <MenuList disablePadding>
+                    {options.map((option) => {
+                        const optionNormalized = option.toLowerCase();
+                        const optionConfig = statusConfig?.[optionNormalized];
+                        const optionColor = optionConfig?.color || defaultColor;
+                        const optionVariant = optionConfig?.variant || defaultVariant;
+                        const optionLabel = optionConfig?.label || startCase(option);
 
-                return (
-                    <MenuItem
-                        key={option}
-                        selected={normalizedStatus === optionNormalized}
-                        onClick={(event) => {
-                            event.preventDefault();
-                            event.stopPropagation();
-                            onChange(option);
-                            handleClose();
-                        }}
-                        sx={{
-                            justifyContent: 'center',
-                        }}
-                    >
-                        {renderOption ? renderOption(option) : (
-                            <Label
-                                color={optionColor}
-                                variant={optionVariant}
-                                sx={{ minWidth: 'auto' }}
+                        return (
+                            <MenuItem
+                                key={option}
+                                selected={normalizedStatus === optionNormalized}
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    onChange(option);
+                                    handleClose();
+                                }}
+                                sx={{
+                                    justifyContent: 'center',
+                                }}
                             >
-                                {optionLabel}
-                            </Label>
-                        )}
-                    </MenuItem>
-                );
-            })}
+                                {renderOption ? renderOption(option) : (
+                                    <Label
+                                        color={optionColor}
+                                        variant={optionVariant}
+                                        sx={{ minWidth: 'auto' }}
+                                    >
+                                        {optionLabel}
+                                    </Label>
+                                )}
+                            </MenuItem>
+                        );
+                    })}
+                </MenuList>
+            )}
         </MenuDropdown>
     );
 }

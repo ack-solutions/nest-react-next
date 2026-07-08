@@ -65,8 +65,12 @@ const MuiTableCell: Components<Theme>['MuiTableCell'] = {
 const MuiTablePagination: Components<Theme>['MuiTablePagination'] = {
 
     defaultProps: {
-        backIconButtonProps: { size: 'small' },
-        nextIconButtonProps: { size: 'small' },
+        slotProps: {
+            actions: {
+                previousButton: { size: 'small' },
+                nextButton: { size: 'small' },
+            },
+        },
     },
 
     styleOverrides: {

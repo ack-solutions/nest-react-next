@@ -11,36 +11,45 @@ interface SummaryRawProps {
 
 function SummaryRaw({ label, value, action, labelProps, valueProps }: SummaryRawProps) {
     return (
-        <Box py={0.5}>
+        <Box sx={{
+            py: 0.5
+        }}>
             <Stack
                 direction="row"
-                justifyContent="space-between"
-                alignItems="center"
                 spacing={1}
-            >
+                sx={{
+                    justifyContent: "space-between",
+                    alignItems: "center"
+                }}>
                 <Typography
-                    width={160}
-                    color="text.secondary"
                     {...labelProps}
-                >
+                    sx={[{
+                        width: 160,
+                        color: "text.secondary"
+                    }, ...(Array.isArray(labelProps.sx) ? labelProps.sx : [labelProps.sx])]}>
                     {label}
                 </Typography>
 
                 <Stack
                     direction="row"
-                    alignItems="center"
                     spacing={1}
+                    sx={{
+                        alignItems: "center"
+                    }}
                 >
                     <Typography
-                        width={160}
                         variant="subtitle2"
                         {...valueProps}
-                    >
+                        sx={[{
+                            width: 160
+                        }, ...(Array.isArray(valueProps.sx) ? valueProps.sx : [valueProps.sx])]}>
                         {value}
                     </Typography>
                     {action || (
                         <Box
-                            width={32}
+                            sx={{
+                                width: 32
+                            }}
                         />
                     )}
                 </Stack>

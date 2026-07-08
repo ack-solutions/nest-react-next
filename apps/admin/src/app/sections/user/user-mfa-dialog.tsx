@@ -137,7 +137,9 @@ export default function UserMfaDialog({
             fullWidth
         >
             <DialogTitle>
-                <Stack direction="row" alignItems="center" spacing={2}>
+                <Stack direction="row" spacing={2} sx={{
+                    alignItems: "center"
+                }}>
                     <Box
                         sx={{
                             p: 1,
@@ -153,13 +155,14 @@ export default function UserMfaDialog({
                         <Typography variant="h6">
                             MFA Settings
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{
+                            color: "text.secondary"
+                        }}>
                             {user.firstName} {user.lastName}
                         </Typography>
                     </Box>
                 </Stack>
             </DialogTitle>
-
             <DialogContent>
                 {isLoading ? (
                     <Box
@@ -180,14 +183,19 @@ export default function UserMfaDialog({
                                 <CardContent>
                                     <Stack
                                         direction="row"
-                                        alignItems="center"
-                                        justifyContent="space-between"
-                                    >
+                                        sx={{
+                                            alignItems: "center",
+                                            justifyContent: "space-between"
+                                        }}>
                                         <Box>
-                                            <Typography variant="subtitle1" fontWeight={600}>
+                                            <Typography variant="subtitle1" sx={{
+                                                fontWeight: 600
+                                            }}>
                                                 Two-Factor Authentication
                                             </Typography>
-                                            <Typography variant="body2" color="text.secondary">
+                                            <Typography variant="body2" sx={{
+                                                color: "text.secondary"
+                                            }}>
                                                 {isMfaEnabled
                                                     ? 'MFA is enabled for this user'
                                                     : 'Enable MFA to add an extra layer of security'}
@@ -207,7 +215,12 @@ export default function UserMfaDialog({
                         {/* TOTP Devices */}
                         {devices.length > 0 && (
                             <Box>
-                                <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
+                                <Typography
+                                    variant="subtitle1"
+                                    sx={{
+                                        fontWeight: 600,
+                                        mb: 2
+                                    }}>
                                     Authenticator Apps
                                 </Typography>
                                 <TableContainer component={Card} variant="outlined">
@@ -224,7 +237,9 @@ export default function UserMfaDialog({
                                             {devices.map((device) => (
                                                 <TableRow key={device.id}>
                                                     <TableCell>
-                                                        <Stack direction="row" alignItems="center" spacing={1}>
+                                                        <Stack direction="row" spacing={1} sx={{
+                                                            alignItems: "center"
+                                                        }}>
                                                             <Icon
                                                                 icon={IconEnum.Smartphone}
                                                                 width={18}
@@ -236,7 +251,9 @@ export default function UserMfaDialog({
                                                         </Stack>
                                                     </TableCell>
                                                     <TableCell>
-                                                        <Typography variant="body2" color="text.secondary">
+                                                        <Typography variant="body2" sx={{
+                                                            color: "text.secondary"
+                                                        }}>
                                                             {device.lastUsedAt
                                                                 ? Datetime.toDisplayDate(device.lastUsedAt)
                                                                 : 'Never'
@@ -289,13 +306,23 @@ export default function UserMfaDialog({
                         {devices.length === 0 && isMfaEnabled && (
                             <Card variant="outlined" sx={{ bgcolor: 'grey.50' }}>
                                 <CardContent>
-                                    <Stack alignItems="center" spacing={1} sx={{ py: 2 }}>
+                                    <Stack
+                                        spacing={1}
+                                        sx={{
+                                            alignItems: "center",
+                                            py: 2
+                                        }}>
                                         <Icon
                                             icon={IconEnum.Smartphone}
                                             width={40}
                                             height={40}
                                         />
-                                        <Typography variant="body2" color="text.secondary" textAlign="center">
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                color: "text.secondary",
+                                                textAlign: "center"
+                                            }}>
                                             No authenticator apps configured.
                                             <br />
                                             The user needs to set up an authenticator app.
@@ -309,13 +336,20 @@ export default function UserMfaDialog({
                         {!canToggle && (
                             <Card variant="outlined" sx={{ bgcolor: 'grey.50' }}>
                                 <CardContent>
-                                    <Stack alignItems="center" spacing={1}>
+                                    <Stack spacing={1} sx={{
+                                        alignItems: "center"
+                                    }}>
                                         <Icon
                                             icon={IconEnum.Info}
                                             width={24}
                                             height={24}
                                         />
-                                        <Typography variant="body2" color="text.secondary" textAlign="center">
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                color: "text.secondary",
+                                                textAlign: "center"
+                                            }}>
                                             MFA management is not available.
                                             <br />
                                             Either MFA is not enabled in the system or it is required for all users.
@@ -327,7 +361,6 @@ export default function UserMfaDialog({
                     </Stack>
                 )}
             </DialogContent>
-
             <DialogActions>
                 <Button onClick={handleClose} variant="outlined">
                     Close

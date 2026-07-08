@@ -69,7 +69,9 @@ function ConfirmDialog({
                 <Stack
                     direction="row"
                     spacing={2}
-                    justifyContent="end"
+                    sx={{
+                        justifyContent: "end"
+                    }}
                 >
                     <Button
                         variant="outlined"

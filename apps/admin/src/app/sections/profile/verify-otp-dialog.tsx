@@ -89,7 +89,9 @@ function VerifyOtpDialog({ onClose, onSubmit, fromValue, type }: VerifyOtpDialog
                 <Typography
                     color="textSecondary"
                     variant="body2"
-                    mb={2}
+                    sx={{
+                        mb: 2
+                    }}
                 >
                     {type === 'phone' ? currentUser?.phoneNumber : authUser?.email}
                 </Typography>
@@ -101,7 +103,6 @@ function VerifyOtpDialog({ onClose, onSubmit, fromValue, type }: VerifyOtpDialog
                     }}
                 />
             </FormContainer>
-
         </DefaultDialog>
     );
 }

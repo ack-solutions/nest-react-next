@@ -90,7 +90,9 @@ export default function Navigation({
                             borderColor: 'divider',
                         }}
                     >
-                        <Stack direction="row" alignItems="center" spacing={1.5}>
+                        <Stack direction="row" spacing={1.5} sx={{
+                            alignItems: "center"
+                        }}>
                             <Avatar
                                 sx={{
                                     width: 36,

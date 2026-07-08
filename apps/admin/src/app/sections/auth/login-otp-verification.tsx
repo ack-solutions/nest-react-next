@@ -58,7 +58,6 @@ function LoginOtpVerification({
             <Typography color="textSecondary">
                 {values?.email}
             </Typography>
-
             <Box
                 sx={{
                     mt: 2,
@@ -74,13 +73,16 @@ function LoginOtpVerification({
                 >
                     <Stack
                         spacing={2}
-                        justifyContent="center"
+                        sx={{
+                            justifyContent: "center"
+                        }}
                     >
                         {(errors as any)?.afterSubmit ? (
                             <Box
-                                pb={2}
-                                pt={0}
-                            >
+                                sx={{
+                                    pb: 2,
+                                    pt: 0
+                                }}>
                                 <Alert severity="error">
                                     {(errors as any)?.afterSubmit.message}
                                 </Alert>
@@ -88,9 +90,10 @@ function LoginOtpVerification({
                         ) : null}
 
                         <Box
-                            display="grid"
-                            justifyContent="center"
-                        >
+                            sx={{
+                                display: "grid",
+                                justifyContent: "center"
+                            }}>
                             <RHFOtpInput name="otp" />
                         </Box>
 
@@ -106,9 +109,10 @@ function LoginOtpVerification({
                         <Stack
                             direction="row"
                             spacing={0.5}
-                            justifyContent="center"
-                            mt={2}
-                        >
+                            sx={{
+                                justifyContent: "center",
+                                mt: 2
+                            }}>
                             <Typography >Didn't receive the email? </Typography>
                             <Button
                                 onClick={() => onResent(setError)}

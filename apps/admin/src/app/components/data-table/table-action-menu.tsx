@@ -5,6 +5,7 @@ import {
     ListItemText,
     Stack,
     Tooltip,
+    MenuList,
 } from '@mui/material';
 import { ReactNode, useMemo } from 'react';
 import { RequirePermission } from '@ackplus/nest-auth-react';
@@ -152,37 +153,37 @@ export function TableActionMenu({
             )}
         >
             {({ handleClose }) => (
-                <>
-                    {crudActions.map((action) => (
-                        <RequirePermission permission={action.permission!} key={`${action?.title}-${row?.id}`}>
-                            <MenuItem
-                                onClick={(event) => {
-                                    event.stopPropagation();
-                                    if (action.onClick) {
-                                        action.onClick(event);
-                                    }
-                                    handleClose();
-                                }}
-                                key={`${action?.title}-${row?.id}`}
-                            >
-                                {action?.icon ? (
-                                    <ListItemIcon sx={{ mr: 0 }}>
-                                        {action?.icon}
-                                    </ListItemIcon>
-                                ) : null}
-                                <ListItemText
-                                    primary={action?.title}
-                                    slotProps={{
-                                        primary: {
-                                            variant: 'body2',
-                                        },
+                <MenuList disablePadding>
+                        {crudActions.map((action) => (
+                            <RequirePermission permission={action.permission!} key={`${action?.title}-${row?.id}`}>
+                                <MenuItem
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        if (action.onClick) {
+                                            action.onClick(event);
+                                        }
+                                        handleClose();
                                     }}
-                                />
-                            </MenuItem>
-                        </RequirePermission>
-                    ))}
-                    {children}
-                </>
+                                    key={`${action?.title}-${row?.id}`}
+                                >
+                                    {action?.icon ? (
+                                        <ListItemIcon sx={{ mr: 0 }}>
+                                            {action?.icon}
+                                        </ListItemIcon>
+                                    ) : null}
+                                    <ListItemText
+                                        primary={action?.title}
+                                        slotProps={{
+                                            primary: {
+                                                variant: 'body2',
+                                            },
+                                        }}
+                                    />
+                                </MenuItem>
+                            </RequirePermission>
+                        ))}
+                        {children}
+                    </MenuList>
             )}
         </MenuDropdown>
     );

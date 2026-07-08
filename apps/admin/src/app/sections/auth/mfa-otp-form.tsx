@@ -168,25 +168,32 @@ export default function MfaOtpForm({
 
                 <Typography
                     variant="h4"
-                    textAlign="center"
+                    sx={{
+                        textAlign: "center"
+                    }}
                 >
                     Enter verification code
                 </Typography>
 
-                <Typography textAlign="center" color="text.secondary">
+                <Typography
+                    sx={{
+                        textAlign: "center",
+                        color: "text.secondary"
+                    }}>
                     {config.description}
                 </Typography>
 
                 {displayValue && (
                     <Typography
                         variant="subtitle2"
-                        textAlign="center"
+                        sx={{
+                            textAlign: "center"
+                        }}
                     >
                         {displayValue}
                     </Typography>
                 )}
             </Stack>
-
             <FormContainer
                 formProps={{
                     id: 'mfa-otp-form',
@@ -203,10 +210,11 @@ export default function MfaOtpForm({
                     ) : null}
 
                     <Box
-                        display="flex"
-                        justifyContent="center"
-                        sx={{ pt: 2 }}
-                    >
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            pt: 2
+                        }}>
                         <RHFOtpInput
                             name="otp"
                             numInputs={6}
@@ -224,7 +232,9 @@ export default function MfaOtpForm({
                                 />
                             }
                             label={
-                                <Typography variant="body2" color="text.secondary">
+                                <Typography variant="body2" sx={{
+                                    color: "text.secondary"
+                                }}>
                                     Remember this device
                                 </Typography>
                             }
@@ -246,9 +256,13 @@ export default function MfaOtpForm({
                         <Stack
                             direction="row"
                             spacing={0.5}
-                            justifyContent="center"
+                            sx={{
+                                justifyContent: "center"
+                            }}
                         >
-                            <Typography color="text.secondary">
+                            <Typography sx={{
+                                color: "text.secondary"
+                            }}>
                                 Didn't receive the code?
                             </Typography>
                             <Button
@@ -274,9 +288,10 @@ export default function MfaOtpForm({
                     {method === 'totp' && (
                         <Typography
                             variant="body2"
-                            color="text.secondary"
-                            textAlign="center"
-                        >
+                            sx={{
+                                color: "text.secondary",
+                                textAlign: "center"
+                            }}>
                             Open your authenticator app (like Google Authenticator or Authy) to get the code.
                         </Typography>
                     )}
@@ -284,8 +299,10 @@ export default function MfaOtpForm({
                     {/* Navigation options */}
                     <Stack
                         direction="row"
-                        justifyContent="center"
                         spacing={2}
+                        sx={{
+                            justifyContent: "center"
+                        }}
                     >
                         {showChangeMethod && onChangeMethod && (
                             <Button

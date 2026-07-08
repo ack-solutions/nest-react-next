@@ -1,6 +1,7 @@
 {
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
+        "ignoreDeprecations": "6.0",
         "jsx": "preserve",
         "strict": true,
         "noEmit": true,

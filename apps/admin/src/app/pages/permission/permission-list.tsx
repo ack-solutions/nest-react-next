@@ -1,4 +1,4 @@
-import { DataTableApi, DataTableColumn } from '@ackplus/react-tanstack-data-table';
+import { DataTableApi, DataTableColumn } from '@ackplus/mui-tanstack-data-grid';
 import {
     Page,
 } from '@admin/app/components';
@@ -109,7 +109,9 @@ function PermissionList() {
                 cell: ({ row }) => (
                     <Box>
                         <Typography variant="body2">{startCase(row.original?.name)}</Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{
+                            color: "text.secondary"
+                        }}>
                             {row.original?.name}
                         </Typography>
                     </Box>

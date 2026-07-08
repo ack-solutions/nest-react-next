@@ -25,10 +25,11 @@ function UserWithAvatar({
     return (
         <Stack
             direction="row"
-            alignItems="center"
             spacing={1}
             {...props}
-        >
+            sx={[{
+                alignItems: "center"
+            }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]}>
             <Avatar
                 src={user?.avatarUrl}
                 alt={user?.name}
@@ -52,7 +53,6 @@ function UserWithAvatar({
                     </Typography>
                 </Stack>
             ) : null}
-
         </Stack>
     );
 }

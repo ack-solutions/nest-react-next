@@ -136,7 +136,9 @@ export function CustomDay({
                     : {}),
             }}
         >
-            <Box border="2px solid transparent">
+            <Box sx={{
+                border: "2px solid transparent"
+            }}>
                 <PickersDay
                     {...(props as any)}
                     onClick={handleOnClick}

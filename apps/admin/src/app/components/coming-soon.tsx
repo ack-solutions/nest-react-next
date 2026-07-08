@@ -14,7 +14,9 @@ function ComingSoon() {
             <Container maxWidth={false}>
                 <Stack
                     spacing={2}
-                    alignItems="center"
+                    sx={{
+                        alignItems: "center"
+                    }}
                 >
                     <Typography
                         variant="h1"

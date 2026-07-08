@@ -9,7 +9,7 @@ export type ColorSchema =
     | 'warning'
     | 'error';
 
-declare module '@mui/material/styles/createPalette' {
+declare module '@mui/material/styles' {
     interface TypeBackground {
         neutral: string;
     }

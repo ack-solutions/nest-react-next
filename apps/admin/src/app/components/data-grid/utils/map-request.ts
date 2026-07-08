@@ -1,6 +1,6 @@
 // table-to-qb.ts
 import { QueryBuilder, OrderDirectionEnum } from "@ackplus/nest-crud-request";
-import type { TableState } from "@ackplus/react-tanstack-data-table";
+import type { TableState } from "@ackplus/mui-tanstack-data-grid";
 import { applyColumnFilterToQueryBuilder, type ColumnFilterRuleForQuery } from "./column-filter-to-query";
 
 export async function buildQBFromTableState<T>(opts: {
